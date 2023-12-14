@@ -139,7 +139,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                            <Button.Button
                               variant={web3auth ? 'outline' : 'disabled'}
                               className="mx-auto px-2 py-3 my-0 text-sm"
-                              onClick={handleConnectWallet}
+                              onClick={() => handleConnectWallet()}
                            >
                               Connect a wallet
                               <PlusCircle className="w-4" />
