@@ -3015,7 +3015,7 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/sign-client@^2.10.5":
+"@walletconnect/sign-client@^2.10.6":
   version "2.10.6"
   resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.10.6.tgz#722d2c2844565e2826dce6a6d3a36c9b3ca1ea91"
   integrity sha512-EvUWjaZBQu2yKnH5/5F2qzbuiIuUN9ZgrNKgvXkw5z1Dq5RJCks0S9/MFlKH/ZSGqXnLl7uAzBXtoX4sMgbCMA==
@@ -3037,7 +3037,7 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/types@2.10.6", "@walletconnect/types@^2.10.5":
+"@walletconnect/types@2.10.6", "@walletconnect/types@^2.10.6":
   version "2.10.6"
   resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.10.6.tgz#d9920ed4fd0113e0addbda8e7e73a5176a3163fd"
   integrity sha512-WgHfiTG1yakmxheaBRiXhUdEmgxwrvsAdOIWaMf/spvrzVKYh6sHI3oyEEky5qj5jjiMiyQBeB57QamzCotbcQ==
@@ -3049,7 +3049,7 @@
     "@walletconnect/logger" "^2.0.1"
     events "^3.3.0"
 
-"@walletconnect/utils@2.10.6", "@walletconnect/utils@^2.10.5":
+"@walletconnect/utils@2.10.6", "@walletconnect/utils@^2.10.5", "@walletconnect/utils@^2.10.6":
   version "2.10.6"
   resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.10.6.tgz#749b37d14e291e346862e7027ec7548463350226"
   integrity sha512-oRsWWhN2+hi3aiDXrQEOfysz6FHQJGXLsNQPVt+WIBJplO6Szmdau9dbleD88u1iiT4GKPqE0R9FOYvvPm1H/w==
@@ -3117,7 +3117,7 @@
     "@web3auth/base" "^7.2.0"
     bs58 "^5.0.0"
 
-"@web3auth/base@^7.1.0", "@web3auth/base@^7.2.0":
+"@web3auth/base@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@web3auth/base/-/base-7.2.0.tgz#18f512fba80448078f05bc04f302e2d1518457ce"
   integrity sha512-ekoTmmBW3ThP9H3jXLXa6kRdjN6lm6Ju5/RZacEmVCbva6vQaZanMMAN4Hld4tLT2eJCW0VInFgEdjLdXGiDKQ==
@@ -3160,7 +3160,7 @@
     "@web3auth/base" "^7.2.0"
     "@web3auth/base-evm-adapter" "^7.2.0"
 
-"@web3auth/modal@^7.1.2":
+"@web3auth/modal@7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@web3auth/modal/-/modal-7.2.0.tgz#b290fbcb4d1397fcc938737486e999ccc1a580d9"
   integrity sha512-lone2riSVAP5m8c0txss6qF0493cwhbTzyWiE6HbOTLY9iXSXY+6iRd9mI58s3y0ZUqVbJir1T1xbs6B0Trkaw==

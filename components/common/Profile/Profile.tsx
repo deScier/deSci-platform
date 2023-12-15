@@ -30,6 +30,8 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
    /** @dev Initialize session hook for user data */
    const { data: session, update: updateSession } = useSession()
 
+   const router = useRouter()
+
    /** @dev Initialize hook to fetch articles */
    const { articles } = useArticles()
 
@@ -44,6 +46,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
     * @notice Connects the user's wallet and updates the session with the new wallet address
     */
    const handleConnectWallet = async () => {
+      console.log('començando...')
       setConnectLoading(true)
       /** @dev Connects to Web3Auth wallet and manages the provider */
       const response = await connectWeb3AuthWallet({
@@ -51,6 +54,8 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
          setProvider,
          web3auth
       })
+
+      console.log('fechou')
 
       setConnectLoading(false)
 
@@ -83,17 +88,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
    }
 
    /**
-    * @dev Initializes Web3 authentication on component mount
-    * @notice Sets up provider and Web3Auth instances
-    */
-   useEffect(() => {
-      initWeb3Auth({
-         setProvider,
-         setWeb3Auth
-      })
-   }, [])
-
-   /**
     * @dev Updates wallet address in state when session user data changes
     */
    useEffect(() => {
@@ -102,12 +96,25 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
       }
    }, [session?.user])
 
-   const router = useRouter()
+   /**
+    * @dev Initializes Web3 authentication on component mount
+    * @notice Sets up provider and Web3Auth instances
+    */
+   useEffect(() => {
+      const loadWeb3Auth = async () => {
+         await initWeb3Auth({
+            setProvider,
+            setWeb3Auth
+         })
+      }
+
+      loadWeb3Auth()
+   }, [])
 
    return (
       <React.Fragment>
          <aside className={twMerge('hidden md:relative md:block overflow-hidden', className)}>
-            <div className="flex flex-col gap-8 sticky xxl:min-h-full 2xl:h-screen 2xl:min-h-screen right-0 md:py-14 md:px-6 justify-between bg-[#FEFEFE]">
+            <div className="flex flex-col gap-8 xxl:min-h-full 2xl:h-screen 2xl:min-h-screen right-0 md:py-14 md:px-6 justify-between bg-[#FEFEFE]">
                <div className="flex flex-col gap-6">
                   <div className="flex justify-between items-center">
                      <h3 className="text-xl font-semibold">My profile</h3>
@@ -139,7 +146,9 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                            <Button.Button
                               variant={web3auth ? 'outline' : 'disabled'}
                               className="mx-auto px-2 py-3 my-0 text-sm"
-                              onClick={() => handleConnectWallet()}
+                              onClick={() => {
+                                 handleConnectWallet()
+                              }}
                            >
                               Connect a wallet
                               <PlusCircle className="w-4" />

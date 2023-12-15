@@ -21,6 +21,8 @@ const alchemyApiUrl = inProduction ? process.env.ALCHEMY_API_URL : process.env.A
 export const initWeb3Auth = async ({ setWeb3Auth, setProvider }: InitWeb3Props) => {
    try {
       const web3authInstance = new Web3Auth({
+         clientId,
+         web3AuthNetwork: inProduction ? 'cyan' : 'sapphire_devnet',
          chainConfig: {
             chainId: inProduction ? '0x89' : '0x13881',
             displayName: inProduction ? 'Polygon' : 'Polygon mumbai',
@@ -29,13 +31,13 @@ export const initWeb3Auth = async ({ setWeb3Auth, setProvider }: InitWeb3Props) 
             blockExplorer: inProduction ? 'https://polygonscan.com' : 'https://mumbai.polygonscan.com',
             ticker: 'MATIC',
             tickerName: 'Polygon'
-         },
-         clientId,
-         web3AuthNetwork: inProduction ? 'cyan' : 'sapphire_devnet'
+         }
       })
-      await web3authInstance.initModal()
       setWeb3Auth(web3authInstance)
-      setProvider(web3authInstance?.provider)
+      await web3authInstance.initModal()
+      if (web3authInstance.provider) {
+         setProvider(web3authInstance.provider)
+      }
    } catch (error) {
       console.log(error)
    }
