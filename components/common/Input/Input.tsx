@@ -68,7 +68,7 @@ const Label: React.FC<LabelProps> = ({ children, optional, icon, tooltip_message
                   {icon}
                </span>
             )}
-            {children} {optional && <span className="text-gray-main font-regular">(Opcional)</span>}
+            {children} {optional && <span className="text-gray-main font-regular">(Optional)</span>}
          </label>
          {tooltip_message && <Tooltip.Information content={tooltip_message} />}
       </div>
