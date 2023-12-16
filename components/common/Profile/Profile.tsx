@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation'
 import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
 import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
 import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CaretRight, PlusCircle, X } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
@@ -26,9 +26,11 @@ import { ProfileProps } from './Typing'
  * @notice This component renders the user's profile page, allowing them to view their profile details, connect a wallet, and access their submitted articles.
  * @dev This component uses the `useSession` and `useArticles` hooks for session management and fetching articles, respectively. It also manages states for the Web3Auth, provider, and wallet connection.
  */
-const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) => {
+const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mobileWeb3auth }: ProfileProps) => {
    /** @dev Initialize session hook for user data */
    const { data: session, update: updateSession } = useSession()
+
+   const windowWidth = useRef(window.innerWidth)
 
    const router = useRouter()
 
@@ -107,9 +109,12 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
             setWeb3Auth
          })
       }
-
-      loadWeb3Auth()
-   }, [])
+      console.log(windowWidth)
+      if (windowWidth.current >= 772) {
+         console.log('entrou')
+         loadWeb3Auth()
+      }
+   }, [windowWidth])
 
    return (
       <React.Fragment>
@@ -144,10 +149,14 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                         </h1>
                         {!walletAddress ? (
                            <Button.Button
-                              variant={web3auth ? 'outline' : 'disabled'}
+                              variant={web3auth !== null || mobileWeb3auth !== null ? 'outline' : 'disabled'}
                               className="mx-auto px-2 py-3 my-0 text-sm"
                               onClick={() => {
-                                 handleConnectWallet()
+                                 if (connectWallet) {
+                                    connectWallet()
+                                 } else {
+                                    handleConnectWallet()
+                                 }
                               }}
                            >
                               Connect a wallet
