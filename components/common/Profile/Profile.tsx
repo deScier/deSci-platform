@@ -20,6 +20,7 @@ import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 import SubmitedItem from './SubmitedItem/SubmitedItem'
 import { ProfileProps } from './Typing'
+import useDimension from '@/hooks/useWindowDimension'
 
 /**
  * @title Profile Component
@@ -30,7 +31,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
    /** @dev Initialize session hook for user data */
    const { data: session, update: updateSession } = useSession()
 
-   const windowWidth = useRef(window.innerWidth)
+   const { windowDimension } = useDimension()
 
    const router = useRouter()
 
@@ -48,7 +49,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
     * @notice Connects the user's wallet and updates the session with the new wallet address
     */
    const handleConnectWallet = async () => {
-      console.log('començando...')
       setConnectLoading(true)
       /** @dev Connects to Web3Auth wallet and manages the provider */
       const response = await connectWeb3AuthWallet({
@@ -56,8 +56,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
          setProvider,
          web3auth
       })
-
-      console.log('fechou')
 
       setConnectLoading(false)
 
@@ -109,12 +107,10 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
             setWeb3Auth
          })
       }
-      console.log(windowWidth)
-      if (windowWidth.current >= 772) {
-         console.log('entrou')
+      if (windowDimension !== null && windowDimension >= 772) {
          loadWeb3Auth()
       }
-   }, [windowWidth])
+   }, [windowDimension])
 
    return (
       <React.Fragment>
