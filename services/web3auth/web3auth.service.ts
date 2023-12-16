@@ -22,7 +22,7 @@ export const initWeb3Auth = async ({ setWeb3Auth, setProvider }: InitWeb3Props) 
    try {
       const web3authInstance = new Web3Auth({
          clientId,
-         web3AuthNetwork: inProduction ? 'cyan' : 'sapphire_devnet',
+         web3AuthNetwork: inProduction ? 'sapphire_mainnet' : 'sapphire_devnet',
          chainConfig: {
             chainId: inProduction ? '0x89' : '0x13881',
             displayName: inProduction ? 'Polygon' : 'Polygon mumbai',
