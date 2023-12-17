@@ -25,7 +25,7 @@ const nextConfig = {
       return config
    },
    compiler: {
-      removeConsole: process.env.NEXT_PUBLIC_NODE_ENV === 'prod' ? true : false
+      removeConsole: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? true : false
    },
    images: {
       domains: ['random.imagecdn.app', 'source.unsplash.com', 'descier-tcc.s3.sa-east-1.amazonaws.com']
