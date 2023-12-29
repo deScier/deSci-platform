@@ -17,8 +17,10 @@ const Dropzone = React.forwardRef(({ setSelectedFile, setValue, placeholder, mes
 
    /** @dev Effect to set a default cover image if provided */
    useEffect(() => {
-      if (defaultCover) {
+      if (defaultCover?.preview !== undefined && defaultCover?.preview !== null && defaultCover?.preview !== '') {
          setFiles([defaultCover])
+      } else {
+         setFiles([])
       }
    }, [defaultCover])
 

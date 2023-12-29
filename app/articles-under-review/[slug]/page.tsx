@@ -109,6 +109,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       }
    })
 
+   console.log('watch', watch())
+
    const {
       watch: watch_comment,
       setValue: setValue_comment,
@@ -892,9 +894,21 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   <p className="text-sm font-semibold">Cover</p>
                   <Dropzone
                      thumbnail
+                     accept="images"
                      placeholder="Upload cover picture (.png, .jpg)"
-                     setSelectedFile={(file) => console.log(file)}
-                     defaultCover={getValues('cover') ? getValues('cover') : undefined}
+                     setSelectedFile={(file) => {
+                        setValue('cover', file as StoredFile)
+                        trigger('cover')
+                     }}
+                     defaultCover={{
+                        lastModified: getValues('cover')?.lastModified || 0,
+                        lastModifiedDate: getValues('cover')?.lastModifiedDate || new Date(),
+                        name: getValues('cover')?.name || '',
+                        path: getValues('cover')?.path || '',
+                        preview: getValues('cover')?.preview || '',
+                        size: getValues('cover')?.size || 0,
+                        type: getValues('cover')?.type || ''
+                     }}
                   />
                </div>
             </Box>
