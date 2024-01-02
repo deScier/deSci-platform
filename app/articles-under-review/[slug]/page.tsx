@@ -247,7 +247,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }, [article, setValue])
 
    const onReorder = (newOrder: typeof items) => {
-      setItems((prevItems) => [...newOrder])
+      setAuthors(newOrder)
+      setValue('authors', newOrder)
    }
 
    const handleSubmitDocument = async () => {
@@ -1290,7 +1291,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                      </Button.Button>
                   </React.Fragment>
                )}
-
                {article?.document.status === 'ADMIN_APPROVE' && (
                   <Button.Button
                      variant="disabled"
