@@ -47,4 +47,5 @@ type Author = {
    title: string
    revenuePercent?: number
    walletAddress?: string
+   position?: number
 }

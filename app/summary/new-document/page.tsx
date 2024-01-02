@@ -139,9 +139,10 @@ export default function SubmitNewPaperPage() {
          category: data.category
       }
 
-      const documentAuthors = authors.map((item) => ({
+      const documentAuthors = authors.map((item, index) => ({
          email: item.email,
          name: item.name,
+         position: index + 1,
          revenuePercent: access_type === 'open-access' ? 0 : Number(item.share?.substring(0, item.share.length - 1)) || 0,
          title: item.title,
          walletAddress: item.wallet || ''
