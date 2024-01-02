@@ -54,6 +54,7 @@ export type CreateAuthor = {
    title: string
    revenuePercent?: number
    walletAddress?: string
+   position?: number
 }
 
 export type UpdateAuthor = {
@@ -63,4 +64,5 @@ export type UpdateAuthor = {
    title?: string
    revenuePercent?: number
    walletAddress?: string
+   position?: number
 }

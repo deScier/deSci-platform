@@ -119,7 +119,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       resolver: zodResolver(addCommentSchema),
       values: {
          comment: '',
-         documentId: article?.document.id || ''
+         documentId: article?.document?.id || ''
       }
    })
 
@@ -247,8 +247,22 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }, [article, setValue])
 
    const onReorder = (newOrder: typeof items) => {
+      console.log('new order', newOrder)
       setAuthors(newOrder)
       setValue('authors', newOrder)
+      const updateNewOrder: UpdateAuthor[] = newOrder.map((item, index) => ({
+         id: item.id,
+         name: item.name,
+         email: item.email,
+         position: index + 1,
+         revenuePercent: item.share ? Number(item.share) : 0,
+         title: item.title,
+         walletAddress: item.wallet || ''
+      }))
+
+      const removeNewAuthors = updateNewOrder.filter((item) => !item.id.includes('author'))
+
+      setUpdateAuthors(removeNewAuthors)
    }
 
    const handleSubmitDocument = async () => {
@@ -297,13 +311,19 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
    const createNewAuthors = () => {
       const documentAuthors = article?.document.authorsOnDocuments || []
-      const newAuthors = getValues('authors')?.filter((item) => !documentAuthors.some((author) => author.authorEmail === item.email))
+      const newAuthors = getValues('authors')
+         ?.map((item, index) => ({ ...item, position: index + 1, revenuePercent: Number(item.revenuePercent) || 0 }))
+         .filter((item) => !documentAuthors.some((author) => author.authorEmail === item.email))
 
-      return newAuthors?.map((item) => ({ ...item, revenuePercent: Number(item.revenuePercent) || 0 })) || []
+      return newAuthors || []
    }
 
    const handleSaveDocument = async () => {
       console.log('update')
+      console.log('authors update', authors)
+
+      console.log('update author', updateAuthors)
+
       if (!article) return
       setSaveLoading(true)
       console.log('access', access_type)
@@ -345,7 +365,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
             return
          }
       }
-      console.log(getValues('cover'))
       if (getValues('cover')?.preview && getValues('cover')?.preview !== article?.document.cover) {
          const uploadCoverSuccess = await uploadDocumentFileService({
             documentId: article?.document.id!,
@@ -584,9 +603,13 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                            const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id)
                            if (authorIndex > 0) {
                               updateAuthors[authorIndex].revenuePercent = Number(share) || 0
+                              updateAuthors[authorIndex].position = authorIndex + 1
                               setUpdateAuthors(updateAuthors)
                            } else {
-                              setUpdateAuthors((prev) => [...prev, { ...updatedAuthor, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }])
+                              setUpdateAuthors((prev) => [
+                                 ...prev,
+                                 { ...updatedAuthor, position: authorIndex + 1, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }
+                              ])
                            }
                         }
                      }}
@@ -673,6 +696,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                                     wallet: authorship_settings!.wallet,
                                     share: share.includes('%') ? share : share + '%'
                                  }
+
+                                 console.log('authors update', authors)
 
                                  const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
 
