@@ -36,7 +36,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                  <div>
                                     <p className="text-sm text-secundary_blue-main font-semibold md:font-regular">{item.author?.name}</p>
                                     <div className="block md:hidden">
-                                       <p className="text-sm text-secundary_blue-main">{item.author?.title === '' ? '-' : item.author?.title}</p>
+                                       <p className="text-sm text-secundary_blue-main">{item.author?.title == '' ? '-' : item.author?.title}</p>
                                     </div>
                                     <div className="block md:hidden">
                                        <p className="text-sm text-secundary_blue-main">{item.author?.email}</p>
@@ -142,7 +142,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                  </div>
                               </div>
                               <div className="hidden md:block">
-                                 <p className="text-sm text-secundary_blue-main max-w-[20ch] truncate">{item.title}</p>
+                                 <p className="text-sm text-secundary_blue-main max-w-[20ch] truncate">{item.title == '' ? '-' : item.title}</p>
                               </div>
                               <div className="hidden md:flex items-center justify-between">
                                  <p className="text-sm text-secundary_blue-main">{item.email}</p>
