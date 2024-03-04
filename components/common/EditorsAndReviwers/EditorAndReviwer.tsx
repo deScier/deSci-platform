@@ -1,4 +1,3 @@
-import { truncate } from '@/utils/format_texts'
 import React from 'react'
 import { twMerge } from 'tailwind-merge'
 import { EditorAndReviewerProps } from './Typing'
@@ -26,7 +25,7 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
                            <p className="text-sm text-secundary_blue-main first-letter:uppercase">{item.reviewer.title}</p>
                         </div>
                         <div>
-                           <p className="text-sm text-secundary_blue-main">{truncate(item.reviewer.email, 16)}</p>
+                           <p className="text-sm text-secundary_blue-main">{item.reviewer.email}</p>
                         </div>
                         <div>
                            <p
