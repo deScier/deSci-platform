@@ -39,7 +39,6 @@ export default function SubmitNewPaperPage() {
    /** @dev Initialize router for navigation and session hook for user session management */
    const router = useRouter()
    const { data: session, update: updateSession } = useSession()
-   console.log('session', session)
 
    /** @dev Initialize states for loading indicators, dialog settings, and various form inputs */
    const [loading, setLoading] = useState(false)
