@@ -5,6 +5,7 @@ import { SelectArticleType } from '@/components/common/Filters/SelectArticleType
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReview, ArticleUnderReviewProps, ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import useDebounce from '@/hooks/useDebounce'
+import { cn } from '@/lib/utils'
 import { filter_status } from '@/mock/dropdow_filter_options'
 import { home_routes } from '@/routes/home'
 import { AuthorsOnDocuments } from '@/services/document/getArticles'
@@ -20,7 +21,6 @@ export default function ArticlesUnderReviewPage() {
     * @dev Using a custom hook "useArticles" to fetch articles.
     */
    const { articles, loading } = useArticles()
-
    const { data: session } = useSession()
 
    /** @dev Number of articles displayed per page. */
@@ -144,7 +144,12 @@ export default function ArticlesUnderReviewPage() {
                   )}
                </div>
             </div>
-            <div className="flex flex-col gap-6 min-h-[calc(50vh)]">
+            <div
+               className={cn('flex flex-col gap-6', {
+                  results: results.length > 1,
+                  'min-h-[calc(50vh)]': results.length > 1
+               })}
+            >
                <div className="grid gap-8">
                   <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">
                      {loading ? (
@@ -157,7 +162,9 @@ export default function ArticlesUnderReviewPage() {
                      ) : (
                         <React.Fragment>
                            {results.length === 0 ? (
-                              <p className="text-center col-span-2 text-gray-500 mt-8">There are no articles under review at the moment.</p>
+                              <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">
+                                 There are no articles under review at the moment.
+                              </p>
                            ) : (
                               results.slice((page - 1) * per_page, page * per_page).map((article) => (
                                  <React.Fragment key={article.id}>

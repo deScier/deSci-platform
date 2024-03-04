@@ -158,7 +158,9 @@ export default function AsReviewerPage() {
                            ) : (
                               <React.Fragment>
                                  {results.length === 0 ? (
-                                    <p className="text-center col-span-2 text-gray-500 mt-8">There are no articles under review at the moment.</p>
+                                    <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">
+                                       There are no articles under review at the moment.
+                                    </p>
                                  ) : (
                                     results.slice((page - 1) * per_page, page * per_page).map((article) => (
                                        <React.Fragment key={article.id}>
@@ -198,7 +200,9 @@ export default function AsReviewerPage() {
                            ) : (
                               <React.Fragment>
                                  {articles?.length === 0 ? (
-                                    <p className="text-center col-span-2 text-gray-500 mt-8">There are no articles under review at the moment.</p>
+                                    <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">
+                                       There are no articles under review at the moment.
+                                    </p>
                                  ) : (
                                     articles
                                        ?.slice((page - 1) * per_page, page * per_page)
