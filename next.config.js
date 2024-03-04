@@ -28,7 +28,17 @@ const nextConfig = {
       removeConsole: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? true : false
    },
    images: {
-      domains: ['random.imagecdn.app', 'source.unsplash.com', 'descier-tcc.s3.sa-east-1.amazonaws.com']
+      remotePatterns: [
+         {
+            hostname: 'source.unsplash.com'
+         },
+         {
+            hostname: 'random.imagecdn.app'
+         },
+         {
+            hostname: 'descier-tcc.s3.sa-east-1.amazonaws.com'
+         }
+      ]
    },
    env: {
       WEB3AUTH_CLIENT_ID: process.env.WEB3AUTH_CLIENT_ID,
