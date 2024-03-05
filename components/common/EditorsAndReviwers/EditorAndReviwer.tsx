@@ -1,3 +1,5 @@
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { truncate } from '@/utils/format_texts'
 import React from 'react'
 import { twMerge } from 'tailwind-merge'
 import { EditorAndReviewerProps } from './Typing'
@@ -25,7 +27,16 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
                            <p className="text-sm text-secundary_blue-main first-letter:uppercase">{item.reviewer.title}</p>
                         </div>
                         <div>
-                           <p className="text-sm text-secundary_blue-main">{item.reviewer.email}</p>
+                           <TooltipProvider>
+                              <Tooltip>
+                                 <TooltipTrigger>
+                                    <p className="text-sm text-secundary_blue-main">{truncate(item.reviewer.email, 16)}</p>
+                                 </TooltipTrigger>
+                                 <TooltipContent>
+                                    <p className="text-sm text-secundary_blue-main">{item.reviewer.email}</p>
+                                 </TooltipContent>
+                              </Tooltip>
+                           </TooltipProvider>
                         </div>
                         <div>
                            <p
