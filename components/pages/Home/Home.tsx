@@ -1,27 +1,31 @@
 'use client'
+import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Input from '@components/common/Input/Input'
 
 import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
 import { ArticleCard } from '@/components/modules/Home/Index/ArticleCard/ArticleCard'
 import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing'
 import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
-import LoginModal from '@/components/modules/Login/Login'
-import RegisterModal from '@/components/modules/Register/Register'
-import useWindowDimension from '@/hooks/useWindowDimension'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/fetchPublic.service'
 import { ConfirmProfileRequestProps, confirmProfileService } from '@/services/user/confirmProfile.service'
 import { formatAuthors } from '@/utils/format_authors'
 import { capitalizeWord } from '@/utils/format_texts'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
-import * as Button from '@components/common/Button/Button'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Input from '@components/common/Input/Input'
 import '@styles/home.css'
 import { useSession } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { CaretRightFill, Eye, HandThumbsUpFill, Person, Search } from 'react-bootstrap-icons'
+import { toast } from 'react-toastify'
+import { twMerge } from 'tailwind-merge'
+
+import LoginModal from '@/components/modules/Login/Login'
+import RegisterModal from '@/components/modules/Register/Register'
+import useWindowDimension from '@/hooks/useWindowDimension'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
 import IllustrationHero from 'public/svgs/modules/home/illustration-home.svg'
 import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg'
 import CirclesHero from 'public/svgs/modules/home/shapes/circles.svg'
@@ -29,10 +33,7 @@ import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg'
 import ShapeSecondary from 'public/svgs/modules/home/shapes/shape2.svg'
 import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg'
 import React, { useEffect, useState } from 'react'
-import { CaretRightFill, Eye, HandThumbsUpFill, Person, Search } from 'react-bootstrap-icons'
-import { toast } from 'react-toastify'
 import slug from 'slug'
-import { twMerge } from 'tailwind-merge'
 
 export function HomeComponent() {
    const router = useRouter()
@@ -154,7 +155,7 @@ export function HomeComponent() {
                <div className="grid gap-2 mt-6 lg:mt-24 xl:mt-16 2xl:mt-24">
                   <div className="grid gap-2">
                      <h1 className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl xl:text-6xl font-bold lg:max-w-[20ch] bg-linear-gradient bg-clip-text text-transparent h-8 sm:h-14 flex items-center">
-                        The DeSci Journal
+                        The DeSci Journals
                      </h1>
                      <h3 className="text-1xl md:text-3xl lg:text-3xl xl:text-4xl font-bold bg-linear-gradient bg-clip-text text-transparent flex md:h-14 lg:h-auto">
                         Redefine how you publish
