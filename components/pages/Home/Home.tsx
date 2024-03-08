@@ -8,29 +8,27 @@ import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassw
 import { ArticleCard } from '@/components/modules/Home/Index/ArticleCard/ArticleCard'
 import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing'
 import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
+import { OurJournals } from '@/components/modules/Home/Index/OurJournals/OurJournals'
+import { CardBig } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardBig/CardBig'
+import { CardSmall } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardSmall/CardSmall'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/fetchPublic.service'
 import { ConfirmProfileRequestProps, confirmProfileService } from '@/services/user/confirmProfile.service'
-import { formatAuthors } from '@/utils/format_authors'
 import { capitalizeWord } from '@/utils/format_texts'
-import { getArticleTypeLabel } from '@/utils/generate_labels'
 import '@styles/home.css'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { CaretRightFill, Eye, HandThumbsUpFill, Person, Search } from 'react-bootstrap-icons'
+import { CaretRightFill, Person, Search } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
 import LoginModal from '@/components/modules/Login/Login'
 import RegisterModal from '@/components/modules/Register/Register'
 import useWindowDimension from '@/hooks/useWindowDimension'
-import Image from 'next/image'
-import Link from 'next/link'
 import IllustrationHero from 'public/svgs/modules/home/illustration-home.svg'
 import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg'
 import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg'
 import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg'
-import React, { useEffect, useState } from 'react'
-import slug from 'slug'
+import React from 'react'
 
 export function HomeComponent() {
    const router = useRouter()
@@ -39,13 +37,13 @@ export function HomeComponent() {
    const { lg } = useWindowDimension()
    const { articles, loading } = useArticles()
 
-   const [topPapers, setTopPapers] = useState<ArticleCardProps[]>([])
-   const [isProfileConfirmed, setIsProfileConfirmed] = useState(false)
+   const [topPapers, setTopPapers] = React.useState<ArticleCardProps[]>([])
+   const [isProfileConfirmed, setIsProfileConfirmed] = React.useState(false)
 
-   const [searchTerm, setSearchTerm] = useState('')
-   const [searchAuthor, setSearchAuthor] = useState('')
+   const [searchTerm, setSearchTerm] = React.useState('')
+   const [searchAuthor, setSearchAuthor] = React.useState('')
 
-   const [inviteAuthorName, setInviteAuthorName] = useState('')
+   const [inviteAuthorName, setInviteAuthorName] = React.useState('')
 
    const handleSearchArticle = () => {
       let searchQuery = '?'
@@ -66,7 +64,7 @@ export function HomeComponent() {
       router.push(home_routes.home.search + searchQuery)
    }
 
-   useEffect(() => {
+   React.useEffect(() => {
       const encodedConfirmProfileData = queryParams.get('data')
 
       if (encodedConfirmProfileData) {
@@ -94,7 +92,7 @@ export function HomeComponent() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
-   useEffect(() => {
+   React.useEffect(() => {
       if (articles) {
          const papers = articles.slice(0, 3).sort((a, b) => b.likes! - a.likes!)
          setTopPapers(papers)
@@ -209,7 +207,7 @@ export function HomeComponent() {
             </div>
             <div className="space-y-6 overflow-hidden px-4 lg:px-0">
                <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
-               <Journals />
+               <OurJournals />
             </div>
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
                <div className="relative h-fit">
@@ -328,295 +326,3 @@ export function HomeComponent() {
       </React.Fragment>
    )
 }
-
-interface TopPapersProps {
-   id: string
-   likes: number
-   views: number
-   title: string
-   image: string
-   documentType: string
-   authors: { id: string; name: string }[]
-   publishedAt: Date
-}
-
-const CardBig: React.FC<TopPapersProps> = (data: TopPapersProps) => {
-   return (
-      <div className="p-4 sm:p-6 rounded-md min-h-[300px] h-full row-span-2 relative">
-         <div className="relative flex justify-between z-10">
-            <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold">
-               {data.publishedAt.toLocaleDateString('pt-BR')}{' '}
-            </div>
-            <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold flex gap-4 items-center">
-               <div className="flex items-center gap-1">
-                  <HandThumbsUpFill className="text-terciary-main w-4 h-4" />
-                  <p className="text-neutral-gray font-regular">{data.likes}</p>
-               </div>
-               <div className="flex items-center gap-1">
-                  <Eye className="text-terciary-main w-4 h-4" />
-                  <p className="text-neutral-gray font-regular">{data.views}</p>
-               </div>
-            </div>
-         </div>
-         <Image fill className="absolute inset-0 object-cover w-full rounded-md" src={data.image} alt="placeholder" />
-         <div className="absolute flex flex-col z-10 bottom-4 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8 gap-2 sm:gap-4">
-            <div>
-               <div className="bg-white px-2 sm:px-3 py-1 text-secundary_blue-main rounded-t-md w-fit text-xs sm:text-sm font-semibold">
-                  • {getArticleTypeLabel(data.documentType.toLowerCase())}
-               </div>
-               <Link href="/home/search/[slug]" as={`/home/search/${slug(data.id)}`}>
-                  <div className="bg-white px-2 sm:px-3 py-1 text-secundary_blue-main rounded-b-md rounded-tr-md font-semibold max-w-[24ch] text-lg sm:text-3xl hover:underline">
-                     {data.title}
-                  </div>
-               </Link>
-            </div>
-            <div className="bg-white w-fit px-2 sm:px-3 py-1 rounded-sm text-secundary_blue-main text-xs sm:text-base font-semibold">
-               by {formatAuthors(data.authors)}
-            </div>
-         </div>
-      </div>
-   )
-}
-
-const CardSmall: React.FC<TopPapersProps> = (data: TopPapersProps) => {
-   return (
-      <div className="p-4 sm:p-6 rounded-md min-h-[300px] h-full relative">
-         <div className="relative flex justify-between z-10">
-            <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold">
-               {data.publishedAt.toLocaleDateString('pt-Br')}
-            </div>
-            <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold flex gap-4 items-center">
-               <div className="flex items-center gap-1">
-                  <HandThumbsUpFill className="text-terciary-main w-4 h-4" />
-                  <p className="text-neutral-gray font-regular">{data.likes}</p>
-               </div>
-               <div className="flex items-center gap-1">
-                  <Eye className="text-terciary-main w-4 h-4" />
-                  <p className="text-neutral-gray font-regular">{data.views}</p>
-               </div>
-            </div>
-         </div>
-         <Image fill className="absolute inset-0 object-cover w-full rounded-md" src={data.image} alt="placeholder" />
-         <div className="absolute flex flex-col z-10 bottom-4 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8 gap-2 sm:gap-4">
-            <div>
-               <div className="bg-white px-2 sm:px-3 py-1 text-secundary_blue-main rounded-t-md w-fit text-sm font-semibold">
-                  {getArticleTypeLabel(data.documentType.toLowerCase())}
-               </div>
-               <Link href="/home/search/[slug]" as={`/home/search/${slug(data.id)}`}>
-                  <div className="bg-white px-2 sm:px-3 py-1 text-secundary_blue-main rounded-b-md rounded-tr-md font-semibold w-fit text-base sm:text-lg hover:underline">
-                     {data.title}
-                  </div>
-               </Link>
-            </div>
-            <div className="bg-white w-fit px-2 sm:px-3 py-1 rounded-sm text-secundary_blue-main text-xs sm:text-base font-semibold">
-               by {formatAuthors(data.authors)}
-            </div>
-         </div>
-      </div>
-   )
-}
-
-import { EmblaEventType, EmblaOptionsType } from 'embla-carousel'
-import AutoScroll from 'embla-carousel-auto-scroll'
-import useEmblaCarousel from 'embla-carousel-react'
-import { motion } from 'framer-motion'
-import { uniqueId } from 'lodash'
-
-interface AutoScrollPlugin {
-   play: () => void
-   stop: () => void
-   isPlaying: () => boolean
-}
-
-const Journals: React.FC = () => {
-   const { windowDimension } = useDimension()
-   const [hovered_curator_id, setHoveredCuratorId] = useState<string | null>(null)
-   const [isPlaying, setIsPlaying] = useState(false)
-
-   const OPTIONS: EmblaOptionsType = {
-      loop: true,
-      containScroll: 'trimSnaps'
-   }
-
-   const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [
-      AutoScroll({
-         playOnInit: true,
-         speed: 1.5,
-         stopOnMouseEnter: true,
-         startDelay: 200
-      })
-   ])
-
-   useEffect(() => {
-      if (windowDimension == null) return
-
-      if (windowDimension < 1024 && hovered_curator_id == null) {
-         setHoveredCuratorId(curators[0].id)
-      }
-
-      if (windowDimension > 1024 && hovered_curator_id !== null) {
-         setHoveredCuratorId(null)
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [windowDimension])
-
-   useEffect(() => {
-      if (!emblaApi) return
-
-      const autoScroll = emblaApi?.plugins()?.autoScroll as unknown as AutoScrollPlugin
-
-      if (!autoScroll) return
-
-      const updateIsPlaying = () => setIsPlaying(autoScroll.isPlaying() as boolean)
-
-      updateIsPlaying()
-
-      emblaApi.on('autoScroll:play' as EmblaEventType, updateIsPlaying)
-      emblaApi.on('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-      emblaApi.on('reInit' as EmblaEventType, updateIsPlaying)
-
-      return () => {
-         emblaApi.off('autoScroll:play' as EmblaEventType, updateIsPlaying)
-         emblaApi.off('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-         emblaApi.off('reInit' as EmblaEventType, updateIsPlaying)
-      }
-   }, [emblaApi])
-
-   useEffect(() => {
-      const autoScroll = emblaApi?.plugins()?.autoScroll
-      if (!autoScroll) return
-
-      if (hovered_curator_id !== null) {
-         ;(autoScroll.stop as () => void)()
-      } else {
-         ;(autoScroll.play as () => void)()
-      }
-   }, [emblaApi, hovered_curator_id])
-
-   return (
-      <React.Fragment>
-         <div className="embla">
-            <div className="embla__viewport" ref={emblaRef}>
-               <div className="embla__container">
-                  {curators.map((curator) => (
-                     <div
-                        key={curator.id}
-                        className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
-                        onClick={() => setHoveredCuratorId(curator.id)}
-                        onMouseEnter={() => setHoveredCuratorId(curator.id)}
-                        onMouseLeave={() => setHoveredCuratorId(null)}
-                     >
-                        <motion.h2
-                           className="z-40 flex h-full items-end justify-start font-normal text-white text-xl"
-                           initial={{ opacity: 0 }}
-                           animate={{ opacity: hovered_curator_id === curator.id ? 1 : 0 }}
-                           transition={{ duration: 0.25 }}
-                        >
-                           {curator.name}
-                        </motion.h2>
-                        <div className="embla__slide__number">
-                           <motion.div
-                              className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] max-w-[284px]"
-                              initial={{ height: 0 }}
-                              animate={{ height: hovered_curator_id === curator.id ? '50%' : 0 }}
-                              transition={{ duration: 0.25 }}
-                           />
-                           <Image
-                              quality={50}
-                              width={400}
-                              height={400}
-                              alt={curator.name}
-                              src={curator.image.src}
-                              className="absolute left-0 top-0 z-0 object-cover object-center w-[284px] max-h-[424px] h-full rounded-3xl min-w-[284px]"
-                           />
-                        </div>
-                     </div>
-                  ))}
-               </div>
-            </div>
-         </div>
-      </React.Fragment>
-   )
-}
-
-import useDimension from '@/hooks/useWindowDimension'
-import DeScierJournal from 'public/images/journals/descier-journal.png'
-import LongBioJournal from 'public/images/journals/longbio.png'
-
-const curators = [
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   }
-]
