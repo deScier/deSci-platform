@@ -119,7 +119,16 @@ input::-webkit-credentials-auto-fill-button {
 }
 
 .embla__slide {
-   flex: 0 0 284px;
-   margin-left: 16px;
-   margin-right: 16px;
+   flex: 0 0 254px;
+   margin-left: 8px;
+   margin-right: 8px;
+}
+
+@media (min-width: 1024px) {
+   .embla__slide {
+      flex: 0 0 284px;
+      width: 100%;
+      margin-left: 16px;
+      margin-right: 16px;
+   }
 }

@@ -145,7 +145,7 @@ export function HomeComponent() {
             </Dialog.Content>
          </Dialog.Root>
          <IllustrationHero className="hidden lg:block lg:w-[45%] xl:w-1/2 absolute right-0 md:top-48 lg:top-50 xl:top-40 2xl:top-60 h-full lg:max-w-[600px] xl:max-w-[708px] max-h-[554px]" />
-         <ShapeHero className="hidden lg:block lg:w-3/4 xl:w-full absolute right-0 top-0 lg:-right-20 xl:-right-0 z-[-1] md:max-w-[600px] md:max-h-[700px] lg:max-w-[700px] lg:max-h-[800px] 2xl:max-w-[742px] 2xl:max-h-[872px]" />
+         <ShapeHero className="hidden lg:block lg:w-3/4 xl:w-full absolute right-0 top-0 lg:-right-20 xl:-right-0 z-[-1] md:max-w-[600px] md:max-h-[700px] lg:max-w-[700px] lg:max-h-[800px] 2xl:max-w-[700px] 2xl:max-h-[872px]" />
          <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
             <div className="h-auto lg:pt-24 lg:h-[calc(100vh-14rem)]">
                <div className="grid gap-4 md:gap-6 content-start">
@@ -207,8 +207,8 @@ export function HomeComponent() {
                <IllustrationHero className="w-[90%] sm:w-3/4 h-auto mt-8 sm:mt-12 max-w-[372px] md:max-w-[454px] lg:hidden" />
                <ShapeMobile className="absolute z-[-1] w-[250vw] sm:w-[200vw] md:w-[164vw] lg:hidden" />
             </div>
-            <div className="space-y-6 overflow-hidden -px-4 sm:-px-6 lg:-px-0">
-               <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Last Journals</h3>
+            <div className="space-y-6 overflow-hidden px-4 lg:px-0">
+               <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
                <Journals />
             </div>
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
@@ -467,9 +467,7 @@ const Journals: React.FC = () => {
 
       if (!autoScroll) return
 
-      const updateIsPlaying = () => {
-         setIsPlaying(autoScroll.isPlaying() as boolean)
-      }
+      const updateIsPlaying = () => setIsPlaying(autoScroll.isPlaying() as boolean)
 
       updateIsPlaying()
 
@@ -503,7 +501,7 @@ const Journals: React.FC = () => {
                   {curators.map((curator) => (
                      <div
                         key={curator.id}
-                        className="embla__slide !relative flex h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
+                        className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
                         onClick={() => setHoveredCuratorId(curator.id)}
                         onMouseEnter={() => setHoveredCuratorId(curator.id)}
                         onMouseLeave={() => setHoveredCuratorId(null)}
