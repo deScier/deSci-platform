@@ -1,11 +1,14 @@
-import ProgressBar from '@/lib/nprogress'
-import { TooltipProvider } from '@/lib/tooltip'
 import '@styles/globals.css'
 import '@styles/utils.css'
+import 'keen-slider/keen-slider.min.css'
+import 'react-toastify/dist/ReactToastify.css'
+
+import { TooltipProvider } from '@/lib/tooltip'
 import type { Metadata } from 'next'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { AuthProvider } from './auth-provider'
+
+import ProgressBar from '@/lib/nprogress'
 
 export const metadata: Metadata = {
    title: 'deSci Publications - Decentralized Science',
@@ -15,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
    return (
-      <html lang="en">
+      <html lang="en" className="antialiased">
          <head>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
