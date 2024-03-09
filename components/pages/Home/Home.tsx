@@ -43,7 +43,7 @@ export function HomeComponent() {
 
    const [searchTerm, setSearchTerm] = React.useState('')
    const [searchAuthor, setSearchAuthor] = React.useState('')
-   const [searchType, setSearchType] = React.useState('')
+   const [searchType, setSearchType] = React.useState('paper')
 
    const [inviteAuthorName, setInviteAuthorName] = React.useState('')
 
@@ -180,6 +180,7 @@ export function HomeComponent() {
                      />
                      <Select value={searchType} onValueChange={(value) => setSearchType(value)}>
                         <SelectTrigger
+                           defaultValue={searchType}
                            className="rounded-full py-2 md:py-3 px-3 md:px-4 border-neutral-stroke_light bg-transparent shadow-none border focus:border-neutral-stroke_light text-xs md:text-sm w-full h-[47px] min-w-[154px]"
                            classNameSelectIcon="fill-neutral-light_gray w-4 h-4"
                         >
