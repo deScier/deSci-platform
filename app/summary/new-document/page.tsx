@@ -650,7 +650,7 @@ export default function SubmitNewPaperPage() {
                         Add authors for this paper
                         <PlusCircle className="w-4 fill-primary-main" />
                      </Button.Button>
-                     <p className="text-sm">Drag the authors to reorder the list.</p>
+                     <p className="text-sm">Drag to reorder.</p>
                      <div className="grid gap-2">
                         <div className="hidden md:grid grid-cols-3">
                            {authors_headers.map((header, index) => (

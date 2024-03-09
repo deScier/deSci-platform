@@ -278,7 +278,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <div className="grid gap-6">
                   <div className="grid gap-2">
                      <h3 className="text-xl text-terciary-main font-semibold lg:text-lg 2xl:text-xl">Authors</h3>
-                     <p className="text-sm">Drag the Authors to reorder the list.</p>
+                     <p className="text-sm">Drag to reorder.</p>
                   </div>
                   <div className="grid gap-2">
                      <div className="hidden md:grid md:grid-cols-3">

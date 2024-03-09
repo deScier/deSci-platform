@@ -169,7 +169,7 @@ export function HomeComponent() {
                   <div className="py-3 px-4 max-w-full lg:max-w-[50vw]  xl:max-w-[600px] 2xl:max-w-full bg-white grid sm:grid-flow-col sm:items-center gap-3 lg:gap-4 rounded-xl lg:rounded-full shadow-search lg:w-fit h-fit ">
                      <Input.Input
                         className="rounded-full py-2 md:py-3 px-3 md:px-4 border-neutral-stroke_light bg-transparent shadow-none border focus:outline-none focus:border-neutral-stroke_light text-xs md:text-sm w-full"
-                        placeholder={`Find ${searchType === 'author' ? 'author' : 'paper'} by term`}
+                        placeholder={`Find ${searchType === 'author' ? 'author' : searchType === 'journal' ? 'journal' : 'paper'} by term`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         icon={

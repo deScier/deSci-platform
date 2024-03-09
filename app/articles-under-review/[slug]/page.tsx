@@ -1071,7 +1071,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                      <PlusCircle className="w-4 fill-primary-main" />
                   </Button.Button>
                   <div className="grid gap-6">
-                     <p className="text-sm">Drag the authors to reorder the list.</p>
+                     <p className="text-sm">Drag to reorder.</p>
                      <div className="grid gap-2">
                         <div className="hidden md:grid grid-cols-3">
                            {authors_headers.map((header, index) => (
