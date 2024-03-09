@@ -200,7 +200,6 @@ export function HomeComponent() {
                            <SelectItem value="paper">Paper</SelectItem>
                         </SelectContent>
                      </Select>
-
                      <Button.Button
                         variant="outline"
                         className="rounded-full py-2 md:py-3 px-5 md:px-6 text-xs md:text-sm w-full justify-center"
