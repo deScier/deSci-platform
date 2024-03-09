@@ -11,13 +11,14 @@ import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerSta
 import { OurJournals } from '@/components/modules/Home/Index/OurJournals/OurJournals'
 import { CardBig } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardBig/CardBig'
 import { CardSmall } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardSmall/CardSmall'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/fetchPublic.service'
 import { ConfirmProfileRequestProps, confirmProfileService } from '@/services/user/confirmProfile.service'
 import { capitalizeWord } from '@/utils/format_texts'
 import '@styles/home.css'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { CaretRightFill, Person, Search } from 'react-bootstrap-icons'
+import { CaretRightFill, Search } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
@@ -42,6 +43,7 @@ export function HomeComponent() {
 
    const [searchTerm, setSearchTerm] = React.useState('')
    const [searchAuthor, setSearchAuthor] = React.useState('')
+   const [searchType, setSearchType] = React.useState('')
 
    const [inviteAuthorName, setInviteAuthorName] = React.useState('')
 
@@ -59,7 +61,9 @@ export function HomeComponent() {
          searchQuery += `term=${searchTerm}&author=${searchAuthor}`
       }
 
-      console.log(searchQuery)
+      if (searchType) {
+         searchQuery += `&type=${searchType}`
+      }
 
       router.push(home_routes.home.search + searchQuery)
    }
@@ -174,24 +178,34 @@ export function HomeComponent() {
                            </React.Fragment>
                         }
                      />
-                     <Input.Input
-                        className="rounded-full py-2 md:py-3 px-3 md:px-4 border-neutral-stroke_light bg-transparent shadow-none border focus:outline-none focus:border-neutral-stroke_light text-xs md:text-sm w-full"
-                        placeholder="Search for an author"
-                        value={searchAuthor}
-                        onChange={(e) => setSearchAuthor(e.target.value)}
-                        icon={
-                           <React.Fragment>
-                              <Person className="w-4 md:w-5 h-4 md:h-5 ml-1 text-neutral-light_gray" />
-                           </React.Fragment>
-                        }
-                     />
+                     <Select value={searchType} onValueChange={(value) => setSearchType(value)}>
+                        <SelectTrigger
+                           className="rounded-full py-2 md:py-3 px-3 md:px-4 border-neutral-stroke_light bg-transparent shadow-none border focus:border-neutral-stroke_light text-xs md:text-sm w-full h-[47px] min-w-[154px]"
+                           classNameSelectIcon="fill-neutral-light_gray w-4 h-4"
+                        >
+                           <SelectValue
+                              placeholder={
+                                 <React.Fragment>
+                                    <p className="text-base text-neutral-light_gray">Search type</p>
+                                 </React.Fragment>
+                              }
+                           />
+                        </SelectTrigger>
+                        <SelectContent>
+                           <SelectItem value="author">Author</SelectItem>
+                           <SelectItem value="journal" disabled>
+                              Journal
+                           </SelectItem>
+                           <SelectItem value="paper">Paper</SelectItem>
+                        </SelectContent>
+                     </Select>
+
                      <Button.Button
                         variant="outline"
-                        className="rounded-full py-2 md:py-3 px-5 md:px-6 text-xs md:text-sm w-full"
+                        className="rounded-full py-2 md:py-3 px-5 md:px-6 text-xs md:text-sm w-full justify-center"
                         onClick={handleSearchArticle}
                      >
-                        Search
-                        <Search className="w-4 md:w-5 h-4 md:h-5 ml-1" />
+                        <Search className="w-4 md:w-5 h-4 md:h-5" />
                      </Button.Button>
                   </div>
                </div>
