@@ -19,6 +19,7 @@ export const home_routes = {
       added_as_reviewer: 'as-reviewer/'
    },
    summary_routes: {
-      new_document: '/summary/new-document'
+      new_document: '/summary/new-document',
+      new_journal: '/summary/new-journal'
    }
 }

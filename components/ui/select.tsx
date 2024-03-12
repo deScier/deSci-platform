@@ -14,10 +14,11 @@ const SelectValue = SelectPrimitive.Value
 
 interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
    classNameSelectIcon?: string
+   hasIndicator?: boolean
 }
 
 const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectTriggerProps>(
-   ({ className, children, classNameSelectIcon, ...props }, ref) => (
+   ({ className, children, classNameSelectIcon, hasIndicator = true, ...props }, ref) => (
       <SelectPrimitive.Trigger
          ref={ref}
          className={cn(
@@ -27,9 +28,11 @@ const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.T
          {...props}
       >
          {children}
-         <SelectPrimitive.Icon asChild>
-            <CaretDown className={cn('ml-2 fill-primary-main', classNameSelectIcon)} />
-         </SelectPrimitive.Icon>
+         {hasIndicator && (
+            <SelectPrimitive.Icon asChild>
+               <CaretDown className={cn('ml-2 fill-primary-main', classNameSelectIcon)} />
+            </SelectPrimitive.Icon>
+         )}
       </SelectPrimitive.Trigger>
    )
 )
@@ -88,8 +91,14 @@ const SelectLabel = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Lab
 )
 SelectLabel.displayName = SelectPrimitive.Label.displayName
 
-const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item>, React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>>(
-   ({ className, children, ...props }, ref) => (
+interface SelectItemProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
+   className?: string
+   children?: React.ReactNode
+   hasItemIndicator?: boolean
+}
+
+const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item>, SelectItemProps>(
+   ({ className, children, hasItemIndicator = true, ...props }, ref) => (
       <SelectPrimitive.Item
          ref={ref}
          className={cn(
@@ -98,12 +107,13 @@ const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item
          )}
          {...props}
       >
-         <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-            <SelectPrimitive.ItemIndicator>
-               <Check className="h-4 w-4" />
-            </SelectPrimitive.ItemIndicator>
-         </span>
-
+         {hasItemIndicator && (
+            <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+               <SelectPrimitive.ItemIndicator>
+                  <Check className="h-4 w-4" />
+               </SelectPrimitive.ItemIndicator>
+            </span>
+         )}
          <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       </SelectPrimitive.Item>
    )
