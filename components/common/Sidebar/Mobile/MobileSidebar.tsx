@@ -3,14 +3,14 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { items } from '@/mock/sidebar_items'
 import { home_routes } from '@/routes/home'
-import * as Button from '@components/common/Button/Button'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import LogoDeScier from 'public/svgs/common/logo/deScier - Logo copy.svg'
 import React from 'react'
-import { PlusCircle, X } from 'react-bootstrap-icons'
+import { X } from 'react-bootstrap-icons'
 import Item from '../Item/Item'
 import Logout from '../Logout/Logout'
+import { SelectCreation } from '../SelectCreation/SelectCreation'
 import { SidesProps } from '../Typing'
 
 /**
@@ -45,12 +45,7 @@ export const MobileSidebarComponent: React.FC<SidesProps> = ({ onClose }: SidesP
                         onClick={() => onClose()}
                      />
                   </div>
-                  <Button.Link href={home_routes.summary_routes.new_document}>
-                     <Button.Button variant="primary" className="mx-auto my-0 p-3 text-sm" onClick={() => onClose()}>
-                        Submit new article
-                        <PlusCircle size={20} />
-                     </Button.Button>
-                  </Button.Link>
+                  <SelectCreation />
                   <div>
                      {items.map((item) =>
                         session?.user?.userInfo.role !== 'ADMIN' && item.text === 'Admin' ? null : (
