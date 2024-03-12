@@ -2,7 +2,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { home_routes } from '@/routes/home'
 import { uniqueId } from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
-import { Clipboard, PlusCircle } from 'react-bootstrap-icons'
+import { Clipboard, FileText, PlusCircle } from 'react-bootstrap-icons'
 
 import React from 'react'
 
@@ -14,13 +14,13 @@ const SelectCreation: React.FC = () => {
       {
          id: uniqueId(),
          label: 'New Article',
-         icon: <Clipboard size={16} />,
+         icon: <Clipboard size={16} className="group-hover:text-primary-hover" />,
          route: home_routes.summary_routes.new_document
       },
       {
          id: uniqueId(),
          label: 'New Journal',
-         icon: <Clipboard size={16} />,
+         icon: <FileText size={17} className="group-hover:text-primary-hover" />,
          route: home_routes.summary_routes.new_journal
       }
    ]
@@ -72,7 +72,7 @@ const SelectCreation: React.FC = () => {
                         onMouseEnter={() => router.prefetch(item.route as string)}
                      >
                         <div className="flex items-center gap-2">
-                           <Clipboard size={18} className="group-hover:text-primary-hover" />
+                           {item.icon}
                            <span className="text-base mt-[2px] group-hover:text-primary-hover">{item.label}</span>
                         </div>
                      </SelectItem>
