@@ -8,22 +8,28 @@ import { cn } from '@/lib/utils'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { input } from '../Input/Input'
 
+type Option = {
+   id: string | number
+   value: string
+   label: React.ReactNode | string
+}
+
 type ComboboxProps = {
    label: string
    placeholder: string
    not_found_message: string
    search_placeholder: string
-   options: Array<{ id: string | number; value: string; label: string }>
-   onValueChange: (value: { id: string | number; value: string; label: string }) => void
+   options: Option[]
+   onValueChange: (value: { id: string | number; value: string; label: React.ReactNode }) => void
 }
 
 const Combobox: React.FC<ComboboxProps> = ({ label, placeholder, not_found_message, options, search_placeholder, onValueChange }: ComboboxProps) => {
    const btn_ref = React.useRef<HTMLButtonElement>(null)
 
    const [open, setOpen] = React.useState(false)
-   const [value, setValue] = React.useState<{ id: string | number; value: string; label: string } | null>(null)
+   const [value, setValue] = React.useState<{ id: string | number; value: string; label: React.ReactNode | string } | null>(null)
 
-   const handleSelect = (currentValue: { id: string | number; value: string; label: string }) => {
+   const handleSelect = (currentValue: Option) => {
       setValue(currentValue === value ? null : currentValue)
       setOpen(false)
       onValueChange(currentValue)
