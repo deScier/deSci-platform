@@ -1,151 +1,32 @@
 'use client'
 
 import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
-import * as z from 'zod'
 
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
-import { FileSchema, KeyWordSchema } from '@/schemas/create_document'
 import { ErrorMessage } from '@/utils/error_message'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqueId } from 'lodash'
+import { useRouter } from 'next/navigation'
 import { Clipboard, PlusCircle, X } from 'react-bootstrap-icons'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
-import { useRouter } from 'next/navigation'
 import NProgress from 'nprogress'
 import React from 'react'
-
-const MembersSchema = z.object({
-   id: z.string().min(3, 'Id must be at least 3 characters.'),
-   name: z.string({ required_error: 'Name is required' }),
-   email: z.string({ required_error: 'Email is required' }),
-   role: z.enum(['EDITOR_IN_CHIEF', 'MEMBER', 'EDITORIAL_BOARD_MEMBER'], { required_error: 'Role is required' })
-})
-
-type MembersDTO = z.infer<typeof MembersSchema>
-
-const CreateJournalSchema = z.object({
-   name: z.string({ required_error: 'Name is required' }),
-   field: z.string({ required_error: 'Field is required' }),
-   keywords: z.array(KeyWordSchema).min(1, 'At least one keyword is required.'),
-   rationale: z.string({ required_error: 'Rationale is required' }),
-   originatesFrom: z.string({ required_error: 'Originates from is required' }),
-   cover: FileSchema,
-   members: z.array(MembersSchema)
-})
-
-type CreateJournalDTO = z.infer<typeof CreateJournalSchema>
 
 export default function NewJournalPage() {
    const router = useRouter()
 
    const [loading, setLoading] = React.useState(false)
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
-   const [dialog, setDialog] = React.useState({
-      members: false,
-      warning_on_change_page: false
-   })
-
-   const {
-      register,
-      handleSubmit,
-      watch,
-      formState: { errors, isDirty },
-      setValue,
-      trigger,
-      getValues,
-      control,
-      setError,
-      clearErrors,
-      unregister,
-      reset,
-      resetField
-   } = useForm<CreateJournalDTO>({
-      resolver: zodResolver(CreateJournalSchema),
-      defaultValues: {
-         name: '',
-         field: '',
-         rationale: '',
-         originatesFrom: '',
-         cover: {
-            lastModified: 0,
-            lastModifiedDate: new Date(),
-            name: '',
-            path: '',
-            preview: '',
-            size: 0,
-            type: ''
-         },
-         keywords: [],
-         members: [
-            {
-               id: 'mem1',
-               name: 'John Doe',
-               email: 'john.doe@example.com',
-               role: 'EDITOR_IN_CHIEF'
-            },
-            {
-               id: 'mem2',
-               name: 'Jane Smith',
-               email: 'jane.smith@example.com',
-               role: 'MEMBER'
-            },
-            {
-               id: 'mem3',
-               name: 'Alice Johnson',
-               email: 'alice.johnson@example.com',
-               role: 'EDITORIAL_BOARD_MEMBER'
-            },
-            {
-               id: 'mem4',
-               name: 'Bob Brown',
-               email: 'bob.brown@example.com',
-               role: 'MEMBER'
-            },
-            {
-               id: 'mem5',
-               name: 'Charlie Davis',
-               email: 'charlie.davis@example.com',
-               role: 'EDITORIAL_BOARD_MEMBER'
-            },
-            {
-               id: 'mem6',
-               name: 'Diana Evans',
-               email: 'diana.evans@example.com',
-               role: 'MEMBER'
-            },
-            {
-               id: 'mem7',
-               name: 'Eva Franklin',
-               email: 'eva.franklin@example.com',
-               role: 'EDITORIAL_BOARD_MEMBER'
-            },
-            {
-               id: 'mem8',
-               name: 'Frank Gomez',
-               email: 'frank.gomez@example.com',
-               role: 'MEMBER'
-            }
-         ]
-      }
-   })
-
-   const {
-      append: append_member,
-      fields: fields_member,
-      remove: remove_member,
-      prepend: prepend_member
-   } = useFieldArray({
-      control,
-      name: 'members'
-   })
-
+   const [members_temp, setMembersTemp] = React.useState<MembersDTO | undefined>()
+   const [dialog, setDialog] = React.useState({ members: false, warning_on_change_page: false, add_new_member: false, edit_member: false })
    const [members, setMembers] = React.useState<MembersDTO[]>([
       {
          id: 'mem1',
@@ -197,9 +78,53 @@ export default function NewJournalPage() {
       }
    ])
 
+   const {
+      register,
+      handleSubmit,
+      watch,
+      formState: { errors, isDirty, isValid },
+      setValue,
+      trigger,
+      control,
+      setError,
+      clearErrors
+   } = useForm<CreateJournalDTO>({
+      resolver: zodResolver(CreateJournalSchema),
+      defaultValues: {
+         name: '',
+         field: '',
+         rationale: '',
+         originatesFrom: '',
+         cover: {
+            lastModified: 0,
+            lastModifiedDate: new Date(),
+            name: '',
+            path: '',
+            preview: '',
+            size: 0,
+            type: ''
+         },
+         keywords: [],
+         members: members
+      }
+   })
+
+   console.log('watch', watch())
+   console.log('errors', errors)
+
+   const {
+      append: append_member,
+      fields: fields_member,
+      remove: remove_member,
+      prepend: prepend_member
+   } = useFieldArray({
+      control,
+      name: 'members'
+   })
+
    const onReorder = (newMembers: MembersDTO[]) => {
-      setValue('members', newMembers)
       setMembers(newMembers)
+      setValue('members', newMembers)
    }
 
    const {
@@ -212,12 +137,8 @@ export default function NewJournalPage() {
    })
 
    const onSubmit: SubmitHandler<CreateJournalDTO> = async (data) => {
-      console.log(data)
+      console.log('onSubmit', data)
    }
-
-   const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters()
-   const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters()
-   const { characterLimit: rationaleLimit, length: abstractLenght } = useLimitCharacters()
 
    const [targetUrl, setTargetUrl] = React.useState('')
 
@@ -278,8 +199,39 @@ export default function NewJournalPage() {
       setDialog({ ...dialog, warning_on_change_page: false })
    }
 
+   const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters()
+   const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters()
+   const { characterLimit: rationaleLimit, length: abstractLenght } = useLimitCharacters()
+
    return (
       <React.Fragment>
+         <Dialog.Root open={dialog.add_new_member || dialog.edit_member || dialog.members || dialog.warning_on_change_page}>
+            <Dialog.Overlay />
+            <Dialog.Content className={cn('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
+               {dialog.add_new_member && (
+                  <AddNewMember
+                     onClose={() => setDialog({ ...dialog, add_new_member: false })}
+                     onAddMember={(member) => {
+                        append_member(member)
+                        setMembers((prev) => [...prev, member])
+                        setDialog({ ...dialog, add_new_member: false })
+                     }}
+                     onEditMember={members_temp}
+                     onUpdateMember={(updatedMember) => {
+                        setMembers((prevItems) => {
+                           return prevItems.map((item) => (item.id === members_temp?.id ? { ...item, ...updatedMember } : item))
+                        })
+                        setDialog({ ...dialog, add_new_member: false })
+                     }}
+                  />
+               )}
+               {dialog.warning_on_change_page && (
+                  <React.Fragment>
+                     <WarningOnChangePage handleClose={handleClose} handleLeave={handleLeave} />
+                  </React.Fragment>
+               )}
+            </Dialog.Content>
+         </Dialog.Root>
          <Title.Root>
             <Title.Title>Submit new journal</Title.Title>
          </Title.Root>
@@ -289,7 +241,7 @@ export default function NewJournalPage() {
                   <div className="grid md:grid-cols-2 items-start gap-6">
                      <Input.Root>
                         <Input.Label className="flex gap-2 items-center">
-                           <span className="text-sm font-semibold">Title</span>
+                           <span className="text-sm font-semibold">Name</span>
                            <span className="text-sm text-neutral-light_gray">{titleLenght}/100 characters</span>
                         </Input.Label>
                         <Input.Input
@@ -381,7 +333,16 @@ export default function NewJournalPage() {
                         <Input.Label className="flex gap-2 items-center">
                            <span className="text-sm  font-semibold">The Journal originates from</span>
                         </Input.Label>
-                        <Input.Select options={[]} placeholder="Select the originates" />
+                        <Input.Select
+                           options={journal_originate_from}
+                           placeholder="Select the originates"
+                           onValueChange={(value) => {
+                              const value_access = value as string
+                              setValue('originatesFrom', value_access)
+                              trigger('originatesFrom')
+                           }}
+                           value={watch('originatesFrom')}
+                        />
                         <Input.Error>{errors.field?.message}</Input.Error>
                      </Input.Root>
                   </div>
@@ -441,9 +402,7 @@ export default function NewJournalPage() {
                         type="button"
                         variant="outline"
                         className="px-4 py-3 w-full text-sm"
-                        onClick={() => {
-                           setDialog({ ...dialog, members: true })
-                        }}
+                        onClick={() => setDialog({ ...dialog, add_new_member: true })}
                      >
                         Add Editorial Board Members, if already available
                         <PlusCircle className="w-4 fill-primary-main" />
@@ -464,17 +423,20 @@ export default function NewJournalPage() {
                               onReorder(newMember)
                            }}
                            onDelete={(member) => {
-                              console.log('member', member)
+                              const newMembers = members.filter((item) => item.id !== member.id)
+                              setMembers(newMembers)
+                              setValue('members', newMembers)
                            }}
                            onEdit={(member) => {
-                              console.log('member', member)
+                              setMembersTemp(member)
+                              setDialog({ ...dialog, add_new_member: true })
                            }}
                         />
                      </div>
                   </div>
                </div>
             </Box>
-            <Button.Button type="submit" variant="primary" loading={loading}>
+            <Button.Button type="submit" variant="primary" loading={loading} disabled={!isValid || loading}>
                Submit for review
                <Clipboard className="w-5" />
             </Button.Button>
@@ -483,10 +445,16 @@ export default function NewJournalPage() {
    )
 }
 
+import { Option } from '@/components/common/Input/Typing'
+import { cn } from '@/lib/utils'
+import { slugfy } from '@/utils/slugfy'
 import { Reorder, useDragControls } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { Pencil, Trash } from 'react-bootstrap-icons'
 
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
+import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
+import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
 import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
 
 interface MembersListDragabbleProps {
@@ -499,17 +467,17 @@ interface MembersListDragabbleProps {
 
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
    const { data: session } = useSession()
-   const dragControls = useDragControls()
+   const controls = useDragControls()
    return (
       <React.Fragment>
          <Reorder.Group axis="y" values={members} onReorder={(newOrder) => onReorder(newOrder)}>
             <div className="grid gap-2">
                {members.map((item, index) => (
-                  <Reorder.Item dragControls={dragControls} key={item.id} dragListener={false} value={item} id={item.id} className="select-none">
+                  <Reorder.Item key={item.id} value={item} id={item.id} className="select-none">
                      <div className="grid md:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
                         <div className="flex items-center gap-4">
-                           <div className="flex gap-0 items-center">
-                              {is_admin === true ? null : <CircleIcon className="w-8" onPointerDown={(event) => dragControls.start(event)} />}
+                           <div className="flex gap-0 items-center reorder-handle" onPointerDown={(e) => controls.start(e)}>
+                              {is_admin === true ? null : <CircleIcon className="w-8" />}
                               <p className="text-sm text-blue-gray">{index + 1}º</p>
                            </div>
                            <div>
@@ -598,4 +566,15 @@ const editors_in_chief = [
       id: 1,
       label: 'E-mail'
    }
+]
+
+const journal_originate_from: Option[] = [
+   { id: uniqueId(), label: 'New Area of Knowledge', value: slugfy('New Area of Knowledge') },
+   { id: uniqueId(), label: 'Community', value: slugfy('Community') },
+   { id: uniqueId(), label: 'University', value: slugfy('University') },
+   { id: uniqueId(), label: 'Faculty', value: slugfy('Faculty') },
+   { id: uniqueId(), label: 'Conference', value: slugfy('Conference') },
+   { id: uniqueId(), label: 'Event', value: slugfy('Event') },
+   { id: uniqueId(), label: 'Association', value: slugfy('Association') },
+   { id: uniqueId(), label: 'Other OK', value: slugfy('Other') }
 ]

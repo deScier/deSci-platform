@@ -11,7 +11,7 @@ import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFla
 import { InviteLink } from '@/components/common/InviteLink/InviteLink'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview'
-import { NewAuthor } from '@/components/modules/Summary/NewArticle/Authors/NewAuthor'
+import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor'
 import EditComment from '@/components/modules/deScier/Article/EditComment'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -593,7 +593,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.edit_author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onEditAuthor={author_to_edit}
                      onUpdateAuthor={(updatedAuthor) => {
                         setAuthors((prevItems) => {
@@ -617,7 +617,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onAddAuthor={(value) => {
                         const newAuthor = {
                            id: value.id,
@@ -635,7 +635,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.edit_author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onEditAuthor={author_to_edit}
                      onUpdateAuthor={(updatedAuthor) => {
                         setAuthors((prevItems) => {

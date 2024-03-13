@@ -9,7 +9,7 @@ import * as Tooltip from '@components/common/Tooltip/Tooltip'
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
-import { NewAuthor } from '@/components/modules/Summary/NewArticle/Authors/NewAuthor'
+import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { access_type_options } from '@/mock/access_type'
 import { article_types_submit_article } from '@/mock/articles_types'
@@ -31,6 +31,7 @@ import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
 import Box from '@/components/common/Box/Box'
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import dynamic from 'next/dynamic'
 import NProgress from 'nprogress'
 import React, { useEffect, useState } from 'react'
@@ -353,7 +354,7 @@ export default function SubmitNewPaperPage() {
             <Dialog.Overlay />
             <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
                {dialog.author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onAddAuthor={(value) => {
                         const newAuthor: AuthorProps = {
                            id: value.id,
@@ -369,7 +370,7 @@ export default function SubmitNewPaperPage() {
                   />
                )}
                {dialog.edit_author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onEditAuthor={author_to_edit}
                      onUpdateAuthor={(updatedAuthor) => {
                         setAuthors((prevItems) => {
@@ -437,19 +438,7 @@ export default function SubmitNewPaperPage() {
                )}
                {dialog.warning_on_change_page && (
                   <React.Fragment>
-                     <Dialog.Title
-                        title="Submission not completed!"
-                        onClose={() => {
-                           setDialog({ ...dialog, share_split: false, warning_on_change_page: false })
-                        }}
-                     />
-                     <p className="text-base">Your document submission is not complete yet. If you leave the page, all your progress will be lost!</p>
-                     <Button.Button variant="primary" onClick={handleClose}>
-                        Cancel
-                     </Button.Button>
-                     <Button.Button variant="outline" onClick={handleLeave}>
-                        Leave without finishing
-                     </Button.Button>
+                     <WarningOnChangePage handleClose={handleClose} handleLeave={handleLeave} />
                   </React.Fragment>
                )}
             </Dialog.Content>
