@@ -9,7 +9,6 @@ import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
-import useDimension from '@/hooks/useWindowDimension'
 import { header_editor_reviewer } from '@/mock/article_under_review'
 import { Author, authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
@@ -134,8 +133,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [article?.document.abstractChart])
-
-   const { lg } = useDimension()
 
    return (
       <React.Fragment>

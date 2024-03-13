@@ -851,7 +851,7 @@ export default function SubmitNewPaperPage() {
                )}
             </Box>
             <Button.Button type="submit" variant="primary" loading={loading}>
-               Submit article for review
+               Submit for review
                <Clipboard className="w-5" />
             </Button.Button>
          </form>
