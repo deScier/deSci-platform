@@ -687,8 +687,8 @@ export default function SubmitNewPaperPage() {
                <div className="grid gap-2">
                   <h3 className="text-lg md:text-xl text-status-green font-semibold">Access type</h3>
                   <p className="text-sm">
-                     Decide if the project is <span className="text-[#53AA22] font-semibold">Open Access</span> or{' '}
-                     <span className="text-[#AE66E6] font-semibold">Paid Access</span>
+                     Decide if <span className="text-[#53AA22] font-semibold">Open Access</span> or{' '}
+                     <span className="text-[#AE66E6] font-semibold">Paid Access</span>.
                   </p>
                </div>
                <div className="grid md:grid-cols-2 items-start gap-6">
