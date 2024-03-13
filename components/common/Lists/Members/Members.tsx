@@ -9,6 +9,12 @@ import React from 'react'
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
    const { data: session } = useSession()
    const controls = useDragControls()
+
+   const role_mapping = {
+      EDITOR_IN_CHIEF: 'Editor-in-Chief',
+      MEMBER: 'Member',
+      EDITORIAL_BOARD_MEMBER: 'Editorial Board Member'
+   }
    return (
       <React.Fragment>
          <Reorder.Group axis="y" values={members} onReorder={(newOrder) => onReorder(newOrder)}>
@@ -21,12 +27,12 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                               {is_admin === true ? null : <CircleIcon className="w-8" />}
                               <p className="text-sm text-blue-gray">{index + 1}º</p>
                            </div>
-                           <div>
+                           <div className="space-y-1">
                               <p className="text-sm text-secundary_blue-main font-semibold md:font-regular">{item.name}</p>
                               <div className="block md:hidden">
-                                 <p className="text-sm text-secundary_blue-main">{item.role}</p>
+                                 <p className="text-sm text-secundary_blue-main">{role_mapping[item.role]}</p>
                               </div>
-                              <div className="block md:hidden">
+                              <div className="block md:hidden space-y-2">
                                  <p className="text-sm text-secundary_blue-main">{item.email}</p>
                                  {item.id !== session?.user?.userInfo.id && (
                                     <React.Fragment>
