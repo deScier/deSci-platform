@@ -43,13 +43,12 @@ export const BannerStartPublishing: React.FC<BannerStartPublishingModalProps> = 
                      </Button.Button>
                      <Button.Button
                         variant="outline"
-                        disabled
                         className="py-3 px-10 lg:w-fit w-full text-sm lg:text-base lg:min-w-[300px]"
                         onClick={() => {
                            if (status === 'unauthenticated') {
                               onPublishNow()
                            } else {
-                              router.push(home_routes.summary_routes.new_document)
+                              router.push(home_routes.summary_routes.new_journal)
                            }
                         }}
                      >
