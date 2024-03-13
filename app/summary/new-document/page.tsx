@@ -31,6 +31,7 @@ import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
 import Box from '@/components/common/Box/Box'
+import { Combobox } from '@/components/common/Combobox/Combobox'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import dynamic from 'next/dynamic'
 import NProgress from 'nprogress'
@@ -448,7 +449,7 @@ export default function SubmitNewPaperPage() {
          </Title.Root>
          <form onSubmit={handleSubmit(handleSubmitDocument)} className="grid gap-6 pb-14">
             <Box className="grid gap-8 h-fit px-4 py-6 md:px-8">
-               <div className="grid gap-x-6 gap-y-4">
+               <div className="grid gap-6">
                   <div className="grid md:grid-cols-2 items-start gap-6">
                      <Input.Root>
                         <Input.Label className="flex gap-2 items-center">
@@ -557,6 +558,42 @@ export default function SubmitNewPaperPage() {
                            }}
                         />
                      </Input.Root>
+                  </div>
+                  <div className="grid md:grid-cols-2 items-start gap-6">
+                     <Combobox
+                        label="Select the journal"
+                        not_found_message="No journals found"
+                        placeholder="Select the journal for submission"
+                        search_placeholder="Search for a journal"
+                        onValueChange={(value) => {}}
+                        options={[
+                           {
+                              id: uniqueId(),
+                              value: 'next.js',
+                              label: 'Next.js'
+                           },
+                           {
+                              id: uniqueId(),
+                              value: 'sveltekit',
+                              label: 'SvelteKit'
+                           },
+                           {
+                              id: uniqueId(),
+                              value: 'nuxt.js',
+                              label: 'Nuxt.js'
+                           },
+                           {
+                              id: uniqueId(),
+                              value: 'remix',
+                              label: 'Remix'
+                           },
+                           {
+                              id: uniqueId(),
+                              value: 'astro',
+                              label: 'Astro'
+                           }
+                        ]}
+                     />
                   </div>
                </div>
                <div className="flex flex-col gap-2">

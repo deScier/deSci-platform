@@ -1,11 +1,7 @@
 import useDimension from '@/hooks/useWindowDimension'
-import { cn } from '@/lib/utils'
-import { ComboboxProps, ErrorProps, InputProps, LabelProps, SelectInputProps, TextAreaProps, WrapperInputProps } from '@components/common/Input/Typing'
+import { ErrorProps, InputProps, LabelProps, SelectInputProps, TextAreaProps, WrapperInputProps } from '@components/common/Input/Typing'
 import * as S from '@components/common/Select/Select'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import { Check } from 'lucide-react'
 import React, { LegacyRef, useEffect, useRef, useState } from 'react'
 import { CaretDown, Eye, EyeSlash, Search as SearchIcon } from 'react-bootstrap-icons'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
@@ -310,76 +306,6 @@ const Percentage = React.forwardRef<HTMLInputElement, CurrencyInputProps>(({ ...
    )
 })
 
-/**
- * @dev Combobox component with customizable options
- * @param {ComboboxProps} props - Properties for the combobox component
- * @return JSX Element
- */
-const Combobox: React.FC<ComboboxProps> = ({
-   options,
-   className,
-   className_icon,
-   placeholder,
-   is_input = false,
-   onSelect,
-   onUnselect,
-   ...props
-}: ComboboxProps) => {
-   /** @dev States to controll when is opened and values */
-   const [open, setOpen] = useState(false)
-   const [value, setValue] = useState('')
-
-   /** @dev Constants to define define values until render */
-   const valueOrPlaceholder = value ? options.find((opt) => opt.value === value)?.label : placeholder
-
-   const buttonRef = useRef<HTMLButtonElement>(null)
-
-   return (
-      <Popover open={open} onOpenChange={setOpen}>
-         <PopoverTrigger asChild>
-            <button
-               ref={buttonRef}
-               type="button"
-               className={twMerge(S.select({ type: 'small' }), 'items-center justify-between py-2', `${is_input && input()}`, className)}
-               {...props}
-            >
-               <span className={twMerge('text-gray-main text-sm', `${is_input && 'text-gray-light'}`)}>{valueOrPlaceholder}</span>
-               <CaretDown className="fill-black-primary" width={18} />
-            </button>
-         </PopoverTrigger>
-         <PopoverContent side="bottom" className={'pb-1 w-52'} style={{ width: is_input ? buttonRef.current?.clientWidth : 'auto' }}>
-            <Command>
-               <CommandInput placeholder={`Digite para pesquisar`} />
-               <CommandEmpty>Não há resultados</CommandEmpty>
-               <CommandGroup>
-                  {options.map((opt) => (
-                     <CommandItem
-                        className="cursor-pointer"
-                        key={opt.value}
-                        onSelect={() => {
-                           if (opt.value === value) {
-                              setValue('')
-                              onSelect?.('')
-                              setOpen(false)
-                              onUnselect?.()
-                           } else {
-                              setValue(opt.value as string)
-                              onSelect?.(opt.value as string)
-                              setOpen(false)
-                           }
-                        }}
-                     >
-                        <Check className={cn('mr-2 h-4 w-4', value === opt.value ? 'opacity-100' : 'opacity-0')} />
-                        {opt.label}
-                     </CommandItem>
-                  ))}
-               </CommandGroup>
-            </Command>
-         </PopoverContent>
-      </Popover>
-   )
-}
-
 /** @dev Set display name for each component */
 TextArea.displayName = 'TextArea'
 Password.displayName = 'Password'
@@ -388,4 +314,4 @@ Search.displayName = 'Search'
 Select.displayName = 'Select'
 Percentage.displayName = 'Percentage'
 
-export { Combobox, Error, Input, Label, Password, Percentage, Root, Search, Select, TextArea }
+export { Error, Input, Label, Password, Percentage, Root, Search, Select, TextArea }
