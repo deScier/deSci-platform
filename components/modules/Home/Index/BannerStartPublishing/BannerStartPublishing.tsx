@@ -43,7 +43,7 @@ export const BannerStartPublishing: React.FC<BannerStartPublishingModalProps> = 
                      </Button.Button>
                      <Button.Button
                         variant="outline"
-                        className="py-3 px-10 lg:w-fit w-full text-sm lg:text-base lg:min-w-[300px]"
+                        className="py-3 px-10 lg:w-fit w-full text-sm lg:text-base lg:min-w-[300px] bg-secundary-hover"
                         onClick={() => {
                            if (status === 'unauthenticated') {
                               onPublishNow()
