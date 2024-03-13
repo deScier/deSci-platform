@@ -7,8 +7,15 @@ import * as Title from '@components/common/Title/Page'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
 
 import { StoredFile } from '@/components/common/Dropzone/Typing'
+import { Option } from '@/components/common/Input/Typing'
+import { MembersListDragabble } from '@/components/common/Lists/Members/Members'
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
+import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
+import { cn } from '@/lib/utils'
+import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
 import { ErrorMessage } from '@/utils/error_message'
+import { slugfy } from '@/utils/slugfy'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
@@ -112,15 +119,7 @@ export default function NewJournalPage() {
    console.log('watch', watch())
    console.log('errors', errors)
 
-   const {
-      append: append_member,
-      fields: fields_member,
-      remove: remove_member,
-      prepend: prepend_member
-   } = useFieldArray({
-      control,
-      name: 'members'
-   })
+   const { append: append_member } = useFieldArray({ control, name: 'members' })
 
    const onReorder = (newMembers: MembersDTO[]) => {
       setMembers(newMembers)
@@ -263,7 +262,7 @@ export default function NewJournalPage() {
                      <Input.Root>
                         <Input.Label className="flex gap-2 items-center">
                            <span className="text-sm font-semibold">Field</span>
-                           <span className="text-sm text-neutral-light_gray">{titleLenght}/100 characters</span>
+                           <span className="text-sm text-neutral-light_gray">{fieldLength}/100 characters</span>
                         </Input.Label>
                         <Input.Input
                            placeholder="Area of knowledge"
@@ -445,114 +444,6 @@ export default function NewJournalPage() {
    )
 }
 
-import { Option } from '@/components/common/Input/Typing'
-import { cn } from '@/lib/utils'
-import { slugfy } from '@/utils/slugfy'
-import { Reorder, useDragControls } from 'framer-motion'
-import { useSession } from 'next-auth/react'
-import { Pencil, Trash } from 'react-bootstrap-icons'
-
-import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
-import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
-import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
-import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
-
-interface MembersListDragabbleProps {
-   members: MembersDTO[]
-   is_admin?: boolean
-   onReorder: (newOrder: MembersDTO[]) => void
-   onDelete?: (member: MembersDTO) => void
-   onEdit?: (member: MembersDTO) => void
-}
-
-const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
-   const { data: session } = useSession()
-   const controls = useDragControls()
-   return (
-      <React.Fragment>
-         <Reorder.Group axis="y" values={members} onReorder={(newOrder) => onReorder(newOrder)}>
-            <div className="grid gap-2">
-               {members.map((item, index) => (
-                  <Reorder.Item key={item.id} value={item} id={item.id} className="select-none">
-                     <div className="grid md:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
-                        <div className="flex items-center gap-4">
-                           <div className="flex gap-0 items-center reorder-handle" onPointerDown={(e) => controls.start(e)}>
-                              {is_admin === true ? null : <CircleIcon className="w-8" />}
-                              <p className="text-sm text-blue-gray">{index + 1}º</p>
-                           </div>
-                           <div>
-                              <p className="text-sm text-secundary_blue-main font-semibold md:font-regular">{item.name}</p>
-                              <div className="block md:hidden">
-                                 <p className="text-sm text-secundary_blue-main">{item.role}</p>
-                              </div>
-                              <div className="block md:hidden">
-                                 <p className="text-sm text-secundary_blue-main">{item.email}</p>
-                                 {item.id !== session?.user?.userInfo.id && (
-                                    <React.Fragment>
-                                       <div className="flex items-center gap-2">
-                                          {onDelete && (
-                                             <Trash
-                                                className="fill-status-error w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                                onClick={() =>
-                                                   onDelete &&
-                                                   onDelete({
-                                                      email: item.email,
-                                                      id: item.id,
-                                                      name: item.name,
-                                                      role: item.role
-                                                   })
-                                                }
-                                             />
-                                          )}
-                                          {onEdit && (
-                                             <Pencil
-                                                className="fill-primary-main w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                                onClick={() =>
-                                                   onEdit &&
-                                                   onEdit({
-                                                      email: item.email,
-                                                      id: item.id,
-                                                      name: item.name,
-                                                      role: item.role
-                                                   })
-                                                }
-                                             />
-                                          )}
-                                       </div>
-                                    </React.Fragment>
-                                 )}
-                              </div>
-                           </div>
-                        </div>
-                        <div className="hidden md:block">
-                           <p className="text-sm text-secundary_blue-main truncate">{item.role}</p>
-                        </div>
-                        <div className="hidden md:flex items-center justify-between">
-                           <p className="text-sm text-secundary_blue-main">{item.email}</p>
-                           {item.id !== session?.user?.userInfo.id && (
-                              <React.Fragment>
-                                 <div className="flex items-center gap-2">
-                                    <Trash
-                                       className="fill-status-error w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                       onClick={() => onDelete && onDelete(item)}
-                                    />
-                                    <Pencil
-                                       className="fill-primary-main w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                       onClick={() => onEdit && onEdit(item)}
-                                    />
-                                 </div>
-                              </React.Fragment>
-                           )}
-                        </div>
-                     </div>
-                  </Reorder.Item>
-               ))}
-            </div>
-         </Reorder.Group>
-      </React.Fragment>
-   )
-}
-
 const editors_in_chief = [
    {
       id: 1,
@@ -576,5 +467,5 @@ const journal_originate_from: Option[] = [
    { id: uniqueId(), label: 'Conference', value: slugfy('Conference') },
    { id: uniqueId(), label: 'Event', value: slugfy('Event') },
    { id: uniqueId(), label: 'Association', value: slugfy('Association') },
-   { id: uniqueId(), label: 'Other OK', value: slugfy('Other') }
+   { id: uniqueId(), label: 'Other', value: slugfy('Other') }
 ]
