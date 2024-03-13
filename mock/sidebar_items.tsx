@@ -6,6 +6,7 @@ import AdminIcon from 'public/svgs/common/sidebar/Icons/admin.svg'
 import ArticlesPurchased from 'public/svgs/common/sidebar/Icons/articles-purchased.svg'
 import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
 import AsReviewerIcon from 'public/svgs/common/sidebar/Icons/as-reviewer.svg'
+// import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
 import HomeIcon from 'public/svgs/common/sidebar/Icons/home.svg'
 import MyIPIcon from 'public/svgs/common/sidebar/Icons/my-ip.svg'
 import ProfileIcon from 'public/svgs/common/sidebar/Icons/profile.svg'
@@ -48,6 +49,14 @@ export const items: Item[] = [
       icon_end: null,
       divider: false
    },
+   //    {
+   //       id: uniqueId(),
+   //       text: 'Journal',
+   //       icon: <JournalIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+   //       path: home_routes.as_reviewer,
+   //       icon_end: null,
+   //       divider: false
+   //    },
    {
       id: uniqueId(),
       text: article_key,
