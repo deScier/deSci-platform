@@ -37,56 +37,7 @@ export default function NewJournalPage() {
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
    const [members_temp, setMembersTemp] = React.useState<MembersDTO | undefined>()
    const [dialog, setDialog] = React.useState({ members: false, warning_on_change_page: false, add_new_member: false, edit_member: false })
-   const [members, setMembers] = React.useState<MembersDTO[]>([
-      {
-         id: 'mem1',
-         name: 'John Doe',
-         email: 'john.doe@example.com',
-         role: 'EDITOR_IN_CHIEF'
-      },
-      {
-         id: 'mem2',
-         name: 'Jane Smith',
-         email: 'jane.smith@example.com',
-         role: 'MEMBER'
-      },
-      {
-         id: 'mem3',
-         name: 'Alice Johnson',
-         email: 'alice.johnson@example.com',
-         role: 'EDITORIAL_BOARD_MEMBER'
-      },
-      {
-         id: 'mem4',
-         name: 'Bob Brown',
-         email: 'bob.brown@example.com',
-         role: 'MEMBER'
-      },
-      {
-         id: 'mem5',
-         name: 'Charlie Davis',
-         email: 'charlie.davis@example.com',
-         role: 'EDITORIAL_BOARD_MEMBER'
-      },
-      {
-         id: 'mem6',
-         name: 'Diana Evans',
-         email: 'diana.evans@example.com',
-         role: 'MEMBER'
-      },
-      {
-         id: 'mem7',
-         name: 'Eva Franklin',
-         email: 'eva.franklin@example.com',
-         role: 'EDITORIAL_BOARD_MEMBER'
-      },
-      {
-         id: 'mem8',
-         name: 'Frank Gomez',
-         email: 'frank.gomez@example.com',
-         role: 'MEMBER'
-      }
-   ])
+   const [members, setMembers] = React.useState<MembersDTO[]>([])
 
    const {
       register,

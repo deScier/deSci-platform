@@ -3,7 +3,6 @@ import { uniqueId } from 'lodash'
 import RedirectIcon from 'public/svgs/common/redirect.svg'
 import AboutUsIcon from 'public/svgs/common/sidebar/Icons/about-us.svg'
 import AdminIcon from 'public/svgs/common/sidebar/Icons/admin.svg'
-import ArticlesPurchased from 'public/svgs/common/sidebar/Icons/articles-purchased.svg'
 import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
 import AsReviewerIcon from 'public/svgs/common/sidebar/Icons/as-reviewer.svg'
 // import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
@@ -11,6 +10,7 @@ import HomeIcon from 'public/svgs/common/sidebar/Icons/home.svg'
 import MyIPIcon from 'public/svgs/common/sidebar/Icons/my-ip.svg'
 import ProfileIcon from 'public/svgs/common/sidebar/Icons/profile.svg'
 import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
+import { List } from 'react-bootstrap-icons'
 
 interface Item {
    id: string | number
@@ -22,6 +22,7 @@ interface Item {
 }
 
 export const article_key = 'Articles purchased'
+
 export const admin_key = 'Admin'
 
 export const items: Item[] = [
@@ -49,18 +50,10 @@ export const items: Item[] = [
       icon_end: null,
       divider: false
    },
-   //    {
-   //       id: uniqueId(),
-   //       text: 'Journal',
-   //       icon: <JournalIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
-   //       path: home_routes.as_reviewer,
-   //       icon_end: null,
-   //       divider: false
-   //    },
    {
       id: uniqueId(),
       text: article_key,
-      icon: <ArticlesPurchased className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      icon: <List size={24} strokeWidth={1.5} className="w-6 fill-neutral-light_gray md:w-5 lg:w-8" />,
       path: null,
       icon_end: null,
       divider: false

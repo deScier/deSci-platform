@@ -10,11 +10,8 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
    const { data: session } = useSession()
    const controls = useDragControls()
 
-   const role_mapping = {
-      EDITOR_IN_CHIEF: 'Editor-in-Chief',
-      MEMBER: 'Member',
-      EDITORIAL_BOARD_MEMBER: 'Editorial Board Member'
-   }
+   if (members.length === 0) return <p className="text-center text-neutral-gray">No members added.</p>
+
    return (
       <React.Fragment>
          <Reorder.Group axis="y" values={members} onReorder={(newOrder) => onReorder(newOrder)}>
@@ -98,6 +95,12 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
          </Reorder.Group>
       </React.Fragment>
    )
+}
+
+const role_mapping = {
+   EDITOR_IN_CHIEF: 'Editor-in-Chief',
+   MEMBER: 'Member',
+   EDITORIAL_BOARD_MEMBER: 'Editorial Board Member'
 }
 
 export { MembersListDragabble }

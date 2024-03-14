@@ -15,7 +15,7 @@ export const CreateJournalSchema = z.object({
    rationale: z.string({ required_error: 'Rationale is required' }),
    originatesFrom: z.string({ required_error: 'Originates from is required' }),
    cover: FileSchema,
-   members: z.array(MembersSchema)
+   members: z.array(MembersSchema).min(1, 'At least one member is required.')
 })
 
 export type MembersDTO = z.infer<typeof MembersSchema>
