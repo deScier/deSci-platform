@@ -24,8 +24,11 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
+import { home_routes } from '@/routes/home'
+import { submitNewJournalService } from '@/services/journal/submit.service'
 import NProgress from 'nprogress'
 import React from 'react'
+import { toast } from 'react-toastify'
 
 export default function NewJournalPage() {
    const router = useRouter()
@@ -136,7 +139,32 @@ export default function NewJournalPage() {
    })
 
    const onSubmit: SubmitHandler<CreateJournalDTO> = async (data) => {
-      console.log('onSubmit', data)
+      setLoading(true)
+      const requestData = {
+         name: data.name,
+         rationale: data.rationale,
+         originatesFrom: data.originatesFrom,
+         field: data.field,
+         keywords: data.keywords.map((keyword) => keyword.name),
+         cover: data.cover.preview,
+         members: data.members.map((member) => ({
+            name: member.name,
+            email: member.email,
+            role: member.role
+         }))
+      }
+
+      const response = await submitNewJournalService(requestData)
+
+      if (!response.success) {
+         toast.error(response.message)
+         setLoading(false)
+         return
+      }
+
+      toast.success(response.message)
+      router.push(home_routes.summary)
+      setLoading(false)
    }
 
    const [targetUrl, setTargetUrl] = React.useState('')

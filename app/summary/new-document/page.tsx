@@ -565,7 +565,7 @@ export default function SubmitNewPaperPage() {
                         not_found_message="No journals found"
                         placeholder="Select the journal for submission"
                         search_placeholder="Search for a journal"
-                        onValueChange={(value) => {}}
+                        onValueChange={(value) => console.log('value', value)}
                         options={[
                            {
                               id: uniqueId(),
