@@ -343,7 +343,7 @@ export default function NewJournalPage() {
                   <Input.TextArea
                      {...register('rationale')}
                      rows={4}
-                     placeholder="Type your reasons"
+                     placeholder="Give your brief reason for create a new Journal"
                      onInput={(e) => {
                         rationaleLimit({
                            e: e,
