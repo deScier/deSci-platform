@@ -23,8 +23,9 @@ export default function JournalsPage() {
     * @dev Using a custom hook "useArticles" to fetch articles.
     */
    const { articles, loading } = useArticles()
-   const { journals } = useJournals()
+   const { journals, public_journals } = useJournals()
    console.log('journals', journals)
+   console.log('public_journals', public_journals)
    const { data: session } = useSession()
 
    /** @dev Number of articles displayed per page. */
