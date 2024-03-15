@@ -1,28 +1,30 @@
 'use client'
 
+import React from 'react'
+
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
-import { ArticleUnderReview, ArticleUnderReviewProps, ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
-import { cn } from '@/lib/utils'
+import { ArticleUnderReviewProps } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import { filter_status } from '@/mock/dropdow_filter_options'
 import { home_routes } from '@/routes/home'
 import { AuthorsOnDocuments } from '@/services/document/getArticles'
 import { useArticles } from '@/services/document/getArticles.service'
 import { useSession } from 'next-auth/react'
 
-import PaginationComponent from '@/components/common/Pagination/Pagination'
 import useDebounce from '@/hooks/useDebounce'
-import React from 'react'
+import { useJournals } from '@/services/journal/getJournals.service'
 
-export default function ArticlesUnderReviewPage() {
+export default function JournalsPage() {
    /**
     * @notice Fetch the articles and their loading state.
     * @dev Using a custom hook "useArticles" to fetch articles.
     */
    const { articles, loading } = useArticles()
+   const { journals } = useJournals()
+   console.log('journals', journals)
    const { data: session } = useSession()
 
    /** @dev Number of articles displayed per page. */
@@ -104,13 +106,12 @@ export default function ArticlesUnderReviewPage() {
    }, [results, per_page])
 
    const withoutFilters = documentType === null && status === 'pending' && debouncedSearchTerm === ''
-
    return (
-      <React.Fragment>
+      <React.Suspense>
          <Title.Root>
-            <Title.Title>My articles under review</Title.Title>
+            <Title.Title>Journals</Title.Title>
          </Title.Root>
-         <div className="grid gap-6">
+         <div className="min-h-screen">
             <div className="grid gap-6">
                <div className="flex items-center gap-2">
                   <Input.Search value={searchTerm} placeholder="Find articles with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
@@ -146,60 +147,7 @@ export default function ArticlesUnderReviewPage() {
                   )}
                </div>
             </div>
-            <div
-               className={cn('flex flex-col gap-6', {
-                  results: results.length > 1,
-                  'min-h-[calc(50vh)]': results.length > 1
-               })}
-            >
-               <div className="grid gap-8">
-                  <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">
-                     {loading ? (
-                        <React.Fragment>
-                           <ArticleUnderReviewSkeleton />
-                           <ArticleUnderReviewSkeleton />
-                           <ArticleUnderReviewSkeleton />
-                           <ArticleUnderReviewSkeleton />
-                        </React.Fragment>
-                     ) : (
-                        <React.Fragment>
-                           {results.length === 0 ? (
-                              <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">
-                                 There are no articles under review at the moment.
-                              </p>
-                           ) : (
-                              results.slice((page - 1) * per_page, page * per_page).map((article) => (
-                                 <React.Fragment key={article.id}>
-                                    <ArticleUnderReview
-                                       title={article.title}
-                                       since={article.since}
-                                       image={article.image}
-                                       link={redirectToArticle(article.authors!, article.userId!, article.id!)}
-                                       status_editor={article.status_editor as 'pending' | 'approved'}
-                                       status_reviewer={article.status_reviewer as 'pending' | 'approved'}
-                                       status_admin={article.status_admin as 'pending' | 'approved'}
-                                    />
-                                 </React.Fragment>
-                              ))
-                           )}
-                        </React.Fragment>
-                     )}
-                  </div>
-               </div>
-               <div className="flex justify-center h-full w-full">
-                  <PaginationComponent
-                     key={totalPages}
-                     current={page}
-                     perPage={per_page}
-                     total={results.length}
-                     handleFirstPage={() => setPage(1)}
-                     handleNextPage={() => setPage(page + 1)}
-                     handlePreviousPage={() => setPage(page - 1)}
-                     handleLastPage={() => setPage(totalPages)}
-                  />
-               </div>
-            </div>
          </div>
-      </React.Fragment>
+      </React.Suspense>
    )
 }

@@ -5,7 +5,7 @@ import AboutUsIcon from 'public/svgs/common/sidebar/Icons/about-us.svg'
 import AdminIcon from 'public/svgs/common/sidebar/Icons/admin.svg'
 import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
 import AsReviewerIcon from 'public/svgs/common/sidebar/Icons/as-reviewer.svg'
-// import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
+import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
 import HomeIcon from 'public/svgs/common/sidebar/Icons/home.svg'
 import MyIPIcon from 'public/svgs/common/sidebar/Icons/my-ip.svg'
 import ProfileIcon from 'public/svgs/common/sidebar/Icons/profile.svg'
@@ -47,6 +47,14 @@ export const items: Item[] = [
       text: 'As Reviewer/Editor',
       icon: <AsReviewerIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
       path: home_routes.as_reviewer,
+      icon_end: null,
+      divider: false
+   },
+   {
+      id: uniqueId(),
+      text: 'Journals',
+      icon: <JournalIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.journals,
       icon_end: null,
       divider: false
    },

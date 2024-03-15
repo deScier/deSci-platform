@@ -13,7 +13,10 @@ import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChange
 import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
+import { home_routes } from '@/routes/home'
 import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
+import { uploadJournalCoverService } from '@/services/file/file.service'
+import { submitNewJournalService } from '@/services/journal/submit.service'
 import { ErrorMessage } from '@/utils/error_message'
 import { slugfy } from '@/utils/slugfy'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,14 +24,12 @@ import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
 import { Clipboard, PlusCircle, X } from 'react-bootstrap-icons'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import Box from '@/components/common/Box/Box'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
-import { home_routes } from '@/routes/home'
-import { submitNewJournalService } from '@/services/journal/submit.service'
 import NProgress from 'nprogress'
 import React from 'react'
-import { toast } from 'react-toastify'
 
 export default function NewJournalPage() {
    const router = useRouter()
@@ -106,6 +107,13 @@ export default function NewJournalPage() {
       }
 
       const response = await submitNewJournalService(requestData)
+
+      await uploadJournalCoverService({
+         fileLocalUrl: data.cover.preview,
+         filename: data.cover.name,
+         mimetype: data.cover.type,
+         journalId: response.journalId
+      })
 
       if (!response.success) {
          toast.error(response.message)

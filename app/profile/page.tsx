@@ -1,21 +1,23 @@
 'use client'
 
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Title from '@components/common/Title/Page'
+
+import { home_routes } from '@/routes/home'
+import { User } from '@/types/next-auth'
+import { motion } from 'framer-motion'
+import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { BoxArrowRight, Envelope, Lock, Pencil } from 'react-bootstrap-icons'
+import { twMerge } from 'tailwind-merge'
+
 import Box from '@/components/common/Box/Box'
 import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
 import UpdatePassword from '@/components/modules/Profile/Modals/ChangePassword'
 import UpdateProfile from '@/components/modules/Profile/Modals/EditProfile'
 import UpdateEmail from '@/components/modules/Profile/Modals/UpdateEmail'
-import { home_routes } from '@/routes/home'
-import { User } from '@/types/next-auth'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Title from '@components/common/Title/Page'
-import { motion } from 'framer-motion'
-import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import React from 'react'
-import { BoxArrowRight, Envelope, Lock, Pencil } from 'react-bootstrap-icons'
-import { twMerge } from 'tailwind-merge'
 
 export default function ProfilePage() {
    const { data: session } = useSession()

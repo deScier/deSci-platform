@@ -1,25 +1,28 @@
 'use client'
 
-import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
-import PaginationComponent from '@/components/common/Pagination/Pagination'
-import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
-import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
-import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
-import LoginModal from '@/components/modules/Login/Login'
-import RegisterModal from '@/components/modules/Register/Register'
-import useDebounce from '@/hooks/useDebounce'
-import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options'
-import { useArticles } from '@/services/document/fetchPublic.service'
-import { slugfy } from '@/utils/slugfy'
+import '@styles/home.css'
+
 import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
-import '@styles/home.css'
+
+import { Dropdown } from '@/components/common/Dropdown/Dropdown'
+import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
+import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
+import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
+import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options'
+import { useArticles } from '@/services/document/fetchPublic.service'
+import { slugfy } from '@/utils/slugfy'
 import { useSearchParams } from 'next/navigation'
-import React from 'react'
 import { Person, Search } from 'react-bootstrap-icons'
 import { twMerge } from 'tailwind-merge'
+
+import PaginationComponent from '@/components/common/Pagination/Pagination'
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
+import LoginModal from '@/components/modules/Login/Login'
+import RegisterModal from '@/components/modules/Register/Register'
+import useDebounce from '@/hooks/useDebounce'
+import React from 'react'
 
 export function SearchArticlesComponent() {
    const { articles } = useArticles()

@@ -10,6 +10,7 @@ export const home_routes = {
    profile: '/profile',
    about_us: '/about',
    my_ip: '/my-ip',
+   journals: '/journals',
    descier: {
       index: '/descier/articles-for-approval',
       articles_for_approval: '/descier/articles-for-approval'

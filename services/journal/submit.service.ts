@@ -29,7 +29,7 @@ export const submitNewJournalService = async (data: CreateJournalDTO) => {
    }
 }
 
-type CreateJournalDTO = {
+export type CreateJournalDTO = {
    name: string
    field: string
    keywords: string[]
@@ -39,9 +39,9 @@ type CreateJournalDTO = {
    members: CreateMembersDTO[]
 }
 
-type MembersRoles = 'EDITOR_IN_CHIEF' | 'MEMBER' | 'EDITORIAL_BOARD_MEMBER'
+export type MembersRoles = 'EDITOR_IN_CHIEF' | 'MEMBER' | 'EDITORIAL_BOARD_MEMBER'
 
-type CreateMembersDTO = {
+export type CreateMembersDTO = {
    name: string
    email: string
    role: MembersRoles
