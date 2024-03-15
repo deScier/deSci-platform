@@ -31,7 +31,7 @@ const OurJournals: React.FC = () => {
    const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [
       AutoScroll({
          playOnInit: true,
-         speed: 1.5,
+         speed: 0.8,
          stopOnMouseEnter: true,
          startDelay: 200
       })

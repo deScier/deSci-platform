@@ -219,7 +219,7 @@ export default function NewJournalPage() {
             </Dialog.Content>
          </Dialog.Root>
          <Title.Root>
-            <Title.Title>Submit new journal</Title.Title>
+            <Title.Title>Submit new Journal</Title.Title>
          </Title.Root>
          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 pb-14">
             <Box className="grid gap-8 h-fit px-4 py-6 md:px-8">
@@ -321,7 +321,7 @@ export default function NewJournalPage() {
                         </Input.Label>
                         <Input.Select
                            options={journal_originate_from}
-                           placeholder="Select the originates"
+                           placeholder="Select"
                            onValueChange={(value) => {
                               const value_access = value as string
                               setValue('originatesFrom', value_access)
@@ -343,7 +343,7 @@ export default function NewJournalPage() {
                   <Input.TextArea
                      {...register('rationale')}
                      rows={4}
-                     placeholder="Give your brief reason for create a new Journal"
+                     placeholder="Provide a brief reason for creating a new journal"
                      onInput={(e) => {
                         rationaleLimit({
                            e: e,
@@ -358,7 +358,7 @@ export default function NewJournalPage() {
                   <Input.Error>{errors.rationale?.message}</Input.Error>
                </Input.Root>
                <div className="grid gap-4">
-                  <p className="text-sm font-semibold">Cover</p>
+                  <p className="text-sm font-semibold">Journal cover</p>
                   <Dropzone
                      accept="images"
                      placeholder="Upload cover picture (.png, .jpg)"

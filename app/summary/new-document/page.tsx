@@ -561,9 +561,9 @@ export default function SubmitNewPaperPage() {
                   </div>
                   <div className="grid md:grid-cols-2 items-start gap-6">
                      <Combobox
-                        label="Select the journal"
+                        label="Select Journal"
                         not_found_message="No journals found"
-                        placeholder="Select the journal for submission"
+                        placeholder="Select the journal for your submission"
                         search_placeholder="Search for a journal"
                         onValueChange={(value) => console.log('value', value)}
                         options={[
