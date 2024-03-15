@@ -2,8 +2,8 @@ import { uniqueId } from 'lodash'
 import * as zod from 'zod'
 
 export const KeyWordSchema = zod.object({
-   id: zod.string().min(3, 'Id must be at least 3 characters.'),
-   name: zod.string().min(3, 'Name must be at least 3 characters.')
+   id: zod.string().min(1, 'Id must be at least 3 characters.'),
+   name: zod.string().min(1, 'Name must be at least 3 characters.')
 })
 
 export const FileSchema = zod.object({
