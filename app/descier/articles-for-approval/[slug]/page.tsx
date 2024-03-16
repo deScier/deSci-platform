@@ -395,7 +395,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                )}
 
                <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
-               {article?.document.status === 'ADMIN_APPROVE' && (
+               {article?.document.status !== 'SUBMITTED' && (
                   <>
                      <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
                         <Check className="w-5 h-5" />
