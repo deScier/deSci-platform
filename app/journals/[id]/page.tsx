@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'
 import { home_routes } from '@/routes/home'
 import { JournalDetailsProps } from '@/services/journal/getJournals.service'
 import { NextAuthOptions, Session, getServerSession } from 'next-auth'
