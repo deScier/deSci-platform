@@ -34,10 +34,6 @@ export const MobileSidebarComponent: React.FC<SidesProps> = ({ onClose }: SidesP
     */
    const { data: session } = useSession()
 
-   //    React.useEffect(() => {
-   //       onClose()
-   //       // eslint-disable-next-line react-hooks/exhaustive-deps
-   //    }, [currentPath])
    return (
       <React.Fragment>
          <ScrollArea className="h-[calc(100vh-7.5rem)]">
@@ -50,7 +46,12 @@ export const MobileSidebarComponent: React.FC<SidesProps> = ({ onClose }: SidesP
                         onClick={() => onClose()}
                      />
                   </div>
-                  <SelectCreation />
+                  <SelectCreation
+                     onValueChange={(value) => {
+                        router.push(value)
+                        onClose()
+                     }}
+                  />
                   <div>
                      {items.map((item) =>
                         session?.user?.userInfo.role !== 'ADMIN' && item.text === 'Admin' ? null : (

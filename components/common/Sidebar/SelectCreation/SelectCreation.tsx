@@ -6,7 +6,7 @@ import { Clipboard, FileText, PlusCircle } from 'react-bootstrap-icons'
 
 import React from 'react'
 
-const SelectCreation: React.FC = () => {
+const SelectCreation: React.FC<SelectCreationProps> = ({ onValueChange }: SelectCreationProps) => {
    const router = useRouter()
    const currentPath = usePathname()
 
@@ -43,7 +43,13 @@ const SelectCreation: React.FC = () => {
    }, [currentPath])
    return (
       <React.Fragment>
-         <Select value={currentItem} onValueChange={(value) => router.push(value as string)}>
+         <Select
+            value={currentItem}
+            onValueChange={(value) => {
+               router.push(value as string)
+               onValueChange && onValueChange(value as string)
+            }}
+         >
             <SelectTrigger
                key={currentPath}
                hasIndicator={false}
@@ -82,6 +88,10 @@ const SelectCreation: React.FC = () => {
          </Select>
       </React.Fragment>
    )
+}
+
+type SelectCreationProps = {
+   onValueChange?: (value: string) => void
 }
 
 export { SelectCreation }

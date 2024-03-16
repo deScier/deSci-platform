@@ -7,7 +7,6 @@ import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { journal_originate_from, journal_status_option } from '@/mock/dropdow_filter_options'
-import { useSession } from 'next-auth/react'
 
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -15,15 +14,13 @@ import useDebounce from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
 import { JournalProps, JournalStatus, useJournals } from '@/services/journal/getJournals.service'
 import 'components/common/Publication/Item/Item.css'
-import { format } from 'date-fns'
+import { format, isValid, parseISO } from 'date-fns'
 import { truncate } from 'lodash'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function JournalsPage() {
-   const { data: session } = useSession()
    const { journals, journal_loading } = useJournals()
-   console.log('journals', journals)
 
    const per_page = 8
    const [page, setPage] = React.useState(1)
@@ -161,6 +158,9 @@ export default function JournalsPage() {
 }
 
 const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, status, image, title }: JournalUnderReviewProps) => {
+   const date = parseISO(since)
+   const formated_since = isValid(date) ? format(date, 'dd/MM/yyyy') : 'Invalid date'
+
    return (
       <React.Fragment>
          <div className="grid md:grid-cols-max-min-auto md:justify-start items-center gap-4 bg-[#fff] py-3 px-4 rounded-lg">
@@ -187,13 +187,13 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                      {status === 'APPROVED' ? (
                         <React.Fragment>
                            <p className="text-sm text-neutral-gray lg:text-sm">Published in</p>
-                           <p className="text-base font-semibold lg:text-sm 2xl:text-base">{format(new Date(since), 'dd/MM/yyyy')}</p>
+                           <p className="text-base font-semibold lg:text-sm 2xl:text-base">{formated_since}</p>
                         </React.Fragment>
                      ) : (
                         <React.Fragment>
                            <div className="flex items-center flex-grow gap-2">
                               <p className="text-sm text-neutral-gray lg:text-sm truncate">Under review since</p>
-                              <p className="text-base font-semibold lg:text-sm 2xl:text-base truncate">{since}</p>
+                              <p className="text-base font-semibold lg:text-sm 2xl:text-base truncate">{formated_since}</p>
                            </div>
                         </React.Fragment>
                      )}
