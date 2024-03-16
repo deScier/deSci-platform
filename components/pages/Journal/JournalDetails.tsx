@@ -6,7 +6,6 @@ import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
 
-import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { Option } from '@/components/common/Input/Typing'
 import { MembersListDragabble } from '@/components/common/Lists/Members/Members'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
@@ -23,7 +22,6 @@ import { PlusCircle, X } from 'react-bootstrap-icons'
 import { useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
-import Dropzone from '@/components/common/Dropzone/Dropzone'
 import { JournalProps } from '@/services/journal/getJournals.service'
 import { keywordsArray } from '@/utils/keywords_format'
 import NProgress from 'nprogress'
@@ -33,7 +31,6 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
    const journal = params.journal
    const router = useRouter()
 
-   const [loading, setLoading] = React.useState(false)
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
    const [members_temp, setMembersTemp] = React.useState<MembersDTO | undefined>()
    const [dialog, setDialog] = React.useState({ members: false, warning_on_change_page: false, add_new_member: false, edit_member: false })
@@ -41,7 +38,6 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
 
    const {
       register,
-      handleSubmit,
       watch,
       formState: { errors, isDirty, isValid },
       setValue,
@@ -196,6 +192,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                         </Input.Label>
                         <Input.Input
                            placeholder="Title of the Journal"
+                           className="pointer-events-none"
                            {...register('name')}
                            onInput={(e) => {
                               titleLimit({
@@ -217,6 +214,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                         </Input.Label>
                         <Input.Input
                            placeholder="Area of knowledge"
+                           className="pointer-events-none"
                            {...register('field')}
                            onInput={(e) => {
                               fieldLimit({
@@ -241,6 +239,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                            Add keywords
                         </Input.Label>
                         <Input.Input
+                           className="pointer-events-none"
                            placeholder="Type a keyword"
                            value={keywords_temp}
                            onKeyDown={(e) => handleKeyDown(e)}
@@ -252,10 +251,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                                     type="button"
                                     variant="outline"
                                     className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
-                                    onClick={() => {
-                                       append_keyword({ id: uniqueId('key'), name: keywords_temp as string })
-                                       setKeywordsTemp('')
-                                    }}
+                                    onClick={() => {}}
                                  >
                                     <PlusCircle className="w-3 fill-neutral-light_gray" />
                                     <span className="font-semibold text-xs text-neutral-light_gray">Add keyword</span>
@@ -272,7 +268,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                               >
                                  <X
                                     className="w-5 fill-neutral-stroke_light hover:fill-status-error cursor-pointer transition-all duration-200 hover:scale-110"
-                                    onClick={() => remove_keyword(index)}
+                                    onClick={() => {}}
                                  />
                                  <span className="text-xxs sm:text-xs text-primary-main">{keyword.name}</span>
                               </div>
@@ -283,16 +279,18 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                         <Input.Label className="flex gap-2 items-center">
                            <span className="text-sm  font-semibold">The Journal originates from</span>
                         </Input.Label>
-                        <Input.Select
-                           options={journal_originate_from}
-                           placeholder="Select"
-                           onValueChange={(value) => {
-                              const value_access = value as string
-                              setValue('originatesFrom', value_access)
-                              trigger('originatesFrom')
-                           }}
-                           value={watch('originatesFrom')}
-                        />
+                        <div className="pointer-events-none">
+                           <Input.Select
+                              options={journal_originate_from}
+                              placeholder="Select"
+                              onValueChange={(value) => {
+                                 const value_access = value as string
+                                 setValue('originatesFrom', value_access)
+                                 trigger('originatesFrom')
+                              }}
+                              value={watch('originatesFrom')}
+                           />
+                        </div>
                         <Input.Error>{errors.field?.message}</Input.Error>
                      </Input.Root>
                   </div>
@@ -305,6 +303,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      <Tooltip.Information content="Give a brief reason for create a new Journal." />
                   </Input.Label>
                   <Input.TextArea
+                     disabled
                      {...register('rationale')}
                      rows={4}
                      placeholder="Provide a brief reason for creating a new journal"
@@ -323,24 +322,15 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                </Input.Root>
                <div className="grid gap-4">
                   <p className="text-sm font-semibold">Journal cover</p>
-                  <Dropzone
-                     accept="images"
-                     defaultCover={{
-                        lastModified: getValues('cover')?.lastModified || 0,
-                        lastModifiedDate: getValues('cover')?.lastModifiedDate || new Date(),
-                        name: getValues('cover')?.name || '',
-                        path: getValues('cover')?.path || '',
-                        preview: getValues('cover')?.preview || '',
-                        size: getValues('cover')?.size || 0,
-                        type: getValues('cover')?.type || ''
-                     }}
-                     placeholder="Upload cover picture (.png, .jpg)"
-                     setSelectedFile={(file) => {
-                        setValue('cover', file as StoredFile)
-                        trigger('cover')
-                        clearErrors('cover')
-                     }}
-                  />
+                  <div
+                     className={cn(
+                        'grid border-[1px] border-dashed border-blue-light rounded-lg p-4 transition duration-300 ease-in-out items-center bg-[#F1FFFF] py-6 min-h-[140px]',
+                        'h-44 w-full p-0'
+                     )}
+                  >
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
+                     <img src={getValues('cover')?.preview} alt="cover" className="w-full h-44 object-cover rounded-md brightness-50" loading="lazy" />
+                  </div>
                   <div className="flex justify-center w-full">
                      <Input.Error>
                         {ErrorMessage({
@@ -359,6 +349,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                   <div className="grid gap-6">
                      <Button.Button
                         type="button"
+                        disabled
                         variant="outline"
                         className="px-4 py-3 w-full text-sm"
                         onClick={() => setDialog({ ...dialog, add_new_member: true })}
@@ -375,22 +366,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                               </React.Fragment>
                            ))}
                         </div>
-                        <MembersListDragabble
-                           members={members}
-                           onReorder={(newMember) => {
-                              console.log('newMember', newMember)
-                              onReorder(newMember)
-                           }}
-                           onDelete={(member) => {
-                              const newMembers = members.filter((item) => item.id !== member.id)
-                              setMembers(newMembers)
-                              setValue('members', newMembers)
-                           }}
-                           onEdit={(member) => {
-                              setMembersTemp(member)
-                              setDialog({ ...dialog, add_new_member: true })
-                           }}
-                        />
+                        <MembersListDragabble members={members} onReorder={(newMember) => {}} />
                      </div>
                   </div>
                </div>
