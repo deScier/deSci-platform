@@ -3,12 +3,10 @@ import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
-// Google OAuth2 credentials
 const googleClientID = process.env.GOOGLE_ID || ''
 const googleSecret = process.env.GOOGLE_SECRET || ''
 
-// NextAuth options object
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
    secret: process.env.NEXTAUTH_SECRET,
    session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
    providers: [

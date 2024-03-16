@@ -1,3 +1,5 @@
+'use client'
+import { Session } from 'next-auth'
 import { getSession, useSession } from 'next-auth/react'
 import useSWR from 'swr'
 import { DocumentProps } from '../document/getArticles'
@@ -6,7 +8,7 @@ import { MembersRoles } from './submit.service'
 export const useJournals = () => {
    const { data } = useSession()
 
-   const fetchJournal = async (journalId: string) => {
+   const fetchJournal = async (journalId: string, data: Session | null) => {
       if (data?.user?.token) {
          const session = await getSession()
 
@@ -68,6 +70,10 @@ export const useJournals = () => {
 
 export type JournalResponse = {
    journals: JournalProps[]
+}
+
+export type JournalDetailsProps = {
+   journal: JournalProps
 }
 
 export type JournalProps = {
