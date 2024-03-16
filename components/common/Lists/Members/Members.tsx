@@ -77,14 +77,18 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                            {item.id !== session?.user?.userInfo.id && (
                               <React.Fragment>
                                  <div className="flex items-center gap-2">
-                                    <Trash
-                                       className="fill-status-error w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                       onClick={() => onDelete && onDelete(item)}
-                                    />
-                                    <Pencil
-                                       className="fill-primary-main w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
-                                       onClick={() => onEdit && onEdit(item)}
-                                    />
+                                    {onDelete && (
+                                       <Trash
+                                          className="fill-status-error w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
+                                          onClick={() => onDelete && onDelete(item)}
+                                       />
+                                    )}
+                                    {onEdit && (
+                                       <Pencil
+                                          className="fill-primary-main w-5 h-full cursor-pointer hover:scale-110 transition-all duration-200"
+                                          onClick={() => onEdit && onEdit(item)}
+                                       />
+                                    )}
                                  </div>
                               </React.Fragment>
                            )}

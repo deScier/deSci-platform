@@ -327,7 +327,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                   <p className="text-sm font-semibold">Journal cover</p>
                   <div
                      className={cn(
-                        'grid border-[1px] border-dashed border-blue-light rounded-lg p-4 transition duration-300 ease-in-out items-center bg-[#F1FFFF] py-6 min-h-[140px]',
+                        'grid rounded-lg p-4 transition duration-300 ease-in-out items-center bg-[#F1FFFF] py-6 min-h-[140px]',
                         'h-44 w-full p-0'
                      )}
                   >
