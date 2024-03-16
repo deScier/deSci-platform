@@ -6,16 +6,17 @@ import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { journal_originate_from, journal_status_option } from '@/mock/dropdow_filter_options'
-
-import PaginationComponent from '@/components/common/Pagination/Pagination'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import useDebounce from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
+import { journal_originate_from, journal_status_option } from '@/mock/dropdow_filter_options'
 import { JournalProps, JournalStatus, useJournals } from '@/services/journal/getJournals.service'
 import 'components/common/Publication/Item/Item.css'
 import { format, isValid, parseISO } from 'date-fns'
 import { truncate } from 'lodash'
+
+import PaginationComponent from '@/components/common/Pagination/Pagination'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -178,11 +179,26 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
             <hr className="block md:hidden divider-h" />
             <div className="grid gap-2 mt-[-8px]">
                <div>
-                  <Link href={link}>
-                     <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
-                        {truncate(title, { length: 40 })}
-                     </h6>
-                  </Link>
+                  {title.length > 32 ? (
+                     <Link href={link}>
+                        <HoverCard>
+                           <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
+                              <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                                 {truncate(title, { length: 32 })}
+                              </h6>
+                           </HoverCardTrigger>
+                           <HoverCardContent align="center" side="top" className="w-fit max-w-[500px] py-1">
+                              <p className="text-sm text-start font-semibold text-primary-main w-full">{title}</p>
+                           </HoverCardContent>
+                        </HoverCard>
+                     </Link>
+                  ) : (
+                     <Link href={link}>
+                        <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                           {title}
+                        </h6>
+                     </Link>
+                  )}
                   <div className="flex items-center gap-2">
                      {status === 'APPROVED' ? (
                         <React.Fragment>

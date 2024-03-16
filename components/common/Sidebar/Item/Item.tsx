@@ -17,7 +17,7 @@ const Item: React.FC<ItemProps> = ({ icon, icon_end, text, active = false, href,
          ) : (
             <React.Fragment>
                {href ? (
-                  <Link href={href || '#'} target={href?.includes('http') ? '_blank' : ''} onClick={onClick}>
+                  <Link href={href} target={href?.includes('http') ? '_blank' : undefined} onClick={onClick}>
                      <div
                         data-active={active}
                         className="relative hover:bg-[#F4E8FF] rounded-md hover:transition-colors duration-200 dark:hover:transition-colors"

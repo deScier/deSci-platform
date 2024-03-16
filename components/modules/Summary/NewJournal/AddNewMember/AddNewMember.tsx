@@ -52,8 +52,8 @@ const AddNewMember: React.FC<AddNewMemberProps> = ({ onAddMember, onEditMember, 
                      value={watch('role')}
                      options={[
                         { id: uniqueId(), value: 'EDITOR_IN_CHIEF', label: 'Editor-in-Chief' },
-                        { id: uniqueId(), value: 'MEMBER', label: 'Member' },
-                        { id: uniqueId(), value: 'EDITORIAL_BOARD_MEMBER', label: 'Editorial Board Member' }
+                        { id: uniqueId(), value: 'EDITORIAL_BOARD_MEMBER', label: 'Editorial Board Member' },
+                        { id: uniqueId(), value: 'MEMBER', label: 'Member' }
                      ]}
                      onValueChange={(value) => {
                         const value_access = value as 'EDITOR_IN_CHIEF' | 'MEMBER' | 'EDITORIAL_BOARD_MEMBER'

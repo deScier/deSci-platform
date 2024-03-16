@@ -81,7 +81,7 @@ export type JournalProps = {
    status: JournalStatus
    createdById: string
    createdBy?: UserProps
-   journalMembers?: JournalMemberProps[]
+   journalOnMembers?: JournalMemberProps[]
    documents?: DocumentProps[]
    createdAt: Date
    updatedAt: Date

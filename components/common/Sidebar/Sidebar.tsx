@@ -51,18 +51,16 @@ const Sidebar: React.FC = () => {
                <div>
                   {items.map((item) =>
                      isAdministrator && item.text === admin_key ? null : (
-                        <div className="grid" key={item.id}>
-                           <Item
-                              key={item.id}
-                              icon={item.icon}
-                              href={item.path}
-                              divider={item.divider}
-                              icon_end={item.icon_end}
-                              text={item.text as string}
-                              active={currentPath.includes(item.path as string)}
-                              onClick={() => item.text === article_key && setPurchased(true)}
-                           />
-                        </div>
+                        <Item
+                           key={item.text}
+                           icon={item.icon}
+                           href={item.path}
+                           divider={item.divider}
+                           icon_end={item.icon_end}
+                           text={item.text as string}
+                           active={currentPath.includes(item.path as string)}
+                           onClick={() => item.text === article_key && setPurchased(true)}
+                        />
                      )
                   )}
                </div>

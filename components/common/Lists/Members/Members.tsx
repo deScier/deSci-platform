@@ -8,6 +8,7 @@ import React from 'react'
 
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
    const { data: session } = useSession()
+
    const controls = useDragControls()
 
    if (members.length === 0) return <p className="text-center text-neutral-gray">No members added.</p>
@@ -69,7 +70,7 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                            </div>
                         </div>
                         <div className="hidden md:block">
-                           <p className="text-sm text-secundary_blue-main truncate">{item.role}</p>
+                           <p className="text-sm text-secundary_blue-main truncate">{role_mapping[item.role]}</p>
                         </div>
                         <div className="hidden md:flex items-center justify-between">
                            <p className="text-sm text-secundary_blue-main">{item.email}</p>
