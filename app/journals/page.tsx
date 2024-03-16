@@ -183,8 +183,11 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                      <Link href={link}>
                         <HoverCard>
                            <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
-                              <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
-                                 {truncate(title, { length: 32 })}
+                              <h6 className="hidden lg:block text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                                 {truncate(title, { length: 30 })}
+                              </h6>
+                              <h6 className="block lg:hidden text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                                 {truncate(title, { length: 70 })}
                               </h6>
                            </HoverCardTrigger>
                            <HoverCardContent align="center" side="top" className="w-fit max-w-[500px] py-1">
@@ -221,7 +224,7 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                         {status === 'APPROVED' ? (
                            <p className="text-sm 2xl:text-base font-semibold text-status-green">Published</p>
                         ) : (
-                           <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0">Pending</p>
+                           <p className="text-xs lg:text-sm font-semibold text-status-pending truncate flex-shrink-0">Pending</p>
                         )}
                      </div>
                   </div>
