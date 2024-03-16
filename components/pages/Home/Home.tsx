@@ -194,9 +194,7 @@ export function HomeComponent() {
                         </SelectTrigger>
                         <SelectContent>
                            <SelectItem value="author">Author</SelectItem>
-                           <SelectItem value="journal" disabled>
-                              Journal
-                           </SelectItem>
+                           <SelectItem value="journal">Journal</SelectItem>
                            <SelectItem value="paper">Paper</SelectItem>
                         </SelectContent>
                      </Select>
@@ -205,7 +203,11 @@ export function HomeComponent() {
                         className="rounded-full py-2 md:py-3 px-5 md:px-6 text-xs md:text-sm w-full justify-center"
                         onClick={handleSearchArticle}
                      >
-                        <Search className="w-4 md:w-5 h-4 md:h-5" />
+                        <Search
+                           className="w-4 
+                        
+                        md:w-5 h-4 md:h-5"
+                        />
                      </Button.Button>
                   </div>
                </div>

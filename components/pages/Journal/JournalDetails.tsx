@@ -10,10 +10,13 @@ import { Option } from '@/components/common/Input/Typing'
 import { MembersListDragabble } from '@/components/common/Lists/Members/Members'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
 import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
-import { ErrorMessage } from '@/utils/error_message'
+import { JournalProps } from '@/services/journal/getJournals.service'
+import { keywordsArray } from '@/utils/keywords_format'
 import { slugfy } from '@/utils/slugfy'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqueId } from 'lodash'
@@ -22,13 +25,13 @@ import { PlusCircle, X } from 'react-bootstrap-icons'
 import { useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
-import { JournalProps } from '@/services/journal/getJournals.service'
-import { keywordsArray } from '@/utils/keywords_format'
+import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
 import NProgress from 'nprogress'
 import React from 'react'
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
    const journal = params.journal
+   console.log('journal', journal)
    const router = useRouter()
 
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
@@ -331,14 +334,43 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      {/* eslint-disable-next-line @next/next/no-img-element */}
                      <img src={getValues('cover')?.preview} alt="cover" className="w-full h-44 object-cover rounded-md brightness-50" loading="lazy" />
                   </div>
-                  <div className="flex justify-center w-full">
-                     <Input.Error>
-                        {ErrorMessage({
-                           error: errors.cover?.type,
-                           message: 'Cover is required.'
-                        })}
-                     </Input.Error>
-                  </div>
+               </div>
+               <div className="space-y-4">
+                  <h4 className="text-sm font-medium leading-none">
+                     Articles in this Journal <span className="text-xs text-neutral-light_gray">({journal.documents?.length || 0})</span>
+                  </h4>
+                  <ScrollArea className={cn('h-72 w-full rounded-md border')}>
+                     <div className={cn('p-4', journal.documents && journal.documents.length == 0 ? 'h-72' : '')}>
+                        {journal.documents && journal.documents.length > 0 ? (
+                           journal.documents.map((document) => (
+                              <React.Fragment key={document.id}>
+                                 <ArticleItem
+                                    title={document.title}
+                                    access_type={document.accessType as 'open' | 'paid' | null}
+                                    authors={
+                                       document.authorsOnDocuments?.map((item) => ({
+                                          id: item.id || uniqueId('author'),
+                                          name: item.author?.name || ''
+                                       })) || []
+                                    }
+                                    id={document.id}
+                                    image={document.cover || ''}
+                                    likes={document.likes || 0}
+                                    published_date={document.createdAt as unknown as string}
+                                    tags={document.keywords.split(';')?.map((item) => ({ id: uniqueId('keyword'), name: item })) || []}
+                                    views={document.views || 0}
+                                    document_type={document.documentType}
+                                 />
+                                 <Separator className="my-2" />
+                              </React.Fragment>
+                           ))
+                        ) : (
+                           <div className="text-sm lg:text-base text-center flex h-full items-center justify-center text-neutral-gray">
+                              This journal does not have any published articles yet.
+                           </div>
+                        )}
+                     </div>
+                  </ScrollArea>
                </div>
             </Box>
             <Box className="grid gap-8 h-fit px-4 py-6 md:px-8">
