@@ -6,140 +6,96 @@ import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
-import { ArticleUnderReviewProps } from '@/components/common/Publication/Item/ArticlesUnderReview'
-import { filter_status } from '@/mock/dropdow_filter_options'
-import { home_routes } from '@/routes/home'
-import { AuthorsOnDocuments } from '@/services/document/getArticles'
-import { useArticles } from '@/services/document/getArticles.service'
+import { journal_originate_from, journal_status_option } from '@/mock/dropdow_filter_options'
 import { useSession } from 'next-auth/react'
 
+import PaginationComponent from '@/components/common/Pagination/Pagination'
+import { Skeleton } from '@/components/ui/skeleton'
 import useDebounce from '@/hooks/useDebounce'
-import { useJournals } from '@/services/journal/getJournals.service'
+import { cn } from '@/lib/utils'
+import { JournalProps, JournalStatus, useJournals } from '@/services/journal/getJournals.service'
+import 'components/common/Publication/Item/Item.css'
+import { format } from 'date-fns'
+import { truncate } from 'lodash'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function JournalsPage() {
-   /**
-    * @notice Fetch the articles and their loading state.
-    * @dev Using a custom hook "useArticles" to fetch articles.
-    */
-   const { articles, loading } = useArticles()
-   const { journals, public_journals } = useJournals()
-   console.log('journals', journals)
-   console.log('public_journals', public_journals)
    const { data: session } = useSession()
+   const { journals, journal_loading } = useJournals()
+   console.log('journals', journals)
 
-   /** @dev Number of articles displayed per page. */
    const per_page = 8
-
-   /** @notice Current page number state.*/
    const [page, setPage] = React.useState(1)
 
-   /** @notice State for the selected document type filter. */
-   const [documentType, setDocumentType] = React.useState<string | null>(null)
-
-   /** @notice State for the search term. */
    const [searchTerm, setSearchTerm] = React.useState('')
-
-   /** @notice Debounces the search term. */
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
-   /** @notice State for the selected status filter. */
-   const [status, setStatus] = React.useState<string | null>('pending')
-
-   /** @notice Holds the list of filtered articles to be displayed. */
-   const [results, setResults] = React.useState<ArticleUnderReviewProps[]>([])
-
-   /** @notice Holds the total number of pages based on the number of results and articles per page. */
+   const [status, setStatus] = React.useState<string | null>('')
+   const [originatesFrom, setOriginatesFrom] = React.useState<string | null>('')
+   const [results, setResults] = React.useState<JournalProps[]>([])
    const [totalPages, setTotalPages] = React.useState(Math.ceil(results.length / per_page))
 
-   const redirectToArticle = (authors: AuthorsOnDocuments[], mainAuthorId: string, articleId: string) => {
-      const isCoAuthor = authors.some((item) => item.author?.userId === session?.user?.userInfo.id && item.author?.userId !== mainAuthorId)
-
-      if (isCoAuthor) {
-         return home_routes.articles.in_review + '/' + 'only-view' + '/' + articleId
-      }
-
-      return home_routes.articles.in_review + '/' + articleId
-   }
-
-   /**
-    * @notice Updates the results state whenever articles data changes.
-    * @dev This effect listens for changes in the articles data and updates the results accordingly.
-    */
    React.useEffect(() => {
-      setResults(articles || [])
-   }, [articles])
+      setResults(journals || [])
+   }, [journals])
 
-   /**
-    * @notice Filters articles based on selected document type, status, and title search.
-    * @dev This effect listens for changes in the articles, documentType, status, and debouncedSearchTerm states
-    * and updates the results with the filtered list of articles. It filters articles based on the following criteria:
-    * - Document Type: If a document type is selected, only articles with a matching document type will be displayed.
-    * - Status: If a status is selected, only articles with a matching status will be displayed.
-    * - Title Search: If a search term is provided, only articles with titles containing the search term (case-insensitive) will be displayed.
-    */
    React.useEffect(() => {
-      if (!articles) return
+      if (!journals || !Array.isArray(journals)) return
 
-      let filteredArticles = [...articles]
-
-      if (documentType) {
-         filteredArticles = filteredArticles.filter((article) => article.document_type?.toLowerCase() == documentType?.toLowerCase())
-      }
+      let filteredJournals = [...journals]
 
       if (status) {
-         filteredArticles = filteredArticles.filter((article) => article.status?.toLocaleLowerCase() == status?.toLowerCase())
+         filteredJournals = filteredJournals.filter((journal) => journal.status?.toLowerCase() == status?.toLowerCase())
+      }
+
+      if (originatesFrom) {
+         filteredJournals = filteredJournals.filter((journal) => journal.originatesFrom?.toLowerCase() == originatesFrom?.toLowerCase())
       }
 
       if (debouncedSearchTerm) {
-         filteredArticles = filteredArticles.filter((article) => article.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+         filteredJournals = filteredJournals.filter((journal) => journal.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
       }
 
-      setResults(filteredArticles)
-   }, [articles, documentType, status, debouncedSearchTerm])
+      setResults(filteredJournals)
+   }, [journals, status, originatesFrom, debouncedSearchTerm])
 
-   /**
-    * @notice Recalculates the total number of pages whenever the list of results changes.
-    * @dev This effect listens for changes in the results and per_page states and recalculates the total pages accordingly.
-    */
    React.useEffect(() => {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = documentType === null && status === 'pending' && debouncedSearchTerm === ''
+   const withoutFilters = status === '' && debouncedSearchTerm === ''
+
    return (
       <React.Suspense>
          <Title.Root>
-            <Title.Title>Journals</Title.Title>
+            <Title.Title>My Journals under review</Title.Title>
          </Title.Root>
-         <div className="min-h-screen">
+         <div className="min-h-screen space-y-6">
             <div className="grid gap-6">
                <div className="flex items-center gap-2">
-                  <Input.Search value={searchTerm} placeholder="Find articles with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
+                  <Input.Search value={searchTerm} placeholder="Find journal with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
                <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <SelectArticleType
-                     className="w-full md:w-fit"
-                     placeholder={'Article type:'}
-                     selected={documentType}
-                     onValueChange={(value) => {
-                        if (value === 'all') setDocumentType(null)
-                        setDocumentType(value)
-                     }}
+                  <Dropdown
+                     label="The journal originates from: "
+                     selected={journal_originate_from.find((item) => item.value === originatesFrom)?.label || undefined}
+                     className="min-w-[180px] w-full"
+                     items={journal_originate_from}
+                     onSelect={(value) => setOriginatesFrom(value)}
                   />
                   <Dropdown
                      label="Status:"
-                     selected={filter_status.find((item) => item.value === status)?.label || undefined}
+                     selected={journal_status_option.find((item) => item.value === status)?.label || undefined}
                      className="min-w-[180px] w-full"
-                     items={filter_status}
+                     items={journal_status_option}
                      onSelect={(value) => setStatus(value)}
                   />
                   {withoutFilters ? null : (
                      <p
                         className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"
                         onClick={() => {
-                           setDocumentType(null)
-                           setStatus('pending')
+                           setStatus('')
                            setSearchTerm('')
                         }}
                      >
@@ -148,7 +104,149 @@ export default function JournalsPage() {
                   )}
                </div>
             </div>
+            <div
+               className={cn('flex flex-col gap-6', {
+                  results: results.length > 1,
+                  'min-h-[calc(50vh)]': results.length > 1
+               })}
+            >
+               <div className="grid gap-8">
+                  <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">
+                     {journal_loading ? (
+                        <React.Fragment>
+                           <JournalUnderReviewSkeleton />
+                           <JournalUnderReviewSkeleton />
+                           <JournalUnderReviewSkeleton />
+                           <JournalUnderReviewSkeleton />
+                        </React.Fragment>
+                     ) : (
+                        <React.Fragment>
+                           {results.length === 0 ? (
+                              <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">
+                                 There are no journals under review at the moment.
+                              </p>
+                           ) : (
+                              results.slice((page - 1) * per_page, page * per_page).map((journal) => (
+                                 <React.Fragment key={journal.id}>
+                                    <JournalUnderReview
+                                       title={journal.name}
+                                       since={journal.createdAt as unknown as string}
+                                       image={journal.cover}
+                                       link={`/journals/${journal.id}`}
+                                       status={journal.status}
+                                    />
+                                 </React.Fragment>
+                              ))
+                           )}
+                        </React.Fragment>
+                     )}
+                  </div>
+               </div>
+               <div className="flex justify-center h-full w-full">
+                  <PaginationComponent
+                     key={totalPages}
+                     current={page}
+                     perPage={per_page}
+                     total={results.length}
+                     handleFirstPage={() => setPage(1)}
+                     handleNextPage={() => setPage(page + 1)}
+                     handlePreviousPage={() => setPage(page - 1)}
+                     handleLastPage={() => setPage(totalPages)}
+                  />
+               </div>
+            </div>
          </div>
       </React.Suspense>
+   )
+}
+
+const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, status, image, title }: JournalUnderReviewProps) => {
+   return (
+      <React.Fragment>
+         <div className="grid md:grid-cols-max-min-auto md:justify-start items-center gap-4 bg-[#fff] py-3 px-4 rounded-lg">
+            <div className="relative w-full md:w-20 h-20">
+               <Image
+                  fill
+                  src={image || 'https://random.imagecdn.app/150/150'}
+                  alt={title}
+                  quality={50}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  className="rounded-md object-cover"
+               />
+            </div>
+            <hr className="hidden md:block divider-v" />
+            <hr className="block md:hidden divider-h" />
+            <div className="grid gap-2 mt-[-8px]">
+               <div>
+                  <Link href={link}>
+                     <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                        {truncate(title, { length: 40 })}
+                     </h6>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                     {status === 'APPROVED' ? (
+                        <React.Fragment>
+                           <p className="text-sm text-neutral-gray lg:text-sm">Published in</p>
+                           <p className="text-base font-semibold lg:text-sm 2xl:text-base">{format(new Date(since), 'dd/MM/yyyy')}</p>
+                        </React.Fragment>
+                     ) : (
+                        <React.Fragment>
+                           <div className="flex items-center flex-grow gap-2">
+                              <p className="text-sm text-neutral-gray lg:text-sm truncate">Under review since</p>
+                              <p className="text-base font-semibold lg:text-sm 2xl:text-base truncate">{since}</p>
+                           </div>
+                        </React.Fragment>
+                     )}
+                  </div>
+               </div>
+               <div className="border-[1px] rounded-md px-2 border-neutral-stroke_light md:w-fit">
+                  <div className="grid grid-flow-col items-center justify-center md:justify-start">
+                     <div className="grid grid-flow-col gap-2 md:gap-1 items-center">
+                        {status === 'APPROVED' ? (
+                           <p className="text-sm 2xl:text-base font-semibold text-status-green">Published</p>
+                        ) : (
+                           <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0">Pending</p>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </React.Fragment>
+   )
+}
+
+interface JournalUnderReviewProps {
+   id?: string
+   status?: JournalStatus
+   image: string
+   since: string
+   title: string
+   link: string
+}
+
+const JournalUnderReviewSkeleton: React.FC = () => {
+   return (
+      <React.Fragment>
+         <div className="grid md:grid-cols-max-min-auto items-center gap-4 bg-[#fff] py-3 px-4 rounded-lg">
+            <Skeleton className="rounded-md h-20 w-full md:w-20 object-cover" />
+            <div className="hidden md:block divider-v" />
+            <div className="block md:hidden divider-h" />
+            <div className="grid gap-2 mt-[-8px]">
+               <div className="grid gap-2">
+                  <Skeleton className="w-1/2 h-4" />
+                  <Skeleton className="w-[90%] h-2" />
+                  <Skeleton className="w-[80%] h-2" />
+                  <div className="border-[1px] rounded-md px-2 border-neutral-stroke_light">
+                     <div className="flex gap-2 items-center justify-items-center">
+                        <Skeleton className="w-full h-2" />
+                        <span className="text-xs font-semibold text-slate-200">/</span>
+                        <Skeleton className="w-full h-2" />
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </React.Fragment>
    )
 }

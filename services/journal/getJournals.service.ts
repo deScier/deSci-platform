@@ -39,14 +39,14 @@ export const useJournals = () => {
                }
             })
 
-            const response: JournalProps[] = await request.json()
+            const response = (await request.json()) as JournalResponse
 
-            return response
+            return response.journals
          }
       }
    }
 
-   const { data: journals, isLoading: journal_loading } = useSWR('tokens', () => fetchJournals())
+   const { data: journals, isLoading: journal_loading } = useSWR('fetchJournals', () => fetchJournals())
 
    const fetchPublicJournals = async () => {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
@@ -66,7 +66,11 @@ export const useJournals = () => {
    return { journals, public_journals, journal_loading, fetchJournal }
 }
 
-type JournalProps = {
+export type JournalResponse = {
+   journals: JournalProps[]
+}
+
+export type JournalProps = {
    id: string
    name: string
    field: string
@@ -83,7 +87,7 @@ type JournalProps = {
    updatedAt: Date
 }
 
-type UserProps = {
+export type UserProps = {
    id: string
    name: string
    email: string
