@@ -59,6 +59,8 @@ export type DocumentProps = {
    reviewerApprovals: number
    editorsApprovals: number
    adminApproval: number
+   nftHash?: string
+   nftLink?: string
    reviewerInviteLink: string | null
    documentLike?: DocumentLikeProps[]
    createdAt: Date
