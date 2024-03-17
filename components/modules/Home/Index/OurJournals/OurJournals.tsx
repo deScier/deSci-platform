@@ -161,7 +161,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                         >
                            <div className="z-40 h-full flex flex-col justify-end pb-1">
                               <motion.h2
-                                 className="flex items-end justify-start font-normal text-white text-xl cursor-pointer hover:underline w-fit"
+                                 className="flex items-end justify-start font-medium text-white text-lg lg:text-xl cursor-pointer hover:underline w-fit"
                                  initial={{ opacity: 0 }}
                                  animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
                                  transition={{ duration: 0.25 }}
@@ -183,7 +183,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                           key={keyword}
                                           className="z-40 border border-white rounded-full px-2 w-fit"
                                        >
-                                          <p className="text-white text-xs">{keyword}</p>
+                                          <p className="text-white text-xxs lg:text-xs">{keyword}</p>
                                        </motion.div>
                                     ))}
                               </div>
