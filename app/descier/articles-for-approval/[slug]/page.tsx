@@ -3,6 +3,7 @@
 import Box from '@/components/common/Box/Box'
 import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import Dropzone from '@/components/common/Dropzone/Dropzone'
 import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer'
 import { File } from '@/components/common/File/File'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
@@ -238,6 +239,65 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         </div>
                      </ScrollArea>
                   </div>
+                  <Dropzone
+                     accept="documents"
+                     placeholder="Update document file (.docx)"
+                     thumbnail={false}
+                     setSelectedFile={(file) => {
+                        console.log('file', file)
+                        // setValue('file', file as StoredFile)
+                        // trigger('file')
+                        // clearErrors('file')
+                     }}
+                  />
+                  <Button.Button variant="primary" className="flex items-center">
+                     Update file
+                  </Button.Button>
+               </div>
+            </Box>
+            <Box className="grid gap-8 h-fit py-6 px-8">
+               <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
+               <div className="grid md:grid-cols-2 items-start gap-6">
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">Hash</span>
+                     </Input.Label>
+                     <Input.Input
+                        placeholder="Ex: 0x495f9472767...0045cb7b5e"
+                        //    {...register('name')}
+                        onInput={(e) => {
+                           //   titleLimit({
+                           //      e: e as React.ChangeEvent<HTMLInputElement>,
+                           //      limit: 100,
+                           //      onInput: (value) => {
+                           //         setValue('name', value.currentTarget.value)
+                           //         trigger('name')
+                           //      }
+                           //   })
+                        }}
+                     />
+                     {/* <Input.Error>{errors.name?.message}</Input.Error> */}
+                  </Input.Root>
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT Link</span>
+                     </Input.Label>
+                     <Input.Input
+                        placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
+                        //    {...register('field')}
+                        onInput={(e) => {
+                           //   fieldLimit({
+                           //      e: e as React.ChangeEvent<HTMLInputElement>,
+                           //      limit: 100,
+                           //      onInput: (value) => {
+                           //         setValue('field', value.currentTarget.value)
+                           //         trigger('field')
+                           //      }
+                           //   })
+                        }}
+                     />
+                     {/* <Input.Error>{errors.field?.message}</Input.Error> */}
+                  </Input.Root>
                </div>
             </Box>
             <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
