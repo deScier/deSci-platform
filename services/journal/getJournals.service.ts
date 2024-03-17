@@ -76,6 +76,10 @@ export type JournalDetailsProps = {
    journal: JournalProps
 }
 
+export type PublicJournalsProps = {
+   journals: PublicJournalProps[]
+}
+
 export type JournalProps = {
    id: string
    name: string
@@ -112,3 +116,17 @@ export type JournalMemberProps = {
 }
 
 export type JournalStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export type PublicJournalProps = {
+   id: string
+   name: string
+   field: string
+   keywords: string
+   rationale: string
+   originatesFrom: string
+   cover: string
+   status: JournalStatus
+   createdById: string
+   createdAt: Date
+   updatedAt: Date
+}
