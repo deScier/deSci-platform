@@ -8,12 +8,12 @@ import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassw
 import { ArticleCard } from '@/components/modules/Home/Index/ArticleCard/ArticleCard'
 import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing'
 import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
-import { OurJournals } from '@/components/modules/Home/Index/OurJournals/OurJournals'
 import { CardBig } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardBig/CardBig'
 import { CardSmall } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardSmall/CardSmall'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/fetchPublic.service'
+import { PublicJournalsProps } from '@/services/journal/getJournals.service'
 import { ConfirmProfileRequestProps, confirmProfileService } from '@/services/user/confirmProfile.service'
 import { capitalizeWord } from '@/utils/format_texts'
 import '@styles/home.css'
@@ -25,16 +25,35 @@ import { twMerge } from 'tailwind-merge'
 import LoginModal from '@/components/modules/Login/Login'
 import RegisterModal from '@/components/modules/Register/Register'
 import useWindowDimension from '@/hooks/useWindowDimension'
-import { PublicJournalsProps } from '@/services/journal/getJournals.service'
+import dynamic from 'next/dynamic'
 import IllustrationHero from 'public/svgs/modules/home/illustration-home.svg'
 import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg'
 import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg'
 import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg'
 import React from 'react'
 
-type HomeProps = {
-   journals: PublicJournalsProps['journals'] | undefined
-}
+const OurJournalsDynamic = dynamic(() => import('@/components/modules/Home/Index/OurJournals/OurJournals').then((mod) => mod.OurJournals), {
+   loading: () => (
+      <div className="embla__container space-x-4">
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 block md:hidden" />
+
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden md:block lg:hidden" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden md:block lg:hidden" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden md:block lg:hidden" />
+
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
+      </div>
+   ),
+   ssr: false
+})
+
+type HomeProps = { journals: PublicJournalsProps['journals'] | undefined }
 
 export function HomeComponent({ journals }: HomeProps) {
    const router = useRouter()
@@ -229,7 +248,7 @@ export function HomeComponent({ journals }: HomeProps) {
             {journals && (
                <div className="space-y-6 overflow-hidden px-4 lg:px-0">
                   <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
-                  <OurJournals journals={journals} />
+                  <OurJournalsDynamic journals={journals} />
                </div>
             )}
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">

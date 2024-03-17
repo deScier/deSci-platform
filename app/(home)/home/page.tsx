@@ -1,6 +1,5 @@
 import { HomeComponent } from '@/components/pages/Home/Home'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
-import React from 'react'
 
 export default async function HomePage() {
    const fetchPublicJournals = async () => {
@@ -13,18 +12,12 @@ export default async function HomePage() {
 
       const first_five_journals = response.journals.slice(0, 5)
 
-      const body = {
-         journals: first_five_journals
-      } as PublicJournalsProps
+      const body = { journals: first_five_journals } as PublicJournalsProps
 
       return body
    }
 
    const journals = await fetchPublicJournals()
 
-   return (
-      <React.Suspense>
-         <HomeComponent journals={journals.journals} />
-      </React.Suspense>
-   )
+   return <HomeComponent journals={journals.journals} />
 }
