@@ -65,7 +65,27 @@ export const useJournals = () => {
 
    const { data: public_journals, isLoading: publicJournalsLoading } = useSWR('publicJournals', fetchPublicJournals)
 
-   return { journals, public_journals, journal_loading, fetchJournal }
+   const fetchAdminJournals = async () => {
+      if (data?.user?.token) {
+         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/journals`, {
+            method: 'GET',
+            headers: {
+               'Content-Type': 'application/json',
+               authorization: `Bearer ${data.user.token}`
+            }
+         })
+
+         const response = await request.json() as JournalProps[]
+
+         return response
+      }
+   }
+
+   const { data: admin_journals, isLoading: adminJournalsLoading } = useSWR('adminJournals', fetchAdminJournals)
+
+   
+
+   return { journals, public_journals, admin_journals, journal_loading, fetchJournal }
 }
 
 export type JournalResponse = {

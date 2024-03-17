@@ -30,10 +30,12 @@ import NProgress from 'nprogress'
 import React from 'react'
 import { approveJournalByAdminService } from '@/services/admin/approve-journal.service'
 import { toast } from 'react-toastify'
+import { useSession } from 'next-auth/react'
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
    const journal = params.journal
    const router = useRouter()
+   const { data: session } = useSession()
 
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
    const [members_temp, setMembersTemp] = React.useState<MembersDTO | undefined>()
@@ -435,34 +437,36 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                </div>
             </Box>
             <Box className="grid gap-4 h-fit py-6 px-8">
-               {journalStatus === 'PENDING' && (
-                  <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
-               )}
+               {
+                  session?.user?.userInfo.role === 'ADMIN' ? (
+                     <React.Fragment>
+                        <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
+                        <Button.Button 
+                           variant="primary" 
+                           className="flex items-center" 
+                           onClick={() => handleApproveJournal('APPROVED')} 
+                           loading={loading.approve_journal}
+                           disabled={loading.reject_journal}
+                        >
+                           <Check className="w-5 h-5" />
+                           Approve journal
+                        </Button.Button>
+                        <Button.Button
+                           variant="outline"
+                           className="flex items-center"
+                           onClick={() => handleApproveJournal('REJECTED')} 
+                           loading={loading.reject_journal}
+                           disabled={loading.approve_journal}
+                        >
+                           <X className="w-5 h-5"/>
+                           Reject journal
+                        </Button.Button>
+                        </React.Fragment>
+                  ) : (
+                     <h3 className="text-lg font-semibold text-status-pending flex justify-center">Awaiting admin approval</h3>
+                  )
+               }
 
-               {journalStatus !== 'APPROVED' && (
-                  <>
-                     <Button.Button 
-                        variant="primary" 
-                        className="flex items-center" 
-                        onClick={() => handleApproveJournal('APPROVED')} 
-                        loading={loading.approve_journal}
-                        disabled={loading.reject_journal}
-                     >
-                        <Check className="w-5 h-5" />
-                        Approve journal
-                     </Button.Button>
-                     <Button.Button
-                        variant="outline"
-                        className="flex items-center"
-                        onClick={() => handleApproveJournal('REJECTED')} 
-                        loading={loading.reject_journal}
-                        disabled={loading.approve_journal}
-                     >
-                        <X className="w-5 h-5"/>
-                        Reject journal
-                     </Button.Button>
-                  </>
-               )}
                {journalStatus === 'REJECTED' && (
                   <p className="text-lg text-center text-status-error font-semibold select-none">Journal rejected</p>
                )}

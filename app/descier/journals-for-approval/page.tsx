@@ -19,7 +19,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function JournalsPage() {
-   const { journals, journal_loading } = useJournals()
+   const { admin_journals: journals, journal_loading } = useJournals()
 
    const per_page = 8
    const [page, setPage] = React.useState(1)
