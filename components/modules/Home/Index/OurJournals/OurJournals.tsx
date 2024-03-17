@@ -1,18 +1,16 @@
 import '@styles/home.css'
 
-import { EmblaEventType, EmblaOptionsType } from 'embla-carousel'
-import { motion } from 'framer-motion'
-import { uniqueId } from 'lodash'
-
-import useDimension from '@/hooks/useWindowDimension'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
 import { formatName } from '@/utils/format_texts'
 import { keywordsArray } from '@/utils/keywords_format'
+import { EmblaEventType, EmblaOptionsType } from 'embla-carousel'
+import { motion } from 'framer-motion'
+
+import useDimension from '@/hooks/useWindowDimension'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
+import { uniqueId } from 'lodash'
 import Image from 'next/image'
-import DeScierJournal from 'public/images/journals/descier-journal.png'
-import LongBioJournal from 'public/images/journals/longbio.png'
 import React from 'react'
 
 type AutoScrollPlugin = {
@@ -27,6 +25,7 @@ type OurJournalsProps = {
 
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
    const { windowDimension } = useDimension()
+
    const [hovered_curator_id, setHoveredCuratorId] = React.useState<string | null>(null)
    const [isPlaying, setIsPlaying] = React.useState(false)
 
@@ -47,9 +46,8 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
    React.useEffect(() => {
       if (windowDimension == null) return
 
-      if (windowDimension < 1024 && hovered_curator_id == null) {
-         setHoveredCuratorId(curators[0].id)
-      }
+      //   if (windowDimension < 1024 && hovered_curator_id == null) {
+      //   }
 
       if (windowDimension > 1024 && hovered_curator_id !== null) {
          setHoveredCuratorId(null)
@@ -90,25 +88,53 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       }
    }, [emblaApi, hovered_curator_id])
 
+   type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
+
+   const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
+
+   console.log('journalsCarousel', journalsCarousel)
+
+   React.useEffect(() => {
+      if (journals === undefined) return
+
+      let journal_for_carroussel: JournalForCarousel[] = []
+
+      if (windowDimension && windowDimension < 1024) {
+         journal_for_carroussel = journals.map((journal, index) => ({
+            ...journal,
+            id_carroussel: uniqueId(`${journal.id}_`)
+         }))
+      } else {
+         journal_for_carroussel = journals
+            ? journals.concat(journals).map((journal, index) => ({
+                 ...journal,
+                 id_carroussel: uniqueId(`${journal.id}_`)
+              }))
+            : ([] as JournalForCarousel[])
+      }
+
+      setJournalsCarousel(journal_for_carroussel)
+   }, [journals, windowDimension])
+
    return (
       <React.Fragment>
          <div className="embla">
             <div className="embla__viewport" ref={emblaRef}>
                <div className="embla__container">
-                  {journals &&
-                     journals.map((journal) => (
+                  {journalsCarousel &&
+                     journalsCarousel.map((journal) => (
                         <div
-                           key={journal.id}
+                           key={journal.id_carroussel}
                            className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
-                           onClick={() => setHoveredCuratorId(journal.id)}
-                           onMouseEnter={() => setHoveredCuratorId(journal.id)}
+                           onClick={() => setHoveredCuratorId(journal.id_carroussel)}
+                           onMouseEnter={() => setHoveredCuratorId(journal.id_carroussel)}
                            onMouseLeave={() => setHoveredCuratorId(null)}
                         >
                            <div className="z-40 h-full flex flex-col justify-end pb-1">
                               <motion.h2
                                  className="flex items-end justify-start font-normal text-white text-xl cursor-pointer hover:underline w-fit"
                                  initial={{ opacity: 0 }}
-                                 animate={{ opacity: hovered_curator_id === journal.id ? 1 : 0 }}
+                                 animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
                                  transition={{ duration: 0.25 }}
                               >
                                  {journal.name.length > 25 ? (
@@ -123,7 +149,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                     .map((keyword) => (
                                        <motion.div
                                           initial={{ opacity: 0 }}
-                                          animate={{ opacity: hovered_curator_id === journal.id ? 1 : 0 }}
+                                          animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
                                           transition={{ duration: 0.25 }}
                                           key={keyword}
                                           className="z-40 border border-white rounded-full px-2 w-fit"
@@ -137,7 +163,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                               <motion.div
                                  className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] max-w-[284px]"
                                  initial={{ height: 0 }}
-                                 animate={{ height: hovered_curator_id === journal.id ? '120%' : 0 }}
+                                 animate={{ height: hovered_curator_id === journal.id_carroussel ? '120%' : 0 }}
                                  transition={{ duration: 0.25 }}
                               />
                               <Image
@@ -157,83 +183,5 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       </React.Fragment>
    )
 }
-
-const curators = [
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: DeScierJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'LongBio Journal',
-      image: LongBioJournal
-   },
-   {
-      id: uniqueId(),
-      name: 'deScier Journal',
-      image: LongBioJournal
-   }
-]
 
 export { OurJournals }

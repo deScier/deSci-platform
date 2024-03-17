@@ -10,11 +10,17 @@ export default async function HomePage() {
       })
 
       const response = (await request.json()) as PublicJournalsProps
-      return response
+
+      const first_five_journals = response.journals.slice(0, 5)
+
+      const body = {
+         journals: first_five_journals
+      } as PublicJournalsProps
+
+      return body
    }
 
    const journals = await fetchPublicJournals()
-   console.log('journal_server', journals)
 
    return (
       <React.Suspense>
