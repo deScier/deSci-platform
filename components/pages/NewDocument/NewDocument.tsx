@@ -90,6 +90,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
          documentType: '',
          field: '',
          price: '',
+         journalId: '',
          title: '',
          file: {
             lastModified: 0,
@@ -140,6 +141,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
          accessType: access_type === 'open-access' ? 'FREE' : 'PAID',
          documentType: data.documentType,
          field: data.field,
+         journalId: data.journalId,
          price: access_type === 'open-access' ? 0 : Number(data.price),
          title: data.title,
          abstractChart: abstractChart,
@@ -570,7 +572,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                         not_found_message="No journals found"
                         placeholder="Select the journal for your submission"
                         search_placeholder="Search for a journal"
-                        onValueChange={(value) => console.log('value', value)}
+                        onValueChange={(value) => setValue('journalId', value.id as string)}
                         options={journals?.map((journal) => ({ label: journal.name, value: journal.id, id: journal.id })) || []}
                      />
                   </div>

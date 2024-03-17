@@ -37,6 +37,7 @@ export const CreateDocumentSchema = zod.object({
    keywords: zod.array(KeyWordSchema).min(1, 'At least one keyword is required.'),
    accessType: zod.enum(['FREE', 'PAID'], { required_error: 'Access type is required.' }),
    price: zod.string(),
+   journalId: zod.string().min(1, 'A journal is required'),
    file: FileSchema,
    cover: FileSchema,
    authors: zod.array(AuthorSchema).min(1, 'At least one author is required.'),
