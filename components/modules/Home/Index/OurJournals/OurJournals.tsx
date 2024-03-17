@@ -5,6 +5,9 @@ import { motion } from 'framer-motion'
 import { uniqueId } from 'lodash'
 
 import useDimension from '@/hooks/useWindowDimension'
+import { PublicJournalsProps } from '@/services/journal/getJournals.service'
+import { formatName } from '@/utils/format_texts'
+import { keywordsArray } from '@/utils/keywords_format'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
@@ -12,13 +15,17 @@ import DeScierJournal from 'public/images/journals/descier-journal.png'
 import LongBioJournal from 'public/images/journals/longbio.png'
 import React from 'react'
 
-interface AutoScrollPlugin {
+type AutoScrollPlugin = {
    play: () => void
    stop: () => void
    isPlaying: () => boolean
 }
 
-const OurJournals: React.FC = () => {
+type OurJournalsProps = {
+   journals: PublicJournalsProps['journals'] | undefined
+}
+
+const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
    const { windowDimension } = useDimension()
    const [hovered_curator_id, setHoveredCuratorId] = React.useState<string | null>(null)
    const [isPlaying, setIsPlaying] = React.useState(false)
@@ -88,40 +95,62 @@ const OurJournals: React.FC = () => {
          <div className="embla">
             <div className="embla__viewport" ref={emblaRef}>
                <div className="embla__container">
-                  {curators.map((curator) => (
-                     <div
-                        key={curator.id}
-                        className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
-                        onClick={() => setHoveredCuratorId(curator.id)}
-                        onMouseEnter={() => setHoveredCuratorId(curator.id)}
-                        onMouseLeave={() => setHoveredCuratorId(null)}
-                     >
-                        <motion.h2
-                           className="z-40 flex h-full items-end justify-start font-normal text-white text-xl"
-                           initial={{ opacity: 0 }}
-                           animate={{ opacity: hovered_curator_id === curator.id ? 1 : 0 }}
-                           transition={{ duration: 0.25 }}
+                  {journals &&
+                     journals.map((journal) => (
+                        <div
+                           key={journal.id}
+                           className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
+                           onClick={() => setHoveredCuratorId(journal.id)}
+                           onMouseEnter={() => setHoveredCuratorId(journal.id)}
+                           onMouseLeave={() => setHoveredCuratorId(null)}
                         >
-                           {curator.name}
-                        </motion.h2>
-                        <div className="embla__slide__number">
-                           <motion.div
-                              className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] max-w-[284px]"
-                              initial={{ height: 0 }}
-                              animate={{ height: hovered_curator_id === curator.id ? '50%' : 0 }}
-                              transition={{ duration: 0.25 }}
-                           />
-                           <Image
-                              quality={50}
-                              width={400}
-                              height={400}
-                              alt={curator.name}
-                              src={curator.image.src}
-                              className="absolute left-0 top-0 z-0 object-cover object-center w-[284px] max-h-[424px] h-full rounded-3xl min-w-[284px]"
-                           />
+                           <div className="z-40 h-full flex flex-col justify-end pb-1">
+                              <motion.h2
+                                 className="flex items-end justify-start font-normal text-white text-xl cursor-pointer hover:underline w-fit"
+                                 initial={{ opacity: 0 }}
+                                 animate={{ opacity: hovered_curator_id === journal.id ? 1 : 0 }}
+                                 transition={{ duration: 0.25 }}
+                              >
+                                 {journal.name.length > 25 ? (
+                                    <React.Fragment>{formatName(journal.name)}</React.Fragment>
+                                 ) : (
+                                    <React.Fragment>{journal.name}</React.Fragment>
+                                 )}
+                              </motion.h2>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                 {keywordsArray(journal.keywords)
+                                    .slice(0, 4)
+                                    .map((keyword) => (
+                                       <motion.div
+                                          initial={{ opacity: 0 }}
+                                          animate={{ opacity: hovered_curator_id === journal.id ? 1 : 0 }}
+                                          transition={{ duration: 0.25 }}
+                                          key={keyword}
+                                          className="z-40 border border-white rounded-full px-2 w-fit"
+                                       >
+                                          <p className="text-white text-xs">{keyword}</p>
+                                       </motion.div>
+                                    ))}
+                              </div>
+                           </div>
+                           <div className="embla__slide__number">
+                              <motion.div
+                                 className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] max-w-[284px]"
+                                 initial={{ height: 0 }}
+                                 animate={{ height: hovered_curator_id === journal.id ? '120%' : 0 }}
+                                 transition={{ duration: 0.25 }}
+                              />
+                              <Image
+                                 quality={50}
+                                 width={400}
+                                 height={400}
+                                 alt={journal.name}
+                                 src={journal.cover}
+                                 className="absolute left-0 top-0 z-0 object-cover object-center w-[284px] max-h-[424px] h-full rounded-3xl min-w-[284px]"
+                              />
+                           </div>
                         </div>
-                     </div>
-                  ))}
+                     ))}
                </div>
             </div>
          </div>
