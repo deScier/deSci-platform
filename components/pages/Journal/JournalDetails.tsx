@@ -26,11 +26,11 @@ import { useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
 import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
+import { approveJournalByAdminService } from '@/services/admin/approve-journal.service'
+import { useSession } from 'next-auth/react'
 import NProgress from 'nprogress'
 import React from 'react'
-import { approveJournalByAdminService } from '@/services/admin/approve-journal.service'
 import { toast } from 'react-toastify'
-import { useSession } from 'next-auth/react'
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
    const journal = params.journal
@@ -128,7 +128,6 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
          reject_journal: false
       })
 
-   
       if (!response.success) {
          toast.error(response.message)
          return
@@ -437,42 +436,36 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                </div>
             </Box>
             <Box className="grid gap-4 h-fit py-6 px-8">
-               {
-                  session?.user?.userInfo.role === 'ADMIN' ? (
-                     <React.Fragment>
-                        <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
-                        <Button.Button 
-                           variant="primary" 
-                           className="flex items-center" 
-                           onClick={() => handleApproveJournal('APPROVED')} 
-                           loading={loading.approve_journal}
-                           disabled={loading.reject_journal}
-                        >
-                           <Check className="w-5 h-5" />
-                           Approve journal
-                        </Button.Button>
-                        <Button.Button
-                           variant="outline"
-                           className="flex items-center"
-                           onClick={() => handleApproveJournal('REJECTED')} 
-                           loading={loading.reject_journal}
-                           disabled={loading.approve_journal}
-                        >
-                           <X className="w-5 h-5"/>
-                           Reject journal
-                        </Button.Button>
-                        </React.Fragment>
-                  ) : (
+               {session?.user?.userInfo.role === 'ADMIN' && (journalStatus === 'PENDING' || journalStatus === 'REJECTED') ? (
+                  <React.Fragment>
+                     <Button.Button
+                        variant="primary"
+                        className="flex items-center"
+                        onClick={() => handleApproveJournal('APPROVED')}
+                        loading={loading.approve_journal}
+                        disabled={loading.reject_journal}
+                     >
+                        <Check className="w-5 h-5" />
+                        Approve journal
+                     </Button.Button>
+                     <Button.Button
+                        variant="outline"
+                        className="flex items-center"
+                        onClick={() => handleApproveJournal('REJECTED')}
+                        loading={loading.reject_journal}
+                        disabled={loading.approve_journal}
+                     >
+                        <X className="w-5 h-5" />
+                        Reject journal
+                     </Button.Button>
+                  </React.Fragment>
+               ) : (
+                  journalStatus !== 'APPROVED' && (
                      <h3 className="text-lg font-semibold text-status-pending flex justify-center">Awaiting admin approval</h3>
                   )
-               }
-
-               {journalStatus === 'REJECTED' && (
-                  <p className="text-lg text-center text-status-error font-semibold select-none">Journal rejected</p>
                )}
-               {journalStatus === 'APPROVED' && (
-                  <p className="text-lg text-center text-status-green font-semibold select-none">Journal approved</p>
-               )}
+               {journalStatus === 'REJECTED' && <p className="text-lg text-center text-status-error font-semibold select-none">Journal rejected</p>}
+               {journalStatus === 'APPROVED' && <p className="text-lg text-center text-status-green font-semibold select-none">Journal approved</p>}
             </Box>
          </form>
       </React.Fragment>
