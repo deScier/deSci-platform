@@ -12,6 +12,8 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { uniqueId } from 'lodash'
 import React from 'react'
 import { DotButton, useDotButton } from './EmblaDotsButton'
+import { useRouter } from 'next/navigation'
+import { home_routes } from '@/routes/home'
 
 type AutoScrollPlugin = {
    play: () => void
@@ -27,6 +29,7 @@ type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: 
 
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
    const { windowDimension } = useDimension()
+   const router = useRouter()
 
    const [hovered_curator_id, setHoveredCuratorId] = React.useState<string | null>(null)
    const [isPlaying, setIsPlaying] = React.useState(false)
@@ -166,7 +169,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
                                  transition={{ duration: 0.25 }}
                                  onClick={() => {
-                                    
+                                    router.push(home_routes.home.search + `?term=${journal.name}&type=journal`)
                                  }}
                               >
                                  {journal.name.length > 25 ? (
