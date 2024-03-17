@@ -1,19 +1,19 @@
 import '@styles/home.css'
 
+import { home_routes } from '@/routes/home'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
 import { formatName } from '@/utils/format_texts'
 import { keywordsArray } from '@/utils/keywords_format'
 import { EmblaEventType, EmblaOptionsType } from 'embla-carousel'
 import { motion } from 'framer-motion'
+import { uniqueId } from 'lodash'
+import { useRouter } from 'next/navigation'
+import { DotButton, useDotButton } from './EmblaDotsButton'
 
 import useDimension from '@/hooks/useWindowDimension'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
-import { uniqueId } from 'lodash'
 import React from 'react'
-import { DotButton, useDotButton } from './EmblaDotsButton'
-import { useRouter } from 'next/navigation'
-import { home_routes } from '@/routes/home'
 
 type AutoScrollPlugin = {
    play: () => void
@@ -148,6 +148,15 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       }
    }, [emblaApi, journalsCarousel, windowDimension])
 
+   if (journals?.length == 0) {
+      return (
+         <React.Fragment>
+            <div>
+               <p className="text-center text-base font-medium text-neutral-gray">There are no journals published yet.</p>
+            </div>
+         </React.Fragment>
+      )
+   }
    return (
       <React.Fragment>
          <div className="embla">
