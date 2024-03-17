@@ -12,6 +12,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { uniqueId } from 'lodash'
 import Image from 'next/image'
 import React from 'react'
+import { DotButton, useDotButton } from './EmblaDotsButton'
 
 type AutoScrollPlugin = {
    play: () => void
@@ -22,6 +23,8 @@ type AutoScrollPlugin = {
 type OurJournalsProps = {
    journals: PublicJournalsProps['journals'] | undefined
 }
+
+type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
 
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
    const { windowDimension } = useDimension()
@@ -36,7 +39,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
    const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [
       AutoScroll({
-         playOnInit: true,
+         playOnInit: windowDimension && windowDimension > 1024 ? true : false,
          speed: 0.8,
          stopOnMouseEnter: true,
          startDelay: 200
@@ -81,18 +84,18 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       const autoScroll = emblaApi?.plugins()?.autoScroll
       if (!autoScroll) return
 
-      if (hovered_curator_id !== null) {
+      if (windowDimension && windowDimension < 1024) {
          ;(autoScroll.stop as () => void)()
       } else {
-         ;(autoScroll.play as () => void)()
+         if (hovered_curator_id !== null) {
+            ;(autoScroll.stop as () => void)()
+         } else {
+            ;(autoScroll.play as () => void)()
+         }
       }
-   }, [emblaApi, hovered_curator_id])
-
-   type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
+   }, [emblaApi, hovered_curator_id, windowDimension])
 
    const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
-
-   console.log('journalsCarousel', journalsCarousel)
 
    React.useEffect(() => {
       if (journals === undefined) return
@@ -116,6 +119,9 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       setJournalsCarousel(journal_for_carroussel)
    }, [journals, windowDimension])
 
+   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
+   console.log('scrollSnaps', scrollSnaps)
+
    return (
       <React.Fragment>
          <div className="embla">
@@ -125,7 +131,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                      journalsCarousel.map((journal) => (
                         <div
                            key={journal.id_carroussel}
-                           className="embla__slide !relative flex h-[364px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
+                           className="embla__slide !relative flex h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
                            onClick={() => setHoveredCuratorId(journal.id_carroussel)}
                            onMouseEnter={() => setHoveredCuratorId(journal.id_carroussel)}
                            onMouseLeave={() => setHoveredCuratorId(null)}
@@ -161,24 +167,28 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                            </div>
                            <div className="embla__slide__number">
                               <motion.div
-                                 className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] max-w-[284px]"
+                                 className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] lg:max-w-[284px]"
                                  initial={{ height: 0 }}
                                  animate={{ height: hovered_curator_id === journal.id_carroussel ? '120%' : 0 }}
                                  transition={{ duration: 0.25 }}
                               />
                               <Image
-                                 quality={50}
-                                 width={400}
-                                 height={400}
+                                 width={800}
+                                 height={800}
                                  alt={journal.name}
                                  src={journal.cover}
-                                 className="absolute left-0 top-0 z-0 object-cover object-center w-[284px] max-h-[424px] h-full rounded-3xl min-w-[284px]"
+                                 className="absolute left-0 top-0 z-0 object-cover object-center lg:w-[284px] lg:max-h-[424px] h-full rounded-3xl min-w-[284px]"
                               />
                            </div>
                         </div>
                      ))}
                </div>
             </div>
+         </div>
+         <div className="dots-container container flex">
+            {scrollSnaps.map((_, index) => (
+               <DotButton key={index} onClick={() => onDotButtonClick(index)} className={`dot-button ${selectedIndex === index ? 'active' : ''}`} />
+            ))}
          </div>
       </React.Fragment>
    )
