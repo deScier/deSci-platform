@@ -209,7 +209,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                </div>
             </div>
          </div>
-         <div className="dots-container container flex">
+         <div className="dots-container lg:!hidden">
             {scrollSnaps.map((_, index) => (
                <DotButton key={index} onClick={() => onDotButtonClick(index)} className={`dot-button ${selectedIndex === index ? 'active' : ''}`} />
             ))}
