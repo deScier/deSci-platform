@@ -30,21 +30,17 @@ export const useJournals = () => {
 
    const fetchJournals = async () => {
       if (data?.user?.token) {
-         const session = await getSession()
+         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals`, {
+            method: 'GET',
+            headers: {
+               'Content-Type': 'application/json',
+               authorization: `Bearer ${data.user.token}`
+            }
+         })
 
-         if (session?.user?.token) {
-            const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals`, {
-               method: 'GET',
-               headers: {
-                  'Content-Type': 'application/json',
-                  authorization: `Bearer ${session.user.token}`
-               }
-            })
+         const response = (await request.json()) as JournalResponse
 
-            const response = (await request.json()) as JournalResponse
-
-            return response.journals
-         }
+         return response.journals
       }
    }
 
