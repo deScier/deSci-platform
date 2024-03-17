@@ -1,5 +1,6 @@
 import { HomeComponent } from '@/components/pages/Home/Home'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
+import React from 'react'
 
 export default async function HomePage() {
    const fetchPublicJournals = async () => {
@@ -19,5 +20,9 @@ export default async function HomePage() {
 
    const journals = await fetchPublicJournals()
 
-   return <HomeComponent journals={journals.journals} />
+   return (
+      <React.Suspense>
+         <HomeComponent journals={journals.journals} />
+      </React.Suspense>
+   )
 }
