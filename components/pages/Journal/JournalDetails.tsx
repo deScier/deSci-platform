@@ -21,23 +21,29 @@ import { slugfy } from '@/utils/slugfy'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
-import { PlusCircle, X } from 'react-bootstrap-icons'
+import { Check, PlusCircle, X } from 'react-bootstrap-icons'
 import { useFieldArray, useForm } from 'react-hook-form'
 
 import Box from '@/components/common/Box/Box'
 import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
 import NProgress from 'nprogress'
 import React from 'react'
+import { approveJournalByAdminService } from '@/services/admin/approve-journal.service'
+import { toast } from 'react-toastify'
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
    const journal = params.journal
-   console.log('journal', journal)
    const router = useRouter()
 
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
    const [members_temp, setMembersTemp] = React.useState<MembersDTO | undefined>()
    const [dialog, setDialog] = React.useState({ members: false, warning_on_change_page: false, add_new_member: false, edit_member: false })
    const [members, setMembers] = React.useState<MembersDTO[]>(journal.journalOnMembers || [])
+   const [loading, setLoading] = React.useState({
+      approve_journal: false,
+      reject_journal: false
+   })
+   const [journalStatus, setJournalStatus] = React.useState<string>(journal.status)
 
    const {
       register,
@@ -104,6 +110,31 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
             })
          }
       }
+   }
+
+   const handleApproveJournal = async (status: 'APPROVED' | 'REJECTED') => {
+      setLoading({
+         approve_journal: status === 'APPROVED',
+         reject_journal: status === 'REJECTED'
+      })
+      const response = await approveJournalByAdminService({
+         journalId: journal.id,
+         status
+      })
+      setLoading({
+         approve_journal: false,
+         reject_journal: false
+      })
+
+   
+      if (!response.success) {
+         toast.error(response.message)
+         return
+      }
+
+      setJournalStatus(status)
+
+      toast.success(response.message)
    }
 
    React.useEffect(() => {
@@ -402,6 +433,42 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      </div>
                   </div>
                </div>
+            </Box>
+            <Box className="grid gap-4 h-fit py-6 px-8">
+               {journalStatus === 'PENDING' && (
+                  <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
+               )}
+
+               {journalStatus !== 'APPROVED' && (
+                  <>
+                     <Button.Button 
+                        variant="primary" 
+                        className="flex items-center" 
+                        onClick={() => handleApproveJournal('APPROVED')} 
+                        loading={loading.approve_journal}
+                        disabled={loading.reject_journal}
+                     >
+                        <Check className="w-5 h-5" />
+                        Approve journal
+                     </Button.Button>
+                     <Button.Button
+                        variant="outline"
+                        className="flex items-center"
+                        onClick={() => handleApproveJournal('REJECTED')} 
+                        loading={loading.reject_journal}
+                        disabled={loading.approve_journal}
+                     >
+                        <X className="w-5 h-5"/>
+                        Reject journal
+                     </Button.Button>
+                  </>
+               )}
+               {journalStatus === 'REJECTED' && (
+                  <p className="text-lg text-center text-status-error font-semibold select-none">Journal rejected</p>
+               )}
+               {journalStatus === 'APPROVED' && (
+                  <p className="text-lg text-center text-status-green font-semibold select-none">Journal approved</p>
+               )}
             </Box>
          </form>
       </React.Fragment>
