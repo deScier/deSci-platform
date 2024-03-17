@@ -120,7 +120,31 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
    }, [journals, windowDimension])
 
    const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
-   console.log('scrollSnaps', scrollSnaps)
+
+   React.useEffect(() => {
+      if (windowDimension && windowDimension < 1024 && journalsCarousel && journalsCarousel.length > 0) {
+         setHoveredCuratorId(journalsCarousel[0].id_carroussel)
+      }
+   }, [windowDimension, journalsCarousel])
+
+   React.useEffect(() => {
+      if (!emblaApi) return
+
+      const onSelect = () => {
+         if (windowDimension && windowDimension < 1024) {
+            const selectedIndex = emblaApi.selectedScrollSnap()
+            if (journalsCarousel && journalsCarousel.length > 0) {
+               setHoveredCuratorId(journalsCarousel[selectedIndex].id_carroussel)
+            }
+         }
+      }
+
+      emblaApi.on('select' as EmblaEventType, onSelect)
+
+      return () => {
+         emblaApi.off('select' as EmblaEventType, onSelect)
+      }
+   }, [emblaApi, journalsCarousel, windowDimension])
 
    return (
       <React.Fragment>
