@@ -25,13 +25,18 @@ import { twMerge } from 'tailwind-merge'
 import LoginModal from '@/components/modules/Login/Login'
 import RegisterModal from '@/components/modules/Register/Register'
 import useWindowDimension from '@/hooks/useWindowDimension'
+import { PublicJournalsProps } from '@/services/journal/getJournals.service'
 import IllustrationHero from 'public/svgs/modules/home/illustration-home.svg'
 import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg'
 import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg'
 import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg'
 import React from 'react'
 
-export function HomeComponent() {
+type HomeProps = {
+   journals: PublicJournalsProps['journals'] | undefined
+}
+
+export function HomeComponent({ journals }: HomeProps) {
    const router = useRouter()
    const queryParams = useSearchParams()
 
@@ -221,10 +226,12 @@ export function HomeComponent() {
                <IllustrationHero className="w-[90%] sm:w-3/4 h-auto mt-8 sm:mt-12 max-w-[372px] md:max-w-[454px] lg:hidden" />
                <ShapeMobile className="absolute z-[-1] w-[250vw] sm:w-[200vw] md:w-[164vw] lg:hidden" />
             </div>
-            <div className="space-y-6 overflow-hidden px-4 lg:px-0">
-               <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
-               <OurJournals />
-            </div>
+            {journals && (
+               <div className="space-y-6 overflow-hidden px-4 lg:px-0">
+                  <h3 className="text-1xl lg:px-20 2xl:px-52 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
+                  <OurJournals journals={journals} />
+               </div>
+            )}
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
                <div className="relative h-fit">
                   <div className="border-neutral-stroke_light rounded-3xl shadow-search backdrop-blur-md bg-white-home px-8 py-6 grid gap-4 relative z-10">

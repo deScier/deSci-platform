@@ -10,14 +10,15 @@ export default async function HomePage() {
       })
 
       const response = (await request.json()) as PublicJournalsProps
-      return response.journals
+      return response
    }
 
    const journals = await fetchPublicJournals()
    console.log('journal_server', journals)
+
    return (
       <React.Suspense>
-         <HomeComponent />
+         <HomeComponent journals={journals.journals} />
       </React.Suspense>
    )
 }

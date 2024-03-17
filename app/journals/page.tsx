@@ -222,7 +222,7 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                   <div className="grid grid-flow-col items-center justify-center md:justify-start">
                      <div className="grid grid-flow-col gap-2 md:gap-1 items-center">
                         {status === 'APPROVED' ? (
-                           <p className="text-sm 2xl:text-base font-semibold text-status-green">Published</p>
+                           <p className="text-sm 2xl:text-base font-semibold text-status-green">Approved</p>
                         ) : (
                            <p className="text-xs lg:text-sm font-semibold text-status-pending truncate flex-shrink-0">Pending</p>
                         )}
