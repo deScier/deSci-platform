@@ -28,13 +28,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                rel="stylesheet"
             />
          </head>
-         <TooltipProvider>
-            <body>
+         <body>
+            <TooltipProvider>
                <ProgressBar />
                <AuthProvider>{children}</AuthProvider>
-            </body>
+            </TooltipProvider>
             <ToastContainer />
-         </TooltipProvider>
+         </body>
       </html>
    )
 }
