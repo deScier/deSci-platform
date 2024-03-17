@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import deScierLogo from 'public/svgs/common/logo/deScier - Logo.png'
 import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg'
+import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
+import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
 import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg'
 import React from 'react'
 import Item from '../Item/Item'
@@ -90,16 +92,22 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
 }
 
 import { home_routes } from '@/routes/home'
+import { uniqueId } from 'lodash'
 import { signOut } from 'next-auth/react'
-import CheckIcon from 'public/svgs/common/sidebar/Icons/check.svg'
 import { PlusCircle } from 'react-bootstrap-icons'
 
 const items = [
    {
-      id: 1,
+      id: uniqueId(),
       text: 'Articles for approval',
-      icon: <CheckIcon className="w-6 fill-neutral-light_gray lg:w-5 2xl:w-6" />,
+      icon: <ArticlesIcon className="w-6 fill-neutral-light_gray lg:w-5 2xl:w-6" />,
       path: home_routes.descier.index
+   },
+   {
+      id: uniqueId(),
+      text: 'Journals for approval',
+      icon: <JournalIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.descier.journals_for_approval
    }
 ]
 

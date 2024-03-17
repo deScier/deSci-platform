@@ -13,7 +13,8 @@ export const home_routes = {
    journals: '/journals',
    descier: {
       index: '/descier/articles-for-approval',
-      articles_for_approval: '/descier/articles-for-approval'
+      articles_for_approval: '/descier/articles-for-approval',
+      journals_for_approval: '/descier/journals-for-approval'
    },
    articles: {
       in_review: 'articles-under-review/',
