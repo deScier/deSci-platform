@@ -346,7 +346,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                               <React.Fragment key={document.id}>
                                  <ArticleItem
                                     title={document.title}
-                                    access_type={document.accessType as 'open' | 'paid' | null}
+                                    access_type={document.accessType === 'PAID' ? 'paid' : 'open'}
                                     authors={
                                        document.authorsOnDocuments?.map((item) => ({
                                           id: item.id || uniqueId('author'),
