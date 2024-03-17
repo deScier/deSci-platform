@@ -44,7 +44,7 @@ type SubmitNewPaperProps = {
    journals: PublicJournalProps[] | undefined
 }
 
-export function SubmitNewPaper({ journals }: SubmitNewPaperProps) {
+export function NewDocument({ journals }: SubmitNewPaperProps) {
    /** @dev Initialize router for navigation and session hook for user session management */
    const router = useRouter()
    const { data: session, update: updateSession } = useSession()
