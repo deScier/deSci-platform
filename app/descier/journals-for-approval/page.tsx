@@ -33,7 +33,9 @@ export default function JournalsPage() {
    const [totalPages, setTotalPages] = React.useState(Math.ceil(results.length / per_page))
 
    React.useEffect(() => {
-      setResults(journals || [])
+      if (journals !== null && Array.isArray(journals)) {
+         setResults(journals || [])
+      }
    }, [journals])
 
    React.useEffect(() => {

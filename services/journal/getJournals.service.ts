@@ -71,15 +71,13 @@ export const useJournals = () => {
             }
          })
 
-         const response = await request.json() as JournalProps[]
+         const response = (await request.json()) as JournalResponse
 
-         return response
+         return response.journals
       }
    }
 
    const { data: admin_journals, isLoading: adminJournalsLoading } = useSWR('adminJournals', fetchAdminJournals)
-
-   
 
    return { journals, public_journals, admin_journals, journal_loading, fetchJournal }
 }
