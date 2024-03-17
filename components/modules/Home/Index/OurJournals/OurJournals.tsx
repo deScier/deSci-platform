@@ -165,6 +165,9 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  initial={{ opacity: 0 }}
                                  animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
                                  transition={{ duration: 0.25 }}
+                                 onClick={() => {
+                                    
+                                 }}
                               >
                                  {journal.name.length > 25 ? (
                                     <React.Fragment>{formatName(journal.name)}</React.Fragment>

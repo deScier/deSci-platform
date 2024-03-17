@@ -107,7 +107,14 @@ export const PurchasedArticles: React.FC<PurchasedArticlesProps> = ({ onClose }:
                            .map((article, index) => (
                               <React.Fragment key={article.id}>
                                  <div className="grid gap-4 sm:gap-6 lg:grid-flow-col">
-                                    <ArticleCheckout responsive id={article.id} authors={article.authors} image={article.image} title={article.title} />
+                                    <ArticleCheckout 
+                                       responsive 
+                                       id={article.id} 
+                                       authors={article.authors} 
+                                       image={article.image} 
+                                       title={article.title} 
+                                       journal={article.journal}
+                                    />
                                     {index !== 3 && index !== 7 && <div className="h-full w-[1px] bg-neutral-stroke_light md:hidden" />}
                                  </div>
                               </React.Fragment>
