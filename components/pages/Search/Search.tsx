@@ -198,25 +198,24 @@ export function SearchArticlesComponent() {
             <div className="flex flex-col gap-6 mt-6">
                <div className="grid md:grid-cols-2 gap-6 md:gap-4">
                   {results
-                     ?.filter((article) => slugfy(article.title).includes(slugfy(debouncedSearchTerm)))
-                     .filter((article) => !searchAuthor || article.authors.some((author) => slugfy(author.name).includes(slugfy(searchAuthor))))
-                     .filter((article) => !documentType || article.documentType === documentType)
-                     .filter((article) => !accessType || article.accessType === accessType)
-                     .filter((article) => !field || article.field === field)
-                     .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear)
-                     .filter((article) => {
+                     ?.filter((article) => {
                         if (!searchType) return true
                         switch (searchType) {
                            case 'author':
                               return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)))
                            case 'journal':
-                           //   return slugfy(article.journalName).includes(slugfy(searchTerm))
+                              return slugfy(article.journal?.name || '').includes(slugfy(searchTerm))
                            case 'paper':
                               return slugfy(article.title).includes(slugfy(searchTerm))
                            default:
                               return true
                         }
                      })
+                     .filter((article) => slugfy(article.title).includes(slugfy(searchTerm)) || slugfy(article.journal.name).includes(slugfy(searchTerm)))
+                     .filter((article) => !documentType || article.documentType === documentType)
+                     .filter((article) => !accessType || article.accessType === accessType)
+                     .filter((article) => !field || article.field === field)
+                     .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear)
                      .slice((page - 1) * per_page, page * per_page)
                      .map((article) => (
                         <React.Fragment key={article.id}>

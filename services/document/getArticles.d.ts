@@ -29,6 +29,7 @@ export type DocumentPublicProps = {
    downloads: number
    views: number
    authorName: string
+   journal: DocumentJournalProps
    createdAt: Date
    updatedAt: Date
 
@@ -61,6 +62,7 @@ export type DocumentProps = {
    adminApproval: number
    nftHash?: string
    nftLink?: string
+   journal: DocumentJournalProps
    reviewerInviteLink: string | null
    documentLike?: DocumentLikeProps[]
    createdAt: Date
@@ -72,6 +74,11 @@ export type DocumentProps = {
 }
 
 export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUBMITTED' | 'ADMIN_APPROVE'
+
+type DocumentJournalProps = {
+   id: string
+   name: string
+}
 
 export type UserProps = {
    id: string

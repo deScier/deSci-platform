@@ -14,6 +14,7 @@ interface ArticleCardProps {
    field?: string
    with_dot?: boolean
    link?: string
+   journal: { id: stirng, name: string }
 }
 
 export { ArticleCardProps }

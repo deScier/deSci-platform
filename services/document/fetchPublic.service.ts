@@ -57,7 +57,8 @@ export const useArticles = () => {
                publishedAt: new Date(article.createdAt),
                documentType: article.documentType,
                accessType: article.accessType === 'FREE' ? 'open' : 'paid',
-               field: article.field
+               field: article.field,
+               journal: article.journal
             }
          })
 

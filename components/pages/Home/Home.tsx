@@ -310,6 +310,7 @@ export function HomeComponent({ journals }: HomeProps) {
                                                 likes={article.likes || 0}
                                                 tags={article.tags}
                                                 title={article.title!}
+                                                journal={article.journal}
                                                 views={article.views || 0}
                                                 documentType={article.documentType}
                                              />
