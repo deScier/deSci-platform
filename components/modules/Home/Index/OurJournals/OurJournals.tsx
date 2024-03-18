@@ -13,6 +13,7 @@ import { DotButton, useDotButton } from './EmblaDotsButton'
 import useDimension from '@/hooks/useWindowDimension'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
+import Image from 'next/image'
 import React from 'react'
 
 type AutoScrollPlugin = {
@@ -210,18 +211,11 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  animate={{ height: hovered_curator_id === journal.id_carroussel ? '120%' : 0 }}
                                  transition={{ duration: 0.25 }}
                               />
-                              {/* <Image
+                              <Image
                                  width={800}
                                  height={800}
                                  alt={journal.name}
                                  src={journal.cover}
-                                 className="absolute left-0 top-0 z-0 object-cover object-center lg:w-[284px] lg:max-h-[424px] h-full rounded-3xl min-w-[284px]"
-                              /> */}
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                 src={journal.cover}
-                                 alt={journal.name}
-                                 loading="lazy"
                                  className="absolute left-0 top-0 z-0 object-center object-cover w-full lg:w-[284px] lg:max-h-[424px] h-full rounded-3xl min-w-[284px]"
                               />
                            </div>
