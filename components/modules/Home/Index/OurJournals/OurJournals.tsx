@@ -105,23 +105,29 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
       let journal_for_carroussel: JournalForCarousel[] = []
 
-      if (journals && journals.length >= 4) {
-         journal_for_carroussel = journals.concat(journals).map((journal, index) => ({
+      if (windowDimension && windowDimension < 1024) {
+         journal_for_carroussel = journals.map((journal, index) => ({
             ...journal,
             id_carroussel: uniqueId(`${journal.id}_`)
          }))
       } else {
-         journal_for_carroussel = journals
-            ? journals.map((journal, index) => ({
-                 ...journal,
-                 id_carroussel: uniqueId(`${journal.id}_`)
-              }))
-            : ([] as JournalForCarousel[])
+         if (journals.length >= 4) {
+            journal_for_carroussel = journals
+               ? journals.concat(journals).map((journal, index) => ({
+                    ...journal,
+                    id_carroussel: uniqueId(`${journal.id}_`)
+                 }))
+               : ([] as JournalForCarousel[])
+         } else {
+            journal_for_carroussel = journals.map((journal, index) => ({
+               ...journal,
+               id_carroussel: uniqueId(`${journal.id}_`)
+            }))
+         }
       }
 
       setJournalsCarousel(journal_for_carroussel)
    }, [journals, windowDimension])
-
    const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
 
    React.useEffect(() => {
