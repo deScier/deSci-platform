@@ -6,7 +6,8 @@ export default async function HomePage() {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
          method: 'GET',
          headers: { 'Content-Type': 'application/json' },
-         next: { revalidate: 60 }
+         next: { revalidate: 3600 },
+         cache: 'no-store'
       })
 
       const response = (await request.json()) as PublicJournalsProps
