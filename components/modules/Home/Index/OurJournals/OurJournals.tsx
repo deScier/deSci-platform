@@ -181,7 +181,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                     router.push(home_routes.home.search + `?term=${journal.name}&type=journal`)
                                  }}
                               >
-                                 {journal.name.length > 25 ? (
+                                 {journal.name.length > 20 ? (
                                     <React.Fragment>{formatName(journal.name)}</React.Fragment>
                                  ) : (
                                     <React.Fragment>{journal.name}</React.Fragment>
