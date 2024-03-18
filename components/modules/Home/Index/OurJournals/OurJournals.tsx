@@ -205,7 +205,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                           key={keyword}
                                           className="z-40 border border-white rounded-full px-2 w-fit"
                                        >
-                                          <p className="text-white text-xxs lg:text-xs">{keyword}</p>
+                                          <p className="text-white text-xxs lg:text-xs">{keyword.length > 30 ? formatName(keyword) : keyword}</p>
                                        </motion.div>
                                     ))}
                               </div>
