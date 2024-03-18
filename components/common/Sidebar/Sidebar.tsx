@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
             <div className="flex flex-col gap-8">
                <LogoDeScier className="w-20 h-20 mx-auto my-0" />
                <SelectCreation />
-               <div>
+               <div key={currentPath}>
                   {items.map((item) =>
                      isAdministrator && item.text === admin_key ? null : (
                         <Item

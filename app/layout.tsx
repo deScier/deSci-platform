@@ -29,10 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             />
          </head>
          <body>
-            <TooltipProvider>
-               <ProgressBar />
-               <AuthProvider>{children}</AuthProvider>
-            </TooltipProvider>
+            <ProgressBar />
+            <AuthProvider>
+               <TooltipProvider>{children}</TooltipProvider>
+            </AuthProvider>
             <ToastContainer />
          </body>
       </html>
