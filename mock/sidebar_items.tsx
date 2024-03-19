@@ -36,17 +36,9 @@ export const items: Item[] = [
    },
    {
       id: uniqueId(),
-      text: 'Articles under Review',
+      text: 'Articles',
       icon: <ArticlesIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
       path: home_routes.articles_under_review,
-      icon_end: null,
-      divider: false
-   },
-   {
-      id: uniqueId(),
-      text: 'As Reviewer/Editor',
-      icon: <AsReviewerIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
-      path: home_routes.as_reviewer,
       icon_end: null,
       divider: false
    },
@@ -58,6 +50,15 @@ export const items: Item[] = [
       icon_end: null,
       divider: false
    },
+   {
+      id: uniqueId(),
+      text: 'As Reviewer/Editor',
+      icon: <AsReviewerIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.as_reviewer,
+      icon_end: null,
+      divider: false
+   },
+
    {
       id: uniqueId(),
       text: article_key,
