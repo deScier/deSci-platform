@@ -247,7 +247,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                {purchase.my_articles && <PurchasedArticles onClose={() => setPurchase({ ...purchase, my_articles: false })} />}
             </Dialog.Content>
          </Dialog.Root>
-         <div className="grid gap-8">
+         <div className="grid gap-8 lg:px-20 2xl:px-52 px-4 sm:px-6">
             <div className="flex items-center gap-4 pt-8 md:pt-12">
                <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
                <h1 className="text-1xl font-semibold">Back</h1>
