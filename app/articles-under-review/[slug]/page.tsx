@@ -54,6 +54,7 @@ import Dropzone from '@/components/common/Dropzone/Dropzone'
 import EditComment from '@/components/modules/deScier/Article/EditComment'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import mermaid from 'mermaid'
+import Link from 'next/link'
 
 export default function ArticleInReviewPage({ params }: { params: { slug: string } }) {
    const router = useRouter()
@@ -972,7 +973,36 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   </div>
                </div>
             </Box>
-            <Box className="grid gap-8 h-fit py-6 px-8">
+            <Box className="grid gap-6 h-fit px-4 py-6 md:px-8">
+               <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
+               <div className="grid md:grid-cols-2 items-start gap-6">
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT hash</span>
+                     </Input.Label>
+                     {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
+                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer">
+                           {article?.document.nftLink}
+                        </Link>
+                     ) : (
+                        <p className="text-base text-neutral-gray">The NFT hash is not available yet.</p>
+                     )}
+                  </Input.Root>
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT link</span>
+                     </Input.Label>
+                     {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
+                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer">
+                           {article?.document.nftLink}
+                        </Link>
+                     ) : (
+                        <p className="text-base text-neutral-gray">The NFT link is not available yet.</p>
+                     )}
+                  </Input.Root>
+               </div>
+            </Box>
+            <Box className="grid gap-6 h-fit px-4 py-6 md:px-8">
                <div className="grid gap-2">
                   <h3 className="text-lg md:text-xl text-primary-main font-semibold">Comments</h3>
                   <p className="text-sm">The reviewing team may write comments and suggest editions on your document here.</p>

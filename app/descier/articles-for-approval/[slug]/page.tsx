@@ -302,12 +302,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         setFile(file as StoredFile)
                      }}
                   />
-                  <Button.Button 
-                     variant="primary" 
-                     className="flex items-center"
-                     onClick={handleUpdateArticleFile}
-                     loading={uploadFileLoading}
-                  >
+                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateArticleFile} loading={uploadFileLoading}>
                      Update file
                   </Button.Button>
                </div>
@@ -323,18 +318,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         placeholder="Ex: 0x495f9472767...0045cb7b5e"
                         value={nftData.nftHash}
                         onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
-                        onInput={(e) => {
-                           //   titleLimit({
-                           //      e: e as React.ChangeEvent<HTMLInputElement>,
-                           //      limit: 100,
-                           //      onInput: (value) => {
-                           //         setValue('name', value.currentTarget.value)
-                           //         trigger('name')
-                           //      }
-                           //   })
-                        }}
                      />
-                     {/* <Input.Error>{errors.name?.message}</Input.Error> */}
                   </Input.Root>
                   <Input.Root>
                      <Input.Label className="flex gap-2 items-center">
@@ -344,26 +328,10 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
                         value={nftData.nftLink}
                         onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
-                        onInput={(e) => {
-                           //   fieldLimit({
-                           //      e: e as React.ChangeEvent<HTMLInputElement>,
-                           //      limit: 100,
-                           //      onInput: (value) => {
-                           //         setValue('field', value.currentTarget.value)
-                           //         trigger('field')
-                           //      }
-                           //   })
-                        }}
                      />
-                     {/* <Input.Error>{errors.field?.message}</Input.Error> */}
                   </Input.Root>
                </div>
-               <Button.Button 
-                  variant="primary" 
-                  className="flex items-center" 
-                  onClick={handleUpdateNftData}
-                  loading={updateNftDataLoading}
-               >
+               <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
                   Save
                </Button.Button>
             </Box>
