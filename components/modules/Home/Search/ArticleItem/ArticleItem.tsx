@@ -73,9 +73,9 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                      </Link>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                     {tags.map((tag) => (
+                     {tags.slice(0, 4).map((tag) => (
                         <div className="border rounded-md border-neutral-stroke_light flex items-center px-2 py-[2px]" key={tag.id}>
-                           <span className="text-xs text-primary-main">{tag.name}</span>
+                           <span className="text-xs text-primary-main">{tag.name.length >= 25 ? truncate(title, { length: 20 }) : tag.name}</span>
                         </div>
                      ))}
                   </div>
