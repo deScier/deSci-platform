@@ -80,7 +80,7 @@ export function SearchArticlesComponent() {
       setField(null)
    }
 
-   const withoutFilters = !searchTerm && !searchAuthor && !accessType && documentType === null && publicationYear === null && field === null
+   const withoutFilters = !searchTerm && !searchAuthor && !accessType && !documentType && !publicationYear && !field
 
    /** @dev Component states for various authentication and navigation modals */
    const login_component = 'login'
@@ -160,6 +160,7 @@ export function SearchArticlesComponent() {
                   no_selected
                   items={filter_by_year}
                   label="Year of publication:"
+                  className="w-full md:w-fit "
                   selected={publicationYear ? String(publicationYear) : undefined}
                   onSelect={(value) => setPublicationYear(Number(value))}
                />
@@ -167,13 +168,13 @@ export function SearchArticlesComponent() {
                   no_selected
                   label="Field:"
                   selected={field || undefined}
-                  className="min-w-fit px-8"
+                  className="w-full md:w-fit px-8"
                   items={filter_field}
                   onSelect={(value) => setField(value)}
                />
                <SelectArticleType
                   variant="filter"
-                  className="md:w-fit"
+                  className="w-fit"
                   placeholder={'Article type:'}
                   selected={documentType}
                   onValueChange={(value) => {
@@ -185,7 +186,7 @@ export function SearchArticlesComponent() {
                   no_selected
                   selected={accessType}
                   label="Access:"
-                  className="px-8 !min-w-full !w-full md:w-fit"
+                  className="w-fit px-8"
                   items={filter_access}
                   onSelect={(value) => setAccessType(value)}
                />
@@ -227,6 +228,7 @@ export function SearchArticlesComponent() {
                               image={article.image}
                               likes={article.likes || 0}
                               published_date={article.publishedAt!.toLocaleDateString('pt-BR')}
+                              journal={article.journal}
                               tags={article.tags || []}
                               views={article.views || 0}
                               document_type={article.documentType}

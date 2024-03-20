@@ -1,14 +1,13 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { cn } from '@/lib/utils'
-import { document_types } from '@/mock/document_types'
 import { formatDate } from '@/utils/date_format'
+import { formatName } from '@/utils/format_texts'
 import { truncate } from 'lodash'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons'
 import slug from 'slug'
-import { twMerge } from 'tailwind-merge'
 import './ArticleItem.css'
 import { ArticleItemProps } from './Typing'
 
@@ -28,7 +27,8 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
    authors,
    document_type,
    id,
-   className
+   className,
+   journal
 }: ArticleItemProps) => {
    return (
       <div className={cn('grid gap-2 bg-[#fff] py-3 px-4 rounded-lg', className)}>
@@ -48,18 +48,28 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                      <Link
                         href="/home/search/[slug]"
                         as={`/home/search/${slug(id)}`}
-                        className={twMerge(`${document_type && 'flex items-center gap-1'}`)}
+                        className={cn(`${journal.name && 'grid justify-start lg:grid-flow-col items-center gap-1'}`)}
                      >
-                        {document_type && (
+                        {journal && (
                            <React.Fragment>
-                              {document_types.find((document) => document.value === document_type)?.label && (
-                                 <React.Fragment>
-                                    <span className="text-base font-semibold text-[#AE66E6] hover:underline transition-all duration-200">
-                                       {document_types.find((document) => document.value === document_type)?.label}
-                                    </span>
-                                    <span className="text-base font-semibold hover:underline transition-all duration-200">•</span>
-                                 </React.Fragment>
+                              {journal.name.length > 20 ? (
+                                 <HoverCard>
+                                    <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
+                                       <span className="hidden lg:block text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">
+                                          {formatName(journal.name)}
+                                       </span>
+                                       <span className="block lg:hidden text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">
+                                          {formatName(journal.name)}
+                                       </span>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent align="center" side="top" className="w-fit max-w-[500px] py-1">
+                                       <p className="text-sm text-start font-semibold text-[#AE66E6] w-full">{journal.name}</p>
+                                    </HoverCardContent>
+                                 </HoverCard>
+                              ) : (
+                                 <span className="text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">{journal.name}</span>
                               )}
+                              <span className="text-sm font-semibold hover:underline transition-all duration-200 hidden lg:block">•</span>
                            </React.Fragment>
                         )}
                         <HoverCard openDelay={50} closeDelay={10}>
@@ -74,8 +84,8 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                         </HoverCard>
                      </Link>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                     {tags.slice(0, 4).map((tag) => (
+                  <div className="flex flex-wrap gap-2 h-6 overflow-hidden">
+                     {tags.map((tag) => (
                         <div className="border rounded-md border-neutral-stroke_light flex items-center px-2 py-[2px]" key={tag.id}>
                            <span className="text-xs text-primary-main">{tag.name.length >= 25 ? truncate(title, { length: 20 }) : tag.name}</span>
                         </div>
