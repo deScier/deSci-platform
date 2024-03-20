@@ -1,9 +1,12 @@
 import { NewDocument } from '@/components/pages/NewDocument/NewDocument'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
+import { unstable_noStore } from 'next/cache'
 
 import React from 'react'
 
 export default async function SubmitNewPaperPage() {
+   unstable_noStore()
+
    const fetchPublicJournals = async () => {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
          method: 'GET',
