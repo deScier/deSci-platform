@@ -208,6 +208,11 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                            <p className="text-sm text-neutral-gray lg:text-sm">Published in</p>
                            <p className="text-base font-semibold lg:text-sm 2xl:text-base">{formated_since}</p>
                         </React.Fragment>
+                     ) : status === 'REJECTED' ? (
+                        <React.Fragment>
+                           <p className="text-sm text-neutral-gray lg:text-sm">Rejected on</p>
+                           <p className="text-base font-semibold lg:text-sm 2xl:text-base">{formated_since}</p>
+                        </React.Fragment>
                      ) : (
                         <React.Fragment>
                            <div className="flex items-center flex-grow gap-2">
@@ -223,6 +228,8 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({ since, link, st
                      <div className="grid grid-flow-col gap-2 md:gap-1 items-center">
                         {status === 'APPROVED' ? (
                            <p className="text-sm 2xl:text-base font-semibold text-status-green">Approved</p>
+                        ) : status === 'REJECTED' ? (
+                           <p className="text-sm 2xl:text-base font-semibold text-status-error">Rejected</p>
                         ) : (
                            <p className="text-xs lg:text-sm font-semibold text-status-pending truncate flex-shrink-0">Pending</p>
                         )}
