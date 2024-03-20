@@ -123,7 +123,7 @@ export function SearchArticlesComponent() {
                )}
             </Dialog.Content>
          </Dialog.Root>
-         <div className="flex flex-col gap-6 lg:px-20 2xl:px-52">
+         <div className="flex flex-col gap-6 lg:px-20 2xl:px-52 px-4 sm:px-6">
             <Title.Root className="mt-8 mb-0 lg:mt-14 md:mb-0">
                <Title.Title className="text-3xl mb-0">Search</Title.Title>
             </Title.Root>
@@ -173,7 +173,7 @@ export function SearchArticlesComponent() {
                />
                <SelectArticleType
                   variant="filter"
-                  className="w-full md:w-fit"
+                  className="md:w-fit"
                   placeholder={'Article type:'}
                   selected={documentType}
                   onValueChange={(value) => {
@@ -234,6 +234,29 @@ export function SearchArticlesComponent() {
                         </React.Fragment>
                      ))}
                </div>
+               {results
+                  ?.filter((article) => {
+                     if (!searchType) return true
+                     switch (searchType) {
+                        case 'author':
+                           return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)))
+                        case 'journal':
+                           return slugfy(article.journal?.name || '').includes(slugfy(searchTerm))
+                        case 'paper':
+                           return slugfy(article.title).includes(slugfy(searchTerm))
+                        default:
+                           return true
+                     }
+                  })
+                  .filter((article) => slugfy(article.title).includes(slugfy(searchTerm)) || slugfy(article.journal.name).includes(slugfy(searchTerm)))
+                  .filter((article) => !documentType || article.documentType === documentType)
+                  .filter((article) => !accessType || article.accessType === accessType)
+                  .filter((article) => !field || article.field === field)
+                  .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear).length === 0 && (
+                  <div className="text-center min-h-[40vh] flex items-center justify-center">
+                     <p>No articles found.</p>
+                  </div>
+               )}
 
                <div className="flex justify-center">
                   <PaginationComponent
