@@ -392,6 +392,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                                     tags={document.keywords.split(';')?.map((item) => ({ id: uniqueId('keyword'), name: item })) || []}
                                     views={document.views || 0}
                                     document_type={document.documentType}
+                                    journal={{ id: journal.id, name: journal.name }}
                                  />
                               </React.Fragment>
                            ))

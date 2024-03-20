@@ -55,10 +55,10 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                               {journal.name.length > 20 ? (
                                  <HoverCard>
                                     <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
-                                       <span className="hidden lg:block text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">
+                                       <span className="hidden lg:block text-sm font-semibold text-[#AE66E6] transition-all duration-200">
                                           {formatName(journal.name)}
                                        </span>
-                                       <span className="block lg:hidden text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">
+                                       <span className="block lg:hidden text-sm font-semibold text-[#AE66E6] transition-all duration-200">
                                           {formatName(journal.name)}
                                        </span>
                                     </HoverCardTrigger>
@@ -67,9 +67,9 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                                     </HoverCardContent>
                                  </HoverCard>
                               ) : (
-                                 <span className="text-sm font-semibold text-[#AE66E6] hover:underline transition-all duration-200">{journal.name}</span>
+                                 <span className="text-sm font-semibold text-[#AE66E6] transition-all duration-200">{journal.name}</span>
                               )}
-                              <span className="text-sm font-semibold hover:underline transition-all duration-200 hidden lg:block">•</span>
+                              <span className="text-sm font-semibold transition-all duration-200 hidden lg:block">•</span>
                            </React.Fragment>
                         )}
                         <HoverCard openDelay={50} closeDelay={10}>
