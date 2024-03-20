@@ -1,4 +1,5 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { cn } from '@/lib/utils'
 import { document_types } from '@/mock/document_types'
 import { formatDate } from '@/utils/date_format'
 import { truncate } from 'lodash'
@@ -26,10 +27,11 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
    tags,
    authors,
    document_type,
-   id
+   id,
+   className
 }: ArticleItemProps) => {
    return (
-      <div className="grid gap-2 bg-[#fff] py-3 px-4 rounded-lg">
+      <div className={cn('grid gap-2 bg-[#fff] py-3 px-4 rounded-lg', className)}>
          <div className="grid lg:grid-cols-max-1px-auto lg:justify-start items-center gap-2 md:gap-4">
             <Image
                src={image}

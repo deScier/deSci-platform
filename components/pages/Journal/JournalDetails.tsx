@@ -11,7 +11,6 @@ import { MembersListDragabble } from '@/components/common/Lists/Members/Members'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
 import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
@@ -372,7 +371,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      Articles in this Journal <span className="text-xs text-neutral-light_gray">({journal.documents?.length || 0})</span>
                   </h4>
                   <ScrollArea className={cn('h-72 w-full rounded-md border')}>
-                     <div className={cn('p-4', journal.documents && journal.documents.length == 0 ? 'h-72' : '')}>
+                     <div className={cn('p-4 space-y-4', journal.documents && journal.documents.length == 0 ? 'h-72' : '')}>
                         {journal.documents && journal.documents.length > 0 ? (
                            journal.documents.map((document) => (
                               <React.Fragment key={document.id}>
@@ -386,6 +385,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                                        })) || []
                                     }
                                     id={document.id}
+                                    className="border rounded-md"
                                     image={document.cover || ''}
                                     likes={document.likes || 0}
                                     published_date={document.createdAt as unknown as string}
@@ -393,7 +393,6 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                                     views={document.views || 0}
                                     document_type={document.documentType}
                                  />
-                                 <Separator className="my-2" />
                               </React.Fragment>
                            ))
                         ) : (

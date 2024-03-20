@@ -1,4 +1,5 @@
 interface ArticleItemProps {
+   className?: string
    id: string
    published_date: string
    access_type: 'open' | 'paid' | null
