@@ -39,7 +39,6 @@ export default function Page({ params }: { params: { slug: string } }) {
    const router = useRouter()
 
    const { data: session } = useSession()
-
    const { fetch_article, loading } = useArticles()
 
    const [liked, setLiked] = React.useState(false)
@@ -258,8 +257,8 @@ export default function Page({ params }: { params: { slug: string } }) {
                      <Badge className="w-fit flex-shrink flex-grow-0" access_type={article?.document.accessType as 'PAID' | 'FREE'} />
                      <span className="text-black font-semibold">•</span>
                      <p className="text-lg font-semibold">{capitalizeWord(getArticleTypeLabel(article?.document?.documentType as string) || 'paper')}</p>
-                     <span className="text-black font-semibold">•</span>
-                     <p className="text-lg font-semibold text-primary-main">{article?.document?.field}</p>
+                     {/* <span className="text-black font-semibold">•</span>
+                     <p className="text-lg font-semibold text-primary-main">{article?.document?.field}</p> */}
                   </div>
                   <div className="flex flex-col md:hidden md:items-center gap-2">
                      <Badge className="w-full" access_type={article?.document.accessType as 'PAID' | 'FREE'} />
@@ -463,6 +462,12 @@ export default function Page({ params }: { params: { slug: string } }) {
                            {capitalizeWord(getArticleTypeLabel(article?.document?.documentType as string) || 'paper')}
                         </p>
                      </div>
+                     {article?.document?.journal.name && (
+                        <div className="flex flex-col flex-grow">
+                           <p className="text-base font-semibold">Journal</p>
+                           <p className="text-base font-regular">{capitalizeWord(article?.document?.journal.name)}</p>
+                        </div>
+                     )}
                   </div>
                   <div>
                      <p className="text-base font-semibold">Abstract</p>
@@ -470,39 +475,41 @@ export default function Page({ params }: { params: { slug: string } }) {
                   </div>
                   {/* <div className="flex flex-col gap-2">
                      <p className="text-base font-semibold">Visual abstract</p>
-                    
                      <img loading="lazy" src={'/images/Frame 987.png'} alt="article-image" className="w-fit lg:h-72 object-contain" />
                   </div> */}
-                  <div>
-                     <p className="text-base font-semibold">Editors/reviewers</p>
+                  {reviewers.length > 0 && (
                      <div>
-                        {reviewers.map((item) => (
-                           <div key={uniqueId('reviewer')} className="border-b border-neutral-stroke_light">
-                              <div className="grid md:grid-cols-5 gap-4  items-center px-0 py-3 rounded-md">
-                                 <div className="border border-neutral-stroke_light rounded px-2 w-full lg:w-28 flex items-center justify-center">
-                                    <p
-                                       className={twMerge(
-                                          'text-base text-secundary_blue-main first-letter:uppercase font-semibold',
-                                          `${item.role == 'reviewer' && 'text-[#B07F03]'}`,
-                                          `${item.role == 'editor' && 'text-terciary-main'}`
-                                       )}
-                                    >
-                                       {item.role}
-                                    </p>
-                                 </div>
-                                 <div className="flex items-center gap-4">
+                        <p className="text-base font-semibold">Editors/reviewers</p>
+                        <div>
+                           {reviewers.map((item) => (
+                              <div key={uniqueId('reviewer')} className="border-b border-neutral-stroke_light">
+                                 <div className="grid md:grid-cols-5 gap-4  items-center px-0 py-3 rounded-md">
+                                    <div className="border border-neutral-stroke_light rounded px-2 w-full lg:w-28 flex items-center justify-center">
+                                       <p
+                                          className={twMerge(
+                                             'text-base text-secundary_blue-main first-letter:uppercase font-semibold',
+                                             `${item.role == 'reviewer' && 'text-[#B07F03]'}`,
+                                             `${item.role == 'editor' && 'text-terciary-main'}`
+                                          )}
+                                       >
+                                          {item.role}
+                                       </p>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                       <div>
+                                          <p className="text-base text-secundary_blue-main">{item.name}</p>
+                                       </div>
+                                    </div>
                                     <div>
-                                       <p className="text-base text-secundary_blue-main">{item.name}</p>
+                                       <p className="text-base text-secundary_blue-main">{item.title}</p>
                                     </div>
                                  </div>
-                                 <div>
-                                    <p className="text-base text-secundary_blue-main">{item.title}</p>
-                                 </div>
                               </div>
-                           </div>
-                        ))}
+                           ))}
+                        </div>
                      </div>
-                  </div>
+                  )}
+
                   <div className="flex items-center gap-2" onClick={handleAddLike}>
                      {liked ? <LikedIcon className="ml-1 w-6 h-6 cursor-pointer" /> : <UnlikedIcon className="ml-1 w-6 h-6 cursor-pointer" />}
                      <p className="text-lg cursor-pointer select-none">Like the article</p>
