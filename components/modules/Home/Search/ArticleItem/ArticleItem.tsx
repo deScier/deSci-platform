@@ -48,7 +48,7 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
                      <Link
                         href="/home/search/[slug]"
                         as={`/home/search/${slug(id)}`}
-                        className={cn(`${journal.name && 'grid justify-start lg:grid-flow-col items-center gap-1'}`)}
+                        className={cn(`${journal?.name && 'grid justify-start lg:grid-flow-col items-center gap-1'}`)}
                      >
                         {journal && (
                            <React.Fragment>
