@@ -174,6 +174,7 @@ export function HomeComponent({ journals }: HomeProps) {
                            <CardBig
                               id={topPapers[0].id}
                               key={topPapers[0].id}
+                              journal={topPapers[0].journal}
                               title={topPapers[0].title}
                               documentType={capitalizeWord(topPapers[0].documentType!)}
                               authors={topPapers[0].authors}
@@ -187,6 +188,7 @@ export function HomeComponent({ journals }: HomeProps) {
                            <CardSmall
                               id={topPapers[1].id}
                               key={topPapers[1].id}
+                              journal={topPapers[1].journal}
                               title={topPapers[1].title}
                               documentType={capitalizeWord(topPapers[1].documentType!)}
                               authors={topPapers[1].authors}
@@ -200,6 +202,7 @@ export function HomeComponent({ journals }: HomeProps) {
                            <CardSmall
                               id={topPapers[2].id}
                               key={topPapers[2].id}
+                              journal={topPapers[2].journal}
                               title={topPapers[2].title}
                               documentType={capitalizeWord(topPapers[2].documentType!)}
                               authors={topPapers[2].authors}

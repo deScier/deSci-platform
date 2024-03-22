@@ -11,9 +11,7 @@ const CardBig: React.FC<TopPapersProps> = (data: TopPapersProps) => {
    return (
       <div className="p-4 sm:p-6 rounded-md min-h-[300px] h-full row-span-2 relative">
          <div className="relative flex justify-between z-10">
-            <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold">
-               {data.publishedAt.toLocaleDateString('pt-BR')}{' '}
-            </div>
+            <div className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold">{data.publishedAt.toLocaleDateString('pt-BR')} </div>
             <div className="bg-white px-3 py-1 text-primary-main rounded-md w-fit h-fit text-sm font-semibold flex gap-4 items-center">
                <div className="flex items-center gap-1">
                   <HandThumbsUpFill className="text-terciary-main w-4 h-4" />
@@ -37,6 +35,7 @@ const CardBig: React.FC<TopPapersProps> = (data: TopPapersProps) => {
                   </div>
                </Link>
             </div>
+            <p className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold">{data.journal.name}</p>
             <div className="bg-white w-fit px-2 sm:px-3 py-1 rounded-sm text-secundary_blue-main text-xs sm:text-base font-semibold">
                by {formatAuthors(data.authors)}
             </div>
@@ -53,6 +52,7 @@ interface TopPapersProps {
    image: string
    documentType: string
    authors: { id: string; name: string }[]
+   journal: { id: string; name: string }
    publishedAt: Date
 }
 
