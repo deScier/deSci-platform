@@ -24,7 +24,7 @@ const AddNewMember: React.FC<AddNewMemberProps> = ({ onAddMember, onEditMember, 
          id: onEditMember ? onEditMember.id : uniqueId('member_'),
          email: onEditMember ? onEditMember.email : '',
          name: onEditMember ? onEditMember.name : '',
-         role: onEditMember ? onEditMember.role : 'MEMBER'
+         role: onEditMember ? onEditMember.role : 'EDITOR_IN_CHIEF'
       }
    })
 
