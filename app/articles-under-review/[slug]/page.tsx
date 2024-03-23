@@ -980,9 +980,9 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                      <Input.Label className="flex gap-2 items-center">
                         <span className="text-sm font-semibold">NFT hash</span>
                      </Input.Label>
-                     {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
-                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer">
-                           {article?.document.nftLink}
+                     {article?.document.nftHash !== null && article?.document.nftHash !== undefined ? (
+                        <Link href={article?.document.nftHash} target="_blank" rel="noreferrer" className="truncate">
+                           {article?.document.nftHash}
                         </Link>
                      ) : (
                         <p className="text-base text-neutral-gray">The NFT hash is not available yet.</p>
@@ -993,7 +993,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         <span className="text-sm font-semibold">NFT link</span>
                      </Input.Label>
                      {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
-                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer">
+                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer" className="truncate">
                            {article?.document.nftLink}
                         </Link>
                      ) : (
