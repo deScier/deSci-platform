@@ -1,13 +1,14 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'
-import { home_routes } from '@/routes/home'
 import { JournalDetailsProps } from '@/services/journal/getJournals.service'
 import { NextAuthOptions, Session, getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+import { unstable_noStore as noStore } from 'next/cache'
 
 import JournalDetails from '@/components/pages/Journal/JournalDetails'
 import React from 'react'
 
 export default async function JournalDetailsPage({ params }: { params: { id: string } }) {
+   noStore()
+
    const options = authOptions as NextAuthOptions
    const session = await getServerSession(options)
 
@@ -26,8 +27,6 @@ export default async function JournalDetailsPage({ params }: { params: { id: str
    }
 
    const journal = await fetchJournal(params.id, session)
-
-   if (!journal) redirect(home_routes.journals)
 
    return <React.Fragment>{journal && <JournalDetails params={{ journal: journal }} />}</React.Fragment>
 }
