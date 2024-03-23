@@ -554,6 +554,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '')
    const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '')
    const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch('abstract') || '')
+
+   const [open_status, setOpenStatus] = React.useState(false)
+
+   const handleCopy = (textToCopy: string) => {
+      navigator.clipboard
+         .writeText(textToCopy)
+         .then(() => setOpenStatus(true))
+         .catch((err) => {
+            console.error('Error copying text: ', err)
+         })
+   }
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}>
@@ -981,9 +992,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         <span className="text-sm font-semibold">NFT hash</span>
                      </Input.Label>
                      {article?.document.nftHash !== null && article?.document.nftHash !== undefined ? (
-                        <Link href={article?.document.nftHash} target="_blank" rel="noreferrer" className="truncate">
+                        <div
+                           className="truncate hover:underline hover:text-blue-600 cursor-copy"
+                           onClick={() => {
+                              if (article.document.nftHash) {
+                                 handleCopy(article?.document.nftHash)
+                                 toast.success('NFT hash copied to clipboard!')
+                              }
+                           }}
+                        >
                            {article?.document.nftHash}
-                        </Link>
+                        </div>
                      ) : (
                         <p className="text-base text-neutral-gray">The NFT hash is not available yet.</p>
                      )}
@@ -993,7 +1012,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         <span className="text-sm font-semibold">NFT link</span>
                      </Input.Label>
                      {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
-                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer" className="truncate">
+                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer" className="truncate hover:underline hover:text-blue-600">
                            {article?.document.nftLink}
                         </Link>
                      ) : (

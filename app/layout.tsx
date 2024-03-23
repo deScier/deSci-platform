@@ -1,7 +1,9 @@
-import '@styles/globals.css'
-import '@styles/utils.css'
 import 'keen-slider/keen-slider.min.css'
-import 'react-toastify/dist/ReactToastify.css'
+import 'react-toastify/dist/ReactToastify.min.css'
+
+import '@styles/globals.css'
+import '@styles/toast.css'
+import '@styles/utils.css'
 
 import { TooltipProvider } from '@/lib/tooltip'
 import type { Metadata } from 'next'
