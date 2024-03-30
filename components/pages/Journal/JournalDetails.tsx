@@ -460,7 +460,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      </Button.Button>
                   </React.Fragment>
                ) : (
-                  journalStatus !== 'APPROVED' && (
+                  journalStatus === 'PENDING' && (
                      <h3 className="text-lg font-semibold text-status-pending flex justify-center">Awaiting admin approval</h3>
                   )
                )}
