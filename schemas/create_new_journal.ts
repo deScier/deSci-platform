@@ -13,7 +13,7 @@ export const CreateJournalSchema = z.object({
    field: z.string({ required_error: 'Field is required' }),
    keywords: z.array(KeyWordSchema).min(1, 'At least one keyword is required.'),
    rationale: z.string({ required_error: 'Rationale is required' }),
-   originatesFrom: z.string({ required_error: 'Originates from is required' }),
+   originatesFrom: z.string({ required_error: 'Originates from is required' }).min(2, 'Originates from must be at least 2 characters.'),
    cover: FileSchema,
    members: z.array(MembersSchema).min(1, 'At least one member is required.')
 })
