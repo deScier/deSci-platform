@@ -122,7 +122,7 @@ export default function NewJournalPage() {
       }
 
       toast.success(response.message)
-      router.push(home_routes.summary)
+      router.push(home_routes.journals)
       setLoading(false)
    }
 
