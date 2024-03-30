@@ -195,19 +195,17 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  )}
                               </motion.h2>
                               <div className="flex flex-wrap gap-2 mt-2">
-                                 {keywordsArray(journal.keywords)
-                                    .slice(0, 4)
-                                    .map((keyword) => (
-                                       <motion.div
-                                          initial={{ opacity: 0 }}
-                                          animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
-                                          transition={{ duration: 0.25 }}
-                                          key={keyword}
-                                          className="z-40 border border-white rounded-full px-2 w-fit"
-                                       >
-                                          <p className="text-white text-xxs lg:text-xs">{keyword.length > 30 ? formatName(keyword) : keyword}</p>
-                                       </motion.div>
-                                    ))}
+                                 {keywordsArray(journal.keywords).map((keyword) => (
+                                    <motion.div
+                                       initial={{ opacity: 0 }}
+                                       animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
+                                       transition={{ duration: 0.25 }}
+                                       key={keyword}
+                                       className="z-40 border border-white rounded-full px-2 w-fit"
+                                    >
+                                       <p className="text-white text-xxs lg:text-xs">{keyword.length > 30 ? formatName(keyword) : keyword}</p>
+                                    </motion.div>
+                                 ))}
                               </div>
                            </div>
                            <div className="embla__slide__number">
