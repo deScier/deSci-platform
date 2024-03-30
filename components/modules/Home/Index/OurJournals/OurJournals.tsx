@@ -99,6 +99,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
    }, [emblaApi, hovered_curator_id, windowDimension])
 
    const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
+   console.log('journal_carroussel', journalsCarousel)
 
    React.useEffect(() => {
       if (journals === undefined) return
@@ -111,7 +112,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
             id_carroussel: uniqueId(`${journal.id}_`)
          }))
       } else {
-         if (journals.length >= 4) {
+         if (journals.length >= 5) {
             journal_for_carroussel = journals
                ? journals.concat(journals).map((journal, index) => ({
                     ...journal,
