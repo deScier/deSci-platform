@@ -44,6 +44,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       approve_journal: false,
       reject_journal: false
    })
+
    const [journalStatus, setJournalStatus] = React.useState<string>(journal.status)
 
    const {
@@ -436,7 +437,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                </div>
             </Box>
             <Box className="grid gap-4 h-fit py-6 px-8">
-               {session?.user?.userInfo.role === 'ADMIN' && (journalStatus === 'PENDING' || journalStatus === 'REJECTED') ? (
+               {session?.user?.userInfo.role === 'ADMIN' && journalStatus !== 'APPROVED' ? (
                   <React.Fragment>
                      <Button.Button
                         variant="primary"
