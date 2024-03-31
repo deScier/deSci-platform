@@ -1,6 +1,7 @@
 'use client'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
+import useDimension from '@/hooks/useWindowDimension'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/getArticles.service'
 import { connectWeb3AuthWallet, initWeb3Auth } from '@/services/web3auth/web3auth.service'
@@ -14,13 +15,12 @@ import { useRouter } from 'next/navigation'
 import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
 import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
 import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CaretRight, PlusCircle, X } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 import SubmitedItem from './SubmitedItem/SubmitedItem'
 import { ProfileProps } from './Typing'
-import useDimension from '@/hooks/useWindowDimension'
 
 /**
  * @title Profile Component
@@ -155,7 +155,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                                  }
                               }}
                            >
-                              Connect a wallet
+                              Connect wallet
                               <PlusCircle className="w-4" />
                            </Button.Button>
                         ) : (
