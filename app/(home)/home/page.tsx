@@ -14,7 +14,7 @@ export default async function HomePage() {
 
       const response = (await request.json()) as PublicJournalsProps
 
-      const first_five_journals = response.journals.slice(0, 5)
+      const first_five_journals = response.journals?.slice(0, 5)
 
       const body = { journals: first_five_journals } as PublicJournalsProps
 

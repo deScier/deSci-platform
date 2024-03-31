@@ -35,7 +35,7 @@ const CardSmall: React.FC<TopPapersProps> = (data: TopPapersProps) => {
                   </div>
                </Link>
             </div>
-            <p className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold">{data.journal.name}</p>
+            <p className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold">{data.journal?.name}</p>
             <div className="bg-white w-fit px-2 sm:px-3 py-1 rounded-sm text-secundary_blue-main text-xs sm:text-base font-semibold">
                by {formatAuthors(data.authors)}
             </div>

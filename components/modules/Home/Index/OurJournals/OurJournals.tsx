@@ -107,7 +107,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       let journal_for_carroussel: JournalForCarousel[] = []
 
       if (windowDimension && windowDimension < 1024) {
-         journal_for_carroussel = journals.map((journal, index) => ({
+         journal_for_carroussel = journals?.map((journal, index) => ({
             ...journal,
             id_carroussel: uniqueId(`${journal.id}_`)
          }))
