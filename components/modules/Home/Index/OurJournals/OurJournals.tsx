@@ -218,7 +218,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  height={800}
                                  alt={journal.name}
                                  src={journal.cover}
-                                 className="absolute left-0 top-0 z-0 object-center object-cover w-full lg:w-[284px] lg:max-h-[424px] h-full rounded-3xl min-w-[284px]"
+                                 className="absolute left-0 top-0 z-0 object-center w-full lg:w-[284px] lg:max-h-[424px] h-full rounded-3xl min-w-[284px]"
                               />
                            </div>
                         </div>
