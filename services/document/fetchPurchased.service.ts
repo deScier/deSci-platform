@@ -52,6 +52,7 @@ export const useFetchPurchasedArticles = () => {
                      id: article.id,
                      title: article.title,
                      image: article.cover || '',
+                     journal: article.journal,
                      authors:
                         article.authorsOnDocuments?.map((item) => ({
                            id: item.id,

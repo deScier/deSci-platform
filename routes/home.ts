@@ -10,15 +10,18 @@ export const home_routes = {
    profile: '/profile',
    about_us: '/about',
    my_ip: '/my-ip',
+   journals: '/journals',
    descier: {
       index: '/descier/articles-for-approval',
-      articles_for_approval: '/descier/articles-for-approval'
+      articles_for_approval: '/descier/articles-for-approval',
+      journals_for_approval: '/descier/journals-for-approval'
    },
    articles: {
       in_review: 'articles-under-review/',
       added_as_reviewer: 'as-reviewer/'
    },
    summary_routes: {
-      new_document: '/summary/new-document'
+      new_document: '/summary/new-document',
+      new_journal: '/summary/new-journal'
    }
 }

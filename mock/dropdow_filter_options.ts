@@ -1,3 +1,5 @@
+import { Option } from '@/components/common/Input/Typing'
+import { slugfy } from '@/utils/slugfy'
 import { uniqueId } from 'lodash'
 
 export interface FilterOption {
@@ -137,6 +139,41 @@ export const filter_status = [
       label: 'Published',
       value: 'submitted'
    }
+]
+
+export const journal_status_option = [
+   {
+      id: uniqueId(),
+      label: 'All',
+      value: ''
+   },
+   {
+      id: uniqueId(),
+      label: 'Pending',
+      value: 'PENDING'
+   },
+   {
+      id: uniqueId(),
+      label: 'Approved',
+      value: 'APPROVED'
+   },
+   {
+      id: uniqueId(),
+      label: 'Rejected',
+      value: 'REJECTED'
+   }
+]
+
+export const journal_originate_from: Option[] = [
+   { id: uniqueId(), label: 'All', value: '' },
+   { id: uniqueId(), label: 'New Area of Knowledge', value: slugfy('New Area of Knowledge') },
+   { id: uniqueId(), label: 'Community', value: slugfy('Community') },
+   { id: uniqueId(), label: 'University', value: slugfy('University') },
+   { id: uniqueId(), label: 'Faculty', value: slugfy('Faculty') },
+   { id: uniqueId(), label: 'Conference', value: slugfy('Conference') },
+   { id: uniqueId(), label: 'Event', value: slugfy('Event') },
+   { id: uniqueId(), label: 'Association', value: slugfy('Association') },
+   { id: uniqueId(), label: 'Other', value: slugfy('Other') }
 ]
 
 export const reviewer_filter_status = [

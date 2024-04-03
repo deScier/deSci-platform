@@ -1,18 +1,20 @@
 'use client'
 
+import * as Input from '@components/common/Input/Input'
+import * as Title from '@components/common/Title/Page'
+
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
-import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReview, ArticleUnderReviewProps, ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
-import useDebounce from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
 import { filter_status } from '@/mock/dropdow_filter_options'
 import { home_routes } from '@/routes/home'
 import { AuthorsOnDocuments } from '@/services/document/getArticles'
 import { useArticles } from '@/services/document/getArticles.service'
-import * as Input from '@components/common/Input/Input'
-import * as Title from '@components/common/Title/Page'
 import { useSession } from 'next-auth/react'
+
+import PaginationComponent from '@/components/common/Pagination/Pagination'
+import useDebounce from '@/hooks/useDebounce'
 import React from 'react'
 
 export default function ArticlesUnderReviewPage() {

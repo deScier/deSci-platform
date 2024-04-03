@@ -2,8 +2,8 @@ import { uniqueId } from 'lodash'
 import * as zod from 'zod'
 
 export const KeyWordSchema = zod.object({
-   id: zod.string().min(3, 'Id must be at least 3 characters.'),
-   name: zod.string().min(3, 'Name must be at least 3 characters.')
+   id: zod.string().min(1, 'Id must be at least 3 characters.'),
+   name: zod.string().min(1, 'Name must be at least 3 characters.')
 })
 
 export const FileSchema = zod.object({
@@ -37,6 +37,7 @@ export const CreateDocumentSchema = zod.object({
    keywords: zod.array(KeyWordSchema).min(1, 'At least one keyword is required.'),
    accessType: zod.enum(['FREE', 'PAID'], { required_error: 'Access type is required.' }),
    price: zod.string(),
+   journalId: zod.string().min(1, 'A journal is required'),
    file: FileSchema,
    cover: FileSchema,
    authors: zod.array(AuthorSchema).min(1, 'At least one author is required.'),

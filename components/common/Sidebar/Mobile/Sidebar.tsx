@@ -1,6 +1,7 @@
 'use client'
 
 import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles'
+import useDimension from '@/hooks/useWindowDimension'
 import { article_key } from '@/mock/sidebar_items'
 import { home_routes } from '@/routes/home'
 import * as Dialog from '@components/common/Dialog/Digalog'
@@ -19,6 +20,8 @@ import { MobileProfileComponent } from './ProfileSidebar'
  * @dev This component uses React state to toggle between sidebar and profile views in a mobile environment.
  */
 export function SidebarMobile() {
+   const { windowDimension } = useDimension()
+
    /** @dev State to manage the open status of navigation ('sidebar', 'profile', or false) */
    const [openNav, setOpenNav] = React.useState<'sidebar' | 'profile' | false>(false)
    /** @dev State to manage whether the user has made a purchase */

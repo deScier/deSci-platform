@@ -1,11 +1,13 @@
 'use client'
 
-import PaginationComponent from '@/components/common/Pagination/Pagination'
+import * as Input from '@components/common/Input/Input'
+import * as Title from '@components/common/Title/Page'
+
 import { ArticleUnderReview, ArticleUnderReviewProps, ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import { home_routes } from '@/routes/home'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
-import * as Input from '@components/common/Input/Input'
-import * as Title from '@components/common/Title/Page'
+
+import PaginationComponent from '@/components/common/Pagination/Pagination'
 import React from 'react'
 import slug from 'slug'
 

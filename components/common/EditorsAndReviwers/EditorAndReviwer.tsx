@@ -57,7 +57,7 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
                                  `${item.inviteStatus == 'ACCEPTED' && 'text-status-green'}`
                               )}
                            >
-                              {item.inviteStatus}
+                              {item.inviteStatus == 'ACCEPTED' ? 'Invite accepted' : item.inviteStatus}
                            </p>
                         </div>
                      </div>

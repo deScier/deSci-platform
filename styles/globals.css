@@ -109,3 +109,40 @@ input::-webkit-credentials-auto-fill-button {
    position: absolute;
    right: 0;
 }
+
+.embla {
+   overflow: visible;
+}
+
+.embla__container {
+   display: flex;
+}
+
+.embla__slide {
+   flex: 0 0 100%;
+   margin-left: 8px;
+   margin-right: 8px;
+}
+
+@media (min-width: 640px) {
+   .embla__slide {
+      flex: 0 0 100%;
+      margin-left: 8px;
+      margin-right: 8px;
+   }
+}
+
+@media (min-width: 768px) {
+   .embla__slide {
+      flex: 0 0 calc(100% / 2);
+      margin-left: 8px;
+      margin-right: 8px;
+   }
+}
+
+@media (min-width: 1024px) {
+   .embla__slide {
+      flex: 0 0 284px;
+      width: 100%;
+   }
+}

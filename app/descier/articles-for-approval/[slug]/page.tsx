@@ -3,13 +3,14 @@
 import Box from '@/components/common/Box/Box'
 import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import Dropzone from '@/components/common/Dropzone/Dropzone'
+import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer'
 import { File } from '@/components/common/File/File'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
-import useDimension from '@/hooks/useWindowDimension'
 import { header_editor_reviewer } from '@/mock/article_under_review'
 import { Author, authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
@@ -17,6 +18,8 @@ import { approveByAdminService } from '@/services/admin/approve.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
 import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles'
+import { updateDocumentService } from '@/services/document/update.service'
+import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
 import { keywordsArray } from '@/utils/keywords_format'
@@ -51,6 +54,14 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       reject: false
    })
    const [chartError, setChartError] = React.useState<boolean>(false)
+   const [nftData, setNftData] = React.useState({
+      nftLink: '',
+      nftHash: ''
+   })
+   const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false)
+   const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false)
+
+   const [file, setFile] = React.useState<StoredFile>()
 
    const { editorApprovals, getApprovals, reviewerApprovals } = useGetApprovals()
 
@@ -59,6 +70,10 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    const fetchSingleArticle = async (documentId: string) => {
       await fetch_article(documentId).then((res) => {
          setArticle(res as DocumentGetProps)
+         setNftData({
+            nftHash: res?.document.nftHash || '',
+            nftLink: res?.document.nftLink || ''
+         })
          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
          getApprovals(res?.document.reviewersOnDocuments || [])
@@ -83,6 +98,45 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       toast.success(`Document ${status} successfully!`)
 
       router.push(home_routes.descier.index)
+   }
+
+   const handleUpdateNftData = async () => {
+      setUpdateNftLoading(true)
+      const response = await updateDocumentService({
+         documentId: params.slug,
+         document: {
+            ...nftData
+         }
+      })
+
+      setUpdateNftLoading(false)
+
+      if (!response.success) {
+         toast.error(response.message)
+         return
+      }
+
+      toast.success('Document updated successfully.')
+   }
+
+   const handleUpdateArticleFile = async () => {
+      setUploadFileLoading(true)
+      if (!file) return
+      const uploadDocumentSuccess = await uploadDocumentFileService({
+         documentId: params.slug,
+         fileLocalUrl: file.preview,
+         filename: file.name,
+         mimetype: file.type
+      })
+      setUploadFileLoading(false)
+
+      if (!uploadDocumentSuccess) {
+         toast.error('There was an error uploading your file.')
+         return
+      }
+
+      fetchSingleArticle(params.slug)
+      toast.success('File uploaded successfully!')
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
@@ -134,8 +188,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [article?.document.abstractChart])
-
-   const { lg } = useDimension()
 
    return (
       <React.Fragment>
@@ -241,7 +293,47 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         </div>
                      </ScrollArea>
                   </div>
+                  <Dropzone
+                     accept="documents"
+                     placeholder="Update document file (.pdf)"
+                     thumbnail={false}
+                     setSelectedFile={(file) => {
+                        console.log('file', file)
+                        setFile(file as StoredFile)
+                     }}
+                  />
+                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateArticleFile} loading={uploadFileLoading}>
+                     Update file
+                  </Button.Button>
                </div>
+            </Box>
+            <Box className="grid gap-8 h-fit py-6 px-8">
+               <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
+               <div className="grid md:grid-cols-2 items-start gap-6">
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT hash</span>
+                     </Input.Label>
+                     <Input.Input
+                        placeholder="Ex: 0x495f9472767...0045cb7b5e"
+                        value={nftData.nftHash}
+                        onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
+                     />
+                  </Input.Root>
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT link</span>
+                     </Input.Label>
+                     <Input.Input
+                        placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
+                        value={nftData.nftLink}
+                        onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
+                     />
+                  </Input.Root>
+               </div>
+               <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
+                  Save
+               </Button.Button>
             </Box>
             <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
                <div className="grid gap-2">
@@ -278,7 +370,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <div className="grid gap-6">
                   <div className="grid gap-2">
                      <h3 className="text-xl text-terciary-main font-semibold lg:text-lg 2xl:text-xl">Authors</h3>
-                     <p className="text-sm">Drag the Authors to reorder the list.</p>
+                     <p className="text-sm">Drag to reorder.</p>
                   </div>
                   <div className="grid gap-2">
                      <div className="hidden md:grid md:grid-cols-3">

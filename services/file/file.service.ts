@@ -4,6 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 type UploadFileProps = {
    documentId?: string
+   journalId?: string
    fileLocalUrl: string
    filename: string
    mimetype: string
@@ -41,6 +42,28 @@ export const uploadAvatarService = async (body: UploadFileProps): Promise<string
    const data = await request.json()
 
    return data?.fileUrl
+}
+
+export const uploadJournalCoverService = async (body: UploadFileProps): Promise<boolean> => {
+   const session = await getSession()
+
+   const file = await localUrlToFile(body.fileLocalUrl, body.filename)
+   const formData = new FormData()
+   formData.append('file', file)
+   formData.append('mimetype', body.mimetype)
+
+   const request = await fetch(`${API_URL}/journals/upload/${body.journalId}`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+         Authorization: `Bearer ${session?.user?.token}`,
+         'Access-Control-Allow-Origin': '*'
+      }
+   })
+
+   const response = request.status === 200
+
+   return response
 }
 
 export const uploadDocumentFileService = async (body: UploadFileProps) => {

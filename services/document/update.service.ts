@@ -45,6 +45,8 @@ type DocumentProps = {
    accessType?: string
    category?: string
    price?: number
+   nftHash?: string
+   nftLink?: string
    authors?: CreateAuthor[]
 }
 

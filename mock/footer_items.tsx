@@ -40,8 +40,8 @@ export const links = [
    },
    {
       id: uniqueId(),
-      name: 'Support',
-      link: 'https://wa.me/5511983432131'
+      name: 'Instructions',
+      link: 'https://descier-1.gitbook.io/the-desci-journal-handbook/'
    },
    {
       id: uniqueId(),

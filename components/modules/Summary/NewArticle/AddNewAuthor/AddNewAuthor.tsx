@@ -9,10 +9,10 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { NewAuthorProps } from './Typing'
 
 /**
- * @title NewAuthor Component
+ * @title AddNewAuthor Component
  * @notice This component provides a form interface for adding or updating author information.
  */
-export const NewAuthor: React.FC<NewAuthorProps> = ({ onAddAuthor, onEditAuthor, onClose, onUpdateAuthor }: NewAuthorProps) => {
+export const AddNewAuthor: React.FC<NewAuthorProps> = ({ onAddAuthor, onEditAuthor, onClose, onUpdateAuthor }: NewAuthorProps) => {
    /** @dev Initializes form handling with validation and default values */
    const {
       register,

@@ -1,10 +1,12 @@
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AuthorsOnDocuments } from '@/services/document/getArticles'
 import { truncate } from 'lodash'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import './Item.css'
-import { AuthorsOnDocuments } from '@/services/document/getArticles'
 
 /**
  * @title Article Under Review Component
@@ -37,11 +39,29 @@ export const ArticleUnderReview: React.FC<ArticleUnderReviewProps> = ({
             <hr className="block md:hidden divider-h" />
             <div className="grid gap-2 mt-[-8px]">
                <div>
-                  <Link href={link}>
-                     <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
-                        {truncate(title, { length: 40 })}
-                     </h6>
-                  </Link>
+                  {title.length > 32 ? (
+                     <Link href={link}>
+                        <HoverCard>
+                           <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
+                              <h6 className="hidden lg:block text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                                 {truncate(title, { length: 30 })}
+                              </h6>
+                              <h6 className="block lg:hidden text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                                 {truncate(title, { length: 70 })}
+                              </h6>
+                           </HoverCardTrigger>
+                           <HoverCardContent align="center" side="top" className="w-fit max-w-[500px] py-1">
+                              <p className="text-sm text-start font-semibold text-primary-main w-full">{title}</p>
+                           </HoverCardContent>
+                        </HoverCard>
+                     </Link>
+                  ) : (
+                     <Link href={link}>
+                        <h6 className="text-sm font-semibold text-secundary_blue-main lg:text-base cursor-pointer hover:text-primary-main hover:underline transition-all duration-200">
+                           {title}
+                        </h6>
+                     </Link>
+                  )}
                   <div className="flex items-center gap-2">
                      {status_editor === 'approved' && status_reviewer === 'approved' ? (
                         <React.Fragment>

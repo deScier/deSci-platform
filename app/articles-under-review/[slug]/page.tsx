@@ -1,9 +1,10 @@
 'use client'
 
-import Box from '@/components/common/Box/Box'
-import CommentItem from '@/components/common/Comment/Comment'
-import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
-import Dropzone from '@/components/common/Dropzone/Dropzone'
+import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Input from '@components/common/Input/Input'
+import * as Tooltip from '@components/common/Tooltip/Tooltip'
+
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { File } from '@/components/common/File/File'
 import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
@@ -11,9 +12,7 @@ import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFla
 import { InviteLink } from '@/components/common/InviteLink/InviteLink'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview'
-import { NewAuthor } from '@/components/modules/Summary/NewArticle/Authors/NewAuthor'
-import EditComment from '@/components/modules/deScier/Article/EditComment'
-import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
@@ -37,13 +36,8 @@ import { updateCommentService } from '@/services/reviewer/updateComment.service'
 import { ActionComments, comments_initial_state, reducer_comments } from '@/states/reducer_comments'
 import { extractFileName } from '@/utils/extract_file_name'
 import { keywordsArray } from '@/utils/keywords_format'
-import * as Button from '@components/common/Button/Button'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Input from '@components/common/Input/Input'
-import * as Tooltip from '@components/common/Tooltip/Tooltip'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEqual, uniqueId } from 'lodash'
-import mermaid from 'mermaid'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useReducer } from 'react'
@@ -52,6 +46,15 @@ import { CurrencyInput } from 'react-currency-mask'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
+
+import Box from '@/components/common/Box/Box'
+import CommentItem from '@/components/common/Comment/Comment'
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import Dropzone from '@/components/common/Dropzone/Dropzone'
+import EditComment from '@/components/modules/deScier/Article/EditComment'
+import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import mermaid from 'mermaid'
+import Link from 'next/link'
 
 export default function ArticleInReviewPage({ params }: { params: { slug: string } }) {
    const router = useRouter()
@@ -551,6 +554,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '')
    const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '')
    const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch('abstract') || '')
+
+   const [open_status, setOpenStatus] = React.useState(false)
+
+   const handleCopy = (textToCopy: string) => {
+      navigator.clipboard
+         .writeText(textToCopy)
+         .then(() => setOpenStatus(true))
+         .catch((err) => {
+            console.error('Error copying text: ', err)
+         })
+   }
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}>
@@ -593,7 +607,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.edit_author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onEditAuthor={author_to_edit}
                      onUpdateAuthor={(updatedAuthor) => {
                         setAuthors((prevItems) => {
@@ -617,7 +631,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onAddAuthor={(value) => {
                         const newAuthor = {
                            id: value.id,
@@ -635,7 +649,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   />
                )}
                {dialog.edit_author && (
-                  <NewAuthor
+                  <AddNewAuthor
                      onEditAuthor={author_to_edit}
                      onUpdateAuthor={(updatedAuthor) => {
                         setAuthors((prevItems) => {
@@ -970,7 +984,44 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   </div>
                </div>
             </Box>
-            <Box className="grid gap-8 h-fit py-6 px-8">
+            <Box className="grid gap-6 h-fit px-4 py-6 md:px-8">
+               <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
+               <div className="grid md:grid-cols-2 items-start gap-6">
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT hash</span>
+                     </Input.Label>
+                     {article?.document.nftHash !== null && article?.document.nftHash !== undefined ? (
+                        <div
+                           className="truncate hover:underline hover:text-blue-600 cursor-copy"
+                           onClick={() => {
+                              if (article.document.nftHash) {
+                                 handleCopy(article?.document.nftHash)
+                                 toast.success('NFT hash copied to clipboard!')
+                              }
+                           }}
+                        >
+                           {article?.document.nftHash}
+                        </div>
+                     ) : (
+                        <p className="text-base text-neutral-gray">The NFT hash is not available yet.</p>
+                     )}
+                  </Input.Root>
+                  <Input.Root>
+                     <Input.Label className="flex gap-2 items-center">
+                        <span className="text-sm font-semibold">NFT link</span>
+                     </Input.Label>
+                     {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
+                        <Link href={article?.document.nftLink} target="_blank" rel="noreferrer" className="truncate hover:underline hover:text-blue-600">
+                           {article?.document.nftLink}
+                        </Link>
+                     ) : (
+                        <p className="text-base text-neutral-gray">The NFT link is not available yet.</p>
+                     )}
+                  </Input.Root>
+               </div>
+            </Box>
+            <Box className="grid gap-6 h-fit px-4 py-6 md:px-8">
                <div className="grid gap-2">
                   <h3 className="text-lg md:text-xl text-primary-main font-semibold">Comments</h3>
                   <p className="text-sm">The reviewing team may write comments and suggest editions on your document here.</p>
@@ -1071,7 +1122,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                      <PlusCircle className="w-4 fill-primary-main" />
                   </Button.Button>
                   <div className="grid gap-6">
-                     <p className="text-sm">Drag the authors to reorder the list.</p>
+                     <p className="text-sm">Drag to reorder.</p>
                      <div className="grid gap-2">
                         <div className="hidden md:grid grid-cols-3">
                            {authors_headers.map((header, index) => (

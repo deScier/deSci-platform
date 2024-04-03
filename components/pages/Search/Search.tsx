@@ -1,24 +1,28 @@
 'use client'
 
-import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
-import PaginationComponent from '@/components/common/Pagination/Pagination'
-import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
-import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
-import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
-import LoginModal from '@/components/modules/Login/Login'
-import RegisterModal from '@/components/modules/Register/Register'
-import useDebounce from '@/hooks/useDebounce'
-import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options'
-import { useArticles } from '@/services/document/fetchPublic.service'
+import '@styles/home.css'
+
 import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
-import '@styles/home.css'
+
+import { Dropdown } from '@/components/common/Dropdown/Dropdown'
+import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
+import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
+import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
+import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options'
+import { useArticles } from '@/services/document/fetchPublic.service'
+import { slugfy } from '@/utils/slugfy'
 import { useSearchParams } from 'next/navigation'
-import React from 'react'
 import { Person, Search } from 'react-bootstrap-icons'
 import { twMerge } from 'tailwind-merge'
+
+import PaginationComponent from '@/components/common/Pagination/Pagination'
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
+import LoginModal from '@/components/modules/Login/Login'
+import RegisterModal from '@/components/modules/Register/Register'
+import useDebounce from '@/hooks/useDebounce'
+import React from 'react'
 
 export function SearchArticlesComponent() {
    const { articles } = useArticles()
@@ -31,6 +35,7 @@ export function SearchArticlesComponent() {
    const [totalPages, setTotalPages] = React.useState(1)
    const [searchTerm, setSearchTerm] = React.useState('')
    const [searchAuthor, setSearchAuthor] = React.useState('')
+   const [searchType, setSearchType] = React.useState('')
    const [accessType, setAccessType] = React.useState('')
    const [documentType, setDocumentType] = React.useState<string | null>(null)
    const [publicationYear, setPublicationYear] = React.useState<number | null>(null)
@@ -49,25 +54,33 @@ export function SearchArticlesComponent() {
       if (searchQueries) {
          const term = searchQueries.get('term') || ''
          const author = searchQueries.get('author') || ''
+         const type = searchQueries.get('type') || ''
 
-         setSearchTerm(term)
-         setSearchAuthor(author)
+         if (type === 'author') {
+            setSearchTerm('')
+            setSearchAuthor(term)
+         } else {
+            setSearchTerm(term)
+            setSearchAuthor(author)
+         }
+
+         setSearchType(type)
       }
    }, [searchQueries])
 
    const clearFilters = () => {
-      setPage(1) // Resetar para a primeira página
-      setResults(articles) // Resetar os resultados (se necessário)
-      setTotalPages(1) // Resetar o total de páginas (se necessário)
+      setPage(1)
+      setResults(articles)
+      setTotalPages(1)
       setSearchTerm('')
       setSearchAuthor('')
       setAccessType('')
-      setDocumentType(null) // Usar null para indicar que nenhum tipo de documento está selecionado
-      setPublicationYear(null) // Alterado de undefined para null para consistência
+      setDocumentType(null)
+      setPublicationYear(null)
       setField(null)
    }
 
-   const withoutFilters = !searchTerm && !searchAuthor && !accessType && documentType === null && publicationYear === null && field === null
+   const withoutFilters = !searchTerm && !searchAuthor && !accessType && !documentType && !publicationYear && !field
 
    /** @dev Component states for various authentication and navigation modals */
    const login_component = 'login'
@@ -110,7 +123,7 @@ export function SearchArticlesComponent() {
                )}
             </Dialog.Content>
          </Dialog.Root>
-         <div className="flex flex-col gap-6">
+         <div className="flex flex-col gap-6 lg:px-20 2xl:px-52 px-4 sm:px-6">
             <Title.Root className="mt-8 mb-0 lg:mt-14 md:mb-0">
                <Title.Title className="text-3xl mb-0">Search</Title.Title>
             </Title.Root>
@@ -147,6 +160,7 @@ export function SearchArticlesComponent() {
                   no_selected
                   items={filter_by_year}
                   label="Year of publication:"
+                  className="w-full md:w-fit "
                   selected={publicationYear ? String(publicationYear) : undefined}
                   onSelect={(value) => setPublicationYear(Number(value))}
                />
@@ -154,13 +168,13 @@ export function SearchArticlesComponent() {
                   no_selected
                   label="Field:"
                   selected={field || undefined}
-                  className="min-w-fit px-8"
+                  className="w-full md:w-fit px-8"
                   items={filter_field}
                   onSelect={(value) => setField(value)}
                />
                <SelectArticleType
                   variant="filter"
-                  className="w-full md:w-fit"
+                  className="w-fit"
                   placeholder={'Article type:'}
                   selected={documentType}
                   onValueChange={(value) => {
@@ -172,7 +186,7 @@ export function SearchArticlesComponent() {
                   no_selected
                   selected={accessType}
                   label="Access:"
-                  className="px-8 !min-w-full !w-full md:w-fit"
+                  className="w-fit px-8"
                   items={filter_access}
                   onSelect={(value) => setAccessType(value)}
                />
@@ -185,17 +199,24 @@ export function SearchArticlesComponent() {
             <div className="flex flex-col gap-6 mt-6">
                <div className="grid md:grid-cols-2 gap-6 md:gap-4">
                   {results
-                     ?.filter((article) => article.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
-                     .filter((article) => article.documentType?.includes(documentType || ''))
-                     .filter((article) => article.accessType?.includes(accessType))
-                     .filter((article) => article.field?.toLowerCase()?.includes(field || ''))
-                     .filter((article) => {
-                        if (!publicationYear) {
-                           return true
-                        } else {
-                           return article.publishedAt?.getFullYear() === publicationYear
+                     ?.filter((article) => {
+                        if (!searchType) return true
+                        switch (searchType) {
+                           case 'author':
+                              return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)))
+                           case 'journal':
+                              return slugfy(article.journal?.name || '').includes(slugfy(searchTerm))
+                           case 'paper':
+                              return slugfy(article.title).includes(slugfy(searchTerm))
+                           default:
+                              return true
                         }
                      })
+                     .filter((article) => slugfy(article.title).includes(slugfy(searchTerm)) || slugfy(article.journal.name).includes(slugfy(searchTerm)))
+                     .filter((article) => !documentType || article.documentType === documentType)
+                     .filter((article) => !accessType || article.accessType === accessType)
+                     .filter((article) => !field || article.field === field)
+                     .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear)
                      .slice((page - 1) * per_page, page * per_page)
                      .map((article) => (
                         <React.Fragment key={article.id}>
@@ -207,6 +228,7 @@ export function SearchArticlesComponent() {
                               image={article.image}
                               likes={article.likes || 0}
                               published_date={article.publishedAt!.toLocaleDateString('pt-BR')}
+                              journal={article.journal}
                               tags={article.tags || []}
                               views={article.views || 0}
                               document_type={article.documentType}
@@ -214,6 +236,30 @@ export function SearchArticlesComponent() {
                         </React.Fragment>
                      ))}
                </div>
+               {results
+                  ?.filter((article) => {
+                     if (!searchType) return true
+                     switch (searchType) {
+                        case 'author':
+                           return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)))
+                        case 'journal':
+                           return slugfy(article.journal?.name || '').includes(slugfy(searchTerm))
+                        case 'paper':
+                           return slugfy(article.title).includes(slugfy(searchTerm))
+                        default:
+                           return true
+                     }
+                  })
+                  .filter((article) => slugfy(article.title).includes(slugfy(searchTerm)) || slugfy(article.journal.name).includes(slugfy(searchTerm)))
+                  .filter((article) => !documentType || article.documentType === documentType)
+                  .filter((article) => !accessType || article.accessType === accessType)
+                  .filter((article) => !field || article.field === field)
+                  .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear).length === 0 && (
+                  <div className="text-center min-h-[40vh] flex items-center justify-center">
+                     <p>No articles found.</p>
+                  </div>
+               )}
+
                <div className="flex justify-center">
                   <PaginationComponent
                      key={totalPages}

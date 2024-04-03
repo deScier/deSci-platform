@@ -1,17 +1,19 @@
 'use client'
 
+import * as Input from '@components/common/Input/Input'
+import * as Title from '@components/common/Title/Page'
+
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
-import ReviewerItem from '@/components/modules/AsReviewer/ReviewerItem/ReviewerItem'
 import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useDebounce from '@/hooks/useDebounce'
 import { reviewer_filter_status } from '@/mock/dropdow_filter_options'
 import { useArticleToReview } from '@/services/reviewer/fetchDocuments.service'
-import * as Input from '@components/common/Input/Input'
-import * as Title from '@components/common/Title/Page'
+
+import ReviewerItem from '@/components/modules/AsReviewer/ReviewerItem/ReviewerItem'
 import React from 'react'
 
 export default function AsReviewerPage() {
