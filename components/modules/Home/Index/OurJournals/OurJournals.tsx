@@ -42,18 +42,14 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
    const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [
       AutoScroll({
-         playOnInit: windowDimension && windowDimension > 1024 ? true : false,
+         playOnInit: false,
          speed: 0.8,
-         stopOnMouseEnter: true,
-         startDelay: 200
+         stopOnMouseEnter: true
       })
    ])
 
    React.useEffect(() => {
       if (windowDimension == null) return
-
-      //   if (windowDimension < 1024 && hovered_curator_id == null) {
-      //   }
 
       if (windowDimension > 1024 && hovered_curator_id !== null) {
          setHoveredCuratorId(null)
@@ -61,42 +57,42 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [windowDimension])
 
-   React.useEffect(() => {
-      if (!emblaApi) return
+   //    React.useEffect(() => {
+   //       if (!emblaApi) return
 
-      const autoScroll = emblaApi?.plugins()?.autoScroll as unknown as AutoScrollPlugin
+   //       const autoScroll = emblaApi?.plugins()?.autoScroll as unknown as AutoScrollPlugin
 
-      if (!autoScroll) return
+   //       if (!autoScroll) return
 
-      const updateIsPlaying = () => setIsPlaying(autoScroll.isPlaying() as boolean)
+   //       const updateIsPlaying = () => setIsPlaying(autoScroll.isPlaying() as boolean)
 
-      updateIsPlaying()
+   //       updateIsPlaying()
 
-      emblaApi.on('autoScroll:play' as EmblaEventType, updateIsPlaying)
-      emblaApi.on('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-      emblaApi.on('reInit' as EmblaEventType, updateIsPlaying)
+   //       emblaApi.on('autoScroll:play' as EmblaEventType, updateIsPlaying)
+   //       emblaApi.on('autoScroll:stop' as EmblaEventType, updateIsPlaying)
+   //       emblaApi.on('reInit' as EmblaEventType, updateIsPlaying)
 
-      return () => {
-         emblaApi.off('autoScroll:play' as EmblaEventType, updateIsPlaying)
-         emblaApi.off('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-         emblaApi.off('reInit' as EmblaEventType, updateIsPlaying)
-      }
-   }, [emblaApi])
+   //       return () => {
+   //          emblaApi.off('autoScroll:play' as EmblaEventType, updateIsPlaying)
+   //          emblaApi.off('autoScroll:stop' as EmblaEventType, updateIsPlaying)
+   //          emblaApi.off('reInit' as EmblaEventType, updateIsPlaying)
+   //       }
+   //    }, [emblaApi])
 
-   React.useEffect(() => {
-      const autoScroll = emblaApi?.plugins()?.autoScroll
-      if (!autoScroll) return
+   //    React.useEffect(() => {
+   //       const autoScroll = emblaApi?.plugins()?.autoScroll
+   //       if (!autoScroll) return
 
-      if (windowDimension && windowDimension < 1024) {
-         ;(autoScroll.stop as () => void)()
-      } else {
-         if (hovered_curator_id !== null) {
-            ;(autoScroll.stop as () => void)()
-         } else {
-            ;(autoScroll.play as () => void)()
-         }
-      }
-   }, [emblaApi, hovered_curator_id, windowDimension])
+   //       if (windowDimension && windowDimension < 1024) {
+   //          ;(autoScroll.stop as () => void)()
+   //       } else {
+   //          if (hovered_curator_id !== null) {
+   //             ;(autoScroll.stop as () => void)()
+   //          } else {
+   //             ;(autoScroll.play as () => void)()
+   //          }
+   //       }
+   //    }, [emblaApi, hovered_curator_id, windowDimension])
 
    const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
    console.log('journal_carroussel', journalsCarousel)
@@ -129,6 +125,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
       setJournalsCarousel(journal_for_carroussel)
    }, [journals, windowDimension])
+
    const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
 
    React.useEffect(() => {
@@ -166,7 +163,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       )
    }
    return (
-      <React.Fragment>
+      <div className="px-4 lg:px-0">
          <div className="embla">
             <div className="embla__viewport" ref={emblaRef}>
                <div className="embla__container">
@@ -234,7 +231,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                <DotButton key={index} onClick={() => onDotButtonClick(index)} className={`dot-button ${selectedIndex === index ? 'active' : ''}`} />
             ))}
          </div>
-      </React.Fragment>
+      </div>
    )
 }
 
