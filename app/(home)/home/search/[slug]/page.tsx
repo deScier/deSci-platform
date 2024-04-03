@@ -462,7 +462,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                            {capitalizeWord(getArticleTypeLabel(article?.document?.documentType as string) || 'paper')}
                         </p>
                      </div>
-                     {article?.document?.journal.name && (
+                     {article?.document?.journal?.name && (
                         <div className="flex flex-col flex-grow">
                            <p className="text-base font-semibold">Journal</p>
                            <p className="text-base font-regular">{capitalizeWord(article?.document?.journal.name)}</p>
