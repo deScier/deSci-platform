@@ -4,7 +4,7 @@ import { home_routes } from '@/routes/home'
 import { PublicJournalsProps } from '@/services/journal/getJournals.service'
 import { formatName } from '@/utils/format_texts'
 import { keywordsArray } from '@/utils/keywords_format'
-import { EmblaEventType, EmblaOptionsType } from 'embla-carousel'
+import { EmblaOptionsType } from 'embla-carousel'
 import { motion } from 'framer-motion'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
@@ -79,6 +79,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
    //       }
    //    }, [emblaApi])
 
+   // Activate the auto scroll plugin when the window dimension is greater than 1024
    //    React.useEffect(() => {
    //       const autoScroll = emblaApi?.plugins()?.autoScroll
    //       if (!autoScroll) return
@@ -96,6 +97,13 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
    const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
    console.log('journal_carroussel', journalsCarousel)
+
+   // Set the first journal as the hovered curator id when the window dimension is less than 1024
+   //    React.useEffect(() => {
+   //       if (windowDimension && windowDimension < 1024 && journalsCarousel && journalsCarousel.length > 0) {
+   //          setHoveredCuratorId(journalsCarousel[0].id_carroussel)
+   //       }
+   //    }, [windowDimension, journalsCarousel])
 
    React.useEffect(() => {
       if (journals === undefined) return
@@ -128,30 +136,25 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
    const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi)
 
-   React.useEffect(() => {
-      if (windowDimension && windowDimension < 1024 && journalsCarousel && journalsCarousel.length > 0) {
-         setHoveredCuratorId(journalsCarousel[0].id_carroussel)
-      }
-   }, [windowDimension, journalsCarousel])
+   // Set the hovered curator id when the user selects a journal
+   //    React.useEffect(() => {
+   //       if (!emblaApi) return
 
-   React.useEffect(() => {
-      if (!emblaApi) return
+   //       const onSelect = () => {
+   //          if (windowDimension && windowDimension < 1024) {
+   //             const selectedIndex = emblaApi.selectedScrollSnap()
+   //             if (journalsCarousel && journalsCarousel.length > 0) {
+   //                setHoveredCuratorId(journalsCarousel[selectedIndex].id_carroussel)
+   //             }
+   //          }
+   //       }
 
-      const onSelect = () => {
-         if (windowDimension && windowDimension < 1024) {
-            const selectedIndex = emblaApi.selectedScrollSnap()
-            if (journalsCarousel && journalsCarousel.length > 0) {
-               setHoveredCuratorId(journalsCarousel[selectedIndex].id_carroussel)
-            }
-         }
-      }
+   //       emblaApi.on('select' as EmblaEventType, onSelect)
 
-      emblaApi.on('select' as EmblaEventType, onSelect)
-
-      return () => {
-         emblaApi.off('select' as EmblaEventType, onSelect)
-      }
-   }, [emblaApi, journalsCarousel, windowDimension])
+   //       return () => {
+   //          emblaApi.off('select' as EmblaEventType, onSelect)
+   //       }
+   //    }, [emblaApi, journalsCarousel, windowDimension])
 
    if (journals?.length == 0) {
       return (
@@ -172,9 +175,20 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                         <div
                            key={journal.id_carroussel}
                            className="embla__slide !relative flex h-[500px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
-                           onClick={() => setHoveredCuratorId(journal.id_carroussel)}
-                           onMouseEnter={() => setHoveredCuratorId(journal.id_carroussel)}
-                           onMouseLeave={() => setHoveredCuratorId(null)}
+                           onClick={() => {
+                              if (windowDimension && windowDimension > 1024) return
+                              if (windowDimension && windowDimension < 1024) {
+                                 router.push(home_routes.home.search + `?term=${journal.name}&type=journal`)
+                              }
+                           }}
+                           onMouseEnter={() => {
+                              if (windowDimension && windowDimension < 1024) return
+                              setHoveredCuratorId(journal.id_carroussel)
+                           }}
+                           onMouseLeave={() => {
+                              if (windowDimension && windowDimension < 1024) return
+                              setHoveredCuratorId(null)
+                           }}
                         >
                            <div className="z-40 h-full flex flex-col justify-end pb-1">
                               <motion.h2

@@ -30,7 +30,7 @@ import React from 'react'
 
 const OurJournalsDynamic = dynamic(() => import('@/components/modules/Home/Index/OurJournals/OurJournals').then((mod) => mod.OurJournals), {
    loading: () => (
-      <div className="embla__container space-x-4">
+      <div className="embla__container space-x-4 px-4 lg:px-0">
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 block md:hidden" />
 
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden md:block lg:hidden" />
