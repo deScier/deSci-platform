@@ -57,7 +57,7 @@
 @media (max-height: 950px) {
    .blockchain-text-height {
       display: block;
-      min-height: clamp(30vh, 30vh, 80vh);
+      min-height: clamp(0vh, 9vh, 80vh);
    }
 }
 

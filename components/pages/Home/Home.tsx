@@ -156,7 +156,7 @@ export function HomeComponent({ journals }: HomeProps) {
          <div className="hidden md:block">
             <div className="blockchain-text-height"></div>
          </div>
-         <div className="grid gap-52">
+         <div className="grid gap-24">
             <div className="relative w-full flex items-center justify-center lg:hidden">
                <IllustrationHero className="w-[90%] sm:w-3/4 h-auto mt-8 sm:mt-12 max-w-[372px] md:max-w-[454px] lg:hidden" />
                <ShapeMobile className="absolute z-[-1] w-[250vw] sm:w-[200vw] md:w-[164vw] lg:hidden" />
