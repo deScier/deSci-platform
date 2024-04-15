@@ -154,3 +154,9 @@ input::-webkit-credentials-auto-fill-button {
       width: 100%;
    }
 }
+
+@media (min-width: 1920px) {
+   .hero-height {
+      min-height: calc(90vh - 14rem) !important;
+   }
+}
