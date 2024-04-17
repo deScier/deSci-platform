@@ -19,18 +19,18 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
             <div className="grid gap-2">
                {members.map((item, index) => (
                   <Reorder.Item key={item.id} value={item} id={item.id} className="select-none">
-                     <div className="grid md:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
+                     <div className="grid lg:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
                         <div className="flex items-center gap-4">
                            <div className="flex gap-0 items-center reorder-handle" onPointerDown={(e) => controls.start(e)}>
                               {is_admin === true ? null : <CircleIcon className="w-8" />}
                               <p className="text-sm text-blue-gray">{index + 1}º</p>
                            </div>
                            <div className="space-y-1">
-                              <p className="text-sm text-secundary_blue-main font-semibold md:font-regular">{item.name}</p>
-                              <div className="block md:hidden">
+                              <p className="text-sm text-secundary_blue-main font-semibold lg:font-regular">{item.name}</p>
+                              <div className="block lg:hidden">
                                  <p className="text-sm text-secundary_blue-main">{role_mapping[item.role]}</p>
                               </div>
-                              <div className="block md:hidden space-y-2">
+                              <div className="block lg:hidden space-y-2">
                                  <p className="text-sm text-secundary_blue-main">{item.email}</p>
                                  {item.id !== session?.user?.userInfo.id && (
                                     <React.Fragment>
@@ -69,10 +69,10 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                               </div>
                            </div>
                         </div>
-                        <div className="hidden md:block">
+                        <div className="hidden lg:block">
                            <p className="text-sm text-secundary_blue-main truncate">{role_mapping[item.role]}</p>
                         </div>
-                        <div className="hidden md:flex items-center justify-between">
+                        <div className="hidden lg:flex items-center justify-between">
                            <p className="text-sm text-secundary_blue-main">{item.email}</p>
                            {item.id !== session?.user?.userInfo.id && (
                               <React.Fragment>

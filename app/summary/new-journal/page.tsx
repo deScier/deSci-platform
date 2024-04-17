@@ -381,7 +381,7 @@ export default function NewJournalPage() {
             <Box className="grid gap-8 h-fit px-4 py-6 md:px-8">
                <div className="grid gap-2">
                   <div className="grid">
-                     <h3 className="text-lg md:text-xl text-black font-semibold">Editor-in-Chief</h3>
+                     <h3 className="text-lg lg:text-xl text-black font-semibold">Editor-in-Chief</h3>
                   </div>
                   <div className="grid gap-6">
                      <Button.Button
@@ -395,7 +395,7 @@ export default function NewJournalPage() {
                      </Button.Button>
                      <p className="text-sm">Drag to reorder.</p>
                      <div className="grid gap-2">
-                        <div className="hidden md:grid grid-cols-3">
+                        <div className="hidden lg:grid grid-cols-3">
                            {editors_in_chief.map((header, index) => (
                               <React.Fragment key={index}>
                                  <p className="text-sm font-semibold">{header.label}</p>
