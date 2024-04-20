@@ -25,7 +25,11 @@ const Root: React.FC<Tooltip.TooltipProps> = ({ children, ...props }) => {
  * @dev Trigger component for the tooltip. This component acts as the tooltip activator.
  */
 const Trigger: React.FC<Tooltip.TooltipTriggerProps> = ({ children, ...props }) => {
-   return <Tooltip.Trigger {...props}>{children}</Tooltip.Trigger>
+   return (
+      <Tooltip.Trigger type="button" {...props}>
+         {children}
+      </Tooltip.Trigger>
+   )
 }
 
 /**

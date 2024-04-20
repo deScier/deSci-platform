@@ -32,7 +32,8 @@ export type DocumentPublicProps = {
    journal: DocumentJournalProps
    createdAt: Date
    updatedAt: Date
-
+   nftHash: string | null
+   nftLink: string | null
    authors?: AuthorsPublicInfo[]
    reviewers?: ReviewersPublicInfo[]
    documentLikes: DocumentLikeProps[]
