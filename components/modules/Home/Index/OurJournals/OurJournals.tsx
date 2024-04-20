@@ -28,6 +28,7 @@ type OurJournalsProps = {
 type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
 
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
+   console.log('journals', journals)
    const { windowDimension } = useDimension()
    const router = useRouter()
 
