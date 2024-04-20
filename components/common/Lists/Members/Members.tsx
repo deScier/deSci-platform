@@ -5,6 +5,7 @@ import { Pencil, Trash } from 'react-bootstrap-icons'
 
 import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
 import React from 'react'
+import { TruncateWithHoverCard } from '../../Truncate/TruncateWithHoverCard'
 
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
    const { data: session } = useSession()
@@ -26,12 +27,16 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                               <p className="text-sm text-blue-gray">{index + 1}º</p>
                            </div>
                            <div className="space-y-1">
-                              <p className="text-sm text-secundary_blue-main font-semibold lg:font-regular">{item.name}</p>
+                              <TruncateWithHoverCard
+                                 text={item.name}
+                                 truncateLength={5}
+                                 className="text-sm text-secundary_blue-main font-semibold lg:font-regular hover:no-underline"
+                              />
                               <div className="block lg:hidden">
-                                 <p className="text-sm text-secundary_blue-main">{role_mapping[item.role]}</p>
+                                 <TruncateWithHoverCard text={role_mapping[item.role]} className="text-sm text-secundary_blue-main hover:no-underline" />
                               </div>
                               <div className="block lg:hidden space-y-2">
-                                 <p className="text-sm text-secundary_blue-main">{item.email}</p>
+                                 <TruncateWithHoverCard text={item.email} className="text-sm text-secundary_blue-main hover:no-underline" />
                                  {item.id !== session?.user?.userInfo.id && (
                                     <React.Fragment>
                                        <div className="flex items-center gap-2">
@@ -70,10 +75,15 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, on
                            </div>
                         </div>
                         <div className="hidden lg:block">
-                           <p className="text-sm text-secundary_blue-main truncate">{role_mapping[item.role]}</p>
+                           {/* <p className="text-sm text-secundary_blue-main truncate">{role_mapping[item.role]}</p> */}
+                           <TruncateWithHoverCard
+                              text={role_mapping[item.role]}
+                              className="text-sm text-secundary_blue-main truncate hover:no-underline"
+                           />
                         </div>
                         <div className="hidden lg:flex items-center justify-between">
-                           <p className="text-sm text-secundary_blue-main">{item.email}</p>
+                           {/* <p className="text-sm text-secundary_blue-main">{item.email}</p> */}
+                           <TruncateWithHoverCard text={item.email} className="text-sm text-secundary_blue-main hover:no-underline" />
                            {item.id !== session?.user?.userInfo.id && (
                               <React.Fragment>
                                  <div className="flex items-center gap-2">

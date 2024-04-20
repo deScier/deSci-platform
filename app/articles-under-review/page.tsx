@@ -22,8 +22,8 @@ export default function ArticlesUnderReviewPage() {
     * @notice Fetch the articles and their loading state.
     * @dev Using a custom hook "useArticles" to fetch articles.
     */
-   const { articles, loading } = useArticles()
    const { data: session } = useSession()
+   const { articles, loading } = useArticles()
 
    /** @dev Number of articles displayed per page. */
    const per_page = 8
