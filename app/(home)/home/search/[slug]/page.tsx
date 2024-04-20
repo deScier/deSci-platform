@@ -1,5 +1,6 @@
 'use client'
 
+import { TruncateWithHoverCard } from '@/components/common/Truncate/TruncateWithHoverCard'
 import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
 import { ArticleAcess, Badge } from '@/components/modules/Home/Search/ArticleAccess/ArticleAcess'
 import { Checkout } from '@/components/modules/Home/Search/Purchase/Checkout'
@@ -22,6 +23,7 @@ import * as Dialog from '@components/common/Dialog/Digalog'
 import { uniqueId } from 'lodash'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import LikedIcon from 'public/svgs/common/likes/Icons/liked.svg'
 import UnlikedIcon from 'public/svgs/common/likes/Icons/unliked.svg'
@@ -49,6 +51,8 @@ export default function Page({ params }: { params: { slug: string } }) {
    const [accessType, setAccessType] = React.useState('PAID')
    const [likesAmount, setLikesAmount] = React.useState(0)
    const [viewsAmount, setViewsAmount] = React.useState(0)
+
+   console.log('article', article)
 
    const login_component = 'login'
    const register_component = 'register'
@@ -156,9 +160,21 @@ export default function Page({ params }: { params: { slug: string } }) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [session?.user])
 
-   const textToCopy = window.location.href
-
    const [popoverOpen, setPopoverOpen] = React.useState(false)
+
+   const [open_status, setOpenStatus] = React.useState(false)
+
+   const handleCopy = (textToCopy: string) => {
+      navigator.clipboard
+         .writeText(textToCopy)
+         .then(() => setOpenStatus(true))
+         .catch((err) => {
+            console.error('Error copying text: ', err)
+         })
+   }
+
+   if (typeof window === 'undefined') return null
+   const textToCopy = window.location.href
 
    return (
       <React.Fragment>
@@ -450,7 +466,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                         ))}
                      </div>
                   </div>
-                  <div className="flex gap-4 flex-col md:flex-row md:items-center">
+                  <div className="grid md:grid-cols-3 gap-4">
                      <div className="flex flex-col flex-grow">
                         <p className="text-base font-semibold">Field</p>
                         <p className="text-base font-regular">{article?.document?.field}</p>
@@ -468,6 +484,41 @@ export default function Page({ params }: { params: { slug: string } }) {
                            <p className="text-base font-regular">{capitalizeWord(article?.document?.journal.name)}</p>
                         </div>
                      )}
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-4">
+                     <div className="flex flex-col">
+                        <p className="text-base font-semibold">NFT Hash</p>
+                        {article?.document.nftHash !== null && article?.document.nftHash !== undefined ? (
+                           <div
+                              className="truncate hover:underline cursor-copy"
+                              onClick={() => {
+                                 if (article.document.nftHash) {
+                                    handleCopy(article?.document.nftHash)
+                                    toast.success('NFT hash copied to clipboard!')
+                                 }
+                              }}
+                           >
+                              <TruncateWithHoverCard text={article?.document.nftHash} />
+                           </div>
+                        ) : (
+                           <p className="text-base text-neutral-gray">The NFT hash is not available yet.</p>
+                        )}
+                     </div>
+                     <div className="flex flex-col">
+                        <p className="text-base font-semibold">NFT Link</p>
+                        {article?.document.nftLink !== null && article?.document.nftLink !== undefined ? (
+                           <Link
+                              href={article?.document.nftLink}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="truncate hover:underline hover:text-blue-600"
+                           >
+                              {article?.document.nftLink}
+                           </Link>
+                        ) : (
+                           <p className="text-base text-neutral-gray">The NFT link is not available yet.</p>
+                        )}
+                     </div>
                   </div>
                   <div>
                      <p className="text-base font-semibold">Abstract</p>

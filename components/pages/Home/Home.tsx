@@ -42,8 +42,6 @@ const OurJournalsDynamic = dynamic(() => import('@/components/modules/Home/Index
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
-         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
-         <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden lg:block" />
       </div>
    ),
    ssr: false
