@@ -161,7 +161,6 @@ export default function Page({ params }: { params: { slug: string } }) {
    }, [session?.user])
 
    const [popoverOpen, setPopoverOpen] = React.useState(false)
-
    const [open_status, setOpenStatus] = React.useState(false)
 
    const handleCopy = (textToCopy: string) => {

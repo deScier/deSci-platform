@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation'
 import { DotButton, useDotButton } from './EmblaDotsButton'
 
 import useDimension from '@/hooks/useWindowDimension'
-import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 import React from 'react'
@@ -40,13 +39,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       containScroll: 'trimSnaps'
    }
 
-   const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [
-      AutoScroll({
-         playOnInit: false,
-         speed: 0.8,
-         stopOnMouseEnter: true
-      })
-   ])
+   const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS)
 
    React.useEffect(() => {
       if (windowDimension == null) return

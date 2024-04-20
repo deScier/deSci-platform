@@ -118,6 +118,15 @@ input::-webkit-credentials-auto-fill-button {
    display: flex;
 }
 
+@media (max-width: 768px) {
+   .embla__container {
+      display: grid !important;
+      grid-auto-flow: column;
+      gap: 16px;
+      grid-auto-columns: 100%;
+   }
+}
+
 .embla__slide {
    flex: 0 0 100%;
    margin-left: 8px;
