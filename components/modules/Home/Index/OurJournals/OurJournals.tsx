@@ -54,24 +54,11 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
       let journal_for_carroussel: JournalForCarousel[] = []
 
-      if (windowDimension && windowDimension < 1024) {
-         journal_for_carroussel = sortedJournals?.map((journal, index) => ({
-            ...journal,
-            id_carroussel: uniqueId(`${journal.id}_`)
-         }))
-      } else {
-         if (sortedJournals.length >= 5) {
-            journal_for_carroussel = sortedJournals?.concat(sortedJournals).map((journal, index) => ({
-               ...journal,
-               id_carroussel: uniqueId(`${journal.id}_`)
-            }))
-         } else {
-            journal_for_carroussel = sortedJournals?.map((journal, index) => ({
-               ...journal,
-               id_carroussel: uniqueId(`${journal.id}_`)
-            }))
-         }
-      }
+      // Seleciona apenas os primeiros 5 jornais após a ordenação
+      journal_for_carroussel = sortedJournals?.slice(0, 5).map((journal) => ({
+         ...journal,
+         id_carroussel: uniqueId(`${journal.id}_`)
+      }))
 
       setJournalsCarousel(journal_for_carroussel)
    }, [journals, windowDimension])
@@ -96,7 +83,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                      journalsCarousel.map((journal) => (
                         <div
                            key={journal.id_carroussel}
-                           className="embla__slide !relative flex h-[500px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
+                           className="embla__slide !relative flex h-[500px] lg:h-[442px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6"
                            onClick={() => {
                               if (windowDimension && windowDimension > 1024) return
                               if (windowDimension && windowDimension < 1024) {
@@ -154,7 +141,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                                  height={800}
                                  alt={journal.name}
                                  src={journal.cover}
-                                 className="absolute left-0 top-0 z-0 object-center w-full lg:w-[316px] lg:max-h-[424px] h-full rounded-3xl min-w-[316px] object-cover"
+                                 className="absolute left-0 top-0 z-0 object-top w-full lg:w-[316px] lg:max-h-[442px] h-full rounded-3xl min-w-[316px] object-cover"
                               />
                            </div>
                         </div>

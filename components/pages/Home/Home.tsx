@@ -114,10 +114,10 @@ export function HomeComponent({ journals }: HomeProps) {
                )}
             </Dialog.Content>
          </Dialog.Root>
-         <IllustrationHero className="hidden lg:block lg:w-[45%] xl:w-1/2 absolute right-0 md:top-48 lg:top-50 xl:top-40 2xl:top-60 h-full lg:max-w-[600px] xl:max-w-[708px] max-h-[554px]" />
-         <ShapeHero className="hidden lg:block lg:w-3/4 xl:w-full absolute right-0 top-0 lg:-right-20 xl:-right-0 z-[-1] md:max-w-[600px] md:max-h-[700px] lg:max-w-[700px] lg:max-h-[800px] 2xl:max-w-[700px] 2xl:max-h-[872px]" />
+         <IllustrationHero className="hidden lg:block lg:w-[45%] xl:w-1/2 absolute right-0 md:top-48 lg:top-50 xl:top-40 2xl:top-60 h-full lg:max-w-[600px] max-h-[554px]" />
+         <ShapeHero className="hidden lg:block lg:w-3/4 xl:w-full absolute right-0 top-0 lg:-right-20 xl:-right-0 z-[-1] md:max-w-[600px] md:max-h-[700px] lg:max-w-[632] lg:max-h-[800px] 2xl:max-w-[700px] 2xl:max-h-[872px]" />
          <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
-            <div className="h-auto lg:pt-24 lg:min-h-[calc(100vh-14rem)] hero-height">
+            <div className="h-auto lg:pt-24 lg:min-h-[calc(100vh-14rem)] hero-height 2xl:min-h-[calc(100vh-18rem)] ">
                <div className="grid gap-4 md:gap-6 content-start">
                   <div className="grid gap-2 mt-6 lg:mt-24 xl:mt-16 2xl:mt-24">
                      <div className="grid gap-2">
