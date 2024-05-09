@@ -54,13 +54,6 @@
    display: none;
 }
 
-@media (max-height: 950px) {
-   .blockchain-text-height {
-      display: block;
-      min-height: clamp(0vh, 3vh, 80vh);
-   }
-}
-
 @media (max-height: 800px) {
    .blockchain-text-height {
       display: block;
