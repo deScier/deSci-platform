@@ -111,14 +111,8 @@ input::-webkit-credentials-auto-fill-button {
 }
 
 .embla {
-   overflow: hidden;
+   overflow: visible;
 }
-
-/* @media (max-width: 1440px) {
-   .embla {
-      overflow: visible;
-   }
-} */
 
 .embla__container {
    display: flex;
