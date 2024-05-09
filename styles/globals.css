@@ -118,6 +118,18 @@ input::-webkit-credentials-auto-fill-button {
    display: flex;
 }
 
+.embla__viewport {
+   overflow: hidden;
+   position: relative;
+   width: 100%;
+}
+
+@media (min-width: 768px) {
+   .embla__viewport {
+      width: 100vw;
+   }
+}
+
 @media (max-width: 768px) {
    .embla__container {
       display: grid !important;
@@ -128,7 +140,7 @@ input::-webkit-credentials-auto-fill-button {
 }
 
 .embla__slide {
-   flex: 0 0 100%;
+   flex: 0 0 calc(100% / 1);
    margin-left: 8px;
    margin-right: 8px;
 }

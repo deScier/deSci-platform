@@ -358,7 +358,10 @@ export default function NewJournalPage() {
                   <Input.Error>{errors.rationale?.message}</Input.Error>
                </Input.Root>
                <div className="grid gap-4">
-                  <p className="text-sm font-semibold">Journal cover</p>
+                  <p className="text-sm font-semibold">
+                     Journal cover{' '}
+                     <span className="text-sm text-neutral-light_gray font-normal">(Recommended dimensions: 375px width x 500px height)</span>
+                  </p>
                   <Dropzone
                      accept="images"
                      placeholder="Upload cover picture (.png, .jpg)"

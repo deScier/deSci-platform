@@ -30,7 +30,7 @@ import React from 'react'
 
 const OurJournalsDynamic = dynamic(() => import('@/components/modules/Home/Index/OurJournals/OurJournals').then((mod) => mod.OurJournals), {
    loading: () => (
-      <div className="embla__container space-x-4 px-4 lg:px-0">
+      <div className="grid grid-flow-col gap-4 space-x-4 px-4 lg:px-0">
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 block md:hidden" />
 
          <div className="animate-pulse bg-slate-100 dark:bg-slate-800 h-[464px] lg:h-[424px] w-full flex-col overflow-x-hidden rounded-3xl bg-gray-light p-6 hidden md:block lg:hidden" />
@@ -81,7 +81,6 @@ export function HomeComponent({ journals }: HomeProps) {
 
    /** @dev State to manage which component is currently active in the modal */
    const [component, setComponent] = React.useState(login_component)
-
    return (
       <React.Fragment>
          <Dialog.Root open={open}>
@@ -159,8 +158,7 @@ export function HomeComponent({ journals }: HomeProps) {
                <IllustrationHero className="w-[90%] sm:w-3/4 h-auto mt-8 sm:mt-12 max-w-[372px] md:max-w-[454px] lg:hidden" />
                <ShapeMobile className="absolute z-[-1] w-[250vw] sm:w-[200vw] md:w-[164vw] lg:hidden" />
             </div>
-            <div className="space-y-6 lg:px-20 2xl:px-52">
-               <h3 className="text-1xl px-4 lg:px-0 lg:text-3xl font-semibold bg-purple bg-clip-text text-transparent">Our Journals</h3>
+            <div className="space-y-6">
                <OurJournalsDynamic journals={journals} />
             </div>
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
