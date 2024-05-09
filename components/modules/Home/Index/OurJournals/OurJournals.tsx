@@ -8,13 +8,13 @@ import { EmblaOptionsType } from 'embla-carousel'
 import { motion } from 'framer-motion'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
+import { ChevronRight } from 'react-bootstrap-icons'
 import { DotButton, useDotButton } from './EmblaDotsButton'
 
 import useDimension from '@/hooks/useWindowDimension'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 import React from 'react'
-import { ChevronRight } from 'react-bootstrap-icons'
 
 type AutoScrollPlugin = {
    play: () => void
@@ -260,7 +260,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                   </div>
                </div>
             </div>
-            <div className="dots-container lg:!hidden">
+            <div className="dots-container lg:!hidden mt-6">
                {scrollSnaps.map((_, index) => (
                   <DotButton key={index} onClick={() => onDotButtonClick(index)} className={`dot-button ${selectedIndex === index ? 'active' : ''}`} />
                ))}
