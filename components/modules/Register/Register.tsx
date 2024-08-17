@@ -1,20 +1,23 @@
+import '@styles/login.css'
+
+import * as Step from '@/components/common/Steps/Steps'
+import * as Button from '@components/common/Button/Button'
+import * as Input from '@components/common/Input/Input'
+
 import { useLoading } from '@/hooks/useLoading'
 import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { registerUserService } from '@/services/user/register.service'
-import * as Button from '@components/common/Button/Button'
-import * as Input from '@components/common/Input/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
-import '@styles/login.css'
 import { signIn } from 'next-auth/react'
-import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
-import SuccessIllustration from 'public/svgs/modules/login/register-success.svg'
-import React from 'react'
 import { ArrowLeft, BoxArrowRight, X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import LoginAnimation from '../Login/Animation/Animation'
 import { RegisterModalProps } from './Typing'
+
+import SuccessIllustration from 'public/svgs/modules/login/register-success.svg'
+import React from 'react'
+import LoginAnimation from '../Login/Animation/Animation'
 
 /**
  * @title RegisterModal Component
@@ -71,6 +74,29 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
       await signIn('google', { callbackUrl: home_routes.summary })
    }
 
+   const [currentStep, setCurrentStep] = React.useState(1)
+   const [completed, setCompleted] = React.useState([0, 0, 0])
+   const [allCompleted, setAllCompleted] = React.useState(false)
+
+   const updateProgress = (step: number) => {
+      setCurrentStep(step)
+      const newCompleted = completed.map((_, i) => (i < step - 1 ? 1 : 0))
+      setCompleted(newCompleted)
+      setAllCompleted(newCompleted.every((status) => status === 1))
+   }
+
+   const nextStep = () => {
+      if (currentStep < 3) {
+         updateProgress(currentStep + 1)
+      }
+   }
+
+   const prevStep = () => {
+      if (currentStep > 1) {
+         updateProgress(currentStep - 1)
+      }
+   }
+
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
          <div className="grid md:grid-cols-2 relative">
@@ -94,6 +120,31 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
                      </div>
                   </React.Fragment>
                )}
+               <div>
+                  <Step.Root>
+                     <Step.Indicator
+                        last_item={false}
+                        total_items={3}
+                        current={currentStep}
+                        step={1}
+                        completed={completed[0]}
+                        all_completed={allCompleted}
+                     />
+                     <Step.Indicator
+                        last_item={false}
+                        total_items={3}
+                        current={currentStep}
+                        step={2}
+                        completed={completed[1]}
+                        all_completed={allCompleted}
+                     />
+                     <Step.Indicator last_item total_items={3} current={currentStep} step={3} completed={completed[2]} all_completed={allCompleted} />
+                  </Step.Root>
+               </div>
+               <div className="space-y-1">
+                  <h2 className="font-semibold text-1xl">Welcome to our platform</h2>
+                  <p className="text-base">How would you like to sign up?</p>
+               </div>
                {component === success_component && (
                   <React.Fragment>
                      <h2 className="font-semibold text-1xl">Almost there!</h2>
@@ -108,10 +159,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
                )}
                {component !== success_component && (
                   <div className="grid gap-6">
-                     <Button.Button variant="outline" className="rounded-full px-4 py-2" onClick={loginWithGoogle}>
-                        <GoogleIcon className="w-6" />
-                        <span className="text-base font-semibold">Register with Google</span>
-                     </Button.Button>
                      <div className="grid gap-4">
                         <h2 className="font-semibold text-lg text-center text-neutral-gray">or</h2>
                         <Input.Root>
@@ -151,6 +198,18 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
          </div>
       </form>
    )
+}
+
+const RegisterStepOne: React.FC = () => {
+   return <React.Fragment></React.Fragment>
+}
+
+const RegisterStepTwo: React.FC = () => {
+   return <React.Fragment></React.Fragment>
+}
+
+const RegisterStepThree: React.FC = () => {
+   return <React.Fragment></React.Fragment>
 }
 
 export default RegisterModal
