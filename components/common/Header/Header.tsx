@@ -80,7 +80,6 @@ const Header: React.FC = () => {
                   <LoginModal
                      onClose={() => setOpen(false)}
                      onForgotPassword={() => setComponent(forgot_password_component)}
-                     onLogin={() => setComponent(login_component)}
                      onRegister={() => setComponent(register_component)}
                   />
                )}

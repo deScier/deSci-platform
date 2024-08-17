@@ -112,7 +112,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                   <Button.Button type="submit" loading={loading}>
                      Login
                   </Button.Button>
-
                   <p className="text-secundary_blue-main text-sm text-center">
                      Forgot your password?{' '}
                      <span
@@ -122,19 +121,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         Click here
                      </span>
                   </p>
-
                   <div className="relative">
                      <Separator color="#A9A9A9" className="h-[0.5px]" />
                      <p className="text-base p-2 px-3 text-neutral-light_gray absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white">
                         or
                      </p>
                   </div>
-
                   <Button.Button variant="outline" className="px-4 py-2" onClick={() => {}}>
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with wallet</span>
                   </Button.Button>
-
                   <p className="text-secundary_blue-main text-sm text-center">
                      Don&apos;t have an account yet?{' '}
                      <span className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline" onClick={onRegister}>
