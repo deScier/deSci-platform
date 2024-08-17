@@ -69,7 +69,7 @@ const LoginAnimation: React.FC<LoginAnimationProps> = ({ animation_key }: LoginA
                data="/svgs/modules/login/deScier - Login animation (1).svg"
             />
             <BlobShape className="login-blob-shape" />
-            <Image quality={100} width={184} height={184} src={deScierStamp} alt="deScier stamp" className="login-stamp" />
+            <Image quality={100} width={172} height={172} src={deScierStamp} alt="deScier stamp" className="login-stamp" />
          </div>
       </React.Fragment>
    )

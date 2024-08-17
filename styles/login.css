@@ -7,8 +7,8 @@
    top: 0%;
    right: 15%;
    transform: translate(42%, -25%) rotate(4deg);
-   width: 800px;
-   height: 800px;
+   width: 600px;
+   height: 600px;
    image-rendering: optimizeQuality;
    image-rendering: -moz-crisp-edges;
    image-rendering: -webkit-optimize-contrast;
@@ -32,9 +32,9 @@
    gap: 2rem;
    position: absolute;
    width: 100%;
-   top: 52%;
+   top: 35%;
    left: 2rem;
-   transform: translate(-0, -52%);
+   transform: translate(-0, -35%);
    z-index: 1000;
 }
 
