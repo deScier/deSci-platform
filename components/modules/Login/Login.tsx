@@ -1,37 +1,33 @@
 import { home_routes } from '@/routes/home'
-import { LoginProps, LoginSchema } from '@/schemas/login'
+import '@styles/login.css'
+
 import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
+
+import { Separator } from '@/components/ui/separator'
+import { LoginProps, LoginSchema } from '@/schemas/login'
 import { zodResolver } from '@hookform/resolvers/zod'
-import '@styles/login.css'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
-import React, { useState } from 'react'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import LoginAnimation from './Animation/Animation'
 import { LoginModalProps } from './Typing'
+
+import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
+import React from 'react'
+import LoginAnimation from './Animation/Animation'
 
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
  *  @dev The component uses React hooks for state management and routing, and integrates form handling and validation using the useForm hook.
  */
-const LoginModal: React.FC<LoginModalProps> = ({
-   withLink = false,
-   authorName,
-   onClose,
-   onForgotPassword,
-   onLogin,
-   onRegister,
-   noRedirect
-}: LoginModalProps) => {
+const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, onClose, onForgotPassword, onRegister, noRedirect }: LoginModalProps) => {
    /** @dev Initialize Next.js router */
    const router = useRouter()
 
    /** @dev State for managing loading status */
-   const [loading, setLoading] = useState(false)
+   const [loading, setLoading] = React.useState(false)
 
    /** @dev Setup form handling with useForm hook, including form validation using zodResolver */
    const {
@@ -80,6 +76,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       e.preventDefault()
       await signIn('google', { callbackUrl: home_routes.summary })
    }
+
    return (
       <React.Fragment>
          <div className="grid md:grid-cols-2 relative">
@@ -100,12 +97,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                   </React.Fragment>
                )}
                <form className="grid gap-6" onSubmit={handleSubmit(onSubmit)}>
-                  <Button.Button variant="outline" className="rounded-full px-4 py-2" onClick={loginWithGoogle}>
-                     <GoogleIcon className="w-6" />
-                     <span className="text-base font-semibold">Login with Google</span>
-                  </Button.Button>
-                  <div className="grid gap-4">
-                     <h2 className="font-semibold text-lg text-center text-neutral-gray">or</h2>
+                  <div className="grid gap-6">
                      <Input.Root>
                         <Input.Label>E-mail</Input.Label>
                         <Input.Input type="email" placeholder="Type your best email" {...register('email')} />
@@ -120,17 +112,36 @@ const LoginModal: React.FC<LoginModalProps> = ({
                   <Button.Button type="submit" loading={loading}>
                      Login
                   </Button.Button>
-                  <p
-                     className="text-secundary_blue-main text-sm text-center cursor-pointer transition-all hover:underline hover:text-primary-hover underline hover:font-semibold duration-300"
-                     onClick={onForgotPassword}
-                  >
-                     Forgot your password? Click here.
+
+                  <p className="text-secundary_blue-main text-sm text-center">
+                     Forgot your password?{' '}
+                     <span
+                        className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
+                        onClick={onForgotPassword}
+                     >
+                        Click here
+                     </span>
                   </p>
-                  <div className="divider-h my-6" />
+
+                  <div className="relative">
+                     <Separator color="#A9A9A9" className="h-[0.5px]" />
+                     <p className="text-base p-2 px-3 text-neutral-light_gray absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white">
+                        or
+                     </p>
+                  </div>
+
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={() => {}}>
+                     <MetamaskLogo className="w-6" />
+                     <span className="text-base font-semibold">Continue with wallet</span>
+                  </Button.Button>
+
+                  <p className="text-secundary_blue-main text-sm text-center">
+                     Don&apos;t have an account yet?{' '}
+                     <span className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline" onClick={onRegister}>
+                        Create account
+                     </span>
+                  </p>
                </form>
-               <Button.Button variant="outline" onClick={onRegister}>
-                  Not a user? Register now
-               </Button.Button>
             </div>
          </div>
       </React.Fragment>

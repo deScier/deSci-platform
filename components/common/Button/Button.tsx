@@ -10,7 +10,7 @@ import { twMerge } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
 
 const btn = tv({
-   base: 'flex gap-2 items-center justify-center w-full py-3 px-4 rounded-md font-semibold focus-visible:outline-none',
+   base: 'flex gap-2 items-center justify-center w-full max-h-[42px] px-4 py-3.5 rounded-md font-semibold focus-visible:outline-none',
    variants: {
       color: {
          primary: 'bg-primary-main hover:bg-primary-hover transition-all duration-200 hover:scale-[1.01] text-neutral-white',

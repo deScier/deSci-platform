@@ -5,7 +5,6 @@ interface LoginModalProps {
    noRedirect?: boolean
    onRegister?: () => void
    onForgotPassword?: () => void
-   onLogin?: () => void
 }
 
 export { LoginModalProps }
