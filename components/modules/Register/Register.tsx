@@ -10,6 +10,7 @@ import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { registerUserService } from '@/services/user/register.service'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSyncProviders } from '@hooks/useSyncProviders'
 import { signIn } from 'next-auth/react'
 import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
@@ -99,6 +100,57 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
       }
    }
 
+   const formatBalance = (rawBalance: string) => {
+      const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2)
+      return balance
+   }
+
+   const formatChainAsNum = (chainIdHex: string) => {
+      const chainIdNum = parseInt(chainIdHex)
+      return chainIdNum
+   }
+
+   const formatAddress = (addr: string) => {
+      const upperAfterLastTwo = addr.slice(0, 2) + addr.slice(2)
+      return `${upperAfterLastTwo.substring(0, 5)}...${upperAfterLastTwo.substring(39)}`
+   }
+
+   const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
+   const [userAccount, setUserAccount] = React.useState<string>('')
+   const providers = useSyncProviders()
+
+   console.log('metamask', {
+      selected_wallet: selectedWallet,
+      user_account: userAccount,
+      providers: providers
+   })
+
+   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
+      try {
+         const accounts = (await providerWithInfo.provider.request({
+            method: 'eth_requestAccounts'
+         })) as string[]
+
+         setSelectedWallet(providerWithInfo)
+         setUserAccount(accounts[0])
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   const handleDisconnect = async () => {
+      try {
+         await selectedWallet?.provider.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }]
+         })
+         setSelectedWallet(undefined)
+         setUserAccount('')
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
          <div className="grid md:grid-cols-2 relative">
@@ -168,7 +220,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
                            or
                         </p>
                      </div>
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={() => {}}>
+                     <Button.Button variant="outline" className="px-4 py-2" onClick={() => handleConnect(providers[0])}>
                         <MetamaskLogo className="w-6" />
                         <span className="text-base font-semibold">Login with wallet</span>
                      </Button.Button>
@@ -274,3 +326,31 @@ const RegisterStepThree: React.FC<RegisterStepProps> = ({}: RegisterStepProps) =
 }
 
 export default RegisterModal
+
+interface EIP6963ProviderInfo {
+   rdns: string
+   uuid: string
+   name: string
+   icon: string
+}
+
+interface EIP6963ProviderDetail {
+   info: EIP6963ProviderInfo
+   provider: EIP1193Provider
+}
+
+type EIP6963AnnounceProviderEvent = {
+   detail: {
+      info: EIP6963ProviderInfo
+      provider: Readonly<EIP1193Provider>
+   }
+}
+
+interface EIP1193Provider {
+   isStatus?: boolean
+   host?: string
+   path?: string
+   sendAsync?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
+   send?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
+   request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>
+}
