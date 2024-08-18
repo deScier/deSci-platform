@@ -33,8 +33,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
       formState: { errors }
    } = useForm<RegisterProps>({
       resolver: zodResolver(RegisterSchema),
-      defaultValues: { name: '', email: '', password: '', confirmPassword: '' }
+      defaultValues: { name: '', email: '', password: '' }
    })
+   console.log(watch())
 
    /** @dev Initialize loading state management */
    const { loading, start, stop } = useLoading()
@@ -245,14 +246,14 @@ const RegisterStepTwo: React.FC<RegisterStepProps> = ({ register, errors }: Regi
             <p className="text-base">Fill in your details to start exploring our platform.</p>
          </div>
          <Input.Root>
-            <Input.Label>Name</Input.Label>
-            <Input.Input type="text" placeholder="Type your full name" {...register('name')} />
+            <Input.Label htmlFor="name">Name</Input.Label>
+            <Input.Input placeholder="Type your full name" {...register('name')} id="name" name="name" type="text" autoComplete="new-name" />
             <Input.Error>{errors.name?.message}</Input.Error>
          </Input.Root>
 
          <Input.Root>
-            <Input.Label>Password</Input.Label>
-            <Input.Password placeholder="Type your password" {...register('password')} />
+            <Input.Label htmlFor="password">Password</Input.Label>
+            <Input.Password placeholder="Type your password" {...register('password')} id="password" name="password" autoComplete="new-password" />
             <Input.Error>{errors.password?.message}</Input.Error>
          </Input.Root>
       </React.Fragment>
