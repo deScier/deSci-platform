@@ -39,7 +39,10 @@
       "@walletconnect/types": "^2.11.2",
       "@walletconnect/utils": "^2.11.2",
       "@web3auth/base": "^7.3.2",
+      "@web3auth/ethereum-provider": "^8.12.3",
       "@web3auth/modal": "7.2.0",
+      "@web3auth/no-modal": "^8.12.3",
+      "@web3auth/openlogin-adapter": "^8.12.4",
       "autoprefixer": "10.4.15",
       "class-variance-authority": "^0.7.0",
       "clsx": "^2.1.0",
@@ -77,6 +80,7 @@
       "tailwindcss-animate": "^1.0.7",
       "typescript": "5.2.2",
       "uuidv4": "^6.2.13",
+      "viem": "^2.20.0",
       "web3": "^4.6.0",
       "zod": "^3.22.4"
    },
@@ -89,6 +93,7 @@
       "embla-carousel": "^8.0.0",
       "embla-carousel-auto-scroll": "^8.0.0",
       "embla-carousel-react": "^8.0.0",
+      "ethers": "^6.13.2",
       "postcss-import": "^15.1.0",
       "postcss-nesting": "^12.1.0"
    }

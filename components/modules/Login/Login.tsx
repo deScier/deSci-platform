@@ -19,6 +19,15 @@ import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
 import LoginAnimation from './Animation/Animation'
 
+import { CHAIN_NAMESPACES, IProvider, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base'
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
+import { Web3AuthNoModal } from '@web3auth/no-modal'
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
+
+import RPC from '@utils/viem_rpc' // for using viem
+
+const clientId = 'BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ' // get from https://dashboard.web3auth.io
+
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
  *  @dev The component uses React hooks for state management and routing, and integrates form handling and validation using the useForm hook.
@@ -73,9 +82,200 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
     * @dev Handles third-party login using Google
     * @param e The mouse event from the click
     */
-   const loginWithGoogle = async (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-      await signIn('google', { callbackUrl: home_routes.summary })
+   //    const loginWithGoogle = async (e: React.MouseEvent<HTMLElement>) => {
+   //       e.preventDefault()
+   //       await signIn('google', { callbackUrl: home_routes.summary })
+   //    }
+   // inside your async function with on click handler
+
+   // ===============================================
+
+   const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
+   console.log('web3auth', web3auth)
+   const [provider, setProvider] = React.useState<IProvider | null>(null)
+   console.log('provider', provider)
+   const [loggedIn, setLoggedIn] = React.useState<boolean | null>(null)
+
+   React.useEffect(() => {
+      const init = async () => {
+         try {
+            const chainConfig = {
+               chainNamespace: CHAIN_NAMESPACES.EIP155,
+               chainId: '0x1', // Please use 0x1 for Mainnet
+               rpcTarget: 'https://rpc.ankr.com/eth',
+               displayName: 'Ethereum Mainnet',
+               blockExplorerUrl: 'https://etherscan.io/',
+               ticker: 'ETH',
+               tickerName: 'Ethereum',
+               logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png'
+            }
+
+            const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
+
+            const web3auth = new Web3AuthNoModal({
+               clientId,
+               web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+               privateKeyProvider
+            })
+
+            const openloginAdapter = new OpenloginAdapter({
+               loginSettings: {
+                  mfaLevel: 'optional'
+               },
+               adapterSettings: {
+                  uxMode: 'popup',
+                  whiteLabel: { defaultLanguage: 'en' },
+                  mfaSettings: {
+                     deviceShareFactor: {
+                        enable: true,
+                        priority: 1,
+                        mandatory: true
+                     },
+                     backUpShareFactor: {
+                        enable: true,
+                        priority: 2,
+                        mandatory: false
+                     },
+                     socialBackupFactor: {
+                        enable: true,
+                        priority: 3,
+                        mandatory: false
+                     },
+                     passwordFactor: {
+                        enable: true,
+                        priority: 4,
+                        mandatory: true
+                     }
+                  },
+                  loginConfig: {
+                     google: {
+                        verifier: 'w3a-google-demo',
+                        typeOfLogin: 'google',
+                        clientId: '519228911939-cri01h55lsjbsia1k7ll6qpalrus75ps.apps.googleusercontent.com' //use your app client id you got from google
+                     }
+                  }
+               }
+            })
+            web3auth.configureAdapter(openloginAdapter)
+            setWeb3auth(web3auth)
+
+            await web3auth.init()
+            setProvider(web3auth.provider)
+
+            if (web3auth.connected) {
+               setLoggedIn(true)
+            }
+         } catch (error) {
+            console.error(error)
+         }
+      }
+
+      init()
+   }, [])
+
+   const login = async () => {
+      if (!web3auth) {
+         uiConsole('web3auth not initialized yet')
+         return
+      }
+      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+         loginProvider: 'google'
+      })
+      setProvider(web3authProvider)
+   }
+
+   const authenticateUser = async () => {
+      if (!web3auth) {
+         uiConsole('web3auth not initialized yet')
+         return
+      }
+      const idToken = await web3auth.authenticateUser()
+      uiConsole(idToken)
+   }
+
+   const getUserInfo = async () => {
+      if (!web3auth) {
+         uiConsole('web3auth not initialized yet')
+         return
+      }
+      const user = await web3auth.getUserInfo()
+      uiConsole(user)
+   }
+
+   const logout = async () => {
+      if (!web3auth) {
+         uiConsole('web3auth not initialized yet')
+         return
+      }
+      await web3auth.logout()
+      setLoggedIn(false)
+      setProvider(null)
+   }
+
+   const getChainId = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const chainId = await rpc.getChainId()
+      uiConsole(chainId)
+   }
+   const getAccounts = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const address = await rpc.getAccounts()
+      uiConsole(address)
+   }
+
+   const getBalance = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const balance = await rpc.getBalance()
+      uiConsole(balance)
+   }
+
+   const sendTransaction = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const receipt = await rpc.sendTransaction()
+      uiConsole(receipt)
+   }
+
+   const signMessage = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const signedMessage = await rpc.signMessage()
+      uiConsole(signedMessage)
+   }
+
+   const getPrivateKey = async () => {
+      if (!provider) {
+         uiConsole('provider not initialized yet')
+         return
+      }
+      const rpc = new RPC(provider)
+      const privateKey = await rpc.getPrivateKey()
+      uiConsole(privateKey)
+   }
+
+   function uiConsole(...args: any[]): void {
+      const el = document.querySelector('#console>p')
+      if (el) {
+         el.innerHTML = JSON.stringify(args || {}, null, 2)
+      }
    }
 
    return (
@@ -133,7 +333,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      <span className="text-base font-semibold">Continue with wallet</span>
                   </Button.Button>
                   <div className="space-y-2">
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => loginWithGoogle(e)}>
+                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => login()}>
                         <GoogleIcon className="w-6" />
                         <span className="text-base font-semibold">Continue with Google</span>
                      </Button.Button>
