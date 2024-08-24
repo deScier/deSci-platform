@@ -1,4 +1,5 @@
-import { NextAuthOptions } from 'next-auth'
+import { NextAuthOptions, Session } from 'next-auth'
+
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
@@ -161,7 +162,7 @@ export const authOptions: NextAuthOptions = {
          return { ...token, ...user, ...profile, ...account }
       },
 
-      async session({ session, token }): Promise<any> {
+      async session({ session, token }): Promise<Session> {
          const user_infos = {
             name: token?.name,
             email: token?.email,
@@ -170,12 +171,11 @@ export const authOptions: NextAuthOptions = {
             googleId: token?.googleId,
             userInfo: { ...(token?.userInfo as object) }
          }
-         // Return all data for the global session
          return {
             user: {
                ...user_infos
             }
-         }
+         } as Session
       }
    }
 }

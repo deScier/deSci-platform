@@ -22,7 +22,6 @@ export type UserSession = {
    picture: string | null
 }
 
-// format useSession interface to include user info
 declare module 'next-auth' {
    interface Session {
       user?: UserSession

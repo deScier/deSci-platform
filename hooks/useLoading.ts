@@ -1,19 +1,14 @@
-import { useState } from 'react'
-
-type LoadingKey = 'loading'
-type LoadingState = { [key in LoadingKey]: boolean }
+import React from 'react'
 
 export function useLoading() {
-   const [loading, setLoading] = useState<LoadingState>({
-      loading: false
-   })
+   const [loading, setLoading] = React.useState({ loading: false })
 
-   const start = (key: LoadingKey) => {
-      setLoading((prevState) => ({ ...prevState, [key]: true }))
+   const start = () => {
+      setLoading((prevState) => ({ ...prevState, loading: true }))
    }
 
-   const stop = (key: LoadingKey) => {
-      setLoading((prevState) => ({ ...prevState, [key]: false }))
+   const stop = () => {
+      setLoading((prevState) => ({ ...prevState, loading: false }))
    }
 
    return {

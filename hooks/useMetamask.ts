@@ -1,14 +1,5 @@
 import { EIP6963AnnounceProviderEvent, EIP6963ProviderDetail } from '@/globals'
 
-declare global {
-   interface WindowEventMap {
-      'eip6963:announceProvider': CustomEvent
-   }
-}
-
-// An array to store the detected wallet providers.
-let providers: EIP6963ProviderDetail[] = []
-
 export const store = {
    value: () => providers,
    subscribe: (callback: () => void) => {
@@ -28,3 +19,11 @@ export const store = {
       return () => window.removeEventListener('eip6963:announceProvider', onAnnouncement)
    }
 }
+
+declare global {
+   interface WindowEventMap {
+      'eip6963:announceProvider': CustomEvent
+   }
+}
+
+let providers: EIP6963ProviderDetail[] = []

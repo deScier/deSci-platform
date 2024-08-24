@@ -1,21 +1,27 @@
 'use client'
 
-import Box from '@/components/common/Box/Box'
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Title from '@components/common/Title/Page'
+
 import { PurchaseSuccess } from '@/components/modules/Home/Search/Purchase/Success'
+import { home_routes } from '@/routes/home'
+import { useStatistics } from '@/services/document/getStatistics.service'
+import '@styles/summary.css'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import Box from '@/components/common/Box/Box'
 import WithLink from '@/components/modules/Login/Modals/WithLink/WithLink'
 import Publications from '@/components/modules/Summary/Publications/Publications'
 import Statistics from '@/components/modules/Summary/Statistics/Statistics'
 import Submission from '@/components/modules/Summary/Submission/Submission'
 import TopPapers from '@/components/modules/Summary/TopPapers/TopPapers'
-import { home_routes } from '@/routes/home'
-import { useStatistics } from '@/services/document/getStatistics.service'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Title from '@components/common/Title/Page'
-import '@styles/summary.css'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 export function SummaryComponent() {
+   const { data: session } = useSession()
+   console.log('session', session)
+
    const router = useRouter()
    const queryParams = useSearchParams()
 

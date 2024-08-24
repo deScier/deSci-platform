@@ -44,7 +44,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
     * @param data Contains user input from registration form
     */
    const onSubmit: SubmitHandler<RegisterProps> = async (data) => {
-      start('loading')
+      start()
 
       const response = await registerUserService({
          name: data.name,
@@ -52,7 +52,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
          password: data.password
       })
 
-      stop('loading')
+      stop()
 
       if (response.success) {
          setComponent(success_component)

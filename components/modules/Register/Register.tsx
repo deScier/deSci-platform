@@ -8,64 +8,83 @@ import { Separator } from '@/components/ui/separator'
 import { useLoading } from '@/hooks/useLoading'
 import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
-import { registerUserService } from '@/services/user/register.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSyncProviders } from '@hooks/useSyncProviders'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
-import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
 
+import { addWalletService } from '@/services/user/addWallet.service'
+import { registerUserService } from '@/services/user/register.service'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
+import { toast } from 'react-toastify'
 import LoginAnimation from '../Login/Animation/Animation'
 
 /**
  * @title RegisterModal Component
  * @notice This component provides a user interface for registering a new account, including form validation and dynamic rendering based on registration status.
  */
-const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBack, onLogin, onReturnToLogin }: RegisterModalProps) => {
+const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: RegisterModalProps) => {
+   const { data: session, status, update } = useSession()
+   console.log('session', session)
    /** @dev Initializes form handling and validation using useForm with Zod schema */
    const {
       register,
       handleSubmit,
       watch,
+      setValue,
       formState: { errors }
    } = useForm<RegisterProps>({
       resolver: zodResolver(RegisterSchema),
-      defaultValues: { name: '', email: '', password: '' }
+      defaultValues: { name: '', email: '', password: '', wallet_address: null }
    })
-   console.log(watch())
+   console.log('watch_register', watch())
 
    /** @dev Initialize loading state management */
    const { loading, start, stop } = useLoading()
-
-   /** @dev State to manage the current component view */
-   const success_component = 'success'
-   const [component, setComponent] = React.useState('')
 
    /**
     * @dev Submits registration data to server
     * @param data Contains user input from registration form
     */
    const onSubmit: SubmitHandler<RegisterProps> = async (data) => {
-      start('loading')
+      start()
 
-      const response = await registerUserService({
+      await registerUserService({
          name: data.name,
+         email: data.email,
+         password: data.password
+      }).then(async (res) => {
+         if (!res.success) {
+            toast.error(res.message)
+            stop()
+            return
+         }
+
+         toast.success(res.message)
+         updateProgress(currentStep + 1)
+         stop()
+      })
+
+      // Register
+      // ----------------------------------------------------------------------
+      // TODO: implement a login to get session when the user finishes the registration
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      const authResult = await signIn('credentials', {
+         redirect: false,
          email: data.email,
          password: data.password
       })
 
-      stop('loading')
-
-      if (response.success) {
-         setComponent(success_component)
+      if (authResult?.error) {
+         toast.error('Login error. Check your credentials.')
          return
       }
 
-      toast.error(response.message)
+      toast.success('Successful login. Redirecting...')
    }
 
    /**
@@ -89,6 +108,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
    }
 
    const nextStep = () => {
+      if (currentStep === 2) {
+         handleSubmit(onSubmit)()
+         return
+      }
       if (currentStep < 3) {
          updateProgress(currentStep + 1)
       }
@@ -99,22 +122,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
          updateProgress(currentStep - 1)
       }
    }
-
-   const formatBalance = (rawBalance: string) => {
-      const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2)
-      return balance
-   }
-
-   const formatChainAsNum = (chainIdHex: string) => {
-      const chainIdNum = parseInt(chainIdHex)
-      return chainIdNum
-   }
-
-   const formatAddress = (addr: string) => {
-      const upperAfterLastTwo = addr.slice(0, 2) + addr.slice(2)
-      return `${upperAfterLastTwo.substring(0, 5)}...${upperAfterLastTwo.substring(39)}`
-   }
-
    const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
    const [userAccount, setUserAccount] = React.useState<string>('')
    const providers = useSyncProviders()
@@ -131,21 +138,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
             method: 'eth_requestAccounts'
          })) as string[]
 
-         setSelectedWallet(providerWithInfo)
+         setValue('wallet_address', accounts[0])
          setUserAccount(accounts[0])
-      } catch (error) {
-         console.error(error)
-      }
-   }
-
-   const handleDisconnect = async () => {
-      try {
-         await selectedWallet?.provider.request({
-            method: 'wallet_requestPermissions',
-            params: [{ eth_accounts: {} }]
-         })
-         setSelectedWallet(undefined)
-         setUserAccount('')
       } catch (error) {
          console.error(error)
       }
@@ -157,32 +151,29 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
             <LoginAnimation />
             <X
                size={32}
-               className="absolute z-20 bg-white rounded-md right-4 top-4 cursor-pointer hover:scale-110 transition-all duration-200"
+               className="absolute z-20 bg-white rounded-md right-4 top-4 cursor-pointer hover:scale-110 transition-all duration-200 hover:cursor-pointer"
                onClick={() => onClose()}
             />
             <div className="w-ful grid gap-6 md:p-16 relative p-6 pb-12 min-h-[590.5px] content-center">
-               {component !== success_component && (
-                  <React.Fragment>
-                     <X
-                        size={32}
-                        className="hidden md:absolute right-4 top-4 cursor-pointer hover:scale-110 transition-all duration-200"
-                        onClick={onClose}
-                     />
-                     <div className="flex items-center gap-4">
-                        <ArrowLeft
-                           size={28}
-                           onClick={() => {
-                              if (currentStep === 1) {
-                                 onBack()
-                              } else {
-                                 prevStep()
-                              }
-                           }}
-                        />
-                        <h2 className="font-semibold text-1xl">Register</h2>
-                     </div>
-                  </React.Fragment>
-               )}
+               <X
+                  size={32}
+                  className="hidden md:absolute right-4 top-4 cursor-pointer hover:scale-110 transition-all duration-200 hover:cursor-pointer"
+                  onClick={onClose}
+               />
+               <div className="flex items-center gap-4">
+                  <ArrowLeft
+                     size={28}
+                     className="cursor-pointer hover:scale-110 transition-all duration-200"
+                     onClick={() => {
+                        if (currentStep === 1) {
+                           onBack()
+                        } else {
+                           prevStep()
+                        }
+                     }}
+                  />
+                  <h2 className="font-semibold text-1xl">Register</h2>
+               </div>
                <div>
                   <Step.Root>
                      <Step.Indicator
@@ -224,7 +215,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
                         <MetamaskLogo className="w-6" />
                         <span className="text-base font-semibold">Login with wallet</span>
                      </Button.Button>
-                     <p className="text-secundary_blue-main text-sm text-center">
+                     <p className="text-secundary_blue-main text-sm text-center" onClick={() => onBack()}>
                         Already have an account?{' '}
                         <span
                            className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
@@ -248,7 +239,16 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onRegister, onBa
 
                {currentStep === 3 && (
                   <React.Fragment>
-                     <Button.Button variant="primary" className="px-4 py-2" onClick={() => nextStep()}>
+                     <Button.Button
+                        variant="primary"
+                        className="px-4 py-2"
+                        onClick={() => {
+                           handleConnect(providers[0])
+                           if (userAccount) {
+                              addWalletService({ walletAddress: userAccount })
+                           }
+                        }}
+                     >
                         <MetamaskLogo className="w-6" />
                         <span className="text-base font-semibold">Register wallet</span>
                      </Button.Button>
@@ -353,4 +353,19 @@ interface EIP1193Provider {
    sendAsync?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
    send?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
    request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>
+}
+
+const formatBalance = (rawBalance: string) => {
+   const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2)
+   return balance
+}
+
+const formatChainAsNum = (chainIdHex: string) => {
+   const chainIdNum = parseInt(chainIdHex)
+   return chainIdNum
+}
+
+const formatAddress = (addr: string) => {
+   const upperAfterLastTwo = addr.slice(0, 2) + addr.slice(2)
+   return `${upperAfterLastTwo.substring(0, 5)}...${upperAfterLastTwo.substring(39)}`
 }
