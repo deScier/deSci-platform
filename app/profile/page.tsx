@@ -63,7 +63,6 @@ export default function ProfilePage() {
    return (
       <React.Fragment>
          <Dialog.Root open={profile.edit_profile || profile.edit_profile_sucess}>
-            <Dialog.Overlay />
             <Dialog.Content
                className={twMerge(
                   'pt-6 px-6 pb-14 md:py-14 md:px-16',
@@ -83,7 +82,6 @@ export default function ProfilePage() {
             </Dialog.Content>
          </Dialog.Root>
          <Dialog.Root open={email.insert_password_to_edit_email || email.new_email || email.new_email_sucess}>
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 max-w-[480px]')}>
                <UpdateEmail
                   insert_password={email.insert_password_to_edit_email}
@@ -106,7 +104,6 @@ export default function ProfilePage() {
             </Dialog.Content>
          </Dialog.Root>
          <Dialog.Root open={password.insert_password_to_edit_password || password.new_password || password.new_password_sucess}>
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 max-w-[480px]')}>
                <UpdatePassword
                   new_password={password.new_password}
@@ -136,7 +133,6 @@ export default function ProfilePage() {
                passwordRecovery.recover_password_sucess
             }
          >
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('py-0 px-0 max-w-[480px]')}>
                <ForgotPasswordModal
                   onBack={() => {}}

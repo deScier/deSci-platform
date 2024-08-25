@@ -11,7 +11,6 @@ export const approveJournalByAdminService = async (data: JournalApproveStatusPro
       body: JSON.stringify(data)
    })
 
-
    if (response.status === 204) {
       return {
          success: true,

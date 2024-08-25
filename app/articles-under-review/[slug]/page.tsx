@@ -568,7 +568,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}>
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20')}>
                {dialog.reasoning && (
                   <Reasoning

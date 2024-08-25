@@ -30,7 +30,6 @@ export function SidebarMobile() {
    return (
       <React.Fragment>
          <Dialog.Root open={purchased}>
-            <Dialog.Overlay />
             <Dialog.Content>{purchased && <PurchasedArticles onClose={() => setPurchased(false)} />}</Dialog.Content>
          </Dialog.Root>
          <aside className="md:hidden z-50">

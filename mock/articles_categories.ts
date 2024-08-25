@@ -5,7 +5,7 @@ export const articles_categories: Option[] = [
    {
       id: uniqueId(),
       label: 'Research articles',
-      value: 'research-articles',
+      value: 'research-articles'
    },
    {
       id: uniqueId(),

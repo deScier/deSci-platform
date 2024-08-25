@@ -192,7 +192,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning}>
-            <Dialog.Overlay />
             <Dialog.Content className="py-14 px-16 max-w-[600px]">
                <Reasoning
                   message={''}

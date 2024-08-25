@@ -23,12 +23,4 @@ interface TooltipInformationProps {
    content: React.ReactNode
 }
 
-export {
-   ArrowProps,
-   ContentProps,
-   PortalProps,
-   ProviderProps,
-   RootProps,
-   TooltipInformationProps,
-   TriggerProps
-}
+export { ArrowProps, ContentProps, PortalProps, ProviderProps, RootProps, TooltipInformationProps, TriggerProps }

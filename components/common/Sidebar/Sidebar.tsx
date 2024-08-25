@@ -39,7 +39,6 @@ const Sidebar: React.FC = () => {
    return (
       <React.Fragment>
          <Dialog.Root open={purchased}>
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('max-w-[1024px] w-full h-fit', `${purchased && 'max-w-[80%]'}`)}>
                {purchased && <PurchasedArticles onClose={() => setPurchased(false)} />}
             </Dialog.Content>

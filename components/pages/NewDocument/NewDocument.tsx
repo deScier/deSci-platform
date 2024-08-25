@@ -359,7 +359,6 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.author || dialog.share_split || dialog.edit_author || dialog.edit_share_split || dialog.warning_on_change_page}>
-            <Dialog.Overlay />
             <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
                {dialog.author && (
                   <AddNewAuthor

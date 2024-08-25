@@ -26,8 +26,6 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
 import RPC from '@utils/viem_rpc' // for using viem
 
-const clientId = 'BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ' // get from https://dashboard.web3auth.io
-
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
  *  @dev The component uses React hooks for state management and routing, and integrates form handling and validation using the useForm hook.
@@ -78,16 +76,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       router.push(home_routes.summary)
    }
 
-   /**
-    * @dev Handles third-party login using Google
-    * @param e The mouse event from the click
-    */
-   //    const loginWithGoogle = async (e: React.MouseEvent<HTMLElement>) => {
-   //       e.preventDefault()
-   //       await signIn('google', { callbackUrl: home_routes.summary })
-   //    }
-   // inside your async function with on click handler
-
    // ===============================================
 
    const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
@@ -103,7 +91,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                chainNamespace: CHAIN_NAMESPACES.EIP155,
                chainId: '0x1', // Please use 0x1 for Mainnet
                rpcTarget: 'https://rpc.ankr.com/eth',
-               displayName: 'Ethereum Mainnet',
+               displayName: 'Ethereum Devnet',
                blockExplorerUrl: 'https://etherscan.io/',
                ticker: 'ETH',
                tickerName: 'Ethereum',
@@ -113,8 +101,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
 
             const web3auth = new Web3AuthNoModal({
-               clientId,
-               web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+               clientId: process.env.WEB3AUTH_CLIENT_ID || 'web3auth-client-id',
+               web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
                privateKeyProvider
             })
 
@@ -149,13 +137,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                   },
                   loginConfig: {
                      google: {
-                        verifier: 'w3a-google-demo',
+                        verifier: 'google-development-verifier',
                         typeOfLogin: 'google',
-                        clientId: '519228911939-cri01h55lsjbsia1k7ll6qpalrus75ps.apps.googleusercontent.com' //use your app client id you got from google
+                        clientId: process.env.GOOGLE_ID || 'google-client-id'
                      }
                   }
                }
             })
+
             web3auth.configureAdapter(openloginAdapter)
             setWeb3auth(web3auth)
 
@@ -178,10 +167,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          uiConsole('web3auth not initialized yet')
          return
       }
-      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-         loginProvider: 'google'
-      })
-      setProvider(web3authProvider)
+      try {
+         const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+            loginProvider: 'google'
+         })
+         setProvider(web3authProvider)
+      } catch (error) {
+         if (error instanceof Error && error.message.includes('Already connected')) {
+            toast.info('Already connected. Please disconnect first.')
+         } else {
+            console.error('Login error:', error)
+         }
+      }
    }
 
    const authenticateUser = async () => {

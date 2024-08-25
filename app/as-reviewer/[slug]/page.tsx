@@ -277,7 +277,6 @@ export default function AsReviwerPageDetails({ params }: { params: { slug: strin
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning || dialog.edit_comment}>
-            <Dialog.Overlay />
             <Dialog.Content className="py-14 px-16 max-w-[600px]">
                {dialog.reasoning && (
                   <Reasoning

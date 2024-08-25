@@ -1,10 +1,10 @@
-import { MetaMaskInpageProvider } from '@metamask/providers'
+// import { MetaMaskInpageProvider } from '@metamask/providers'
 
-declare global {
-   interface Window {
-      ethereum?: MetaMaskInpageProvider
-   }
-}
+// declare global {
+//    interface Window {
+//       ethereum?: MetaMaskInpageProvider
+//    }
+// }
 
 interface EIP6963ProviderInfo {
    rdns: string
@@ -25,11 +25,11 @@ type EIP6963AnnounceProviderEvent = {
    }
 }
 
-interface EIP1193Provider {
-   isStatus?: boolean
-   host?: string
-   path?: string
-   sendAsync?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
-   send?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
-   request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>
-}
+// interface EIP1193Provider {
+//    isStatus?: boolean
+//    host?: string
+//    path?: string
+//    sendAsync?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
+//    send?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
+//    request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>
+// }

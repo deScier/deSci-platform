@@ -61,7 +61,6 @@ export function SummaryComponent() {
    return (
       <React.Fragment>
          <Dialog.Root open={open || paymentSuccess}>
-            <Dialog.Overlay />
             <Dialog.Content className="max-w-[750px]">
                {open && (
                   <WithLink

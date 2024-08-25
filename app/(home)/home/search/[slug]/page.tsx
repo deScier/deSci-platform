@@ -178,7 +178,6 @@ export default function Page({ params }: { params: { slug: string } }) {
    return (
       <React.Fragment>
          <Dialog.Root open={purchase.checkout || purchase.processing || purchase.success || purchase.error || purchase.my_articles || purchase.login}>
-            <Dialog.Overlay />
             <Dialog.Content
                className={twMerge(
                   'max-w-[1024px] w-full h-fit',
@@ -218,7 +217,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                      }
                      noRedirect
                      onForgotPassword={() => setComponent(forgot_password_component)}
-                     onLogin={() => setComponent(login_component)}
+                     //  onLogin={() => setComponent(login_component)}
                      onRegister={() => setComponent(register_component)}
                   />
                )}

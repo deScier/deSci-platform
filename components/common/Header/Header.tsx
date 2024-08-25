@@ -69,10 +69,9 @@ const Header: React.FC = () => {
    return (
       <React.Fragment>
          <Dialog.Root open={open}>
-            <Dialog.Overlay />
             <Dialog.Content
                className={twMerge(
-                  `${component !== purchased && 'w-[80%] max-w-[1200px] p-0 transition-all duration-300'}`,
+                  `${component !== purchased && 'md:w-[80%] max-w-[1200px] p-0 transition-all duration-300'}`,
                   component === forgot_password_component && 'max-w-[554px]'
                )}
             >

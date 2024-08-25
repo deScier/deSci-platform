@@ -7,7 +7,7 @@ import '@styles/utils.css'
 
 import { TooltipProvider } from '@/lib/tooltip'
 import type { Metadata } from 'next'
-import { ToastContainer } from 'react-toastify'
+import { Slide, ToastContainer } from 'react-toastify'
 import { AuthProvider } from './auth-provider'
 
 import ProgressBar from '@/lib/nprogress'
@@ -28,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <link
                href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
                rel="stylesheet"
+               fetchPriority="high"
             />
          </head>
          <body>
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>
                <TooltipProvider>{children}</TooltipProvider>
             </AuthProvider>
-            <ToastContainer />
+            <ToastContainer transition={Slide} draggable />
          </body>
       </html>
    )
