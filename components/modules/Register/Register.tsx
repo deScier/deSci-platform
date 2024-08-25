@@ -28,7 +28,8 @@ import LoginAnimation from '../Login/Animation/Animation'
  */
 const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: RegisterModalProps) => {
    const { data: session, status, update } = useSession()
-   console.log('session', session)
+   console.log('register_session', session)
+
    /** @dev Initializes form handling and validation using useForm with Zod schema */
    const {
       register,
@@ -69,7 +70,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
       })
 
       // Register
-      // ----------------------------------------------------------------------
+      // ------------------------------------------------------------------
       // TODO: implement a login to get session when the user finishes the registration
       await new Promise((resolve) => setTimeout(resolve, 2000))
 

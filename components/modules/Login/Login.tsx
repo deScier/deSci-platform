@@ -24,6 +24,7 @@ import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 import { Web3AuthNoModal } from '@web3auth/no-modal'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
+import { useSyncProviders } from '@/hooks/useSyncProviders'
 import RPC from '@utils/viem_rpc' // for using viem
 
 /** @title LoginModal Component
@@ -275,6 +276,33 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       }
    }
 
+   /* =============== Metamask Auth =================== */
+   const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
+   const [userAccount, setUserAccount] = React.useState<string>('')
+   const providers = useSyncProviders()
+
+   console.log('metamask', {
+      selected_wallet: selectedWallet,
+      user_account: userAccount,
+      providers: providers
+   })
+
+   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
+      try {
+         const accounts = (await providerWithInfo.provider.request({
+            method: 'eth_requestAccounts'
+         })) as string[]
+
+         // Login
+         // ----------------------------------------------------------------
+         // TODO: implement a login to get session when the user is connected
+         //  setValue('wallet_address', accounts[0])
+         setUserAccount(accounts[0])
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    return (
       <React.Fragment>
          <div className="grid md:grid-cols-2 relative">
@@ -325,7 +353,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         or
                      </p>
                   </div>
-                  <Button.Button disabled variant="outline" className="px-4 py-2" onClick={() => {}}>
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={() => handleConnect(providers[0])}>
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with wallet</span>
                   </Button.Button>
