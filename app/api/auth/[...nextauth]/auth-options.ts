@@ -132,6 +132,19 @@ export const authOptions: NextAuthOptions = {
                })
             })
 
+            //
+            // Implement login with web3auth
+            // ----------------------------------------------------------------
+            // 1. route to generate a nonce: /generate-nonce (GET) return a { nonce: string } object
+            //
+            // 1.5 se for metamask, assina com o viem. caso seja outro wallet, usar web3 auth (4)
+            //
+            // 2. com o hash da assinatura, envia para o endpoint: /users/web3-auth (POST) with body export type Web3AuthenticateDTO = { walletAddress: string, signature: string, nonce: string }
+            //
+            // 3. assinar com o viem: https://viem.sh/docs/actions/wallet/signMessage.html
+            //
+            // 4. assinar com web3 auth: https://github.com/Web3Auth/w3a-new-demo/blob/b5468c8251fe77b68ee5ca89a37de3eb755e2654/src/store/web3authStore.ts#L161
+
             const data = await response.json()
 
             if (!data?.token) {

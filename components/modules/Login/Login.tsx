@@ -25,7 +25,7 @@ import { Web3AuthNoModal } from '@web3auth/no-modal'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
 import { useSyncProviders } from '@/hooks/useSyncProviders'
-import RPC from '@utils/viem_rpc' // for using viem
+import RPC from '@utils/viem_rpc'; // for using viem
 
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
@@ -102,7 +102,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
 
             const web3auth = new Web3AuthNoModal({
-               clientId: process.env.WEB3AUTH_CLIENT_ID || 'web3auth-client-id',
+               clientId: process.env.WEB3AUTH_NEW_LOGIN_CLIENT_ID as string, 
                web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
                privateKeyProvider
             })
@@ -140,7 +140,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      google: {
                         verifier: 'google-development-verifier',
                         typeOfLogin: 'google',
-                        clientId: process.env.GOOGLE_ID || 'google-client-id'
+                        clientId: process.env.GOOGLE_ID as string
                      }
                   }
                }
@@ -163,15 +163,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       init()
    }, [])
 
-   const login = async () => {
+   //    const handleGoogleAuth = async (e: React.MouseEvent<HTMLElement>) => {
+   //     e.preventDefault()
+   //     signIn('google', { callbackUrl: `/login` })
+   //   }
+
+   const login = async (e: React.MouseEvent<HTMLElement>) => {
       if (!web3auth) {
          uiConsole('web3auth not initialized yet')
          return
       }
       try {
-         const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-            loginProvider: 'google'
-         })
+         const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' })
+
+         signIn('google', { callbackUrl: `/home` })
+
          setProvider(web3authProvider)
       } catch (error) {
          if (error instanceof Error && error.message.includes('Already connected')) {
@@ -358,7 +364,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      <span className="text-base font-semibold">Continue with wallet</span>
                   </Button.Button>
                   <div className="space-y-2">
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => login()}>
+                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => login(e)}>
                         <GoogleIcon className="w-6" />
                         <span className="text-base font-semibold">Continue with Google</span>
                      </Button.Button>

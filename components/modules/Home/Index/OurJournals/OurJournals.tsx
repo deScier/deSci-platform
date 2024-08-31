@@ -16,21 +16,9 @@ import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 import React from 'react'
 
-type AutoScrollPlugin = {
-   play: () => void
-   stop: () => void
-   isPlaying: () => boolean
-}
-
-type OurJournalsProps = {
-   journals: PublicJournalsProps['journals'] | undefined
-}
-
-type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
-
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
-   console.log('journals', journals)
    const { windowDimension } = useDimension()
+
    const router = useRouter()
 
    const [hovered_curator_id, setHoveredCuratorId] = React.useState<string | null>(null)
@@ -91,7 +79,6 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
    //    }, [emblaApi, hovered_curator_id, windowDimension])
 
    const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined)
-   console.log('journal_carroussel', journalsCarousel)
 
    // Set the first journal as the hovered curator id when the window dimension is less than 1024
    //    React.useEffect(() => {
@@ -269,5 +256,17 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       </React.Fragment>
    )
 }
+
+type AutoScrollPlugin = {
+   play: () => void
+   stop: () => void
+   isPlaying: () => boolean
+}
+
+type OurJournalsProps = {
+   journals: PublicJournalsProps['journals'] | undefined
+}
+
+type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string }
 
 export { OurJournals }
