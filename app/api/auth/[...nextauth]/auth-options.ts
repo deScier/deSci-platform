@@ -1,3 +1,5 @@
+import { loginUserService } from '@/services/user/login.service'
+import { User } from '@/types/next-auth'
 import { NextAuthOptions, Session } from 'next-auth'
 
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -11,7 +13,7 @@ export const authOptions: NextAuthOptions = {
    session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
    providers: [
       CredentialsProvider({
-         name: 'Sign in',
+         name: 'Login with email',
          credentials: {
             email: {
                label: 'Email',
@@ -20,7 +22,7 @@ export const authOptions: NextAuthOptions = {
             },
             password: { label: 'Password', type: 'password' }
          },
-         async authorize(credentials): Promise<any> {
+         async authorize(credentials): Promise<User | null> {
             try {
                // Payload to send to the API
                const payload = {
@@ -36,6 +38,9 @@ export const authOptions: NextAuthOptions = {
                      email: payload.email,
                      password: payload.password
                   })
+               }).then((res) => {
+                  console.log('res_credentials', res)
+                  return res
                })
 
                if (response.status !== 200) {
@@ -48,11 +53,13 @@ export const authOptions: NextAuthOptions = {
                // Desestructure the token from the response
                const token = data?.token
 
-               return {
+               const user = {
                   token,
                   ...{ email: credentials?.email },
                   userInfo: data.user
                }
+
+               return user as unknown as User
             } catch (error) {
                console.log(error)
                return null
@@ -60,7 +67,7 @@ export const authOptions: NextAuthOptions = {
          }
       }),
       CredentialsProvider({
-         id: 'login-token',
+         name: 'Update user info by token',
          credentials: {
             token: { label: 'Token', type: 'text' }
          },
@@ -88,6 +95,47 @@ export const authOptions: NextAuthOptions = {
             }
          }
       }),
+      CredentialsProvider({
+         id: 'wallet',
+         name: 'Login with wallet',
+         credentials: {
+            walletAddress: { label: 'Wallet Address', type: 'text' },
+            signature: { label: 'Signature', type: 'text' },
+            nonce: { label: 'Nonce', type: 'text' }
+         },
+         async authorize(credentials, req): Promise<User | null> {
+            console.log('credentials', credentials)
+            if (!credentials) return null
+
+            const { getNounce, web3GoogleAuthenticate } = loginUserService()
+
+            try {
+               const data = {
+                  walletAddress: credentials.walletAddress,
+                  signature: credentials.signature,
+                  nonce: credentials.nonce,
+                  provider: 'wallet'
+               }
+
+               const response = await web3GoogleAuthenticate(data)
+
+               if (response.status === 200 && response.user) {
+                  return {
+                     id: response.user.id,
+                     name: response.user.name,
+                     email: response.user.email,
+                     walletAddress: response.user.walletAddress,
+                     token: response.token,
+                     userInfo: response.user
+                  } as unknown as User
+               }
+               return null
+            } catch (error) {
+               console.error('Auth error:', error)
+               return null
+            }
+         }
+      }),
       GoogleProvider({
          clientId: googleClientID,
          clientSecret: googleSecret,
@@ -106,17 +154,22 @@ export const authOptions: NextAuthOptions = {
    },
    callbacks: {
       async jwt({ token, account, session, trigger, profile, user }) {
+         console.log('acc_type', account?.type)
+         console.log('profile', profile)
+
          if (trigger === 'update' && session) {
             return { ...token, ...session?.user }
          }
 
          if (account?.type === 'credentials') {
-            return {
+            const obj = {
                ...token,
                ...user,
                ...profile,
                ...account
             }
+            console.log('obj_credentials', obj)
+            return obj
          }
 
          // If the user is signing in with google
@@ -127,23 +180,10 @@ export const authOptions: NextAuthOptions = {
                body: JSON.stringify({
                   email: profile?.email,
                   name: profile?.name,
-                  googleId: account.providerAccountId,
-                  avatar: profile?.image || token?.picture
+                  avatar: profile?.image || token?.picture,
+                  googleId: account.providerAccountId
                })
             })
-
-            //
-            // Implement login with web3auth
-            // ----------------------------------------------------------------
-            // 1. route to generate a nonce: /generate-nonce (GET) return a { nonce: string } object
-            //
-            // 1.5 se for metamask, assina com o viem. caso seja outro wallet, usar web3 auth (4)
-            //
-            // 2. com o hash da assinatura, envia para o endpoint: /users/web3-auth (POST) with body export type Web3AuthenticateDTO = { walletAddress: string, signature: string, nonce: string }
-            //
-            // 3. assinar com o viem: https://viem.sh/docs/actions/wallet/signMessage.html
-            //
-            // 4. assinar com web3 auth: https://github.com/Web3Auth/w3a-new-demo/blob/b5468c8251fe77b68ee5ca89a37de3eb755e2654/src/store/web3authStore.ts#L161
 
             const data = await response.json()
 
@@ -180,14 +220,12 @@ export const authOptions: NextAuthOptions = {
             name: token?.name,
             email: token?.email,
             token: token?.token,
-            redirectToRegister: token?.redirectToRegister || false,
             googleId: token?.googleId,
+            redirectToRegister: token?.redirectToRegister || false,
             userInfo: { ...(token?.userInfo as object) }
          }
          return {
-            user: {
-               ...user_infos
-            }
+            user: { ...user_infos }
          } as Session
       }
    }

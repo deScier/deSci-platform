@@ -74,18 +74,18 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
       // TODO: implement a login to get session when the user finishes the registration
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      const authResult = await signIn('credentials', {
+      await signIn('credentials', {
          redirect: false,
          email: data.email,
          password: data.password
+      }).then((res) => {
+         if (res?.error) {
+            toast.error('Login error. Check your credentials.')
+            return
+         }
+
+         toast.success('Successful login. Redirecting...')
       })
-
-      if (authResult?.error) {
-         toast.error('Login error. Check your credentials.')
-         return
-      }
-
-      toast.success('Successful login. Redirecting...')
    }
 
    /**

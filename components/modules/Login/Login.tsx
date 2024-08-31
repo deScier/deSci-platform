@@ -1,31 +1,33 @@
-import { home_routes } from '@/routes/home'
+'use client'
 import '@styles/login.css'
 
 import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
 
 import { Separator } from '@/components/ui/separator'
+import { useSyncProviders } from '@/hooks/useSyncProviders'
+import { home_routes } from '@/routes/home'
 import { LoginProps, LoginSchema } from '@/schemas/login'
+import { loginUserService, Web3AuthenticateDTO } from '@/services/user/login.service'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
+import { CHAIN_NAMESPACES, IProvider, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base'
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
+import { Web3AuthNoModal } from '@web3auth/no-modal'
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { LoginModalProps } from './Typing'
 
+import RPC from '@utils/viem_rpc' // for using viem
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
+import { createWalletClient, custom, EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem'
+import { sepolia } from 'viem/chains'
 import LoginAnimation from './Animation/Animation'
-
-import { CHAIN_NAMESPACES, IProvider, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base'
-import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
-import { Web3AuthNoModal } from '@web3auth/no-modal'
-import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
-
-import { useSyncProviders } from '@/hooks/useSyncProviders'
-import RPC from '@utils/viem_rpc'; // for using viem
 
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
@@ -102,7 +104,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
 
             const web3auth = new Web3AuthNoModal({
-               clientId: process.env.WEB3AUTH_NEW_LOGIN_CLIENT_ID as string, 
+               clientId: 'BDLCDoEW_yk2kzblGIAReTlUlekSqt6znV09LCvSUMTdLrX4iQKbHOHPFkrj3KO-HFGOtZY_nSGe4r_GDDBvLCE',
                web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
                privateKeyProvider
             })
@@ -140,7 +142,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      google: {
                         verifier: 'google-development-verifier',
                         typeOfLogin: 'google',
-                        clientId: process.env.GOOGLE_ID as string
+                        clientId: '397245222116-0ibhtaoia20ra1ber1mm0bfc61u52abd.apps.googleusercontent.com'
                      }
                   }
                }
@@ -163,28 +165,242 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       init()
    }, [])
 
-   //    const handleGoogleAuth = async (e: React.MouseEvent<HTMLElement>) => {
-   //     e.preventDefault()
-   //     signIn('google', { callbackUrl: `/login` })
-   //   }
+   const { getNounce, web3GoogleAuthenticate } = loginUserService()
+   const { data: session, update, status } = useSession()
+   console.log('session', session)
 
-   const login = async (e: React.MouseEvent<HTMLElement>) => {
+   const [sessionState, setSession] = React.useState<boolean>(false)
+
+   const handleEnsureSession = async (): Promise<boolean> => {
+      const local = localStorage.getItem('openlogin_store')
+      if (!local) {
+         return false
+      }
+
+      const sessionState = JSON.parse(local)
+
+      if (!sessionState) {
+         return false
+      }
+
+      setSession(true)
+
+      return true
+   }
+
+   React.useEffect(() => {
+      handleEnsureSession()
+   }, [])
+
+   const handleGoogleAuth = async (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+
+      console.info('Starting Google login process')
+
       if (!web3auth) {
-         uiConsole('web3auth not initialized yet')
+         toast.error('Web3Auth not initialized yet')
+         console.info('Web3Auth not initialized yet')
          return
       }
       try {
+         console.info('Setting loading state to true')
+
+         // Connect to Web3Auth with Google
          const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' })
 
-         signIn('google', { callbackUrl: `/home` })
+         console.info('Attempting to connect to Web3Auth with Google', web3authProvider)
 
-         setProvider(web3authProvider)
-      } catch (error) {
-         if (error instanceof Error && error.message.includes('Already connected')) {
-            toast.info('Already connected. Please disconnect first.')
-         } else {
-            console.error('Login error:', error)
+         if (!web3authProvider) {
+            throw new Error('Failed to get Web3Auth provider')
          }
+         console.info('Successfully connected to Web3Auth provider', web3authProvider)
+
+         // Get user info
+         const userInfo = await web3auth.getUserInfo()
+         console.info('Attempting to get user info', userInfo)
+
+         // Get nonce from your backend
+         const nonce = await getNounce()
+         console.info('Attempting to get nonce from backend', nonce)
+
+         // Get the user's account
+         const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' })
+         console.info('Attempting to get user accounts', accounts)
+
+         if (!accounts) {
+            throw new Error('Failed to get user accounts')
+         }
+         console.info('Successfully got user accounts', accounts)
+
+         const from = accounts[0] ?? 'from'
+         console.info(`Using account: ${from}`)
+
+         // Sign the nonce
+         const signedMessage = await web3authProvider.request<[string, string], string>({
+            method: 'personal_sign',
+            params: [nonce.nonce, from]
+         })
+         console.info('Attempting to sign nonce', signedMessage)
+
+         /* 
+         async function signedMessage() {
+            const message = 'Example `personal_sign` message'
+            const from = accounts.value[0]
+            const signedMessage = await walletServicesPlugin.value?.proxyProvider?.request<
+                [string, string],
+                string
+            >({
+                method: 'personal_sign',
+                params: [message, from]
+            })
+            return signedMessage
+        }
+         */
+
+         const data: Web3AuthenticateDTO = {
+            walletAddress: from,
+            signature: signedMessage ?? '',
+            nonce: nonce.nonce,
+            provider: 'google'
+         }
+
+         console.info('Preparing Web3AuthenticateDTO', data)
+
+         const response = await web3GoogleAuthenticate(data).then((res) => {
+            if (res.status === 404) {
+               toast.info('User not found. Please register first.')
+               handleClearSession(false)
+               onRegister?.()
+               return
+            }
+            if (!String(res.status).includes('20')) {
+               toast.error(res.reason)
+               return
+            }
+            toast.success('Successfully logged in with Google')
+            setLoading(false)
+         })
+         console.info('Attempting to authenticate with Web3', response)
+
+         // TODO: Send the signed nonce to your backend for verification
+         // const verificationResult = await verifySignedNonce(userInfo.email, signedMessage)
+
+         // If verification is successful, proceed with login
+         // if (verificationResult.success) {
+         //    // Perform login actions (e.g., set user sessionState, redirect)
+         //    toast.success('Successfully logged in with Google')
+         //    if (noRedirect) {
+         //       onClose()
+         //    } else {
+         //       router.refresh()
+         //       router.push(home_routes.summary)
+         //    }
+         // } else {
+         //    throw new Error('Failed to verify signed nonce')
+         // }
+
+         //  toast.success('Successfully connected with Google')
+      } catch (error) {
+         console.error('Login error:', error)
+         if (error instanceof Error) {
+            if (error.message.includes('Already connected')) {
+               toast.info('Already connected. Please disconnect first.')
+            } else {
+               toast.error(`Login failed: ${error.message}`)
+            }
+         }
+      } finally {
+         setLoading(false)
+      }
+   }
+
+   const handleClearSession = async (reload: boolean = true) => {
+      localStorage.clear()
+      setLoggedIn(false)
+      setProvider(null)
+
+      if (reload && typeof window !== 'undefined') {
+         window.location.reload()
+      }
+   }
+
+   /* =============== Metamask Auth =================== */
+
+   const walletClient = createWalletClient({
+      chain: sepolia,
+      transport: custom(
+         (
+            window as Window & {
+               ethereum?:
+                  | {
+                       on: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
+                       removeListener: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
+                       request: EIP1193RequestFn<EIP1474Methods>
+                    }
+                  | undefined
+            }
+         ).ethereum!
+      )
+   })
+
+   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>, providerWithInfo: EIP6963ProviderDetail) => {
+      e.preventDefault()
+
+      try {
+         const [account] = await walletClient.getAddresses()
+         console.log('account', account)
+
+         const nonce = await getNounce()
+
+         const signedMessage = await walletClient.signMessage({
+            account,
+            message: nonce.nonce
+         })
+
+         const data: Web3AuthenticateDTO = {
+            walletAddress: account,
+            signature: signedMessage ?? '',
+            nonce: nonce.nonce,
+            provider: 'wallet'
+         }
+
+         const response = await web3GoogleAuthenticate(data)
+
+         if (response.status === 404) {
+            toast.info('User not found. Please register first.')
+            handleClearSession(false)
+            onRegister?.()
+            return
+         }
+
+         if (!String(response.status).includes('20')) {
+            toast.error(response.reason)
+            return
+         }
+
+         // Use signIn para criar uma sessão
+         const result = await signIn('wallet', {
+            redirect: false,
+            walletAddress: account,
+            signature: signedMessage,
+            nonce: nonce.nonce
+         })
+
+         if (result?.error) {
+            toast.error(`Failed to create session: ${result.error}`)
+         } else {
+            toast.success('Successfully logged in with wallet')
+            setLoading(false)
+            if (noRedirect) {
+               onClose()
+            } else {
+               router.refresh()
+               router.push(home_routes.summary)
+            }
+         }
+      } catch (error) {
+         console.error(error)
+         toast.error('An error occurred during authentication')
       }
    }
 
@@ -225,6 +441,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       const chainId = await rpc.getChainId()
       uiConsole(chainId)
    }
+
    const getAccounts = async () => {
       if (!provider) {
          uiConsole('provider not initialized yet')
@@ -293,22 +510,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       providers: providers
    })
 
-   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
-      try {
-         const accounts = (await providerWithInfo.provider.request({
-            method: 'eth_requestAccounts'
-         })) as string[]
-
-         // Login
-         // ----------------------------------------------------------------
-         // TODO: implement a login to get session when the user is connected
-         //  setValue('wallet_address', accounts[0])
-         setUserAccount(accounts[0])
-      } catch (error) {
-         console.error(error)
-      }
-   }
-
    return (
       <React.Fragment>
          <div className="grid md:grid-cols-2 relative">
@@ -359,14 +560,24 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         or
                      </p>
                   </div>
-                  <Button.Button variant="outline" className="px-4 py-2" onClick={() => handleConnect(providers[0])}>
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => handleMetamaskAuth(e, providers[0])}>
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with wallet</span>
                   </Button.Button>
                   <div className="space-y-2">
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => login(e)}>
+                     <Button.Button
+                        variant="outline"
+                        className="px-4 py-2"
+                        onClick={(e) => {
+                           if (sessionState) {
+                              handleClearSession()
+                           } else {
+                              handleGoogleAuth(e)
+                           }
+                        }}
+                     >
                         <GoogleIcon className="w-6" />
-                        <span className="text-base font-semibold">Continue with Google</span>
+                        <span className="text-base font-semibold">{sessionState ? 'Disconnect' : 'Continue with Google'}</span>
                      </Button.Button>
                      <p className="text-[10px] font-regular text-neutral-light_gray text-center">
                         When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over your
