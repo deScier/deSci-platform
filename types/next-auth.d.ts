@@ -1,21 +1,10 @@
-export type User = {
-   id: string
-   name: string
-   email: string
-   title?: string
-   lattes: string | null
-   avatar: string | null
-   picture: string | null
-   walletAddress: string | null
-   aiUsageLimit: number
-   role: string
-}
+import { UserProps } from './user'
 
 export type UserSession = {
    name?: string
    email: string
    token: string
-   userInfo: User
+   userInfo: UserProps
    redirectToRegister?: boolean
    googleId?: string
    role: string

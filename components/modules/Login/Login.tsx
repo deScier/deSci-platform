@@ -242,29 +242,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          })
          console.info('Attempting to sign nonce', signedMessage)
 
-         /* 
-         async function signedMessage() {
-            const message = 'Example `personal_sign` message'
-            const from = accounts.value[0]
-            const signedMessage = await walletServicesPlugin.value?.proxyProvider?.request<
-                [string, string],
-                string
-            >({
-                method: 'personal_sign',
-                params: [message, from]
-            })
-            return signedMessage
-        }
-         */
-
          const data: Web3AuthenticateDTO = {
             walletAddress: from,
             signature: signedMessage ?? '',
             nonce: nonce.nonce,
-            provider: 'google'
+            provider: 'google',
+            idToken: userInfo.idToken
          }
-
-         console.info('Preparing Web3AuthenticateDTO', data)
+         console.info('Web3AuthenticateDTO', data)
 
          const response = await web3GoogleAuthenticate(data).then((res) => {
             if (res.status === 404) {
@@ -280,26 +265,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             toast.success('Successfully logged in with Google')
             setLoading(false)
          })
+
          console.info('Attempting to authenticate with Web3', response)
-
-         // TODO: Send the signed nonce to your backend for verification
-         // const verificationResult = await verifySignedNonce(userInfo.email, signedMessage)
-
-         // If verification is successful, proceed with login
-         // if (verificationResult.success) {
-         //    // Perform login actions (e.g., set user sessionState, redirect)
-         //    toast.success('Successfully logged in with Google')
-         //    if (noRedirect) {
-         //       onClose()
-         //    } else {
-         //       router.refresh()
-         //       router.push(home_routes.summary)
-         //    }
-         // } else {
-         //    throw new Error('Failed to verify signed nonce')
-         // }
-
-         //  toast.success('Successfully connected with Google')
       } catch (error) {
          console.error('Login error:', error)
          if (error instanceof Error) {
@@ -378,7 +345,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             return
          }
 
-         // Use signIn para criar uma sessão
          const result = await signIn('wallet', {
             redirect: false,
             walletAddress: account,

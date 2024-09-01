@@ -123,6 +123,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
          updateProgress(currentStep - 1)
       }
    }
+
    const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
    const [userAccount, setUserAccount] = React.useState<string>('')
    const providers = useSyncProviders()
@@ -231,6 +232,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
                {currentStep === 2 && <RegisterStepTwo register={register} errors={errors} />}
 
                {currentStep === 2 && (
+                  /* 
+                 // Register
+                 // ---------------------------------------------------------------
+                // TODO: implement loading state when the user is creating the account
+                
+                */
                   <Button.Button variant="primary" className="px-4 py-2" onClick={() => nextStep()}>
                      Create account
                   </Button.Button>

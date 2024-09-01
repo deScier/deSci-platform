@@ -4,7 +4,7 @@ import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Title from '@components/common/Title/Page'
 
 import { home_routes } from '@/routes/home'
-import { User } from '@/types/next-auth'
+import { UserSession as User } from '@/types/next-auth'
 import { motion } from 'framer-motion'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -53,12 +53,16 @@ export default function ProfilePage() {
       router.push(home_routes.home.index)
    }
 
-   React.useEffect(() => {
-      console.log(session?.user)
-      if (session?.user) {
-         setProfileInfo(session?.user?.userInfo)
-      }
-   }, [session])
+   // Hook to get the user info
+   // ---------------------------------------------------------------
+   // TODO: verify if this is necessary or the best way to get the user info
+
+   //    React.useEffect(() => {
+   //       console.log(session?.user)
+   //       if (session?.user) {
+   //          setProfileInfo(session?.user?.userInfo)
+   //       }
+   //    }, [session])
 
    return (
       <React.Fragment>
@@ -71,9 +75,9 @@ export default function ProfilePage() {
                )}
             >
                <UpdateProfile
-                  name={profileInfo?.name ?? ''}
-                  title={profileInfo?.title ?? ''}
-                  image={profileInfo?.avatar ?? ''}
+                  name={session?.user?.name ?? ''}
+                  title={session?.user?.userInfo.title ?? ''}
+                  image={session?.user?.userInfo?.avatar ?? ''}
                   success={profile.edit_profile_sucess}
                   edit_profile={profile.edit_profile}
                   onClose={() => setProfile({ ...profile, edit_profile: false, edit_profile_sucess: false })}
@@ -154,13 +158,13 @@ export default function ProfilePage() {
          <Box className="h-fit py-10 px-8">
             <div className="grid gap-8">
                <div className="grid gap-6">
-                  {profileInfo?.avatar ? (
+                  {profileInfo?.userInfo?.avatar ? (
                      <Image
                         width={144}
                         quality={50}
                         height={144}
                         alt="profile-image"
-                        src={profileInfo?.avatar ?? ''}
+                        src={profileInfo?.userInfo?.avatar ?? ''}
                         className="w-36 h-36 bg-status-pending rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
                      />
                   ) : (

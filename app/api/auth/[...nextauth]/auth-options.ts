@@ -1,6 +1,6 @@
 import { loginUserService } from '@/services/user/login.service'
-import { User } from '@/types/next-auth'
-import { NextAuthOptions, Session } from 'next-auth'
+import { UserProps } from '@/types/user'
+import { NextAuthOptions, Session, User } from 'next-auth'
 
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
@@ -13,55 +13,35 @@ export const authOptions: NextAuthOptions = {
    session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
    providers: [
       CredentialsProvider({
+         id: 'credentials',
          name: 'Login with email',
          credentials: {
-            email: {
-               label: 'Email',
-               type: 'email',
-               placeholder: 'example@example.com'
-            },
+            email: { label: 'Email', type: 'email' },
             password: { label: 'Password', type: 'password' }
          },
          async authorize(credentials): Promise<User | null> {
             try {
-               // Payload to send to the API
-               const payload = {
-                  email: credentials?.email || '',
-                  password: credentials?.password || ''
-               }
-
-               // Send the payload to the API
                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                     email: payload.email,
-                     password: payload.password
+                     email: credentials?.email,
+                     password: credentials?.password
                   })
-               }).then((res) => {
-                  console.log('res_credentials', res)
-                  return res
                })
 
-               if (response.status !== 200) {
-                  throw new Error('To perform this function please log in first.')
-               }
-
-               // Get the response from the API
-               const data = await response.json()
-
-               // Desestructure the token from the response
-               const token = data?.token
+               const data: { user: UserProps; token: string } = await response.json()
 
                const user = {
-                  token,
                   ...{ email: credentials?.email },
+                  id: data.user.id,
+                  token: data.token,
                   userInfo: data.user
                }
 
-               return user as unknown as User
+               return user
             } catch (error) {
-               console.log(error)
+               console.error('Auth error on id: credentials', error)
                return null
             }
          }
@@ -103,11 +83,10 @@ export const authOptions: NextAuthOptions = {
             signature: { label: 'Signature', type: 'text' },
             nonce: { label: 'Nonce', type: 'text' }
          },
-         async authorize(credentials, req): Promise<User | null> {
-            console.log('credentials', credentials)
+         async authorize(credentials): Promise<User | null> {
             if (!credentials) return null
 
-            const { getNounce, web3GoogleAuthenticate } = loginUserService()
+            const { web3GoogleAuthenticate } = loginUserService()
 
             try {
                const data = {
@@ -117,21 +96,18 @@ export const authOptions: NextAuthOptions = {
                   provider: 'wallet'
                }
 
-               const response = await web3GoogleAuthenticate(data)
+               const response: { user: UserProps; token: string } = await web3GoogleAuthenticate(data)
 
-               if (response.status === 200 && response.user) {
-                  return {
-                     id: response.user.id,
-                     name: response.user.name,
-                     email: response.user.email,
-                     walletAddress: response.user.walletAddress,
-                     token: response.token,
-                     userInfo: response.user
-                  } as unknown as User
+               const user = {
+                  ...{ email: response.user.email },
+                  id: response.user.id,
+                  token: response.token,
+                  userInfo: response.user
                }
-               return null
+
+               return user
             } catch (error) {
-               console.error('Auth error:', error)
+               console.error('Auth error on id: wallet', error)
                return null
             }
          }

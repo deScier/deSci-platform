@@ -109,7 +109,6 @@ export type DocumentPublicProps = {
    nftLink?: string | null
    createdAt: Date
    updatedAt: Date
-
    authors?: AuthorsPublicInfo[]
    reviewers?: ReviewersPublicInfo[]
    documentLikes?: DocumentLikeProps[]

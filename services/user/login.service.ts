@@ -42,6 +42,7 @@ export type Web3AuthenticateDTO = {
    signature: string
    nonce: string
    provider: string
+   idToken?: string
 }
 
 export type Web3AuthenticateResponse = {
