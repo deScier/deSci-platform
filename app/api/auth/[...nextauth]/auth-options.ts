@@ -3,10 +3,6 @@ import { UserProps } from '@/types/user'
 import { NextAuthOptions, Session, User } from 'next-auth'
 
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-
-const googleClientID = process.env.GOOGLE_ID || ''
-const googleSecret = process.env.GOOGLE_SECRET || ''
 
 export const authOptions: NextAuthOptions = {
    secret: process.env.NEXTAUTH_SECRET,
@@ -14,7 +10,7 @@ export const authOptions: NextAuthOptions = {
    providers: [
       CredentialsProvider({
          id: 'credentials',
-         name: 'Login with email',
+         name: 'Login with credentials',
          credentials: {
             email: { label: 'Email', type: 'email' },
             password: { label: 'Password', type: 'password' }
@@ -52,37 +48,8 @@ export const authOptions: NextAuthOptions = {
          }
       }),
       CredentialsProvider({
-         name: 'Update user info by token',
-         credentials: {
-            token: { label: 'Token', type: 'text' }
-         },
-         async authorize(credentials): Promise<any> {
-            const token = credentials?.token
-
-            const userInfoResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
-               method: 'GET',
-               headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`
-               }
-            })
-
-            if (userInfoResponse.status !== 200) {
-               throw new Error('Error getting user basic info')
-            }
-
-            const userInfo = await userInfoResponse.json()
-
-            return {
-               token,
-               email: userInfo?.email,
-               userInfo: userInfo.user
-            }
-         }
-      }),
-      CredentialsProvider({
          id: 'wallet',
-         name: 'Login with wallet',
+         name: 'Login with wallet (Metamask)',
          credentials: {
             walletAddress: { label: 'Wallet Address', type: 'text' },
             signature: { label: 'Signature', type: 'text' },
@@ -117,14 +84,43 @@ export const authOptions: NextAuthOptions = {
             }
          }
       }),
-      GoogleProvider({
-         clientId: googleClientID,
-         clientSecret: googleSecret,
-         authorization: {
-            params: {
-               prompt: 'consent',
-               access_type: 'offline',
-               response_type: 'code'
+      CredentialsProvider({
+         id: 'google',
+         name: 'Login with Google (Web3 Auth)',
+         credentials: {
+            walletAddress: { label: 'Wallet Address', type: 'text' },
+            signature: { label: 'Signature', type: 'text' },
+            nonce: { label: 'Nonce', type: 'text' },
+            idToken: { label: 'Id Token', type: 'text' }
+         },
+         async authorize(credentials): Promise<User | null> {
+            console.log('credentials', credentials)
+            if (!credentials) return null
+
+            const { web3GoogleAuthenticate } = loginUserService()
+
+            try {
+               const data = {
+                  walletAddress: credentials.walletAddress,
+                  signature: credentials.signature,
+                  nonce: credentials.nonce,
+                  provider: 'google',
+                  idToken: credentials.idToken
+               }
+
+               const response: { user: UserProps; token: string } = await web3GoogleAuthenticate(data)
+
+               const user = {
+                  ...{ email: response.user.email },
+                  id: response.user.id,
+                  token: response.token,
+                  userInfo: response.user
+               }
+
+               return user
+            } catch (error) {
+               console.error('Auth error on id: wallet', error)
+               return null
             }
          }
       })
@@ -135,9 +131,6 @@ export const authOptions: NextAuthOptions = {
    },
    callbacks: {
       async jwt({ token, account, session, trigger, profile, user }) {
-         console.log('acc_type', account?.type)
-         console.log('profile', profile)
-
          if (trigger === 'update' && session) {
             return { ...token, ...session?.user }
          }
@@ -149,46 +142,7 @@ export const authOptions: NextAuthOptions = {
                ...profile,
                ...account
             }
-            console.log('obj_credentials', obj)
             return obj
-         }
-
-         // If the user is signing in with google
-         if (account?.type === 'oauth') {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/google`, {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify({
-                  email: profile?.email,
-                  name: profile?.name,
-                  avatar: profile?.image || token?.picture,
-                  googleId: account.providerAccountId
-               })
-            })
-
-            const data = await response.json()
-
-            if (!data?.token) {
-               return Promise.resolve({
-                  ...data,
-                  googleId: account?.providerAccountId,
-                  redirectToRegister: true
-               })
-            }
-
-            if (response.status !== 200) {
-               throw new Error('To perform this function please log in first.')
-            }
-
-            token.token = data.token
-            token.userInfo = data.user
-
-            return {
-               ...token,
-               ...user,
-               ...profile,
-               ...account
-            }
          }
 
          // This return is necessary for

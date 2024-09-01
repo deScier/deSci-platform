@@ -9,32 +9,41 @@ import { useLoading } from '@/hooks/useLoading'
 import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSyncProviders } from '@hooks/useSyncProviders'
 import { signIn, useSession } from 'next-auth/react'
 import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
 import { RegisterModalProps } from './Typing'
 
+import { AddWalletDTO, loginUserService } from '@/services/user/login.service'
 import { registerUserService } from '@/services/user/register.service'
+import { useRouter } from 'next/navigation'
+import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
 import { toast } from 'react-toastify'
+import { createWalletClient, custom, EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem'
+import { sepolia } from 'viem/chains'
 import LoginAnimation from '../Login/Animation/Animation'
+
+import { useSyncProviders } from '@/hooks/useSyncProviders'
+import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from '@web3auth/base'
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
+import { Web3AuthNoModal } from '@web3auth/no-modal'
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
 /**
  * @title RegisterModal Component
  * @notice This component provides a user interface for registering a new account, including form validation and dynamic rendering based on registration status.
  */
-const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: RegisterModalProps) => {
-   const { data: session, status, update } = useSession()
+const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack }: RegisterModalProps) => {
+   const router = useRouter()
+   const { data: session } = useSession()
    console.log('register_session', session)
 
    /** @dev Initializes form handling and validation using useForm with Zod schema */
    const {
       register,
       handleSubmit,
-      watch,
-      setValue,
       formState: { errors }
    } = useForm<RegisterProps>({
       resolver: zodResolver(RegisterSchema),
@@ -119,6 +128,148 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
       }
    }
 
+   const [provider, setProvider] = React.useState<IProvider | null>(null)
+   const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
+   const [loggedIn, setLoggedIn] = React.useState<boolean | null>(null)
+
+   React.useEffect(() => {
+      const init = async () => {
+         try {
+            const chainConfig = {
+               chainNamespace: CHAIN_NAMESPACES.EIP155,
+               chainId: '0x1', // Please use 0x1 for Mainnet
+               rpcTarget: 'https://rpc.ankr.com/eth',
+               displayName: 'Ethereum Devnet',
+               blockExplorerUrl: 'https://etherscan.io/',
+               ticker: 'ETH',
+               tickerName: 'Ethereum',
+               logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png'
+            }
+
+            const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
+
+            const web3auth = new Web3AuthNoModal({
+               clientId: 'BDLCDoEW_yk2kzblGIAReTlUlekSqt6znV09LCvSUMTdLrX4iQKbHOHPFkrj3KO-HFGOtZY_nSGe4r_GDDBvLCE',
+               web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+               privateKeyProvider
+            })
+
+            const openloginAdapter = new OpenloginAdapter({
+               loginSettings: {
+                  mfaLevel: 'optional'
+               },
+               adapterSettings: {
+                  uxMode: 'popup',
+                  whiteLabel: { defaultLanguage: 'en' },
+                  mfaSettings: {
+                     deviceShareFactor: {
+                        enable: true,
+                        priority: 1,
+                        mandatory: true
+                     },
+                     backUpShareFactor: {
+                        enable: true,
+                        priority: 2,
+                        mandatory: false
+                     },
+                     socialBackupFactor: {
+                        enable: true,
+                        priority: 3,
+                        mandatory: false
+                     },
+                     passwordFactor: {
+                        enable: true,
+                        priority: 4,
+                        mandatory: true
+                     }
+                  },
+                  loginConfig: {
+                     google: {
+                        verifier: 'google-development-verifier',
+                        typeOfLogin: 'google',
+                        clientId: '397245222116-0ibhtaoia20ra1ber1mm0bfc61u52abd.apps.googleusercontent.com'
+                     }
+                  }
+               }
+            })
+
+            web3auth.configureAdapter(openloginAdapter)
+            setWeb3auth(web3auth)
+
+            await web3auth.init()
+            setProvider(web3auth.provider)
+
+            if (web3auth.connected) {
+               setLoggedIn(true)
+            }
+         } catch (error) {
+            console.error(error)
+         }
+      }
+
+      init()
+   }, [])
+
+   const { getNounce, addWalletAddress } = loginUserService()
+
+   const walletClient = createWalletClient({
+      chain: sepolia,
+      transport: custom(
+         (
+            window as Window & {
+               ethereum?:
+                  | {
+                       on: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
+                       removeListener: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
+                       request: EIP1193RequestFn<EIP1474Methods>
+                    }
+                  | undefined
+            }
+         ).ethereum!
+      )
+   })
+
+   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+
+      try {
+         const [account] = await walletClient.getAddresses()
+         console.log('account', account)
+
+         const nonce = await getNounce()
+
+         const signedMessage = await walletClient.signMessage({
+            account,
+            message: nonce.nonce
+         })
+
+         const data: AddWalletDTO = {
+            walletAddress: account,
+            signature: signedMessage ?? '',
+            nonce: nonce.nonce
+         }
+
+         console.log('Web3AuthenticateDTO', data)
+
+         const response = await addWalletAddress(data, session?.user?.token as string)
+
+         if (String(response.status).includes('40')) {
+            toast.error(response.message)
+            return
+         }
+
+         if (String(response.status).includes('20')) {
+            toast.success('Wallet added successfully')
+            router.refresh()
+            router.push(home_routes.summary)
+            return
+         }
+      } catch (error) {
+         console.error(error)
+         toast.error('An error occurred during authentication')
+      }
+   }
+
    const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
    const [userAccount, setUserAccount] = React.useState<string>('')
    const providers = useSyncProviders()
@@ -128,19 +279,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
       user_account: userAccount,
       providers: providers
    })
-
-   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
-      try {
-         const accounts = (await providerWithInfo.provider.request({
-            method: 'eth_requestAccounts'
-         })) as string[]
-
-         setValue('wallet_address', accounts[0])
-         setUserAccount(accounts[0])
-      } catch (error) {
-         console.error(error)
-      }
-   }
 
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -208,7 +346,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
                            or
                         </p>
                      </div>
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={() => handleConnect(providers[0])}>
+                     <Button.Button disabled variant="outline" className="px-4 py-2">
                         <MetamaskLogo className="w-6" />
                         <span className="text-base font-semibold">Login with wallet</span>
                      </Button.Button>
@@ -216,7 +354,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
                         Already have an account?{' '}
                         <span
                            className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
-                           onClick={() => {}}
+                           onClick={() => onLogin()}
                         >
                            Login here.
                         </span>
@@ -236,29 +374,52 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
 
                {currentStep === 3 && (
                   <React.Fragment>
-                     <Button.Button
-                        variant="primary"
-                        className="px-4 py-2"
-                        onClick={() => {
-                           // Implement the wallet registration with web3 and metamask
-                           // ----------------------------------------------------
-                           // TODO: implement the wallet registration
-                           //    handleConnect(providers[0])
-                           //    if (userAccount) {
-                           //       addWalletService({ walletAddress: userAccount })
-                           //    }
-                        }}
-                     >
-                        <MetamaskLogo className="w-6" />
-                        <span className="text-base font-semibold">Register wallet</span>
-                     </Button.Button>
+                     <div className="space-y-4">
+                        {/* 
+                        // Implement adding wallet via metamask and google
+                        // --------------------------------------------------
+                        // TODO: implement adding wallet via metamask and google
+                        */}
+                        <Button.Button disabled variant="outline" className="px-4 py-2" onClick={(e) => handleMetamaskAuth(e)}>
+                           <MetamaskLogo className="w-6" />
+                           <span className="text-base font-semibold">Add wallet with Metamask</span>
+                        </Button.Button>
+                        <div className="space-y-2">
+                           <Button.Button
+                              disabled
+                              variant="outline"
+                              className="px-4 py-2"
+                              onClick={(e) => {
+                                 //    if (sessionState) {
+                                 //       handleClearSession()
+                                 //    } else {
+                                 //       handleGoogleAuth(e)
+                                 //    }
+                              }}
+                           >
+                              <GoogleIcon className="w-6" />
+                              <span className="text-base font-semibold">Add wallet with Google</span>
+                           </Button.Button>
+                           <p className="text-[10px] font-regular text-neutral-light_gray text-center">
+                              When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over
+                              your assets.
+                           </p>
+                        </div>
+                     </div>
                      <div className="relative">
                         <Separator color="#A9A9A9" className="h-[0.5px]" />
                         <p className="text-base p-2 px-3 text-neutral-light_gray absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white">
                            or
                         </p>
                      </div>
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={() => {}}>
+                     <Button.Button
+                        variant="outline"
+                        className="px-4 py-2"
+                        onClick={() => {
+                           router.refresh()
+                           router.push(home_routes.summary)
+                        }}
+                     >
                         Go to dashboard
                      </Button.Button>
                   </React.Fragment>

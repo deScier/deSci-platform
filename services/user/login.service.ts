@@ -27,9 +27,21 @@ export const loginUserService = () => {
       }
    }
 
+   const addWalletAddress = async (data: AddWalletDTO, token: string) => {
+      const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/add-wallet`, {
+         method: 'PATCH',
+         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+         body: JSON.stringify(data)
+      })
+      const response = await request.json()
+
+      return response
+   }
+
    return {
       getNounce,
-      web3GoogleAuthenticate
+      web3GoogleAuthenticate,
+      addWalletAddress
    }
 }
 
@@ -43,6 +55,12 @@ export type Web3AuthenticateDTO = {
    nonce: string
    provider: string
    idToken?: string
+}
+
+export type AddWalletDTO = {
+   walletAddress: string
+   signature: string
+   nonce: string
 }
 
 export type Web3AuthenticateResponse = {

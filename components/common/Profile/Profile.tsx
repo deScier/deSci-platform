@@ -148,11 +148,13 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                               variant={web3auth !== null || mobileWeb3auth !== null ? 'outline' : 'disabled'}
                               className="mx-auto px-2 py-3 my-0 text-sm"
                               onClick={() => {
-                                 if (connectWallet) {
-                                    connectWallet()
-                                 } else {
-                                    handleConnectWallet()
-                                 }
+                                 // TODO: Update implementation to show Menu bar (https://ui.shadcn.com/docs/components/menubar) with options to connect wallet using google or metamask
+                                 // -----------------------------------
+                                 //  if (connectWallet) {
+                                 //     connectWallet()
+                                 //  } else {
+                                 //     handleConnectWallet()
+                                 //  }
                               }}
                            >
                               Connect wallet

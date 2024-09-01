@@ -25,6 +25,9 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
     */
    const handleLogout = async () => {
       await signOut()
+      await localStorage.clear()
+      await sessionStorage.clear()
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       router.push(home_routes.home.index)
    }
    return (

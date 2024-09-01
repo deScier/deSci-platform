@@ -19,14 +19,13 @@ import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { createWalletClient, custom, EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem'
+import { sepolia } from 'viem/chains'
 import { LoginModalProps } from './Typing'
 
-import RPC from '@utils/viem_rpc' // for using viem
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
-import { createWalletClient, custom, EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem'
-import { sepolia } from 'viem/chains'
 import LoginAnimation from './Animation/Animation'
 
 /** @title LoginModal Component
@@ -166,7 +165,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    }, [])
 
    const { getNounce, web3GoogleAuthenticate } = loginUserService()
-   const { data: session, update, status } = useSession()
+   const { data: session } = useSession()
    console.log('session', session)
 
    const [sessionState, setSession] = React.useState<boolean>(false)
@@ -205,7 +204,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       try {
          console.info('Setting loading state to true')
 
-         // Connect to Web3Auth with Google
          const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' })
 
          console.info('Attempting to connect to Web3Auth with Google', web3authProvider)
@@ -215,15 +213,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          }
          console.info('Successfully connected to Web3Auth provider', web3authProvider)
 
-         // Get user info
          const userInfo = await web3auth.getUserInfo()
          console.info('Attempting to get user info', userInfo)
 
-         // Get nonce from your backend
          const nonce = await getNounce()
          console.info('Attempting to get nonce from backend', nonce)
 
-         // Get the user's account
          const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' })
          console.info('Attempting to get user accounts', accounts)
 
@@ -235,7 +230,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          const from = accounts[0] ?? 'from'
          console.info(`Using account: ${from}`)
 
-         // Sign the nonce
          const signedMessage = await web3authProvider.request<[string, string], string>({
             method: 'personal_sign',
             params: [nonce.nonce, from]
@@ -251,22 +245,26 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          }
          console.info('Web3AuthenticateDTO', data)
 
-         const response = await web3GoogleAuthenticate(data).then((res) => {
-            if (res.status === 404) {
-               toast.info('User not found. Please register first.')
-               handleClearSession(false)
-               onRegister?.()
-               return
-            }
-            if (!String(res.status).includes('20')) {
-               toast.error(res.reason)
-               return
-            }
-            toast.success('Successfully logged in with Google')
-            setLoading(false)
+         const result = await signIn('google', {
+            redirect: false,
+            walletAddress: from,
+            signature: signedMessage,
+            nonce: nonce.nonce,
+            idToken: userInfo.idToken
          })
 
-         console.info('Attempting to authenticate with Web3', response)
+         if (result?.error) {
+            toast.error(`Failed to create session: ${result.error}`)
+         } else {
+            toast.success('Successfully logged with Google')
+            setLoading(false)
+            if (noRedirect) {
+               onClose()
+            } else {
+               router.refresh()
+               router.push(home_routes.summary)
+            }
+         }
       } catch (error) {
          console.error('Login error:', error)
          if (error instanceof Error) {
@@ -292,7 +290,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    }
 
    /* =============== Metamask Auth =================== */
-
    const walletClient = createWalletClient({
       chain: sepolia,
       transport: custom(
@@ -310,7 +307,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       )
    })
 
-   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>, providerWithInfo: EIP6963ProviderDetail) => {
+   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault()
 
       try {
@@ -355,7 +352,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          if (result?.error) {
             toast.error(`Failed to create session: ${result.error}`)
          } else {
-            toast.success('Successfully logged in with wallet')
+            toast.success('Successfully logged with Metamask')
             setLoading(false)
             if (noRedirect) {
                onClose()
@@ -367,101 +364,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       } catch (error) {
          console.error(error)
          toast.error('An error occurred during authentication')
-      }
-   }
-
-   const authenticateUser = async () => {
-      if (!web3auth) {
-         uiConsole('web3auth not initialized yet')
-         return
-      }
-      const idToken = await web3auth.authenticateUser()
-      uiConsole(idToken)
-   }
-
-   const getUserInfo = async () => {
-      if (!web3auth) {
-         uiConsole('web3auth not initialized yet')
-         return
-      }
-      const user = await web3auth.getUserInfo()
-      uiConsole(user)
-   }
-
-   const logout = async () => {
-      if (!web3auth) {
-         uiConsole('web3auth not initialized yet')
-         return
-      }
-      await web3auth.logout()
-      setLoggedIn(false)
-      setProvider(null)
-   }
-
-   const getChainId = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const chainId = await rpc.getChainId()
-      uiConsole(chainId)
-   }
-
-   const getAccounts = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const address = await rpc.getAccounts()
-      uiConsole(address)
-   }
-
-   const getBalance = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const balance = await rpc.getBalance()
-      uiConsole(balance)
-   }
-
-   const sendTransaction = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const receipt = await rpc.sendTransaction()
-      uiConsole(receipt)
-   }
-
-   const signMessage = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const signedMessage = await rpc.signMessage()
-      uiConsole(signedMessage)
-   }
-
-   const getPrivateKey = async () => {
-      if (!provider) {
-         uiConsole('provider not initialized yet')
-         return
-      }
-      const rpc = new RPC(provider)
-      const privateKey = await rpc.getPrivateKey()
-      uiConsole(privateKey)
-   }
-
-   function uiConsole(...args: any[]): void {
-      const el = document.querySelector('#console>p')
-      if (el) {
-         el.innerHTML = JSON.stringify(args || {}, null, 2)
       }
    }
 
@@ -526,9 +428,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         or
                      </p>
                   </div>
-                  <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => handleMetamaskAuth(e, providers[0])}>
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => handleMetamaskAuth(e)}>
                      <MetamaskLogo className="w-6" />
-                     <span className="text-base font-semibold">Continue with wallet</span>
+                     <span className="text-base font-semibold">Continue with Metamask</span>
                   </Button.Button>
                   <div className="space-y-2">
                      <Button.Button
