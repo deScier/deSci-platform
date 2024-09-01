@@ -15,7 +15,6 @@ import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
 import { RegisterModalProps } from './Typing'
 
-import { addWalletService } from '@/services/user/addWallet.service'
 import { registerUserService } from '@/services/user/register.service'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
@@ -41,7 +40,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
       resolver: zodResolver(RegisterSchema),
       defaultValues: { name: '', email: '', password: '', wallet_address: null }
    })
-   console.log('watch_register', watch())
 
    /** @dev Initialize loading state management */
    const { loading, start, stop } = useLoading()
@@ -52,42 +50,39 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
     */
    const onSubmit: SubmitHandler<RegisterProps> = async (data) => {
       start()
+      try {
+         const res = await registerUserService({
+            name: data.name,
+            email: data.email,
+            password: data.password
+         })
 
-      await registerUserService({
-         name: data.name,
-         email: data.email,
-         password: data.password
-      }).then(async (res) => {
          if (!res.success) {
             toast.error(res.message)
             stop()
             return
          }
 
-         toast.success(res.message)
-         updateProgress(currentStep + 1)
-         stop()
-      })
+         const signInRes = await signIn('credentials', {
+            redirect: false,
+            email: data.email,
+            password: data.password
+         })
 
-      // Register
-      // ------------------------------------------------------------------
-      // TODO: implement a login to get session when the user finishes the registration
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      await signIn('credentials', {
-         redirect: false,
-         email: data.email,
-         password: data.password
-      }).then((res) => {
-         if (res?.error) {
+         if (signInRes?.error) {
             toast.error('Login error. Check your credentials.')
             return
          }
 
-         toast.success('Successful login. Redirecting...')
-      })
+         updateProgress(currentStep + 1)
+         toast.success('Register user successfully.')
+      } catch (error) {
+         toast.error('An error occurred during registration. Please try again.')
+         console.error('Registration error:', error)
+      } finally {
+         stop()
+      }
    }
-
    /**
     * @dev Handles third-party login using Google
     * @param e The mouse event from the click
@@ -232,13 +227,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
                {currentStep === 2 && <RegisterStepTwo register={register} errors={errors} />}
 
                {currentStep === 2 && (
-                  /* 
-                 // Register
-                 // ---------------------------------------------------------------
-                // TODO: implement loading state when the user is creating the account
-                
-                */
-                  <Button.Button variant="primary" className="px-4 py-2" onClick={() => nextStep()}>
+                  <Button.Button variant="primary" loading={loading.loading} className="px-4 py-2" onClick={() => nextStep()}>
                      Create account
                   </Button.Button>
                )}
@@ -251,10 +240,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose, onBack }: Regist
                         variant="primary"
                         className="px-4 py-2"
                         onClick={() => {
-                           handleConnect(providers[0])
-                           if (userAccount) {
-                              addWalletService({ walletAddress: userAccount })
-                           }
+                           // Implement the wallet registration with web3 and metamask
+                           // ----------------------------------------------------
+                           // TODO: implement the wallet registration
+                           //    handleConnect(providers[0])
+                           //    if (userAccount) {
+                           //       addWalletService({ walletAddress: userAccount })
+                           //    }
                         }}
                      >
                         <MetamaskLogo className="w-6" />
