@@ -1,9 +1,11 @@
-import { ComponentProps } from 'react'
+import { VariantProps } from 'tailwind-variants'
+import { buttonVariants } from './Button'
 
-type ButtonProps = ComponentProps<'button'> & {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
    variant?: 'primary' | 'outline' | 'disabled'
    loading?: boolean
    icon?: React.ReactNode
+   asChild?: boolean
 }
 
 interface LinkProps {
