@@ -1,7 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { home_routes } from '@/routes/home'
 import { formatName } from '@/utils/format_texts'
-import { signOut, useSession } from 'next-auth/react'
+import { handleLogout } from '@/utils/logout'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg'
@@ -23,13 +24,7 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
     * @dev Handles the logout process.
     * @notice When invoked, it signs the user out and redirects to the home page.
     */
-   const handleLogout = async () => {
-      await signOut()
-      await localStorage.clear()
-      await sessionStorage.clear()
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      router.push(home_routes.home.index)
-   }
+
    return (
       <React.Fragment>
          <div className="grid grid-flow-col items-center justify-start gap-4">
@@ -58,7 +53,7 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
                <LogoutIcon
                   width={18}
                   className="fill-neutral-light_gray cursor-pointer hover:fill-primary-main transition-all duration-300 hover:scale-110 mt-[2px]"
-                  onClick={handleLogout}
+                  onClick={() => handleLogout(() => router.push(home_routes.home.index))}
                />
             </div>
          </div>

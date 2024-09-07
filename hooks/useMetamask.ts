@@ -1,3 +1,5 @@
+import { EIP6963AnnounceProviderEvent, EIP6963ProviderDetail } from '@/globals'
+
 export const store = {
    value: () => providers,
    subscribe: (callback: () => void) => {

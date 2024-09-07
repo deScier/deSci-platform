@@ -166,7 +166,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                               <PlusCircle className="w-4" />
                            </Button.Button>
                         ) : (
-                           //    <div className="mx-auto px-2 py-3 my-0 text-sm w-52 overflow-hidden truncate">{formatAddress(walletAddress)}</div>
                            <div className="flex items-center gap-2 mx-auto my-0">
                               <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress || 'N/A')}</p>
                               <HoverCard closeDelay={1000} open={isCopied}>

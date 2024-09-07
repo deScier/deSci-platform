@@ -3,8 +3,12 @@
 import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Title from '@components/common/Title/Page'
 
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Separator } from '@/components/ui/separator'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { home_routes } from '@/routes/home'
 import { UserSession as User } from '@/types/next-auth'
+import { formatAddress } from '@/utils/format_wallet'
 import { motion } from 'framer-motion'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -16,10 +20,6 @@ import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassw
 import UpdatePassword from '@/components/modules/Profile/Modals/ChangePassword'
 import UpdateProfile from '@/components/modules/Profile/Modals/EditProfile'
 import UpdateEmail from '@/components/modules/Profile/Modals/UpdateEmail'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { Separator } from '@/components/ui/separator'
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
-import { formatAddress } from '@/utils/format_wallet'
 import Image from 'next/image'
 import React from 'react'
 
@@ -95,45 +95,43 @@ export default function ProfilePage() {
                   <div className="grid gap-2">
                      <h1 className="text-xl text-secundary_blue-main font-semibold flex justify-center lg:text-lg 2xl:text-xl">{session?.user?.name}</h1>
                      <div className="grid md:grid-flow-col items-center justify-center gap-2 md:gap-4">
-                        {session?.user?.userInfo.title !== '' && (
-                           <React.Fragment>
-                              <p className="text-sm text-primary-main font-regular select-none text-center">{session?.user?.userInfo.title}</p>
-                              <div className="divider-h md:hidden bg-gray-300 h-px" />
-                              {session?.user?.userInfo?.title !== '' && <Separator orientation="vertical" className="h-4 bg-gray-300" />}
-                           </React.Fragment>
-                        )}
+                        <React.Fragment>
+                           <p className="text-sm text-primary-main font-regular select-none text-center">{session?.user?.userInfo.title || '-'}</p>
+                           <div className="divider-h md:hidden bg-gray-300 h-px" />
+                           <Separator orientation="vertical" className="h-4 bg-gray-300" />
+                        </React.Fragment>
                         <div className="flex items-center gap-2">
                            <Envelope className="w-4 h-5 fill-neutral-gray" />
-                           <p className="text-sm text-neutral-gray select-none">{session?.user?.email}</p>
+                           <p className="text-sm text-neutral-gray select-none">{session?.user?.email || '-'}</p>
                         </div>
-                        {session?.user?.userInfo.walletAddress && (
-                           <React.Fragment>
-                              <Separator orientation="vertical" className="h-4 bg-gray-300" />
-                              <div className="flex items-center gap-2">
-                                 <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress)}</p>
-                                 <HoverCard closeDelay={1000} open={isCopied}>
-                                    <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
-                                       <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          width="14"
-                                          height="14"
-                                          fill="currentColor"
-                                          className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
-                                          viewBox="0 0 16 16"
-                                       >
-                                          <path
-                                             fill-rule="evenodd"
-                                             d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
-                                          />
-                                       </svg>
-                                    </HoverCardTrigger>
-                                    <HoverCardContent className="p-2 py-1" side="bottom">
-                                       <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
-                                    </HoverCardContent>
-                                 </HoverCard>
-                              </div>
-                           </React.Fragment>
-                        )}
+                        <React.Fragment>
+                           <Separator orientation="vertical" className="h-4 bg-gray-300" />
+                           <div className="flex items-center gap-2">
+                              <p className="text-sm text-neutral-gray select-none">
+                                 {session?.user?.userInfo.walletAddress ? formatAddress(session?.user?.userInfo.walletAddress) : '-'}
+                              </p>
+                              <HoverCard closeDelay={1000} open={isCopied}>
+                                 <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       width="14"
+                                       height="14"
+                                       fill="currentColor"
+                                       className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
+                                       viewBox="0 0 16 16"
+                                    >
+                                       <path
+                                          fill-rule="evenodd"
+                                          d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
+                                       />
+                                    </svg>
+                                 </HoverCardTrigger>
+                                 <HoverCardContent className="p-2 py-1" side="bottom">
+                                    <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
+                                 </HoverCardContent>
+                              </HoverCard>
+                           </div>
+                        </React.Fragment>
                      </div>
                   </div>
                </div>

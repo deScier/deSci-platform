@@ -9,9 +9,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { dashboard_key, links } from '@/mock/sidebar_home_items'
 import { home_routes } from '@/routes/home'
 import { formatName } from '@/utils/format_texts'
+import { handleLogout } from '@/utils/logout'
 import * as Button from '@components/common/Button/Button'
 import * as Dialog from '@components/common/Dialog/Digalog'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -232,10 +233,7 @@ const Header: React.FC = () => {
                            </DropdownMenuItem>
                            <DropdownMenuItem
                               className="grid text-sm text-center text-[#5E6992] "
-                              onClick={async () => {
-                                 await signOut()
-                                 router.push(home_routes.home.index)
-                              }}
+                              onClick={() => handleLogout(() => router.push(home_routes.home.index))}
                            >
                               Logout
                            </DropdownMenuItem>
