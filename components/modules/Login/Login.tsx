@@ -5,7 +5,6 @@ import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
 
 import { Separator } from '@/components/ui/separator'
-import { useSyncProviders } from '@/hooks/useSyncProviders'
 import { home_routes } from '@/routes/home'
 import { LoginProps, LoginSchema } from '@/schemas/login'
 import { loginUserService, Web3AuthenticateDTO } from '@/services/user/login.service'
@@ -19,7 +18,7 @@ import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { createWalletClient, custom, EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem'
+import { createWalletClient, custom } from 'viem'
 import { sepolia } from 'viem/chains'
 import { LoginModalProps } from './Typing'
 
@@ -290,37 +289,66 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    }
 
    /* =============== Metamask Auth =================== */
-   const walletClient = createWalletClient({
-      chain: sepolia,
-      transport: custom(
-         (
-            window as Window & {
-               ethereum?:
-                  | {
-                       on: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
-                       removeListener: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void
-                       request: EIP1193RequestFn<EIP1474Methods>
-                    }
-                  | undefined
-            }
-         ).ethereum!
-      )
-   })
+   const walletClient =
+      typeof window !== undefined && window.ethereum
+         ? createWalletClient({
+              chain: sepolia,
+              transport: custom(window.ethereum!)
+           })
+         : null
 
    const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
+      console.info('Starting Metamask authentication')
       e.preventDefault()
 
       try {
-         const [account] = await walletClient.getAddresses()
-         console.log('account', account)
+         console.info('Checking for wallet client')
+         if (!walletClient) {
+            console.info('No wallet client found')
+            toast.error('No wallet providers available. Try installing Metamask or another wallet provider.')
+            return
+         }
 
-         const nonce = await getNounce()
-
-         const signedMessage = await walletClient.signMessage({
-            account,
-            message: nonce.nonce
+         console.info('Getting wallet addresses')
+         const [account] = await walletClient.getAddresses().catch((error) => {
+            console.info('Failed to get account', error)
+            toast.error('Failed to get account. Please install Metamask.')
+            return []
          })
 
+         console.info('Checking account', account)
+         if (!account) {
+            console.info('No account found')
+            toast.error('Failed to get account. Please install Metamask.')
+            return
+         }
+
+         console.info('Getting nonce')
+         const nonce = await getNounce()
+
+         if (!nonce) {
+            console.info('Failed to get nonce')
+            toast.error('Failed to get nonce. Please try again.')
+            return
+         }
+
+         console.info('Signing message')
+         const signedMessage = await walletClient
+            .signMessage({
+               account,
+               message: nonce.nonce
+            })
+            .catch((error) => {
+               console.log('error_signedMessage', error)
+               toast.error('Failed to sign message. Please try again.')
+               return ''
+            })
+
+         if (!signedMessage) {
+            return
+         }
+
+         console.info('Preparing authentication data')
          const data: Web3AuthenticateDTO = {
             walletAddress: account,
             signature: signedMessage ?? '',
@@ -328,9 +356,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             provider: 'wallet'
          }
 
+         console.info('Authenticating with backend')
          const response = await web3GoogleAuthenticate(data)
 
+         console.info('Checking authentication response', response)
          if (response.status === 404) {
+            console.info('User not found')
             toast.info('User not found. Please register first.')
             handleClearSession(false)
             onRegister?.()
@@ -338,10 +369,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          }
 
          if (!String(response.status).includes('20')) {
+            console.info('Authentication failed', response.reason)
             toast.error(response.reason)
             return
          }
 
+         console.info('Signing in with NextAuth')
          const result = await signIn('wallet', {
             redirect: false,
             walletAddress: account,
@@ -349,34 +382,27 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             nonce: nonce.nonce
          })
 
+         console.info('Handling sign-in result', result)
          if (result?.error) {
+            console.info('Sign-in failed', result.error)
             toast.error(`Failed to create session: ${result.error}`)
          } else {
-            toast.success('Successfully logged with Metamask')
+            console.info('Sign-in successful')
+            toast.success('Successfully logged with Metamask.')
             setLoading(false)
             if (noRedirect) {
+               console.info('Closing modal')
                onClose()
             } else {
+               console.info('Redirecting')
                router.refresh()
                router.push(home_routes.summary)
             }
          }
       } catch (error) {
-         console.error(error)
-         toast.error('An error occurred during authentication')
+         console.error('Metamask login error:', error)
       }
    }
-
-   /* =============== Metamask Auth =================== */
-   const [selectedWallet, setSelectedWallet] = React.useState<EIP6963ProviderDetail>()
-   const [userAccount, setUserAccount] = React.useState<string>('')
-   const providers = useSyncProviders()
-
-   console.log('metamask', {
-      selected_wallet: selectedWallet,
-      user_account: userAccount,
-      providers: providers
-   })
 
    return (
       <React.Fragment>
@@ -428,7 +454,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         or
                      </p>
                   </div>
-                  <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => handleMetamaskAuth(e)}>
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={async (e) => handleMetamaskAuth(e)}>
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with Metamask</span>
                   </Button.Button>

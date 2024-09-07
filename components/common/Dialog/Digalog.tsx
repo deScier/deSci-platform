@@ -1,10 +1,13 @@
-import { TitleProps } from '@/components/common/Dialog/Typing'
-import { cn } from '@/lib/utils'
+import '@styles/dialog.css'
+
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import '@styles/dialog.css'
-import React from 'react'
+
+import { TitleProps } from '@/components/common/Dialog/Typing'
+import { cn } from '@/lib/utils'
 import { X } from 'react-bootstrap-icons'
+
+import React from 'react'
 
 /**
  * @title Dialog Root Component

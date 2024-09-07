@@ -1,10 +1,13 @@
 'use client'
 
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import useDimension from '@/hooks/useWindowDimension'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/getArticles.service'
 import { connectWeb3AuthWallet, initWeb3Auth } from '@/services/web3auth/web3auth.service'
+import { formatAddress } from '@/utils/format_wallet'
 import * as Button from '@components/common/Button/Button'
 import { SafeEventEmitterProvider } from '@web3auth/base'
 import { Web3Auth } from '@web3auth/modal'
@@ -112,6 +115,8 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
       }
    }, [windowDimension])
 
+   const { isCopied, copyToClipboard } = useCopyToClipboard()
+
    return (
       <React.Fragment>
          <aside className={twMerge('hidden md:relative md:block overflow-hidden', className)}>
@@ -161,7 +166,30 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                               <PlusCircle className="w-4" />
                            </Button.Button>
                         ) : (
-                           <div className="mx-auto px-2 py-3 my-0 text-sm w-52 overflow-hidden truncate ...">{walletAddress}</div>
+                           //    <div className="mx-auto px-2 py-3 my-0 text-sm w-52 overflow-hidden truncate">{formatAddress(walletAddress)}</div>
+                           <div className="flex items-center gap-2 mx-auto my-0">
+                              <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress || 'N/A')}</p>
+                              <HoverCard closeDelay={1000} open={isCopied}>
+                                 <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       width="14"
+                                       height="14"
+                                       fill="currentColor"
+                                       className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
+                                       viewBox="0 0 16 16"
+                                    >
+                                       <path
+                                          fill-rule="evenodd"
+                                          d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
+                                       />
+                                    </svg>
+                                 </HoverCardTrigger>
+                                 <HoverCardContent className="p-2 py-1" side="bottom">
+                                    <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
+                                 </HoverCardContent>
+                              </HoverCard>
+                           </div>
                         )}
                      </div>
                   </div>
