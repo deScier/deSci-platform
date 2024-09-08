@@ -48,10 +48,10 @@ const Sidebar: React.FC = () => {
                <LogoDeScier className="w-20 h-20 mx-auto my-0" />
                <SelectCreation />
                <div key={currentPath}>
-                  {items.map((item) =>
+                  {items.map((item, index) =>
                      isAdministrator && item.text === admin_key ? null : (
                         <Item
-                           key={item.text}
+                           key={index}
                            icon={item.icon}
                            href={item.path}
                            divider={item.divider}

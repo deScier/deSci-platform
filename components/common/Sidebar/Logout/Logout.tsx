@@ -40,7 +40,6 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
                      width: '100%',
                      height: '100%'
                   }}
-                  className="hover:scale-110 transition-all duration-300"
                />
             </div>
             <div className="grid grid-flow-col items-center gap-4">

@@ -142,7 +142,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                         width={144}
                         height={144}
                         alt="profile-image"
-                        className="w-24 h-24 md:w-36 md:h-36 bg-status-pending rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
+                        className="w-24 h-24 md:w-36 md:h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
                      />
                      <div className="grid gap-2 lg:gap-3 2xl:gap-2">
                         <h1 className="text-xl text-secundary_blue-main font-semibold flex justify-center lg:text-lg 2xl:text-xl">

@@ -78,35 +78,41 @@ export default function ProfilePage() {
          <Box className="h-fit py-10 px-8">
             <div className="grid gap-8">
                <div className="grid gap-6">
-                  {profileInfo?.userInfo?.avatar ? (
+                  {session?.user?.userInfo?.avatar !== null ? (
                      <Image
                         width={144}
                         quality={50}
                         height={144}
                         alt="profile-image"
-                        src={profileInfo?.userInfo?.avatar ?? ''}
-                        className="w-36 h-36 bg-status-pending rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
+                        src={session?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
+                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
                      />
                   ) : (
-                     <div className="flex justify-center items-center w-40 h-40 bg-status-pending rounded-full mx-auto my-0 lg:w-28 lg:h-28 2xl:w-36 2xl:h-36">
-                        <p className="text-5xl w-full px-6 text-center">{session?.user?.name?.charAt(0).toUpperCase()}</p>
-                     </div>
+                     <Image
+                        width={144}
+                        quality={50}
+                        height={144}
+                        alt="profile-image"
+                        src={'/images/profile_dk08wk.png'}
+                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
+                     />
                   )}
                   <div className="grid gap-2">
                      <h1 className="text-xl text-secundary_blue-main font-semibold flex justify-center lg:text-lg 2xl:text-xl">{session?.user?.name}</h1>
                      <div className="grid md:grid-flow-col items-center justify-center gap-2 md:gap-4">
                         <React.Fragment>
                            <p className="text-sm text-primary-main font-regular select-none text-center">{session?.user?.userInfo.title || '-'}</p>
-                           <div className="divider-h md:hidden bg-gray-300 h-px" />
-                           <Separator orientation="vertical" className="h-4 bg-gray-300" />
+                           <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
+                           <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
                         </React.Fragment>
                         <div className="flex items-center gap-2">
                            <Envelope className="w-4 h-5 fill-neutral-gray" />
                            <p className="text-sm text-neutral-gray select-none">{session?.user?.email || '-'}</p>
                         </div>
                         <React.Fragment>
-                           <Separator orientation="vertical" className="h-4 bg-gray-300" />
-                           <div className="flex items-center gap-2">
+                           <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
+                           <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
+                           <div className="flex items-center gap-2 mx-auto my-0 md:mx-0 md:my-0">
                               <p className="text-sm text-neutral-gray select-none">
                                  {session?.user?.userInfo.walletAddress ? formatAddress(session?.user?.userInfo.walletAddress) : '-'}
                               </p>
