@@ -81,8 +81,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
    console.log('web3auth', web3auth)
    const [provider, setProvider] = React.useState<IProvider | null>(null)
-   console.log('provider', provider)
-   const [loggedIn, setLoggedIn] = React.useState<boolean | null>(null)
 
    React.useEffect(() => {
       const init = async () => {
@@ -152,7 +150,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
             setProvider(web3auth.provider)
 
             if (web3auth.connected) {
-               setLoggedIn(true)
+               //    setLoggedIn(true)
             }
          } catch (error) {
             console.error(error)
@@ -279,109 +277,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
 
    const handleClearSession = async (reload: boolean = true) => {
       localStorage.clear()
-      setLoggedIn(false)
+      //   setLoggedIn(false)
       setProvider(null)
 
       if (reload && typeof window !== 'undefined') {
          window.location.reload()
       }
    }
-
-   //    const walletClient =
-   //       typeof window !== undefined && window.ethereum
-   //          ? createWalletClient({
-   //               chain: sepolia,
-   //               transport: custom(window.ethereum!)
-   //            })
-   //          : null
-
-   //    const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
-   //       console.info('Starting Metamask authentication')
-   //       e.preventDefault()
-
-   //       try {
-   //          if (!walletClient) {
-   //             toast.error('No wallet providers available. Try installing Metamask or another wallet provider.')
-   //             return
-   //          }
-
-   //          const [account] = await walletClient.getAddresses().catch((error) => {
-   //             return []
-   //          })
-
-   //          console.info('Checking account', account)
-   //          if (!account) {
-   //             toast.error('Failed to found provider.')
-   //             toast.info('Try open your Metamask extension.')
-   //             return
-   //          }
-
-   //          const nonce = await getNounce()
-
-   //          if (!nonce) {
-   //             toast.error('Failed to get nonce. Please try again.')
-   //             return
-   //          }
-
-   //          const signedMessage = await walletClient
-   //             .signMessage({
-   //                account,
-   //                message: nonce.nonce
-   //             })
-   //             .catch((error) => {
-   //                return ''
-   //             })
-
-   //          if (!signedMessage) {
-   //             toast.error('Failed to sign message. Please try again.')
-   //             return
-   //          }
-
-   //          console.info('Preparing authentication data')
-   //          const data: Web3AuthenticateDTO = {
-   //             walletAddress: account,
-   //             signature: signedMessage ?? '',
-   //             nonce: nonce.nonce,
-   //             provider: 'wallet'
-   //          }
-
-   //          const response = await web3GoogleAuthenticate(data)
-
-   //          if (response.status === 404) {
-   //             toast.info('User not found. Please register first.')
-   //             handleClearSession(false)
-   //             onRegister?.()
-   //             return
-   //          }
-
-   //          if (!String(response.status).includes('20')) {
-   //             toast.error(response.reason)
-   //             return
-   //          }
-
-   //          const result = await signIn('wallet', {
-   //             redirect: false,
-   //             walletAddress: account,
-   //             signature: signedMessage,
-   //             nonce: nonce.nonce
-   //          })
-
-   //          if (result?.error) {
-   //             toast.error(`Failed to create session: ${result.error}`)
-   //          } else {
-   //             toast.success('Successfully logged with Metamask.')
-   //             setLoading(false)
-   //             if (noRedirect) {
-   //                onClose()
-   //             } else {
-   //                router.refresh()
-   //                router.push(home_routes.summary)
-   //             }
-   //          }
-   //       } catch (error) {
-   //          console.error('Metamask login error:', error)
-   //       }
-   //    }
 
    const { handleMetamaskAuth } = useMetamaskAuth()
 
