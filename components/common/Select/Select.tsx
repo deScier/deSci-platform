@@ -141,4 +141,4 @@ const Group: React.FC<Select.SelectGroupProps> = ({ children, className, ...prop
    )
 }
 
-export { Content, Group, Icon, Item, ItemText, Portal, Root, Trigger, Value, Viewport, select }
+export { Content, Group, Icon, Item, ItemText, Portal, Root, select, Trigger, Value, Viewport }

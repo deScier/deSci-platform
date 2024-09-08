@@ -106,7 +106,7 @@ export const articles_types: ArticlesTypesFilter[] = [
    }
 ]
 
-export const all = [{ id: random(1, 1000 * 9999), label: 'All articles', value: null, type: 'item' }]
+export const all = [{ id: random(1, 1000 * 9999), label: 'All articles', value: 'all', type: 'item' }]
 export const research_article = articles_types.slice(0, 4) as ArticlesTypes[]
 export const cases_and_notes = articles_types.slice(5, 8) as ArticlesTypes[]
 export const reviews = articles_types.slice(8, 10) as ArticlesTypes[]

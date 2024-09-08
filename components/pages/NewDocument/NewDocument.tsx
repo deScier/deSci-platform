@@ -8,10 +8,10 @@ import * as Tooltip from '@components/common/Tooltip/Tooltip'
 
 import { Combobox } from '@/components/common/Combobox/Combobox'
 import { StoredFile } from '@/components/common/Dropzone/Typing'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { access_type_options } from '@/mock/access_type'
 import { article_types_submit_article } from '@/mock/articles_types'
@@ -20,6 +20,7 @@ import { home_routes } from '@/routes/home'
 import { AuthorProps, CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
 import { submitNewDocumentService } from '@/services/document/submit.service'
 import { uploadDocumentFileService } from '@/services/file/file.service'
+import { PublicJournalProps } from '@/services/journal/getJournals.service'
 import { ErrorMessage } from '@/utils/error_message'
 import { truncate } from '@/utils/truncate'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,10 +34,12 @@ import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
 import Box from '@/components/common/Box/Box'
-import { PublicJournalProps } from '@/services/journal/getJournals.service'
+import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
 import NProgress from 'nprogress'
 import React, { useEffect, useState } from 'react'
+import slug from 'slug'
 
 const Dropzone = dynamic(() => import('@/components/common/Dropzone/Dropzone'), { ssr: false })
 
@@ -115,8 +118,6 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
          keywords: []
       }
    })
-
-   console.log('errors', errors)
 
    /** @dev Using `useFieldArray` to manage dynamic keyword fields */
    const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
@@ -551,18 +552,59 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                         <Input.Label className="flex gap-2 items-center">
                            <span className="text-sm  font-semibold">Article type</span>
                         </Input.Label>
-                        <SelectArticleType
-                           variant="input"
-                           placeholder="Select the article type"
-                           selected={documentType}
-                           items={article_types_submit_article}
-                           onValueChange={(value, name) => {
+                        <Select
+                           value={documentType || undefined}
+                           onValueChange={(value) => {
                               setDocumentType(value)
 
-                              setValue('documentType', value), trigger('documentType')
-                              setValue('category', name as string), trigger('category')
+                              const findLabelItem = article_types_submit_article.find((item) => item.type === 'label' && item.related?.includes(value))
+
+                              if (findLabelItem) {
+                                 const labelName = findLabelItem.label
+                                 setValue('category', slug(labelName, { lower: true, replacement: '-' }))
+                                 trigger('category')
+                              }
+
+                              setValue('documentType', value)
+                              trigger('documentType')
                            }}
-                        />
+                        >
+                           <SelectTrigger
+                              className={cn(
+                                 'justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray',
+                                 {
+                                    'text-black': documentType
+                                 }
+                              )}
+                           >
+                              <SelectValue asChild placeholder="Select the article type">
+                                 <span>{article_types_submit_article.find((item) => item.value === documentType)?.label || null}</span>
+                              </SelectValue>
+                           </SelectTrigger>
+                           <SelectContent>
+                              <React.Fragment>
+                                 {article_types_submit_article.map((item, index) => (
+                                    <React.Fragment key={item.id}>
+                                       {item.type === 'label' && (
+                                          <React.Fragment>
+                                             {index !== 0 && <Separator />}
+                                             <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                          </React.Fragment>
+                                       )}
+                                       {item.type === 'item' && (
+                                          <SelectItem
+                                             value={item.value as string}
+                                             className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                             onMouseUp={() => setDocumentType(item.value)}
+                                          >
+                                             {item.label}
+                                          </SelectItem>
+                                       )}
+                                    </React.Fragment>
+                                 ))}
+                              </React.Fragment>
+                           </SelectContent>
+                        </Select>
                      </Input.Root>
                   </div>
                   <div className="grid md:grid-cols-2 items-start gap-6">

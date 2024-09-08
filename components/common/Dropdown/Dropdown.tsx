@@ -2,10 +2,11 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { FilterOption } from '@/mock/dropdow_filter_options'
-import React from 'react'
 import { CaretDown } from 'react-bootstrap-icons'
 import { twMerge } from 'tailwind-merge'
 import { DropdownProps } from './Typing'
+
+import React from 'react'
 
 /**
  * @title Dropdown Component

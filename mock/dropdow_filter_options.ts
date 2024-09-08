@@ -145,7 +145,7 @@ export const journal_status_option = [
    {
       id: uniqueId(),
       label: 'All',
-      value: ''
+      value: 'ALL'
    },
    {
       id: uniqueId(),

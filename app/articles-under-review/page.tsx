@@ -3,10 +3,11 @@
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
-import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import { ArticleUnderReview, ArticleUnderReviewProps, ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { articles_types_filter } from '@/mock/articles_types'
 import { filter_status } from '@/mock/dropdow_filter_options'
 import { home_routes } from '@/routes/home'
 import { AuthorsOnDocuments } from '@/services/document/getArticles'
@@ -32,7 +33,7 @@ export default function ArticlesUnderReviewPage() {
    const [page, setPage] = React.useState(1)
 
    /** @notice State for the selected document type filter. */
-   const [documentType, setDocumentType] = React.useState<string | null>(null)
+   const [documentType, setDocumentType] = React.useState<string | null>('all')
 
    /** @notice State for the search term. */
    const [searchTerm, setSearchTerm] = React.useState('')
@@ -103,7 +104,7 @@ export default function ArticlesUnderReviewPage() {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = documentType === null && status === 'pending' && debouncedSearchTerm === ''
+   const withoutFilters = documentType === 'all' && status === 'pending' && debouncedSearchTerm === ''
 
    return (
       <React.Fragment>
@@ -116,22 +117,50 @@ export default function ArticlesUnderReviewPage() {
                   <Input.Search value={searchTerm} placeholder="Find articles with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
                <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <SelectArticleType
-                     className="w-full md:w-fit"
-                     placeholder={'Article type:'}
-                     selected={documentType}
-                     onValueChange={(value) => {
-                        if (value === 'all') setDocumentType(null)
-                        setDocumentType(value)
-                     }}
-                  />
-                  <Dropdown
-                     label="Status:"
-                     selected={filter_status.find((item) => item.value === status)?.label || undefined}
-                     className="min-w-[180px] w-full"
-                     items={filter_status}
-                     onSelect={(value) => setStatus(value)}
-                  />
+                  <Select value={documentType || undefined} onValueChange={(value) => setDocumentType(value)}>
+                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                        <SelectValue asChild>
+                           <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || undefined}</p>
+                        </SelectValue>
+                     </SelectTrigger>
+                     <SelectContent>
+                        <React.Fragment>
+                           {articles_types_filter.map((item, index) => (
+                              <React.Fragment key={item.id}>
+                                 {item.type === 'label' && (
+                                    <React.Fragment>
+                                       {index !== 0 && <Separator />}
+                                       <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                    </React.Fragment>
+                                 )}
+                                 {item.type === 'item' && (
+                                    <SelectItem
+                                       value={item.value as string}
+                                       className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                       onMouseUp={() => setDocumentType(item.value)}
+                                    >
+                                       {item.label}
+                                    </SelectItem>
+                                 )}
+                              </React.Fragment>
+                           ))}
+                        </React.Fragment>
+                     </SelectContent>
+                  </Select>
+                  <Select value={status || undefined} onValueChange={(value) => setStatus(value)}>
+                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                        <SelectValue asChild>
+                           <p>Status: {filter_status.find((item) => item.value === status)?.label || undefined}</p>
+                        </SelectValue>
+                     </SelectTrigger>
+                     <SelectContent>
+                        {filter_status.map((item) => (
+                           <SelectItem key={item.value} value={item.value} className="text-primary-main font-semibold">
+                              {item.label}
+                           </SelectItem>
+                        ))}
+                     </SelectContent>
+                  </Select>
                   {withoutFilters ? null : (
                      <p
                         className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"

@@ -7,6 +7,7 @@ import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import useDebounce from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
@@ -29,7 +30,7 @@ export default function JournalsPage() {
    const [searchTerm, setSearchTerm] = React.useState('')
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
-   const [status, setStatus] = React.useState<string | null>('')
+   const [status, setStatus] = React.useState<string | null>('ALL')
    const [originatesFrom, setOriginatesFrom] = React.useState<string | null>('')
    const [results, setResults] = React.useState<JournalProps[]>([])
    const [totalPages, setTotalPages] = React.useState(Math.ceil(results.length / per_page))
@@ -62,7 +63,7 @@ export default function JournalsPage() {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = status === '' && debouncedSearchTerm === ''
+   const withoutFilters = status === 'ALL' && debouncedSearchTerm === ''
 
    return (
       <React.Suspense>
@@ -82,13 +83,20 @@ export default function JournalsPage() {
                      items={journal_originate_from}
                      onSelect={(value) => setOriginatesFrom(value)}
                   />
-                  <Dropdown
-                     label="Status:"
-                     selected={journal_status_option.find((item) => item.value === status)?.label || undefined}
-                     className="min-w-[180px] w-full"
-                     items={journal_status_option}
-                     onSelect={(value) => setStatus(value)}
-                  />
+                  <Select value={status || undefined} onValueChange={(value) => setStatus(value)}>
+                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                        <SelectValue asChild>
+                           <p>Status: {journal_status_option.find((item) => item.value === status)?.label || 'All'}</p>
+                        </SelectValue>
+                     </SelectTrigger>
+                     <SelectContent>
+                        {journal_status_option.map((item) => (
+                           <SelectItem key={item.value} value={item.value} className="text-primary-main font-semibold">
+                              {item.label}
+                           </SelectItem>
+                        ))}
+                     </SelectContent>
+                  </Select>
                   {withoutFilters ? null : (
                      <p
                         className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"

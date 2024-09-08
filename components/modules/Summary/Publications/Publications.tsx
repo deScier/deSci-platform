@@ -63,10 +63,10 @@ const Publications: React.FC<PublicationsProps> = ({ pendingDocuments, published
             </div>
             {publications && (
                <div className="bg-[#F1FFFF] rounded-md transition-all duration-200 p-3 md:p-4 min-h-[456px] flex flex-col justify-between gap-4">
-                  <div className="flex-grow">
+                  <div className="flex-grow relative">
                      {publishedDocuments?.length === 0 ? (
-                        <div className="flex items-center justify-center !h-full">
-                           <p className="text-neutral-gray">No published articles found.</p>
+                        <div className="flex items-center justify-center absolute top-0 left-0 w-full h-full">
+                           <p className="text-neutral-gray text-center">No published articles found.</p>
                         </div>
                      ) : (
                         <div className="flex flex-col gap-4">
@@ -103,10 +103,10 @@ const Publications: React.FC<PublicationsProps> = ({ pendingDocuments, published
             )}
             {underReview && (
                <div className="bg-[#FFF4DE] rounded-md transition-all duration-200 p-3 md:p-4 min-h-[456px] flex flex-col justify-between gap-4">
-                  <div className="flex-grow">
+                  <div className="flex-grow relative">
                      {pendingDocuments?.length === 0 ? (
-                        <div className="flex items-center justify-center !h-full">
-                           <p className="text-neutral-gray">No articles under review found.</p>
+                        <div className="flex items-center justify-center absolute top-0 left-0 w-full h-full">
+                           <p className="text-neutral-gray text-center">No articles under review found.</p>
                         </div>
                      ) : (
                         <div className="flex flex-col gap-4">

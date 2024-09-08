@@ -10,8 +10,7 @@ export default async function SubmitNewPaperPage() {
    const fetchPublicJournals = async () => {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
          method: 'GET',
-         headers: { 'Content-Type': 'application/json' },
-         cache: 'no-store'
+         headers: { 'Content-Type': 'application/json' }
       })
 
       const response = (await request.json()) as PublicJournalsProps

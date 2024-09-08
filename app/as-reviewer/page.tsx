@@ -4,16 +4,18 @@ import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useDebounce from '@/hooks/useDebounce'
 import { reviewer_filter_status } from '@/mock/dropdow_filter_options'
 import { useArticleToReview } from '@/services/reviewer/fetchDocuments.service'
 
 import ReviewerItem from '@/components/modules/AsReviewer/ReviewerItem/ReviewerItem'
+import { Separator } from '@/components/ui/separator'
+import { articles_types_filter } from '@/mock/articles_types'
 import React from 'react'
 
 export default function AsReviewerPage() {
@@ -28,7 +30,7 @@ export default function AsReviewerPage() {
    const [page, setPage] = React.useState(1)
 
    /** @notice State for the selected document type filter. */
-   const [documentType, setDocumentType] = React.useState<string | null>(null)
+   const [documentType, setDocumentType] = React.useState<string | null>('all')
 
    /** @notice State for the search term. */
    const [searchTerm, setSearchTerm] = React.useState('')
@@ -76,7 +78,7 @@ export default function AsReviewerPage() {
       setResults(filteredArticles)
    }, [articles, documentType, status, debouncedSearchTerm, current])
 
-   const withoutFilters = documentType === null && status === '' && debouncedSearchTerm === ''
+   const withoutFilters = documentType === 'all' && status === '' && debouncedSearchTerm === ''
 
    return (
       <React.Fragment>
@@ -112,15 +114,36 @@ export default function AsReviewerPage() {
                      <Input.Search value={searchTerm} placeholder="Find articles with this terms" onChange={(e) => setSearchTerm(e.target.value)} />
                   </div>
                   <div className="flex flex-col md:flex-row md:items-center gap-2">
-                     <SelectArticleType
-                        className="w-full md:w-fit"
-                        placeholder={'Article type:'}
-                        selected={documentType}
-                        onValueChange={(value) => {
-                           if (value === 'all') setDocumentType(null)
-                           setDocumentType(value)
-                        }}
-                     />
+                     <Select value={documentType || undefined} onValueChange={(value) => setDocumentType(value)}>
+                        <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                           <SelectValue asChild>
+                              <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || undefined}</p>
+                           </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                           <React.Fragment>
+                              {articles_types_filter.map((item, index) => (
+                                 <React.Fragment key={item.id}>
+                                    {item.type === 'label' && (
+                                       <React.Fragment>
+                                          {index !== 0 && <Separator />}
+                                          <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                       </React.Fragment>
+                                    )}
+                                    {item.type === 'item' && (
+                                       <SelectItem
+                                          value={item.value as string}
+                                          className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                          onMouseUp={() => setDocumentType(item.value)}
+                                       >
+                                          {item.label}
+                                       </SelectItem>
+                                    )}
+                                 </React.Fragment>
+                              ))}
+                           </React.Fragment>
+                        </SelectContent>
+                     </Select>
                      {current !== 'published' && (
                         <React.Fragment>
                            <Dropdown
