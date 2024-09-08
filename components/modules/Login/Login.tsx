@@ -18,10 +18,9 @@ import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { createWalletClient, custom } from 'viem'
-import { sepolia } from 'viem/chains'
 import { LoginModalProps } from './Typing'
 
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
@@ -288,121 +287,103 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       }
    }
 
-   /* =============== Metamask Auth =================== */
-   const walletClient =
-      typeof window !== undefined && window.ethereum
-         ? createWalletClient({
-              chain: sepolia,
-              transport: custom(window.ethereum!)
-           })
-         : null
+   //    const walletClient =
+   //       typeof window !== undefined && window.ethereum
+   //          ? createWalletClient({
+   //               chain: sepolia,
+   //               transport: custom(window.ethereum!)
+   //            })
+   //          : null
 
-   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
-      console.info('Starting Metamask authentication')
-      e.preventDefault()
+   //    const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>) => {
+   //       console.info('Starting Metamask authentication')
+   //       e.preventDefault()
 
-      try {
-         console.info('Checking for wallet client')
-         if (!walletClient) {
-            console.info('No wallet client found')
-            toast.error('No wallet providers available. Try installing Metamask or another wallet provider.')
-            return
-         }
+   //       try {
+   //          if (!walletClient) {
+   //             toast.error('No wallet providers available. Try installing Metamask or another wallet provider.')
+   //             return
+   //          }
 
-         console.info('Getting wallet addresses')
-         const [account] = await walletClient.getAddresses().catch((error) => {
-            console.info('Failed to get account', error)
-            toast.error('Failed to get account. Please install Metamask.')
-            return []
-         })
+   //          const [account] = await walletClient.getAddresses().catch((error) => {
+   //             return []
+   //          })
 
-         console.info('Checking account', account)
-         if (!account) {
-            console.info('No account found')
-            toast.error('Failed to get account. Please install Metamask.')
-            return
-         }
+   //          console.info('Checking account', account)
+   //          if (!account) {
+   //             toast.error('Failed to found provider.')
+   //             toast.info('Try open your Metamask extension.')
+   //             return
+   //          }
 
-         console.info('Getting nonce')
-         const nonce = await getNounce()
+   //          const nonce = await getNounce()
 
-         if (!nonce) {
-            console.info('Failed to get nonce')
-            toast.error('Failed to get nonce. Please try again.')
-            return
-         }
+   //          if (!nonce) {
+   //             toast.error('Failed to get nonce. Please try again.')
+   //             return
+   //          }
 
-         console.info('Signing message')
-         const signedMessage = await walletClient
-            .signMessage({
-               account,
-               message: nonce.nonce
-            })
-            .catch((error) => {
-               console.log('error_signedMessage', error)
-               toast.error('Failed to sign message. Please try again.')
-               return ''
-            })
+   //          const signedMessage = await walletClient
+   //             .signMessage({
+   //                account,
+   //                message: nonce.nonce
+   //             })
+   //             .catch((error) => {
+   //                return ''
+   //             })
 
-         if (!signedMessage) {
-            return
-         }
+   //          if (!signedMessage) {
+   //             toast.error('Failed to sign message. Please try again.')
+   //             return
+   //          }
 
-         console.info('Preparing authentication data')
-         const data: Web3AuthenticateDTO = {
-            walletAddress: account,
-            signature: signedMessage ?? '',
-            nonce: nonce.nonce,
-            provider: 'wallet'
-         }
+   //          console.info('Preparing authentication data')
+   //          const data: Web3AuthenticateDTO = {
+   //             walletAddress: account,
+   //             signature: signedMessage ?? '',
+   //             nonce: nonce.nonce,
+   //             provider: 'wallet'
+   //          }
 
-         console.info('Authenticating with backend')
-         const response = await web3GoogleAuthenticate(data)
+   //          const response = await web3GoogleAuthenticate(data)
 
-         console.info('Checking authentication response', response)
-         if (response.status === 404) {
-            console.info('User not found')
-            toast.info('User not found. Please register first.')
-            handleClearSession(false)
-            onRegister?.()
-            return
-         }
+   //          if (response.status === 404) {
+   //             toast.info('User not found. Please register first.')
+   //             handleClearSession(false)
+   //             onRegister?.()
+   //             return
+   //          }
 
-         if (!String(response.status).includes('20')) {
-            console.info('Authentication failed', response.reason)
-            toast.error(response.reason)
-            return
-         }
+   //          if (!String(response.status).includes('20')) {
+   //             toast.error(response.reason)
+   //             return
+   //          }
 
-         console.info('Signing in with NextAuth')
-         const result = await signIn('wallet', {
-            redirect: false,
-            walletAddress: account,
-            signature: signedMessage,
-            nonce: nonce.nonce
-         })
+   //          const result = await signIn('wallet', {
+   //             redirect: false,
+   //             walletAddress: account,
+   //             signature: signedMessage,
+   //             nonce: nonce.nonce
+   //          })
 
-         console.info('Handling sign-in result', result)
-         if (result?.error) {
-            console.info('Sign-in failed', result.error)
-            toast.error(`Failed to create session: ${result.error}`)
-         } else {
-            console.info('Sign-in successful')
-            toast.success('Successfully logged with Metamask.')
-            setLoading(false)
-            if (noRedirect) {
-               console.info('Closing modal')
-               onClose()
-            } else {
-               console.info('Redirecting')
-               router.refresh()
-               router.push(home_routes.summary)
-            }
-         }
-      } catch (error) {
-         console.error('Metamask login error:', error)
-      }
-   }
+   //          if (result?.error) {
+   //             toast.error(`Failed to create session: ${result.error}`)
+   //          } else {
+   //             toast.success('Successfully logged with Metamask.')
+   //             setLoading(false)
+   //             if (noRedirect) {
+   //                onClose()
+   //             } else {
+   //                router.refresh()
+   //                router.push(home_routes.summary)
+   //             }
+   //          }
+   //       } catch (error) {
+   //          console.error('Metamask login error:', error)
+   //       }
+   //    }
+
+   const { handleMetamaskAuth } = useMetamaskAuth()
 
    return (
       <React.Fragment>
@@ -454,7 +435,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                         or
                      </p>
                   </div>
-                  <Button.Button variant="outline" className="px-4 py-2" onClick={async (e) => handleMetamaskAuth(e)}>
+                  <Button.Button
+                     variant="outline"
+                     className="px-4 py-2"
+                     onClick={(e) =>
+                        handleMetamaskAuth(e, {
+                           onSuccess: () => router.push(home_routes.summary),
+                           noRedirect,
+                           onRegister,
+                           onClose
+                        })
+                     }
+                  >
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with Metamask</span>
                   </Button.Button>
