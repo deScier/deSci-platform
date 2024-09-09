@@ -252,7 +252,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
          if (result?.error) {
             toast.error(`Failed to create session: ${result.error}`)
          } else {
-            toast.success('Successfully logged with Google')
+            toast.success('Successfully logged with Google.')
             setLoading(false)
             if (noRedirect) {
                onClose()
@@ -277,7 +277,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
 
    const handleClearSession = async (reload: boolean = true) => {
       localStorage.clear()
-      //   setLoggedIn(false)
       setProvider(null)
 
       if (reload && typeof window !== 'undefined') {
