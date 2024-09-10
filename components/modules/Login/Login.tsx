@@ -1,30 +1,27 @@
 'use client'
+
 import '@styles/login.css'
 
 import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
 
+import { LoginModalProps } from '@/components/modules/Login/Typing'
 import { Separator } from '@/components/ui/separator'
+import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
 import { LoginProps, LoginSchema } from '@/schemas/login'
-import { loginUserService, Web3AuthenticateDTO } from '@/services/user/login.service'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CHAIN_NAMESPACES, IProvider, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base'
-import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
-import { Web3AuthNoModal } from '@web3auth/no-modal'
-import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { LoginModalProps } from './Typing'
 
-import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
+import LoginAnimation from '@/components/modules/Login/Animation/Animation'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
-import LoginAnimation from './Animation/Animation'
 
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
@@ -41,7 +38,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    const {
       register,
       handleSubmit,
-      watch,
       formState: { errors }
    } = useForm<LoginProps>({
       resolver: zodResolver(LoginSchema),
@@ -76,215 +72,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
       router.push(home_routes.summary)
    }
 
-   // ===============================================
-
-   const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
-   console.log('web3auth', web3auth)
-   const [provider, setProvider] = React.useState<IProvider | null>(null)
-
-   React.useEffect(() => {
-      const init = async () => {
-         try {
-            const chainConfig = {
-               chainNamespace: CHAIN_NAMESPACES.EIP155,
-               chainId: '0x1', // Please use 0x1 for Mainnet
-               rpcTarget: 'https://rpc.ankr.com/eth',
-               displayName: 'Ethereum Devnet',
-               blockExplorerUrl: 'https://etherscan.io/',
-               ticker: 'ETH',
-               tickerName: 'Ethereum',
-               logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png'
-            }
-
-            const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
-
-            const web3auth = new Web3AuthNoModal({
-               clientId: 'BDLCDoEW_yk2kzblGIAReTlUlekSqt6znV09LCvSUMTdLrX4iQKbHOHPFkrj3KO-HFGOtZY_nSGe4r_GDDBvLCE',
-               web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-               privateKeyProvider
-            })
-
-            const openloginAdapter = new OpenloginAdapter({
-               loginSettings: {
-                  mfaLevel: 'optional'
-               },
-               adapterSettings: {
-                  uxMode: 'popup',
-                  whiteLabel: { defaultLanguage: 'en' },
-                  mfaSettings: {
-                     deviceShareFactor: {
-                        enable: true,
-                        priority: 1,
-                        mandatory: true
-                     },
-                     backUpShareFactor: {
-                        enable: true,
-                        priority: 2,
-                        mandatory: false
-                     },
-                     socialBackupFactor: {
-                        enable: true,
-                        priority: 3,
-                        mandatory: false
-                     },
-                     passwordFactor: {
-                        enable: true,
-                        priority: 4,
-                        mandatory: true
-                     }
-                  },
-                  loginConfig: {
-                     google: {
-                        verifier: 'google-development-verifier',
-                        typeOfLogin: 'google',
-                        clientId: '397245222116-0ibhtaoia20ra1ber1mm0bfc61u52abd.apps.googleusercontent.com'
-                     }
-                  }
-               }
-            })
-
-            web3auth.configureAdapter(openloginAdapter)
-            setWeb3auth(web3auth)
-
-            await web3auth.init()
-            setProvider(web3auth.provider)
-
-            if (web3auth.connected) {
-               //    setLoggedIn(true)
-            }
-         } catch (error) {
-            console.error(error)
-         }
-      }
-
-      init()
-   }, [])
-
-   const { getNounce, web3GoogleAuthenticate } = loginUserService()
-   const { data: session } = useSession()
-   console.log('session', session)
-
-   const [sessionState, setSession] = React.useState<boolean>(false)
-
-   const handleEnsureSession = async (): Promise<boolean> => {
-      const local = localStorage.getItem('openlogin_store')
-      if (!local) {
-         return false
-      }
-
-      const sessionState = JSON.parse(local)
-
-      if (!sessionState) {
-         return false
-      }
-
-      setSession(true)
-
-      return true
-   }
-
-   React.useEffect(() => {
-      handleEnsureSession()
-   }, [])
-
-   const handleGoogleAuth = async (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-
-      console.info('Starting Google login process')
-
-      if (!web3auth) {
-         toast.error('Web3Auth not initialized yet')
-         console.info('Web3Auth not initialized yet')
-         return
-      }
-      try {
-         console.info('Setting loading state to true')
-
-         const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' })
-
-         console.info('Attempting to connect to Web3Auth with Google', web3authProvider)
-
-         if (!web3authProvider) {
-            throw new Error('Failed to get Web3Auth provider')
-         }
-         console.info('Successfully connected to Web3Auth provider', web3authProvider)
-
-         const userInfo = await web3auth.getUserInfo()
-         console.info('Attempting to get user info', userInfo)
-
-         const nonce = await getNounce()
-         console.info('Attempting to get nonce from backend', nonce)
-
-         const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' })
-         console.info('Attempting to get user accounts', accounts)
-
-         if (!accounts) {
-            throw new Error('Failed to get user accounts')
-         }
-         console.info('Successfully got user accounts', accounts)
-
-         const from = accounts[0] ?? 'from'
-         console.info(`Using account: ${from}`)
-
-         const signedMessage = await web3authProvider.request<[string, string], string>({
-            method: 'personal_sign',
-            params: [nonce.nonce, from]
-         })
-         console.info('Attempting to sign nonce', signedMessage)
-
-         const data: Web3AuthenticateDTO = {
-            walletAddress: from,
-            signature: signedMessage ?? '',
-            nonce: nonce.nonce,
-            provider: 'google',
-            idToken: userInfo.idToken
-         }
-         console.info('Web3AuthenticateDTO', data)
-
-         const result = await signIn('google', {
-            redirect: false,
-            walletAddress: from,
-            signature: signedMessage,
-            nonce: nonce.nonce,
-            idToken: userInfo.idToken
-         })
-
-         if (result?.error) {
-            toast.error(`Failed to create session: ${result.error}`)
-         } else {
-            toast.success('Successfully logged with Google.')
-            setLoading(false)
-            if (noRedirect) {
-               onClose()
-            } else {
-               router.refresh()
-               router.push(home_routes.summary)
-            }
-         }
-      } catch (error) {
-         console.error('Login error:', error)
-         if (error instanceof Error) {
-            if (error.message.includes('Already connected')) {
-               toast.info('Already connected. Please disconnect first.')
-            } else {
-               toast.error(`Login failed: ${error.message}`)
-            }
-         }
-      } finally {
-         setLoading(false)
-      }
-   }
-
-   const handleClearSession = async (reload: boolean = true) => {
-      localStorage.clear()
-      setProvider(null)
-
-      if (reload && typeof window !== 'undefined') {
-         window.location.reload()
-      }
-   }
-
    const { handleMetamaskAuth } = useMetamaskAuth()
+   const { handleGoogleAuth } = useGoogleWeb3Auth()
 
    return (
       <React.Fragment>
@@ -355,16 +144,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      <Button.Button
                         variant="outline"
                         className="px-4 py-2"
-                        onClick={(e) => {
-                           if (sessionState) {
-                              handleClearSession()
-                           } else {
-                              handleGoogleAuth(e)
-                           }
-                        }}
+                        onClick={(e) =>
+                           handleGoogleAuth(e, {
+                              onSuccess: () => router.push(home_routes.summary),
+                              noRedirect,
+                              onRegister,
+                              onClose
+                           })
+                        }
                      >
                         <GoogleIcon className="w-6" />
-                        <span className="text-base font-semibold">{sessionState ? 'Disconnect' : 'Continue with Google'}</span>
+                        <span className="text-base font-semibold">Continue with Google</span>
                      </Button.Button>
                      <p className="text-[10px] font-regular text-neutral-light_gray text-center">
                         When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over your

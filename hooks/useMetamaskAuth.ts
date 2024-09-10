@@ -4,18 +4,6 @@ import { toast } from 'react-toastify'
 import { createWalletClient, custom } from 'viem'
 import { sepolia } from 'viem/chains'
 
-interface MetamaskAuthOptions {
-   onSuccess?: () => void
-   onError?: () => void
-   noRedirect?: boolean
-   onRegister?: () => void
-   onClose?: () => void
-}
-
-interface UseMetamaskAuthReturn {
-   handleMetamaskAuth: (e: React.MouseEvent<HTMLElement>, options: MetamaskAuthOptions) => Promise<void>
-}
-
 export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
    const { getNounce, web3GoogleAuthenticate } = loginUserService()
 
@@ -109,4 +97,16 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
    }
 
    return { handleMetamaskAuth }
+}
+
+interface MetamaskAuthOptions {
+   noRedirect?: boolean
+   onSuccess?: () => void
+   onError?: () => void
+   onRegister?: () => void
+   onClose?: () => void
+}
+
+interface UseMetamaskAuthReturn {
+   handleMetamaskAuth: (e: React.MouseEvent<HTMLElement>, options: MetamaskAuthOptions) => Promise<void>
 }
