@@ -21,6 +21,7 @@ import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
 
 import LoginAnimation from '@/components/modules/Login/Animation/Animation'
+import { verifyEmailService } from '@/services/user/verifyEmail.service'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
@@ -85,7 +86,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
          })
 
          if (!res.success) {
-            toast.error(res.message)
+            toast.error('An error occurred during registration. Please try again.')
             stop()
             return
          }
@@ -221,14 +222,25 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
 
                {currentStep === 1 && (
                   <Button.Button
+                     loading={loading.loading}
                      variant="primary"
                      className="px-4 py-2"
-                     onClick={() => {
+                     onClick={async () => {
                         trigger('email')
                         if (watch('email') && !errors.email) {
-                           nextStep()
+                           start()
+                           await verifyEmailService({ email: watch('email') }).then((res) => {
+                              if (res) {
+                                 nextStep()
+                                 stop()
+                              } else {
+                                 toast.error('Email already in use.')
+                                 stop()
+                              }
+                           })
                         } else {
                            toast.error('Please enter a valid email.')
+                           stop()
                         }
                      }}
                   >
@@ -326,28 +338,45 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                   <React.Fragment>
                      <div className="space-y-4">
                         <Button.Button
-                           disabled
                            variant="outline"
                            className="px-4 py-2"
-                           //    onClick={async (e) => {
-                           //       const account = await handleGetMetamaskAccount()
+                           onClick={async () => {
+                              const account = await handleGetMetamaskAccount()
 
-                           //       if (account) {
-                           //          setValue('wallet_address', account)
-                           //          await addWalletService({ walletAddress: account }).then((res) => {
-                           //             if (res.success) {
-                           //                toast.success('Added wallet successfully')
-                           //             }
+                              if (account) {
+                                 setValue('wallet_address', account.walletAddress)
 
-                           //             if (!res.success) {
-                           //                toast.error(res.message)
-                           //             }
-                           //          })
-                           //       }
-                           //    }}
+                                 await addWalletService({
+                                    walletAddress: account.walletAddress,
+                                    signature: account.signature,
+                                    nonce: account.nonce
+                                 }).then(async (res) => {
+                                    if (res.success) {
+                                       toast.success('Connected wallet successfully.')
+
+                                       let data = {
+                                          user: {
+                                             ...session?.user,
+                                             userInfo: {
+                                                ...session?.user?.userInfo,
+                                                walletAddress: account.walletAddress
+                                             }
+                                          }
+                                       }
+
+                                       update(data)
+
+                                       router.refresh()
+                                       router.push(home_routes.summary)
+                                    } else {
+                                       toast.error(res.message)
+                                    }
+                                 })
+                              }
+                           }}
                         >
                            <MetamaskLogo className="w-6" />
-                           <span className="text-base font-semibold">Add wallet with Metamask</span>
+                           <span className="text-base font-semibold">Connect with MetaMask</span>
                         </Button.Button>
                         <div className="space-y-2">
                            <Button.Button
@@ -365,7 +394,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                                        nonce: account.nonce
                                     }).then(async (res) => {
                                        if (res.success) {
-                                          toast.success('Added wallet successfully')
+                                          toast.success('Connected wallet successfully.')
 
                                           let data = {
                                              user: {
@@ -389,7 +418,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                               }}
                            >
                               <GoogleIcon className="w-6" />
-                              <span className="text-base font-semibold">Add wallet with Google</span>
+                              <span className="text-base font-semibold">Connect with Google</span>
                            </Button.Button>
                            <p className="text-[10px] font-regular text-neutral-light_gray text-center">
                               When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over

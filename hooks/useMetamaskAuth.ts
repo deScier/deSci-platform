@@ -1,3 +1,4 @@
+import { AddWalletDTO } from '@/services/user/addWallet.service'
 import { loginUserService, Web3AuthenticateDTO } from '@/services/user/login.service'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-toastify'
@@ -96,17 +97,30 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
       }
    }
 
-   const handleGetMetamaskAccount = async (): Promise<string | undefined> => {
+   const handleGetMetamaskAccount = async (): Promise<AddWalletDTO | undefined> => {
       if (!walletClient) {
          toast.error('No wallet providers available. Install Metamask or another wallet provider.')
          return undefined
       }
-      const [account] = await walletClient.getAddresses().catch(() => [])
-      if (!account) {
-         toast.error('Failed to find provider. Try opening your Metamask extension.')
+
+      try {
+         const [walletAddress] = await walletClient.getAddresses()
+         if (!walletAddress) {
+            throw new Error('Failed to get wallet address')
+         }
+
+         const nonce = await getNounce()
+         const signature = await walletClient.signMessage({
+            account: walletAddress,
+            message: nonce.nonce
+         })
+
+         return { walletAddress, signature, nonce: nonce.nonce }
+      } catch (error) {
+         console.error('Metamask account retrieval error:', error)
+         toast.error('Failed to get account')
          return undefined
       }
-      return account
    }
 
    return { handleMetamaskAuth, handleGetMetamaskAccount }
@@ -122,5 +136,5 @@ interface MetamaskAuthOptions {
 
 interface UseMetamaskAuthReturn {
    handleMetamaskAuth: (e: React.MouseEvent<HTMLElement>, options: MetamaskAuthOptions) => Promise<void>
-   handleGetMetamaskAccount: () => Promise<string | undefined>
+   handleGetMetamaskAccount: () => Promise<AddWalletDTO | undefined>
 }
