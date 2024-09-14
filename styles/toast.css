@@ -14,14 +14,12 @@
 
 /** Classes for the displayed toast **/
 .Toastify__toast {
-   padding: 0rem 0rem 0.1rem 0.5rem;
+   padding: 0.25rem;
    border-radius: 8px;
    background: theme('colors.white');
    box-shadow: 0px -2px 16px 0px rgba(0, 0, 0, 0.12);
    color: theme('colors.black');
-   font:
-      400 1rem 'Poppins',
-      sans-serif;
+   font: 400 1rem 'Poppins', sans-serif;
    line-height: 1.25;
 }
 /* .Toastify__toast--rtl {

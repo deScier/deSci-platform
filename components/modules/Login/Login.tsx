@@ -138,7 +138,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      }
                   >
                      <MetamaskLogo className="w-6" />
-                     <span className="text-base font-semibold">Continue with Metamask</span>
+                     <span className="text-base font-semibold">Continue with MetaMask</span>
                   </Button.Button>
                   <div className="space-y-2">
                      <Button.Button

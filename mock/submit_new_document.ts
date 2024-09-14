@@ -60,6 +60,6 @@ export const authorship_headers = [
    {
       id: 1,
       label: 'Wallet',
-      tooltip: 'Add digital wallet such as Metamask, if available. You can add this later.'
+      tooltip: 'Add digital wallet such as MetaMask, if available. You can add this later.'
    }
 ]

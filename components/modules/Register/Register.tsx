@@ -49,6 +49,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       reValidateMode: 'onChange'
    })
 
+   console.log('register_errors', errors)
+   console.log('register_watch', watch())
+
    const { loading, start, stop } = useLoading()
 
    const onSubmit: SubmitHandler<RegisterProps> = async (data) => {

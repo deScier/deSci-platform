@@ -1,8 +1,8 @@
 'use client'
 
 import Footer from '@/components/common/Footer/Footer'
-import Profile from '@/components/common/Profile/Profile'
 import { SidebarMobile } from '@/components/common/Sidebar/Mobile/Sidebar'
+import Profile from '@/components/common/Sidebar/Profile/Profile'
 import Sidebar from '@/components/common/Sidebar/Sidebar'
 import '@styles/layout.css'
 import React from 'react'

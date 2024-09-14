@@ -1,125 +1,63 @@
 'use client'
 
+import * as Button from '@components/common/Button/Button'
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
-import useDimension from '@/hooks/useWindowDimension'
+import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
+import { cn } from '@/lib/utils'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/getArticles.service'
-import { connectWeb3AuthWallet, initWeb3Auth } from '@/services/web3auth/web3auth.service'
+import { addWalletService } from '@/services/user/addWallet.service'
 import { formatAddress } from '@/utils/format_wallet'
-import * as Button from '@components/common/Button/Button'
-import { SafeEventEmitterProvider } from '@web3auth/base'
-import { Web3Auth } from '@web3auth/modal'
 import { useSession } from 'next-auth/react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
-import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
-import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
-import React, { useEffect, useState } from 'react'
 import { CaretRight, PlusCircle, X } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
-import SubmitedItem from './SubmitedItem/SubmitedItem'
 import { ProfileProps } from './Typing'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
+import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
+import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
+import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
+import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
+import React from 'react'
+import SubmitedItem from './SubmitedItem/SubmitedItem'
 
 /**
  * @title Profile Component
  * @notice This component renders the user's profile page, allowing them to view their profile details, connect a wallet, and access their submitted articles.
  * @dev This component uses the `useSession` and `useArticles` hooks for session management and fetching articles, respectively. It also manages states for the Web3Auth, provider, and wallet connection.
  */
-const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mobileWeb3auth }: ProfileProps) => {
-   /** @dev Initialize session hook for user data */
-   const { data: session, update: updateSession } = useSession()
-
-   const { windowDimension } = useDimension()
-
+const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) => {
+   /** @dev Initialize router hook for navigation */
    const router = useRouter()
+
+   /** @dev Initialize button ref to get the width of the button */
+   const button_ref = React.useRef<HTMLButtonElement>(null)
+
+   /** @dev Initialize session hook for user data */
+   const { data: session, update } = useSession()
 
    /** @dev Initialize hook to fetch articles */
    const { articles } = useArticles()
 
-   /** @dev States for Web3 authentication, provider, and wallet connection */
-   const [web3auth, setWeb3Auth] = useState<Web3Auth | null>(null)
-   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null)
-   const [connectLoading, setConnectLoading] = useState<boolean>(false)
-   const [walletAddress, setWalletAddress] = useState<string | undefined>(session?.user?.userInfo.walletAddress || '')
-
-   /**
-    * @dev Handles wallet connection logic
-    * @notice Connects the user's wallet and updates the session with the new wallet address
-    */
-   const handleConnectWallet = async () => {
-      setConnectLoading(true)
-      /** @dev Connects to Web3Auth wallet and manages the provider */
-      const response = await connectWeb3AuthWallet({
-         provider,
-         setProvider,
-         web3auth
-      })
-
-      setConnectLoading(false)
-
-      /** @dev Shows error message on connection failure */
-      if (!response?.success) {
-         toast.error('Error in connect wallet!')
-         return
-      }
-
-      /** @dev Updates the session with the new wallet address */
-      const udpatedInfo = {
-         ...session,
-         user: {
-            ...session?.user,
-            userInfo: {
-               ...session?.user?.userInfo,
-               walletAddress: response.walletAddress
-            }
-         }
-      }
-
-      /** @dev Calls the session update function */
-      await updateSession(udpatedInfo)
-
-      /** @dev Sets the new wallet address in state */
-      setWalletAddress(response.walletAddress)
-
-      /** @dev Notification of successful wallet connection */
-      toast.success('Wallet connected successfully.')
-   }
-
-   /**
-    * @dev Updates wallet address in state when session user data changes
-    */
-   useEffect(() => {
-      if (session?.user) {
-         setWalletAddress(session?.user?.userInfo.walletAddress || '')
-      }
-   }, [session?.user])
-
-   /**
-    * @dev Initializes Web3 authentication on component mount
-    * @notice Sets up provider and Web3Auth instances
-    */
-   useEffect(() => {
-      const loadWeb3Auth = async () => {
-         await initWeb3Auth({
-            setProvider,
-            setWeb3Auth
-         })
-      }
-      if (windowDimension !== null && windowDimension >= 772) {
-         loadWeb3Auth()
-      }
-   }, [windowDimension])
-
+   /** @dev Initialize hook to copy to clipboard */
    const { isCopied, copyToClipboard } = useCopyToClipboard()
+
+   /** @dev Initialize hook to connect wallet */
+   const { handleGetMetamaskAccount } = useMetamaskAuth()
+   const { handleGetGoogleAccount } = useGoogleWeb3Auth()
 
    return (
       <React.Fragment>
-         <aside className={twMerge('hidden md:relative md:block overflow-hidden', className)}>
+         <aside className={twMerge('hidden md:relative md:block', className)}>
             <div className="flex flex-col gap-8 xxl:min-h-full 2xl:h-screen 2xl:min-h-screen right-0 md:py-14 md:px-6 justify-between bg-[#FEFEFE]">
                <div className="flex flex-col gap-6">
                   <div className="flex justify-between items-center">
@@ -148,23 +86,102 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose, connectWallet, mo
                         <h1 className="text-xl text-secundary_blue-main font-semibold flex justify-center lg:text-lg 2xl:text-xl">
                            {session?.user?.userInfo.name}
                         </h1>
-                        {!walletAddress ? (
-                           <Button.Button
-                              variant={web3auth !== null || mobileWeb3auth !== null ? 'outline' : 'disabled'}
-                              className="mx-auto px-2 py-3 my-0 text-sm"
-                              onClick={() => {
-                                 // TODO: Update implementation to show Menu bar (https://ui.shadcn.com/docs/components/menubar) with options to connect wallet using google or metamask
-                                 // -----------------------------------
-                                 //  if (connectWallet) {
-                                 //     connectWallet()
-                                 //  } else {
-                                 //     handleConnectWallet()
-                                 //  }
-                              }}
-                           >
-                              Connect wallet
-                              <PlusCircle className="w-4" />
-                           </Button.Button>
+                        {!session?.user?.userInfo.walletAddress ? (
+                           <React.Fragment>
+                              <DropdownMenu>
+                                 <DropdownMenuTrigger asChild className="w-full">
+                                    <Button.Button ref={button_ref} variant="outline" className="mx-auto px-2 py-3 my-0 text-sm">
+                                       Connect wallet
+                                       <PlusCircle className="w-4" />
+                                    </Button.Button>
+                                 </DropdownMenuTrigger>
+                                 <DropdownMenuContent className={cn('min-w-[242px]')} style={{ width: button_ref?.current?.clientWidth }}>
+                                    <DropdownMenuItem
+                                       className="px-3 py-2 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                       onClick={async () => {
+                                          const account = await handleGetMetamaskAccount()
+
+                                          if (account) {
+                                             await addWalletService({
+                                                walletAddress: account.walletAddress,
+                                                signature: account.signature,
+                                                nonce: account.nonce
+                                             }).then(async (res) => {
+                                                if (res.success) {
+                                                   toast.success('MetaMask wallet connected successfully.')
+
+                                                   let data = {
+                                                      user: {
+                                                         ...session?.user,
+                                                         userInfo: {
+                                                            ...session?.user?.userInfo,
+                                                            walletAddress: account.walletAddress
+                                                         }
+                                                      }
+                                                   }
+
+                                                   update(data)
+
+                                                   router.refresh()
+                                                } else {
+                                                   toast.error(res.message)
+                                                }
+                                             })
+                                          }
+                                       }}
+                                    >
+                                       <div className="flex items-center gap-2">
+                                          <MetamaskLogo className="w-4" />
+                                          <span className="text-sm font-medium">Connect with MetaMask</span>
+                                       </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                       className="px-3 py-2 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                       onClick={async (e) => {
+                                          const account = await handleGetGoogleAccount()
+
+                                          if (account?.walletAddress) {
+                                             await addWalletService({
+                                                walletAddress: account.walletAddress,
+                                                signature: account.signature,
+                                                nonce: account.nonce
+                                             }).then(async (res) => {
+                                                if (res.success) {
+                                                   toast.success('Successfully connected your wallet using Google via Web3 Auth.')
+
+                                                   toast.info(
+                                                      'A Web3Auth self-custodial wallet has been created, giving you full control over your assets.'
+                                                   )
+
+                                                   let data = {
+                                                      user: {
+                                                         ...session?.user,
+                                                         userInfo: {
+                                                            ...session?.user?.userInfo,
+                                                            walletAddress: account.walletAddress
+                                                         }
+                                                      }
+                                                   }
+
+                                                   update(data)
+
+                                                   router.refresh()
+                                                   router.push(home_routes.summary)
+                                                } else {
+                                                   toast.error(res.message)
+                                                }
+                                             })
+                                          }
+                                       }}
+                                    >
+                                       <div className="flex items-center gap-2">
+                                          <GoogleIcon className="w-4" />
+                                          <span className="text-sm font-medium">Connect with Google</span>
+                                       </div>
+                                    </DropdownMenuItem>
+                                 </DropdownMenuContent>
+                              </DropdownMenu>
+                           </React.Fragment>
                         ) : (
                            <div className="flex items-center gap-2 mx-auto my-0">
                               <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress || 'N/A')}</p>

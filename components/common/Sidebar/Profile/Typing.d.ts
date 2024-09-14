@@ -1,9 +1,6 @@
-import { Web3Auth } from '@web3auth/modal'
 interface ProfileProps {
    className?: string
    onClose?: () => void
-   connectWallet?: () => Promise<void>
-   mobileWeb3auth?: Web3Auth | null
 }
 
 interface BadgeProps {

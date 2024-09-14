@@ -16,21 +16,41 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
            })
          : null
 
+   const handleConnectProvider = async () => {
+      try {
+         const accounts = await window?.ethereum?.request({
+            method: 'eth_requestAccounts'
+         })
+         let selectedAccount
+         if (accounts && accounts.length > 0) {
+            selectedAccount = accounts[0]
+         } else {
+            toast.error('No accounts found. Please connect to MetaMask.')
+            return
+         }
+      } catch (error) {
+         console.error('MetaMask connection error:', error)
+         toast.error('Failed to connect to MetaMask.')
+         return
+      }
+   }
+
    const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>, { onSuccess, onError, noRedirect, onRegister, onClose }: MetamaskAuthOptions) => {
-      console.info('Starting Metamask authentication')
+      console.info('Starting MetaMask authentication')
       e.preventDefault()
 
       try {
+         await handleConnectProvider()
+
          if (!walletClient) {
-            toast.error('No wallet providers available. Try installing Metamask or another wallet provider.')
+            toast.error('No wallet providers available. Install MetaMask or another wallet provider.')
             return
          }
 
          const [account] = await walletClient.getAddresses().catch(() => [])
 
          if (!account) {
-            toast.error('Failed to find provider.')
-            toast.info('Try opening your Metamask extension.')
+            toast.error('No accounts found. Please connect to MetaMask.')
             return
          }
 
@@ -84,7 +104,7 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
             toast.error(`Failed to create session: ${result.error}`)
             onError?.()
          } else {
-            toast.success('Successfully logged in with Metamask.')
+            toast.success('Successfully logged in with MetaMask.')
             if (noRedirect) {
                onClose?.()
             } else {
@@ -92,14 +112,14 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
             }
          }
       } catch (error) {
-         console.error('Metamask login error:', error)
+         console.error('MetaMask login error:', error)
          onError?.()
       }
    }
 
    const handleGetMetamaskAccount = async (): Promise<AddWalletDTO | undefined> => {
       if (!walletClient) {
-         toast.error('No wallet providers available. Install Metamask or another wallet provider.')
+         toast.error('No wallet providers available. Install MetaMask or another wallet provider.')
          return undefined
       }
 
@@ -117,7 +137,7 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
 
          return { walletAddress, signature, nonce: nonce.nonce }
       } catch (error) {
-         console.error('Metamask account retrieval error:', error)
+         console.error('MetaMask account retrieval error:', error)
          toast.error('Failed to get account')
          return undefined
       }

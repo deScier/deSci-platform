@@ -1,6 +1,6 @@
 import Footer from '@/components/common/Footer/Footer'
-import ProfileDeScier from '@/components/common/Profile/deScier/Profile'
 import { SidebarMobile } from '@/components/common/Sidebar/Mobile/Sidebar'
+import ProfileDeScier from '@/components/common/Sidebar/Profile/deScier/Profile'
 import SidebarDeScier from '@/components/common/Sidebar/deScier/SidebarDeScier'
 import '@styles/layout.css'
 import React from 'react'

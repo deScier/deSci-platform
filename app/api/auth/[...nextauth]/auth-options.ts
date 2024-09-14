@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
       }),
       CredentialsProvider({
          id: 'wallet',
-         name: 'Login with wallet (Metamask)',
+         name: 'Login with wallet (MetaMask)',
          credentials: {
             walletAddress: { label: 'Wallet Address', type: 'text' },
             signature: { label: 'Signature', type: 'text' },
