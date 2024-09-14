@@ -6,10 +6,12 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-toastify'
 
+import { AddWalletDTO } from '@/services/user/addWallet.service'
 import React from 'react'
 
 export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
    const { getNounce, web3GoogleAuthenticate } = loginUserService()
+
    const [web3auth, setWeb3auth] = React.useState<Web3AuthNoModal | null>(null)
 
    React.useEffect(() => {
@@ -107,6 +109,7 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
          }
 
          const userInfo = await web3auth.getUserInfo()
+
          const nonce = await getNounce()
          const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' })
 
@@ -173,17 +176,51 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
       }
    }
 
-   return { handleGoogleAuth }
+   const handleGetGoogleAccount = async (): Promise<AddWalletDTO | undefined> => {
+      if (!web3auth) {
+         toast.error('Web3Auth not initialized yet')
+         return undefined
+      }
+
+      try {
+         const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' })
+         if (!web3authProvider) {
+            toast.error('Failed to get Web3Auth provider')
+            return undefined
+         }
+
+         const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' })
+         if (!accounts) {
+            throw new Error('Failed to get user accounts')
+         }
+
+         const walletAddress = accounts[0] ?? ''
+         const nonce = await getNounce()
+         const signature = await web3authProvider.request<[string, string], string>({
+            method: 'personal_sign',
+            params: [nonce.nonce, walletAddress]
+         })
+
+         return { walletAddress, signature: signature as string, nonce: nonce.nonce }
+      } catch (error) {
+         console.error('Google account retrieval error:', error)
+         toast.error('Failed to get account')
+         return undefined
+      }
+   }
+
+   return { handleGoogleAuth, handleGetGoogleAccount }
 }
 
 interface GoogleWeb3AuthOptions {
    noRedirect?: boolean
-   onSuccess?: () => void
    onError?: () => void
    onRegister?: () => void
    onClose?: () => void
+   onSuccess?: () => void
 }
 
 interface UseGoogleWeb3AuthReturn {
    handleGoogleAuth: (e: React.MouseEvent<HTMLElement>, options: GoogleWeb3AuthOptions) => Promise<void>
+   handleGetGoogleAccount: () => Promise<AddWalletDTO | undefined>
 }

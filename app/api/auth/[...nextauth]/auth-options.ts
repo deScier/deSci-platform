@@ -145,8 +145,6 @@ export const authOptions: NextAuthOptions = {
             return obj
          }
 
-         // This return is necessary for
-         // pass the token to the session callback
          return { ...token, ...user, ...profile, ...account }
       },
 

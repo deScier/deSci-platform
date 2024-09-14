@@ -1,21 +1,15 @@
 import { getSession } from 'next-auth/react'
 
-export const addWalletService = async (data: AddWalletProps) => {
+export const addWalletService = async (data: AddWalletDTO) => {
    const session = await getSession()
    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/add-wallet`, {
       method: 'PATCH',
-      headers: {
-         'content-type': 'application/json',
-         authorization: `Bearer ${session?.user?.token}`
-      },
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${session?.user?.token}` },
       body: JSON.stringify(data)
    })
 
-   if (response.status === 201) {
-      return {
-         success: true,
-         message: 'Added wallet successfully'
-      }
+   if (String(response.status).startsWith('20')) {
+      return { success: true, message: 'Added wallet successfully', status: response.status }
    }
 
    const responseData = await response.json()
@@ -23,10 +17,13 @@ export const addWalletService = async (data: AddWalletProps) => {
 
    return {
       success: false,
-      message: message
+      message: message,
+      status: response.status
    }
 }
 
-type AddWalletProps = {
+export type AddWalletDTO = {
    walletAddress: string
+   signature: string
+   nonce: string
 }

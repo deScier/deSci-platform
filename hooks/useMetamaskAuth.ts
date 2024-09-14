@@ -96,7 +96,20 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
       }
    }
 
-   return { handleMetamaskAuth }
+   const handleGetMetamaskAccount = async (): Promise<string | undefined> => {
+      if (!walletClient) {
+         toast.error('No wallet providers available. Install Metamask or another wallet provider.')
+         return undefined
+      }
+      const [account] = await walletClient.getAddresses().catch(() => [])
+      if (!account) {
+         toast.error('Failed to find provider. Try opening your Metamask extension.')
+         return undefined
+      }
+      return account
+   }
+
+   return { handleMetamaskAuth, handleGetMetamaskAccount }
 }
 
 interface MetamaskAuthOptions {
@@ -109,4 +122,5 @@ interface MetamaskAuthOptions {
 
 interface UseMetamaskAuthReturn {
    handleMetamaskAuth: (e: React.MouseEvent<HTMLElement>, options: MetamaskAuthOptions) => Promise<void>
+   handleGetMetamaskAccount: () => Promise<string | undefined>
 }

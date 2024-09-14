@@ -5,25 +5,25 @@ import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
 
 import { Separator } from '@/components/ui/separator'
+import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
 import { useLoading } from '@/hooks/useLoading'
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
+import { addWalletService } from '@/services/user/addWallet.service'
+import { registerUserService } from '@/services/user/register.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
 
-import { registerUserService } from '@/services/user/register.service'
-import { useRouter } from 'next/navigation'
+import LoginAnimation from '@/components/modules/Login/Animation/Animation'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
-import { toast } from 'react-toastify'
-import LoginAnimation from '../Login/Animation/Animation'
-
-import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
-import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 
 /**
  * @title RegisterModal Component
@@ -31,28 +31,52 @@ import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
  */
 const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack }: RegisterModalProps) => {
    const router = useRouter()
-   const { data: session } = useSession()
+   const { data: session, update } = useSession()
    console.log('register_session', session)
 
    /** @dev Initializes form handling and validation using useForm with Zod schema */
    const {
       register,
       handleSubmit,
-      formState: { errors }
+      formState: { errors },
+      watch,
+      setValue,
+      trigger
    } = useForm<RegisterProps>({
       resolver: zodResolver(RegisterSchema),
-      defaultValues: { name: '', email: '', password: '', wallet_address: null }
+      defaultValues: { name: '', email: '', password: '', wallet_address: null },
+      reValidateMode: 'onChange'
    })
 
-   /** @dev Initialize loading state management */
    const { loading, start, stop } = useLoading()
 
-   /**
-    * @dev Submits registration data to server
-    * @param data Contains user input from registration form
-    */
    const onSubmit: SubmitHandler<RegisterProps> = async (data) => {
       start()
+
+      if (!data.email || !data.name || !data.password) {
+         toast.error('Please fill in all fields.')
+         stop()
+         return
+      }
+
+      if (!data.email) {
+         toast.error('Please enter a valid email.')
+         stop()
+         return
+      }
+
+      if (!data.name) {
+         toast.error('Please enter your name.')
+         stop()
+         return
+      }
+
+      if (!data.password || data.password.length < 8) {
+         toast.error('Please enter a password with at least 8 characters.')
+         stop()
+         return
+      }
+
       try {
          const res = await registerUserService({
             name: data.name,
@@ -86,14 +110,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
          stop()
       }
    }
-   /**
-    * @dev Handles third-party login using Google
-    * @param e The mouse event from the click
-    */
-   const loginWithGoogle = async (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-      await signIn('google', { callbackUrl: home_routes.summary })
-   }
 
    const [currentStep, setCurrentStep] = React.useState(1)
    const [completed, setCompleted] = React.useState([0, 0, 0])
@@ -122,8 +138,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       }
    }
 
-   const { handleMetamaskAuth } = useMetamaskAuth()
-   const { handleGoogleAuth } = useGoogleWeb3Auth()
+   const { handleMetamaskAuth, handleGetMetamaskAccount } = useMetamaskAuth()
+   const { handleGoogleAuth, handleGetGoogleAccount } = useGoogleWeb3Auth()
 
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -175,10 +191,47 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      <Step.Indicator last_item total_items={3} current={currentStep} step={3} completed={completed[2]} all_completed={allCompleted} />
                   </Step.Root>
                </div>
-               {currentStep === 1 && <RegisterStepOne register={register} errors={errors} />}
 
                {currentStep === 1 && (
-                  <Button.Button variant="primary" className="px-4 py-2" onClick={() => nextStep()}>
+                  <React.Fragment>
+                     <div className="space-y-1">
+                        <h2 className="font-semibold text-1xl">Welcome to our platform</h2>
+                        <p className="text-base">How would you like to sign up?</p>
+                     </div>
+                     <Input.Root>
+                        <Input.Label>E-mail</Input.Label>
+                        <Input.Input
+                           {...register('email')}
+                           type="email"
+                           placeholder="Type your best email"
+                           onChange={(e) => {
+                              if (e.currentTarget.value === '') {
+                                 trigger('email')
+                              }
+                              if (e.currentTarget.value !== '') {
+                                 setValue('email', e.currentTarget.value)
+                                 trigger('email')
+                              }
+                           }}
+                        />
+                        <Input.Error>{errors.email?.message}</Input.Error>
+                     </Input.Root>
+                  </React.Fragment>
+               )}
+
+               {currentStep === 1 && (
+                  <Button.Button
+                     variant="primary"
+                     className="px-4 py-2"
+                     onClick={() => {
+                        trigger('email')
+                        if (watch('email') && !errors.email) {
+                           nextStep()
+                        } else {
+                           toast.error('Please enter a valid email.')
+                        }
+                     }}
+                  >
                      Continue
                   </Button.Button>
                )}
@@ -191,10 +244,38 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                            or
                         </p>
                      </div>
-                     <Button.Button disabled variant="outline" className="px-4 py-2">
+                     <Button.Button
+                        variant="outline"
+                        className="px-4 py-2"
+                        onClick={(e) => {
+                           handleMetamaskAuth(e, {
+                              onSuccess: () => router.push(home_routes.summary),
+                              onClose
+                           })
+                        }}
+                     >
                         <MetamaskLogo className="w-6" />
                         <span className="text-base font-semibold">Login with wallet</span>
                      </Button.Button>
+                     <div className="space-y-2">
+                        <Button.Button
+                           variant="outline"
+                           className="px-4 py-2"
+                           onClick={(e) => {
+                              handleGoogleAuth(e, {
+                                 onSuccess: () => router.push(home_routes.summary),
+                                 onClose
+                              })
+                           }}
+                        >
+                           <GoogleIcon className="w-6" />
+                           <span className="text-base font-semibold">Login with Google</span>
+                        </Button.Button>
+                        <p className="text-[10px] font-regular text-neutral-light_gray text-center">
+                           When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over
+                           your assets.
+                        </p>
+                     </div>
                      <p className="text-secundary_blue-main text-sm text-center" onClick={() => onBack()}>
                         Already have an account?{' '}
                         <span
@@ -207,7 +288,31 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                   </React.Fragment>
                )}
 
-               {currentStep === 2 && <RegisterStepTwo register={register} errors={errors} />}
+               {currentStep === 2 && (
+                  <React.Fragment>
+                     <div className="space-y-1">
+                        <h2 className="font-semibold text-1xl">Complete your profile</h2>
+                        <p className="text-base">Fill in your details to start exploring our platform.</p>
+                     </div>
+                     <Input.Root>
+                        <Input.Label htmlFor="name">Name</Input.Label>
+                        <Input.Input placeholder="Type your full name" {...register('name')} id="name" name="name" type="text" autoComplete="new-name" />
+                        <Input.Error>{errors.name?.message}</Input.Error>
+                     </Input.Root>
+
+                     <Input.Root>
+                        <Input.Label htmlFor="password">Password</Input.Label>
+                        <Input.Password
+                           placeholder="Type your password"
+                           {...register('password')}
+                           id="password"
+                           name="password"
+                           autoComplete="new-password"
+                        />
+                        <Input.Error>{errors.password?.message}</Input.Error>
+                     </Input.Root>
+                  </React.Fragment>
+               )}
 
                {currentStep === 2 && (
                   <Button.Button variant="primary" loading={loading.loading} className="px-4 py-2" onClick={() => nextStep()}>
@@ -221,28 +326,66 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                   <React.Fragment>
                      <div className="space-y-4">
                         <Button.Button
+                           disabled
                            variant="outline"
                            className="px-4 py-2"
-                           onClick={(e) =>
-                              handleMetamaskAuth(e, {
-                                 onSuccess: () => router.push(home_routes.summary),
-                                 onClose
-                              })
-                           }
+                           //    onClick={async (e) => {
+                           //       const account = await handleGetMetamaskAccount()
+
+                           //       if (account) {
+                           //          setValue('wallet_address', account)
+                           //          await addWalletService({ walletAddress: account }).then((res) => {
+                           //             if (res.success) {
+                           //                toast.success('Added wallet successfully')
+                           //             }
+
+                           //             if (!res.success) {
+                           //                toast.error(res.message)
+                           //             }
+                           //          })
+                           //       }
+                           //    }}
                         >
                            <MetamaskLogo className="w-6" />
                            <span className="text-base font-semibold">Add wallet with Metamask</span>
                         </Button.Button>
                         <div className="space-y-2">
                            <Button.Button
-                              disabled
                               variant="outline"
                               className="px-4 py-2"
-                              onClick={(e) => {
-                                 handleGoogleAuth(e, {
-                                    onSuccess: () => router.push(home_routes.summary),
-                                    onClose
-                                 })
+                              onClick={async (e) => {
+                                 const account = await handleGetGoogleAccount()
+
+                                 if (account?.walletAddress) {
+                                    setValue('wallet_address', account.walletAddress)
+
+                                    await addWalletService({
+                                       walletAddress: account.walletAddress,
+                                       signature: account.signature,
+                                       nonce: account.nonce
+                                    }).then(async (res) => {
+                                       if (res.success) {
+                                          toast.success('Added wallet successfully')
+
+                                          let data = {
+                                             user: {
+                                                ...session?.user,
+                                                userInfo: {
+                                                   ...session?.user?.userInfo,
+                                                   walletAddress: account.walletAddress
+                                                }
+                                             }
+                                          }
+
+                                          update(data)
+
+                                          router.refresh()
+                                          router.push(home_routes.summary)
+                                       } else {
+                                          toast.error(res.message)
+                                       }
+                                    })
+                                 }
                               }}
                            >
                               <GoogleIcon className="w-6" />
