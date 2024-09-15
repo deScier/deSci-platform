@@ -36,12 +36,11 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
    }
 
    const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>, { onSuccess, onError, noRedirect, onRegister, onClose }: MetamaskAuthOptions) => {
-      console.info('Starting MetaMask authentication')
       e.preventDefault()
 
-      try {
-         await handleConnectProvider()
+      await handleConnectProvider()
 
+      try {
          if (!walletClient) {
             toast.error('No wallet providers available. Install MetaMask or another wallet provider.')
             return
@@ -118,6 +117,8 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
    }
 
    const handleGetMetamaskAccount = async (): Promise<AddWalletDTO | undefined> => {
+      await handleConnectProvider()
+
       if (!walletClient) {
          toast.error('No wallet providers available. Install MetaMask or another wallet provider.')
          return undefined

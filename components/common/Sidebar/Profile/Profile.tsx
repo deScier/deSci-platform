@@ -121,7 +121,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                                                    }
 
                                                    update(data)
-
                                                    router.refresh()
                                                 } else {
                                                    toast.error(res.message)
