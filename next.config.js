@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   crossOrigin: 'anonymous',
    webpack: (config, { isServer }) => {
       const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'))
 
@@ -56,6 +57,14 @@ const nextConfig = {
             source: '/',
             destination: '/summary',
             permanent: true
+         }
+      ]
+   },
+   async rewrites() {
+      return [
+         {
+            source: '/api/:path*',
+            destination: `https://${process.env.VERCEL_URL}/api/:path*`
          }
       ]
    }
