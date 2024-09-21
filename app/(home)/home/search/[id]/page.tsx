@@ -39,11 +39,11 @@ import TwitterIcon from 'public/svgs/modules/home/article-details/twitter.svg'
 import WhatsAppIcon from 'public/svgs/modules/home/article-details/whatsapp.svg'
 import React from 'react'
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default function ArticleDetails({ params }: { params: { id: string } }) {
    const router = useRouter()
 
    const { data: session } = useSession()
-   const { fetch_article, loading } = useArticles()
+   const { fetch_article } = useArticles()
 
    const [liked, setLiked] = React.useState(false)
    const [purchase, setPurchase] = React.useState({ checkout: false, processing: false, success: false, error: false, my_articles: false, login: false })
@@ -54,12 +54,9 @@ export default function Page({ params }: { params: { slug: string } }) {
    const [likesAmount, setLikesAmount] = React.useState(0)
    const [viewsAmount, setViewsAmount] = React.useState(0)
 
-   console.log('article', article)
-
    const login_component = 'login'
    const register_component = 'register'
    const forgot_password_component = 'forgot_password'
-   const purchased = 'purchased'
 
    const [component, setComponent] = React.useState(login_component)
 
@@ -157,7 +154,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
    React.useEffect(() => {
       if (!article) {
-         fetchSingleArticle(params.slug)
+         fetchSingleArticle(params.id)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [session?.user])
@@ -179,89 +176,6 @@ export default function Page({ params }: { params: { slug: string } }) {
 
    return (
       <React.Fragment>
-         <Dialog.Root open={purchase.checkout || purchase.processing || purchase.success || purchase.error || purchase.my_articles || purchase.login}>
-            <Dialog.Content
-               className={twMerge(
-                  'max-w-[1024px] w-full h-fit',
-                  `${purchase.processing && 'max-w-[600px] md:px-16 md:py-14'}`,
-                  `${purchase.success && 'max-w-[600px] md:px-16 md:py-14'}`,
-                  `${purchase.error && 'max-w-[600px] md:px-16 md:py-14'}`,
-                  `${purchase.my_articles && 'max-w-[80%]'}`,
-                  `${purchase.login && 'w-[80%] max-w-[1200px] p-0 transition-all duration-300'}`,
-                  component === forgot_password_component && 'max-w-[554px]'
-               )}
-            >
-               {purchase.checkout && (
-                  <Checkout
-                     article={{
-                        image: article?.document.cover || 'https://source.unsplash.com/random/900×700/?technology',
-                        date: new Date(article?.document.createdAt!).toLocaleDateString() || '',
-                        id: article?.document.id || '',
-                        price: article?.document.price || 0,
-                        title: article?.document.title || ''
-                     }}
-                     onPurchase={() => {
-                        handlePurchase()
-                     }}
-                     onClose={() => setPurchase({ ...purchase, checkout: false })}
-                     onSetPaymentOption={(value) => {
-                        console.log(value)
-                     }}
-                  />
-               )}
-               {purchase.login && component === login_component && (
-                  <LoginModal
-                     onClose={() =>
-                        setPurchase({
-                           ...purchase,
-                           login: false
-                        })
-                     }
-                     noRedirect
-                     onForgotPassword={() => setComponent(forgot_password_component)}
-                     //  onLogin={() => setComponent(login_component)}
-                     onRegister={() => setComponent(register_component)}
-                  />
-               )}
-               {component === register_component && (
-                  <RegisterModal
-                     onBack={() => setComponent(login_component)}
-                     onClose={() => {
-                        setPurchase({
-                           ...purchase,
-                           login: false
-                        })
-                        setComponent(login_component)
-                     }}
-                     onLogin={() => setComponent(login_component)}
-                     onRegister={() => setComponent(register_component)}
-                     onReturnToLogin={() => setComponent(login_component)}
-                  />
-               )}
-               {component === forgot_password_component && (
-                  <ForgotPasswordModal onBack={() => setComponent(login_component)} onClose={() => setComponent(login_component)} />
-               )}
-               {purchase.success && (
-                  <PurchaseSuccess
-                     onClose={() => {
-                        setPurchase({ ...purchase, success: false })
-                     }}
-                     onReturn={() => {
-                        setPurchase({ ...purchase, success: false, error: true })
-                     }}
-                  />
-               )}
-               {purchase.error && (
-                  <PurchaseError
-                     onClose={() => {
-                        setPurchase({ ...purchase, error: false })
-                     }}
-                  />
-               )}
-               {purchase.processing && <PurchaseProcessing />}
-               {purchase.my_articles && <PurchasedArticles onClose={() => setPurchase({ ...purchase, my_articles: false })} />}
-            </Dialog.Content>
-         </Dialog.Root>
          <div className="grid gap-8 lg:px-20 2xl:px-52 px-4 sm:px-6">
             <div className="flex items-center gap-4 pt-8 md:pt-12">
                <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
@@ -568,6 +482,89 @@ export default function Page({ params }: { params: { slug: string } }) {
                </div>
             </div>
          </div>
+         <Dialog.Root open={purchase.checkout || purchase.processing || purchase.success || purchase.error || purchase.my_articles || purchase.login}>
+            <Dialog.Content
+               className={twMerge(
+                  'max-w-[1024px] w-full h-fit',
+                  `${purchase.processing && 'max-w-[600px] md:px-16 md:py-14'}`,
+                  `${purchase.success && 'max-w-[600px] md:px-16 md:py-14'}`,
+                  `${purchase.error && 'max-w-[600px] md:px-16 md:py-14'}`,
+                  `${purchase.my_articles && 'max-w-[80%]'}`,
+                  `${purchase.login && 'w-[80%] max-w-[1200px] p-0 transition-all duration-300'}`,
+                  component === forgot_password_component && 'max-w-[554px]'
+               )}
+            >
+               {purchase.checkout && (
+                  <Checkout
+                     article={{
+                        image: article?.document.cover || 'https://source.unsplash.com/random/900×700/?technology',
+                        date: new Date(article?.document.createdAt!).toLocaleDateString() || '',
+                        id: article?.document.id || '',
+                        price: article?.document.price || 0,
+                        title: article?.document.title || ''
+                     }}
+                     onPurchase={() => {
+                        handlePurchase()
+                     }}
+                     onClose={() => setPurchase({ ...purchase, checkout: false })}
+                     onSetPaymentOption={(value) => {
+                        console.log(value)
+                     }}
+                  />
+               )}
+               {purchase.login && component === login_component && (
+                  <LoginModal
+                     onClose={() =>
+                        setPurchase({
+                           ...purchase,
+                           login: false
+                        })
+                     }
+                     noRedirect
+                     onForgotPassword={() => setComponent(forgot_password_component)}
+                     //  onLogin={() => setComponent(login_component)}
+                     onRegister={() => setComponent(register_component)}
+                  />
+               )}
+               {component === register_component && (
+                  <RegisterModal
+                     onBack={() => setComponent(login_component)}
+                     onClose={() => {
+                        setPurchase({
+                           ...purchase,
+                           login: false
+                        })
+                        setComponent(login_component)
+                     }}
+                     onLogin={() => setComponent(login_component)}
+                     onRegister={() => setComponent(register_component)}
+                     onReturnToLogin={() => setComponent(login_component)}
+                  />
+               )}
+               {component === forgot_password_component && (
+                  <ForgotPasswordModal onBack={() => setComponent(login_component)} onClose={() => setComponent(login_component)} />
+               )}
+               {purchase.success && (
+                  <PurchaseSuccess
+                     onClose={() => {
+                        setPurchase({ ...purchase, success: false })
+                     }}
+                     onReturn={() => {
+                        setPurchase({ ...purchase, success: false, error: true })
+                     }}
+                  />
+               )}
+               {purchase.error && (
+                  <PurchaseError
+                     onClose={() => {
+                        setPurchase({ ...purchase, error: false })
+                     }}
+                  />
+               )}
+               {purchase.processing && <PurchaseProcessing />}
+               {purchase.my_articles && <PurchasedArticles onClose={() => setPurchase({ ...purchase, my_articles: false })} />}
+            </Dialog.Content>
+         </Dialog.Root>
       </React.Fragment>
    )
 }

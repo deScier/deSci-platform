@@ -13,7 +13,7 @@ import { UserSession } from './types/next-auth'
  * sensitive routes.
  */
 
-const publicRoutes = ['/home']
+const publicRoutes = ['/home', '/paper']
 
 export async function middleware(request: NextRequest) {
    /** @dev Extract the 'next-auth.session-token' cookie from the request. */
@@ -77,6 +77,6 @@ export const config = {
        * - favicon.ico (favicon file)
        * - /public/* (public files)
        */
-      '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home/).*)'
+      '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)'
    ]
 }
