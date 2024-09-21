@@ -59,14 +59,6 @@ const nextConfig = {
             permanent: true
          }
       ]
-   },
-   async rewrites() {
-      return [
-         {
-            source: '/api/:path*',
-            destination: `https://${process.env.VERCEL_URL}/api/:path*`
-         }
-      ]
    }
 }
 
