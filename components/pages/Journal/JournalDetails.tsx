@@ -187,7 +187,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.add_new_member || dialog.edit_member || dialog.members || dialog.warning_on_change_page}>
-            <Dialog.Content className={cn('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
+            <Dialog.Content className={cn('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px] w-[564px]'}`)}>
                {dialog.add_new_member && (
                   <AddNewMember
                      onClose={() => setDialog({ ...dialog, add_new_member: false })}
