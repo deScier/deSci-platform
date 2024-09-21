@@ -7,9 +7,9 @@ import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
 import { Dropdown } from '@/components/common/Dropdown/Dropdown'
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType'
 import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing'
 import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options'
 import { useArticles } from '@/services/document/fetchPublic.service'
 import { slugfy } from '@/utils/slugfy'
@@ -21,7 +21,9 @@ import PaginationComponent from '@/components/common/Pagination/Pagination'
 import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
 import LoginModal from '@/components/modules/Login/Login'
 import RegisterModal from '@/components/modules/Register/Register'
+import { Separator } from '@/components/ui/separator'
 import useDebounce from '@/hooks/useDebounce'
+import { articles_types_filter } from '@/mock/articles_types'
 import React from 'react'
 
 export function SearchArticlesComponent() {
@@ -37,7 +39,7 @@ export function SearchArticlesComponent() {
    const [searchAuthor, setSearchAuthor] = React.useState('')
    const [searchType, setSearchType] = React.useState('')
    const [accessType, setAccessType] = React.useState('')
-   const [documentType, setDocumentType] = React.useState<string | null>(null)
+   const [documentType, setDocumentType] = React.useState<string | null>('all')
    const [publicationYear, setPublicationYear] = React.useState<number | null>(null)
    const [field, setField] = React.useState<string | null>(null)
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -80,7 +82,7 @@ export function SearchArticlesComponent() {
       setField(null)
    }
 
-   const withoutFilters = !searchTerm && !searchAuthor && !accessType && !documentType && !publicationYear && !field
+   const withoutFilters = documentType === 'all' && !searchTerm && !searchAuthor && !accessType && !publicationYear && !field
 
    /** @dev Component states for various authentication and navigation modals */
    const login_component = 'login'
@@ -171,16 +173,36 @@ export function SearchArticlesComponent() {
                   items={filter_field}
                   onSelect={(value) => setField(value)}
                />
-               <SelectArticleType
-                  variant="filter"
-                  className="w-fit"
-                  placeholder={'Article type:'}
-                  selected={documentType}
-                  onValueChange={(value) => {
-                     if (value === 'all') setDocumentType(null)
-                     setDocumentType(value)
-                  }}
-               />
+               <Select value={documentType || undefined} onValueChange={(value) => setDocumentType(value)}>
+                  <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectValue asChild>
+                        <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || undefined}</p>
+                     </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                     <React.Fragment>
+                        {articles_types_filter.map((item, index) => (
+                           <React.Fragment key={item.id}>
+                              {item.type === 'label' && (
+                                 <React.Fragment>
+                                    {index !== 0 && <Separator />}
+                                    <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                 </React.Fragment>
+                              )}
+                              {item.type === 'item' && (
+                                 <SelectItem
+                                    value={item.value as string}
+                                    className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                    onMouseUp={() => setDocumentType(item.value)}
+                                 >
+                                    {item.label}
+                                 </SelectItem>
+                              )}
+                           </React.Fragment>
+                        ))}
+                     </React.Fragment>
+                  </SelectContent>
+               </Select>
                <Dropdown
                   no_selected
                   selected={accessType}
