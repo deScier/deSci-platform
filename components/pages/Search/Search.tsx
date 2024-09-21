@@ -173,10 +173,10 @@ export function SearchArticlesComponent() {
                   items={filter_field}
                   onSelect={(value) => setField(value)}
                />
-               <Select value={documentType || undefined} onValueChange={(value) => setDocumentType(value)}>
+               <Select value={documentType || 'all'} onValueChange={(value) => setDocumentType(value)}>
                   <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
                      <SelectValue asChild>
-                        <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || undefined}</p>
+                        <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || 'All articles'}</p>
                      </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
