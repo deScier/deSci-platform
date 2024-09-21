@@ -39,7 +39,7 @@ export function SearchArticlesComponent() {
    const [searchAuthor, setSearchAuthor] = React.useState('')
    const [searchType, setSearchType] = React.useState('')
    const [accessType, setAccessType] = React.useState('')
-   const [documentType, setDocumentType] = React.useState<string | null>('all')
+   const [documentType, setDocumentType] = React.useState<string | null>(null)
    const [publicationYear, setPublicationYear] = React.useState<number | null>(null)
    const [field, setField] = React.useState<string | null>(null)
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -82,7 +82,7 @@ export function SearchArticlesComponent() {
       setField(null)
    }
 
-   const withoutFilters = documentType === 'all' && !searchTerm && !searchAuthor && !accessType && !publicationYear && !field
+   const withoutFilters = !documentType && !accessType && !field && !publicationYear && !searchTerm && !searchAuthor
 
    /** @dev Component states for various authentication and navigation modals */
    const login_component = 'login'
@@ -234,7 +234,7 @@ export function SearchArticlesComponent() {
                         }
                      })
                      .filter((article) => slugfy(article.title).includes(slugfy(searchTerm)) || slugfy(article.journal.name).includes(slugfy(searchTerm)))
-                     .filter((article) => !documentType || article.documentType === documentType)
+                     .filter((article) => !documentType || documentType === 'all' || article.documentType === documentType)
                      .filter((article) => !accessType || article.accessType === accessType)
                      .filter((article) => !field || article.field === field)
                      .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear)

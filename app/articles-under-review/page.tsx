@@ -33,7 +33,7 @@ export default function ArticlesUnderReviewPage() {
    const [page, setPage] = React.useState(1)
 
    /** @notice State for the selected document type filter. */
-   const [documentType, setDocumentType] = React.useState<string | null>('all')
+   const [documentType, setDocumentType] = React.useState<string | null>(null)
 
    /** @notice State for the search term. */
    const [searchTerm, setSearchTerm] = React.useState('')
@@ -81,8 +81,8 @@ export default function ArticlesUnderReviewPage() {
 
       let filteredArticles = [...articles]
 
-      if (documentType) {
-         filteredArticles = filteredArticles.filter((article) => article.document_type?.toLowerCase() == documentType?.toLowerCase())
+      if (documentType && documentType !== 'all') {
+         filteredArticles = filteredArticles.filter((article) => article.document_type?.toLowerCase() === documentType.toLowerCase())
       }
 
       if (status) {
@@ -104,7 +104,7 @@ export default function ArticlesUnderReviewPage() {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = documentType === 'all' && status === 'pending' && debouncedSearchTerm === ''
+   const withoutFilters = !documentType && status === 'pending' && debouncedSearchTerm === ''
 
    return (
       <React.Fragment>
