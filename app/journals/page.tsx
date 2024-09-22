@@ -43,12 +43,12 @@ export default function JournalsPage() {
 
       let filteredJournals = [...journals]
 
-      if (status) {
-         filteredJournals = filteredJournals.filter((journal) => journal.status?.toLowerCase() == status?.toLowerCase())
+      if (status && status !== 'ALL') {
+         filteredJournals = filteredJournals.filter((journal) => journal.status?.toLowerCase() === status.toLowerCase())
       }
 
       if (originatesFrom) {
-         filteredJournals = filteredJournals.filter((journal) => journal.originatesFrom?.toLowerCase() == originatesFrom?.toLowerCase())
+         filteredJournals = filteredJournals.filter((journal) => journal.originatesFrom?.toLowerCase() === originatesFrom.toLowerCase())
       }
 
       if (debouncedSearchTerm) {
