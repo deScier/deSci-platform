@@ -62,8 +62,6 @@ export default function JournalsPage() {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = status === '' && debouncedSearchTerm === ''
-
    return (
       <React.Suspense>
          <Title.Root>

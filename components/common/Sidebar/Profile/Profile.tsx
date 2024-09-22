@@ -236,21 +236,25 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                      <p className="text-base font-semibold text-[#3F3F44]">Last Submitted</p>
                      <ScrollArea className="h-[164px] lg:h-[300px] 2xl:h-[400px] pr-2">
                         <div className="grid gap-4">
-                           {articles?.slice(0, 9)?.map((item) => (
-                              <SubmitedItem
-                                 key={item.id}
-                                 date={item.since}
-                                 status={item.status as 'published' | 'in_review'}
-                                 title={item.title}
-                                 onClick={() => {
-                                    if (item.status === 'SUBMITTED') {
-                                       router.push(`/home/search/${item.id}`)
-                                    } else if (item.status === 'PENDING') {
-                                       router.push(home_routes.articles.in_review + '/' + item.id)
-                                    }
-                                 }}
-                              />
-                           ))}
+                           {articles?.length ? (
+                              articles.slice(0, 9).map((item) => (
+                                 <SubmitedItem
+                                    key={item.id}
+                                    date={item.since}
+                                    status={item.status as 'published' | 'in_review'}
+                                    title={item.title}
+                                    onClick={() => {
+                                       if (item.status === 'SUBMITTED') {
+                                          router.push(`/home/search/${item.id}`)
+                                       } else if (item.status === 'PENDING') {
+                                          router.push(home_routes.articles.in_review + '/' + item.id)
+                                       }
+                                    }}
+                                 />
+                              ))
+                           ) : (
+                              <p className="text-sm text-neutral-gray">No submissions available.</p>
+                           )}
                         </div>
                      </ScrollArea>
                   </div>

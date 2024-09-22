@@ -8,11 +8,18 @@ import { home_routes } from '@/routes/home'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 
 import PaginationComponent from '@/components/common/Pagination/Pagination'
+import useDebounce from '@/hooks/useDebounce'
 import React from 'react'
 import slug from 'slug'
 
 export default function ArticlesForApprovalPage() {
    const { articles, loading } = useFetchAdminArticles()
+
+   /** @notice State for the search term. */
+   const [searchTerm, setSearchTerm] = React.useState('')
+
+   /** @notice Debounces the search term. */
+   const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
    const per_page = 8
    const [page, setPage] = React.useState(1)
@@ -21,10 +28,11 @@ export default function ArticlesForApprovalPage() {
 
    React.useEffect(() => {
       if (articles) {
-         setResults(articles)
-         setTotalPages(articles.length)
+         const filteredArticles = articles.filter((article) => article.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+         setResults(filteredArticles)
+         setTotalPages(Math.ceil(filteredArticles.length / per_page))
       }
-   }, [articles])
+   }, [articles, debouncedSearchTerm, per_page])
 
    return (
       <React.Fragment>
@@ -34,17 +42,8 @@ export default function ArticlesForApprovalPage() {
          <div className="grid gap-6">
             <div className="grid gap-6">
                <div className="flex items-center gap-2">
-                  <Input.Search placeholder="Find articles with this terms" />
+                  <Input.Search placeholder="Find articles with these terms" onInput={(e) => setSearchTerm(e.currentTarget.value)} />
                </div>
-               {/* <div className="flex flex-wrap justify-center md:justify-start items-center gap-2">
-                  <Dropdown
-                     classNameTrigger="w-full md:w-fit"
-                     items={article_category_filter}
-                     label="Order by:"
-                     onSelect={(value) => console.log(value)}
-                  />
-                  <Dropdown classNameTrigger="w-full md:w-fit" label="Status:" items={filter_status} onSelect={(value) => console.log(value)} />
-               </div> */}
             </div>
             <div className="grid gap-8">
                <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">
@@ -55,7 +54,7 @@ export default function ArticlesForApprovalPage() {
                         <ArticleUnderReviewSkeleton />
                         <ArticleUnderReviewSkeleton />
                      </React.Fragment>
-                  ) : (
+                  ) : results.length > 0 ? (
                      <React.Fragment>
                         {results.slice((page - 1) * per_page, page * per_page).map((article) => (
                            <React.Fragment key={article.id}>
@@ -71,6 +70,10 @@ export default function ArticlesForApprovalPage() {
                            </React.Fragment>
                         ))}
                      </React.Fragment>
+                  ) : (
+                     <div className="flex justify-center items-center col-span-full">
+                        <p className="text-center md:col-span-2 3xl:col-span-3 text-gray-500 my-8">No articles found matching your search criteria.</p>
+                     </div>
                   )}
                </div>
             </div>

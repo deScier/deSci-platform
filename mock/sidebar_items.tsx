@@ -1,5 +1,3 @@
-import { home_routes } from '@/routes/home'
-import { uniqueId } from 'lodash'
 import RedirectIcon from 'public/svgs/common/redirect.svg'
 import AboutUsIcon from 'public/svgs/common/sidebar/Icons/about-us.svg'
 import AdminIcon from 'public/svgs/common/sidebar/Icons/admin.svg'
@@ -10,16 +8,10 @@ import HomeIcon from 'public/svgs/common/sidebar/Icons/home.svg'
 import MyIPIcon from 'public/svgs/common/sidebar/Icons/my-ip.svg'
 import ProfileIcon from 'public/svgs/common/sidebar/Icons/profile.svg'
 import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
-import { CheckCircle, List } from 'react-bootstrap-icons'
 
-interface Item {
-   id: string | number
-   text: string | null
-   icon: JSX.Element | null
-   path: string | null
-   divider?: boolean
-   icon_end: JSX.Element | null
-}
+import { home_routes } from '@/routes/home'
+import { uniqueId } from 'lodash'
+import { CheckAll, List } from 'react-bootstrap-icons'
 
 export const article_key = 'Articles purchased'
 
@@ -61,12 +53,11 @@ export const items: Item[] = [
    {
       id: uniqueId(),
       text: 'Articles for approval',
-      icon: <CheckCircle size={22} strokeWidth={1.5} className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      icon: <CheckAll size={24} strokeWidth={1.5} className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
       path: home_routes.articles_for_approval,
       icon_end: null,
       divider: false
    },
-
    {
       id: uniqueId(),
       text: article_key,
@@ -132,3 +123,12 @@ export const items: Item[] = [
       divider: false
    }
 ]
+
+interface Item {
+   id: string | number
+   text: string | null
+   icon: JSX.Element | null
+   path: string | null
+   divider?: boolean
+   icon_end: JSX.Element | null
+}
