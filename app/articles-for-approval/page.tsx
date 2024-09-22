@@ -36,15 +36,6 @@ export default function ArticlesForApprovalPage() {
                <div className="flex items-center gap-2">
                   <Input.Search placeholder="Find articles with this terms" />
                </div>
-               {/* <div className="flex flex-wrap justify-center md:justify-start items-center gap-2">
-                  <Dropdown
-                     classNameTrigger="w-full md:w-fit"
-                     items={article_category_filter}
-                     label="Order by:"
-                     onSelect={(value) => console.log(value)}
-                  />
-                  <Dropdown classNameTrigger="w-full md:w-fit" label="Status:" items={filter_status} onSelect={(value) => console.log(value)} />
-               </div> */}
             </div>
             <div className="grid gap-8">
                <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">

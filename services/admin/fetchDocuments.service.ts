@@ -8,8 +8,6 @@ import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from '../doc
  * @title useArticles
  * A React hook for fetching and managing articles.
  *
- * @author Your Name
- *
  * @notice This hook provides functions to fetch articles and manage article data.
  *
  * @dev This hook relies on the Next.js `useSession` hook to authenticate the user

@@ -10,7 +10,7 @@ import HomeIcon from 'public/svgs/common/sidebar/Icons/home.svg'
 import MyIPIcon from 'public/svgs/common/sidebar/Icons/my-ip.svg'
 import ProfileIcon from 'public/svgs/common/sidebar/Icons/profile.svg'
 import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
-import { List } from 'react-bootstrap-icons'
+import { CheckCircle, List } from 'react-bootstrap-icons'
 
 interface Item {
    id: string | number
@@ -36,9 +36,17 @@ export const items: Item[] = [
    },
    {
       id: uniqueId(),
-      text: 'Articles',
+      text: 'Articles under review',
       icon: <ArticlesIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
       path: home_routes.articles_under_review,
+      icon_end: null,
+      divider: false
+   },
+   {
+      id: uniqueId(),
+      text: 'As Reviewer/Editor',
+      icon: <AsReviewerIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.as_reviewer,
       icon_end: null,
       divider: false
    },
@@ -52,9 +60,9 @@ export const items: Item[] = [
    },
    {
       id: uniqueId(),
-      text: 'As Reviewer/Editor',
-      icon: <AsReviewerIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
-      path: home_routes.as_reviewer,
+      text: 'Articles for approval',
+      icon: <CheckCircle size={22} strokeWidth={1.5} className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.articles_for_approval,
       icon_end: null,
       divider: false
    },

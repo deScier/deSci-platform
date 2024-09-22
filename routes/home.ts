@@ -3,9 +3,10 @@ export const home_routes = {
    home: {
       index: '/home',
       search: '/home/search',
-      articles_details: '/home/articles-details' // :id
+      articles_details: '/home/articles-details'
    },
    articles_under_review: '/articles-under-review',
+   articles_for_approval: '/articles-for-approval',
    as_reviewer: '/as-reviewer',
    profile: '/profile',
    about_us: '/about',
