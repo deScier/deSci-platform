@@ -191,7 +191,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <h1 className="text-1xl font-semibold">Article in review</h1>
             </div>
             <Box className="grid gap-8 h-fit py-6 px-8">
-               <ArticleStatus status={article?.document.status || 'PENDING'} />
+               {/* <ArticleStatus status={article?.document.status || 'PENDING'} /> */}
                <div className="grid md:grid-cols-2 gap-6">
                   <div className="grid grid-cols-1">
                      <span className="text-sm font-semibold">Title</span>
@@ -231,23 +231,25 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                   <h3 className="text-sm font-semibold">Abstract</h3>
                   <p className="text-sm font-regular">{article?.document.abstract}</p>
                </div>
-               <div className="grid gap-4">
-                  <p className="text-sm font-semibold">Cover</p>
-                  <div className="w-full h-56 rounded-md overflow-hidden relative">
-                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                     <img
-                        loading="lazy"
-                        src={article?.document.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
-                        alt="cover-preview"
-                        className="absolute w-full h-full object-cover"
-                     />
+               {article?.document?.cover && (
+                  <div className="grid gap-4">
+                     <p className="text-sm font-semibold">Cover</p>
+                     <div className="w-full h-56 rounded-md overflow-hidden relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                           loading="lazy"
+                           src={article?.document.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
+                           alt="cover-preview"
+                           className="absolute w-full h-full object-cover"
+                        />
+                     </div>
+                     {article?.document.updatedAt && (
+                        <p className="text-sm font-regular">
+                           Last updated on {format(new Date(article?.document.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
+                        </p>
+                     )}
                   </div>
-                  {article?.document.updatedAt && (
-                     <p className="text-sm font-regular">
-                        Last updated on {format(new Date(article?.document.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
-                     </p>
-                  )}
-               </div>
+               )}
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
                <div className="grid gap-6">
