@@ -12,8 +12,8 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
    return (
       <React.Fragment>
          <div>
-            {article?.document.reviewersOnDocuments && article?.document.reviewersOnDocuments.length > 0 ? (
-               article?.document.reviewersOnDocuments?.map((item, index) => (
+            {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments.length > 0 ? (
+               article?.document?.reviewersOnDocuments?.map((item, index) => (
                   <div key={item.id}>
                      <div className="grid md:grid-cols-5  items-center px-0 py-3 rounded-md">
                         <div className="flex items-center gap-4">

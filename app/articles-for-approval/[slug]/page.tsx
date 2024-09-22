@@ -13,7 +13,6 @@ import { useGetApprovals } from '@/hooks/useGetApprovals'
 import { header_editor_reviewer } from '@/mock/article_under_review'
 import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
-import { approveByAdminService } from '@/services/admin/approve.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
 import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles'
@@ -32,6 +31,7 @@ import Box from '@/components/common/Box/Box'
 import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import { ApproveArticleForJournal } from '@/services/journal/approveArticle.service'
 import React from 'react'
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
@@ -46,10 +46,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false })
-   const [loading, setLoading] = React.useState({
-      approve: false,
-      reject: false
-   })
+   const [loading, setLoading] = React.useState({ approve: false, reject: false })
    const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '' })
    const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false)
    const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false)
@@ -61,19 +58,19 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       await fetch_article(documentId).then((res) => {
          setArticle(res as DocumentGetProps)
          setNftData({
-            nftHash: res?.document.nftHash || '',
-            nftLink: res?.document.nftLink || ''
+            nftHash: res?.document?.nftHash || '',
+            nftLink: res?.document?.nftLink || ''
          })
-         const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
+         const access = res?.document?.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
-         getApprovals(res?.document.reviewersOnDocuments || [])
+         getApprovals(res?.document?.reviewersOnDocuments || [])
       })
    }
 
    const handleApproveDocument = async (approve: boolean) => {
       setLoading({ ...loading, approve: true })
-      const response = await approveByAdminService({
-         documentId: article?.document.id!,
+      const response = await ApproveArticleForJournal({
+         documentId: article?.document?.id!,
          approve: approve
       })
 
@@ -87,12 +84,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       const status = approve ? 'approved' : 'rejected'
       toast.success(`Document ${status} successfully!`)
 
-      router.push(home_routes.descier.index)
+      router.push(home_routes.articles_for_approval)
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
       const response = await downloadDocumentVersionService({
-         documentId: article?.document.id!,
+         documentId: article?.document?.id!,
          fileId,
          userId: session?.user?.userInfo.id!
       })
@@ -103,7 +100,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       }
 
       const url = URL.createObjectURL(response.file!)
-      const link = document.createElement('a')
+      const link = document?.createElement('a')
       link.href = url
       link.download = filename
       link.click()
@@ -135,9 +132,9 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                   <div className="grid gap-2">
                      <p className="text-sm font-semibold">Add keywords</p>
                      <div className="flex flex-wrap gap-1 sm:gap-2">
-                        {keywordsArray(article?.document.keywords as string)?.length > 0 ? (
+                        {keywordsArray(article?.document?.keywords as string)?.length > 0 ? (
                            <React.Fragment>
-                              {keywordsArray(article?.document.keywords as string).map((tag, index) => (
+                              {keywordsArray(article?.document?.keywords as string).map((tag, index) => (
                                  <div
                                     className="border rounded-md border-neutral-stroke_light flex items-center px-1 sm:px-2 py-[2px] bg-white"
                                     key={index}
@@ -161,12 +158,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <div className="grid gap-2">
                   <h3 className="text-sm font-semibold">Document type</h3>
                   <p className="text-sm font-regular first-letter:uppercase lowercase">
-                     {getArticleTypeLabel(article?.document.documentType as string) || '-'}
+                     {getArticleTypeLabel(article?.document?.documentType as string) || '-'}
                   </p>
                </div>
                <div className="grid gap-2">
                   <h3 className="text-sm font-semibold">Abstract</h3>
-                  <p className="text-sm font-regular">{article?.document.abstract || '-'}</p>
+                  <p className="text-sm font-regular">{article?.document?.abstract || '-'}</p>
                </div>
                {article?.document?.cover && (
                   <div className="grid gap-4">
@@ -175,14 +172,14 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                            loading="lazy"
-                           src={article?.document.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
+                           src={article?.document?.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
                            alt="cover-preview"
                            className="absolute w-full h-full object-cover"
                         />
                      </div>
-                     {article?.document.updatedAt && (
+                     {article?.document?.updatedAt && (
                         <p className="text-sm font-regular">
-                           Last updated on {format(new Date(article?.document.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
+                           Last updated on {format(new Date(article?.document?.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
                         </p>
                      )}
                   </div>
@@ -194,8 +191,8 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                   <div>
                      <ScrollArea className="h-[200px] w-full pr-2">
                         <div className="grid gap-4">
-                           {article?.document.documentVersions && article.document.documentVersions.length > 0 ? (
-                              article?.document.documentVersions?.map((file) => (
+                           {article?.document?.documentVersions && article?.document?.documentVersions.length > 0 ? (
+                              article?.document?.documentVersions?.map((file) => (
                                  <File
                                     key={file.id}
                                     file_name={formatFileName(file.fileName as string) || 'file.docx'}
@@ -203,7 +200,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                                        handleDownloadDocument(file.id, file.fileName!)
                                     }}
                                     uploaded_at={new Date(file.createdAt).toLocaleDateString('pt-BR')}
-                                    uploaded_by={article.document.user?.name || ''}
+                                    uploaded_by={article.document?.user?.name || ''}
                                  />
                               ))
                            ) : (
@@ -250,12 +247,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                   <ScrollArea
                      className={twMerge(
                         'h-[342px]',
-                        `${article?.document.documentComments && article?.document?.documentComments?.length == 0 && 'h-full'}`
+                        `${article?.document?.documentComments && article?.document?.documentComments?.length == 0 && 'h-full'}`
                      )}
                   >
                      <div className="grid gap-4">
-                        {article?.document.documentComments && article?.document?.documentComments?.length > 0 ? (
-                           article?.document.documentComments?.map((comment: DocumentComment) => (
+                        {article?.document?.documentComments && article?.document?.documentComments?.length > 0 ? (
+                           article?.document?.documentComments?.map((comment: DocumentComment) => (
                               <React.Fragment key={comment.id}>
                                  <CommentItem
                                     comment_author={comment.user.name}
@@ -286,7 +283,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                            </React.Fragment>
                         ))}
                      </div>
-                     <AuthorsListDragabble is_admin authors={[]} article={article} onReorder={onReorder} />
+                     <AuthorsListDragabble read_only is_admin authors={[]} article={article} onReorder={onReorder} />
                   </div>
                </div>
             </Box>
@@ -336,7 +333,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                            <Input.Label>Price</Input.Label>
                            <CurrencyInput
                               currency="USD"
-                              defaultValue={article?.document.price}
+                              defaultValue={article?.document?.price}
                               onChangeValue={(event, originalValue, maskedValue) => console.log(event, originalValue, maskedValue)}
                               InputElement={<Input.Input placeholder="USD" disabled />}
                            />
@@ -360,7 +357,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         </div>
                         <div>
                            <div>
-                              {article?.document.authorsOnDocuments?.map((author, index) => (
+                              {article?.document?.authorsOnDocuments?.map((author, index) => (
                                  <React.Fragment key={index}>
                                     <div className="grid grid-cols-3 items-center py-3">
                                        <div>
@@ -388,13 +385,13 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                )}
             </Box>
             <Box className="grid gap-4 h-fit py-6 px-8">
-               {article?.document.adminApproval === 0 && (
+               {article?.document?.adminApproval === 0 && (
                   <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
                )}
                {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments?.length > 0 && (
                   <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
                )}
-               {article?.document.status !== 'SUBMITTED' && (
+               {article?.document?.status !== 'SUBMITTED' && (
                   <>
                      <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
                         <Check className="w-5 h-5" />
@@ -410,11 +407,11 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                      </Button.Button>
                   </>
                )}
-               {article?.document.status === 'REJECTED' && (
+               {article?.document?.status === 'REJECTED' && (
                   <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
                )}
-               {article?.document.status === 'APPROVED' ||
-                  (article?.document.status === 'SUBMITTED' && (
+               {article?.document?.status === 'APPROVED' ||
+                  (article?.document?.status === 'SUBMITTED' && (
                      <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
                   ))}
             </Box>
@@ -423,7 +420,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
             <Dialog.Content className="py-14 px-16 max-w-[600px]">
                <Reasoning
                   message={''}
-                  documentAuthor={article?.document.user?.name!}
+                  documentAuthor={article?.document?.user?.name!}
                   onClose={() => setDialog({ ...dialog, reasoning: false })}
                   onConfirm={(value) => {
                      setDialog({ ...dialog, reasoning: false })

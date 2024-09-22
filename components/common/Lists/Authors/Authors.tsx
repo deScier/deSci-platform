@@ -16,16 +16,17 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
    onReorder,
    onDelete,
    onEdit,
-   is_admin = false
+   is_admin = false,
+   read_only = false
 }: AuthorsListDragabbleProps) => {
    const { data: session } = useSession()
    return (
       <React.Fragment>
-         {article?.document.authorsOnDocuments ? (
+         {article?.document?.authorsOnDocuments ? (
             <React.Fragment>
                <Reorder.Group axis="y" values={authors} onReorder={onReorder}>
                   <div className="grid gap-2">
-                     {article?.document.authorsOnDocuments?.map((item, index) => (
+                     {article?.document?.authorsOnDocuments?.map((item, index) => (
                         <Reorder.Item key={item.id} value={item} id={item.id}>
                            <div className="grid md:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
                               <div className="flex items-center gap-4">
@@ -40,7 +41,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                     </div>
                                     <div className="block md:hidden">
                                        <p className="text-sm text-secundary_blue-main">{item.author?.email}</p>
-                                       {item.id !== session?.user?.userInfo.id && (
+                                       {item.id !== session?.user?.userInfo.id && !read_only && (
                                           <React.Fragment>
                                              <div className="flex items-center gap-2">
                                                 {onDelete && (
@@ -82,7 +83,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                               </div>
                               <div className="hidden md:flex items-center justify-between">
                                  <p className="text-sm text-secundary_blue-main">{item.author?.email}</p>
-                                 {item.id !== session?.user?.userInfo.id && (
+                                 {item.id !== session?.user?.userInfo.id && !read_only && (
                                     <React.Fragment>
                                        <div className="flex items-center gap-2">
                                           <Trash
@@ -146,7 +147,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                               </div>
                               <div className="hidden md:flex items-center justify-between">
                                  <p className="text-sm text-secundary_blue-main">{item.email}</p>
-                                 {item.id !== session?.user?.userInfo.id && (
+                                 {item.id !== session?.user?.userInfo.id && !read_only && (
                                     <React.Fragment>
                                        <div className="flex items-center gap-2">
                                           {onDelete && (
