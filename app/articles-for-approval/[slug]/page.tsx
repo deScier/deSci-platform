@@ -17,8 +17,6 @@ import { approveByAdminService } from '@/services/admin/approve.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
 import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles'
-import { updateDocumentService } from '@/services/document/update.service'
-import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
 import { keywordsArray } from '@/utils/keywords_format'
@@ -33,7 +31,6 @@ import { twMerge } from 'tailwind-merge'
 import Box from '@/components/common/Box/Box'
 import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
-import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import React from 'react'
 
@@ -45,6 +42,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    const { editorApprovals, getApprovals, reviewerApprovals } = useGetApprovals()
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
+   console.log('article', article)
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false })
@@ -92,45 +90,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       router.push(home_routes.descier.index)
    }
 
-   const handleUpdateNftData = async () => {
-      setUpdateNftLoading(true)
-      const response = await updateDocumentService({
-         documentId: params.slug,
-         document: {
-            ...nftData
-         }
-      })
-
-      setUpdateNftLoading(false)
-
-      if (!response.success) {
-         toast.error(response.message)
-         return
-      }
-
-      toast.success('Document updated successfully.')
-   }
-
-   const handleUpdateArticleFile = async () => {
-      setUploadFileLoading(true)
-      if (!file) return
-      const uploadDocumentSuccess = await uploadDocumentFileService({
-         documentId: params.slug,
-         fileLocalUrl: file.preview,
-         filename: file.name,
-         mimetype: file.type
-      })
-      setUploadFileLoading(false)
-
-      if (!uploadDocumentSuccess) {
-         toast.error('There was an error uploading your file.')
-         return
-      }
-
-      fetchSingleArticle(params.slug)
-      toast.success('File uploaded successfully!')
-   }
-
    const handleDownloadDocument = async (fileId: string, filename: string) => {
       const response = await downloadDocumentVersionService({
          documentId: article?.document.id!,
@@ -162,30 +121,16 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
 
    return (
       <React.Fragment>
-         <Dialog.Root open={dialog.reasoning}>
-            <Dialog.Content className="py-14 px-16 max-w-[600px]">
-               <Reasoning
-                  message={''}
-                  documentAuthor={article?.document.user?.name!}
-                  onClose={() => setDialog({ ...dialog, reasoning: false })}
-                  onConfirm={(value) => {
-                     setDialog({ ...dialog, reasoning: false })
-                     handleApproveDocument(false)
-                  }}
-               />
-            </Dialog.Content>
-         </Dialog.Root>
          <div className="grid gap-8">
             <div className="flex items-center gap-4">
                <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
                <h1 className="text-1xl font-semibold">Article in review</h1>
             </div>
             <Box className="grid gap-8 h-fit py-6 px-8">
-               {/* <ArticleStatus status={article?.document.status || 'PENDING'} /> */}
                <div className="grid md:grid-cols-2 gap-6">
                   <div className="grid grid-cols-1">
                      <span className="text-sm font-semibold">Title</span>
-                     <span className="text-sm">{article?.document?.title}</span>
+                     <span className="text-sm">{article?.document?.title || '-'}</span>
                   </div>
                   <div className="grid gap-2">
                      <p className="text-sm font-semibold">Add keywords</p>
@@ -197,7 +142,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                                     className="border rounded-md border-neutral-stroke_light flex items-center px-1 sm:px-2 py-[2px] bg-white"
                                     key={index}
                                  >
-                                    <span className="text-xxs sm:text-xs text-primary-main">{tag}</span>
+                                    <span className="text-xxs sm:text-xs text-primary-main">{tag || '-'}</span>
                                  </div>
                               ))}
                            </React.Fragment>
@@ -210,16 +155,18 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <div className="grid md:grid-cols-2 gap-6">
                   <div className="grid grid-cols-1">
                      <span className="text-sm font-semibold">Area of knowledge</span>
-                     <span className="text-sm">{article?.document?.field}</span>
+                     <span className="text-sm">{article?.document?.field || '-'}</span>
                   </div>
                </div>
                <div className="grid gap-2">
                   <h3 className="text-sm font-semibold">Document type</h3>
-                  <p className="text-sm font-regular first-letter:uppercase lowercase">{getArticleTypeLabel(article?.document.documentType as string)}</p>
+                  <p className="text-sm font-regular first-letter:uppercase lowercase">
+                     {getArticleTypeLabel(article?.document.documentType as string) || '-'}
+                  </p>
                </div>
                <div className="grid gap-2">
                   <h3 className="text-sm font-semibold">Abstract</h3>
-                  <p className="text-sm font-regular">{article?.document.abstract}</p>
+                  <p className="text-sm font-regular">{article?.document.abstract || '-'}</p>
                </div>
                {article?.document?.cover && (
                   <div className="grid gap-4">
@@ -265,17 +212,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         </div>
                      </ScrollArea>
                   </div>
-                  <Dropzone
-                     accept="documents"
-                     placeholder="Update document file (.pdf)"
-                     thumbnail={false}
-                     setSelectedFile={(file) => {
-                        setFile(file as StoredFile)
-                     }}
-                  />
-                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateArticleFile} loading={uploadFileLoading}>
-                     Update file
-                  </Button.Button>
                </div>
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
@@ -286,6 +222,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         <span className="text-sm font-semibold">NFT hash</span>
                      </Input.Label>
                      <Input.Input
+                        disabled
                         placeholder="Ex: 0x495f9472767...0045cb7b5e"
                         value={nftData.nftHash}
                         onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
@@ -296,15 +233,13 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         <span className="text-sm font-semibold">NFT link</span>
                      </Input.Label>
                      <Input.Input
+                        disabled
                         placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
                         value={nftData.nftLink}
                         onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
                      />
                   </Input.Root>
                </div>
-               <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
-                  Save
-               </Button.Button>
             </Box>
             <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
                <div className="grid gap-2">
@@ -456,8 +391,9 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                {article?.document.adminApproval === 0 && (
                   <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
                )}
-
-               <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
+               {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments?.length > 0 && (
+                  <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
+               )}
                {article?.document.status !== 'SUBMITTED' && (
                   <>
                      <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
@@ -477,11 +413,25 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                {article?.document.status === 'REJECTED' && (
                   <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
                )}
-               {article?.document.status === 'APPROVED' && (
-                  <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
-               )}
+               {article?.document.status === 'APPROVED' ||
+                  (article?.document.status === 'SUBMITTED' && (
+                     <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
+                  ))}
             </Box>
          </div>
+         <Dialog.Root open={dialog.reasoning}>
+            <Dialog.Content className="py-14 px-16 max-w-[600px]">
+               <Reasoning
+                  message={''}
+                  documentAuthor={article?.document.user?.name!}
+                  onClose={() => setDialog({ ...dialog, reasoning: false })}
+                  onConfirm={(value) => {
+                     setDialog({ ...dialog, reasoning: false })
+                     handleApproveDocument(false)
+                  }}
+               />
+            </Dialog.Content>
+         </Dialog.Root>
       </React.Fragment>
    )
 }

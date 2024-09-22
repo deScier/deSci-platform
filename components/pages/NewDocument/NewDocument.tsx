@@ -359,98 +359,6 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
 
    return (
       <React.Fragment>
-         <Dialog.Root open={dialog.author || dialog.share_split || dialog.edit_author || dialog.edit_share_split || dialog.warning_on_change_page}>
-            <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
-               {dialog.author && (
-                  <AddNewAuthor
-                     onAddAuthor={(value) => {
-                        const newAuthor: AuthorProps = {
-                           id: value.id,
-                           name: value.name,
-                           title: value.title,
-                           email: value.email,
-                           revenuePercent: value.revenuePercent
-                        }
-                        setAuthors((prevItems) => [...prevItems, newAuthor])
-                        setValue('authors', [...authors, newAuthor])
-                     }}
-                     onClose={() => setDialog({ ...dialog, author: false })}
-                  />
-               )}
-               {dialog.edit_author && (
-                  <AddNewAuthor
-                     onEditAuthor={author_to_edit}
-                     onUpdateAuthor={(updatedAuthor) => {
-                        setAuthors((prevItems) => {
-                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
-                        })
-                     }}
-                     onClose={() => setDialog({ ...dialog, edit_author: false })}
-                  />
-               )}
-               {dialog.share_split && (
-                  <React.Fragment>
-                     <div className="grid gap-6">
-                        <Dialog.Title
-                           title="Share split"
-                           onClose={() => {
-                              setDialog({ ...dialog, share_split: false })
-                              setEditShare(null)
-                              setAuthorshipSettings(undefined)
-                           }}
-                        />
-                        <div className="grid gap-6">
-                           <div className="flex items-center gap-6">
-                              <Input.Root>
-                                 <Input.Label>Share</Input.Label>
-                                 <Input.Percentage
-                                    defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
-                                    placeholder="% of the revenue"
-                                    onValueChange={(value) => {
-                                       setShare(value as string)
-                                    }}
-                                 />
-                              </Input.Root>
-                              <Input.Root>
-                                 <Input.Label optional>Wallet</Input.Label>
-                                 <Input.Input
-                                    defaultValue={edit_share_split?.wallet || undefined}
-                                    placeholder="Crypto wallet address to receive $"
-                                    onChange={(e) => setWallet(e.target.value)}
-                                 />
-                              </Input.Root>
-                           </div>
-                           <Button.Button
-                              variant="primary"
-                              onClick={() => {
-                                 if (!authorship_settings!.id) {
-                                    console.error('Authorship settings does not have an ID!')
-                                    return
-                                 }
-
-                                 const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
-
-                                 const updatedAuthors = [...authors]
-                                 updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%'
-                                 updatedAuthors[authorIndex].wallet = wallet
-                                 setAuthors(updatedAuthors)
-
-                                 onSaveShareSettings()
-                              }}
-                           >
-                              Add share split
-                           </Button.Button>
-                        </div>
-                     </div>
-                  </React.Fragment>
-               )}
-               {dialog.warning_on_change_page && (
-                  <React.Fragment>
-                     <WarningOnChangePage handleClose={handleClose} handleLeave={handleLeave} />
-                  </React.Fragment>
-               )}
-            </Dialog.Content>
-         </Dialog.Root>
          <Title.Root>
             <Title.Title>Submit new article</Title.Title>
          </Title.Root>
@@ -914,6 +822,98 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                <Clipboard className="w-5" />
             </Button.Button>
          </form>
+         <Dialog.Root open={dialog.author || dialog.share_split || dialog.edit_author || dialog.edit_share_split || dialog.warning_on_change_page}>
+            <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}>
+               {dialog.author && (
+                  <AddNewAuthor
+                     onAddAuthor={(value) => {
+                        const newAuthor: AuthorProps = {
+                           id: value.id,
+                           name: value.name,
+                           title: value.title,
+                           email: value.email,
+                           revenuePercent: value.revenuePercent
+                        }
+                        setAuthors((prevItems) => [...prevItems, newAuthor])
+                        setValue('authors', [...authors, newAuthor])
+                     }}
+                     onClose={() => setDialog({ ...dialog, author: false })}
+                  />
+               )}
+               {dialog.edit_author && (
+                  <AddNewAuthor
+                     onEditAuthor={author_to_edit}
+                     onUpdateAuthor={(updatedAuthor) => {
+                        setAuthors((prevItems) => {
+                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
+                        })
+                     }}
+                     onClose={() => setDialog({ ...dialog, edit_author: false })}
+                  />
+               )}
+               {dialog.share_split && (
+                  <React.Fragment>
+                     <div className="grid gap-6">
+                        <Dialog.Title
+                           title="Share split"
+                           onClose={() => {
+                              setDialog({ ...dialog, share_split: false })
+                              setEditShare(null)
+                              setAuthorshipSettings(undefined)
+                           }}
+                        />
+                        <div className="grid gap-6">
+                           <div className="flex items-center gap-6">
+                              <Input.Root>
+                                 <Input.Label>Share</Input.Label>
+                                 <Input.Percentage
+                                    defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
+                                    placeholder="% of the revenue"
+                                    onValueChange={(value) => {
+                                       setShare(value as string)
+                                    }}
+                                 />
+                              </Input.Root>
+                              <Input.Root>
+                                 <Input.Label optional>Wallet</Input.Label>
+                                 <Input.Input
+                                    defaultValue={edit_share_split?.wallet || undefined}
+                                    placeholder="Crypto wallet address to receive $"
+                                    onChange={(e) => setWallet(e.target.value)}
+                                 />
+                              </Input.Root>
+                           </div>
+                           <Button.Button
+                              variant="primary"
+                              onClick={() => {
+                                 if (!authorship_settings!.id) {
+                                    console.error('Authorship settings does not have an ID!')
+                                    return
+                                 }
+
+                                 const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
+
+                                 const updatedAuthors = [...authors]
+                                 updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%'
+                                 updatedAuthors[authorIndex].wallet = wallet
+                                 setAuthors(updatedAuthors)
+
+                                 onSaveShareSettings()
+                              }}
+                           >
+                              Add share split
+                           </Button.Button>
+                        </div>
+                     </div>
+                  </React.Fragment>
+               )}
+               {dialog.warning_on_change_page && (
+                  <React.Fragment>
+                     <WarningOnChangePage handleClose={handleClose} handleLeave={handleLeave} />
+                  </React.Fragment>
+               )}
+            </Dialog.Content>
+         </Dialog.Root>
       </React.Fragment>
    )
 }

@@ -38,6 +38,9 @@ const nextConfig = {
          },
          {
             hostname: 'descier-tcc.s3.sa-east-1.amazonaws.com'
+         },
+         {
+            hostname: 'aquamarine-used-mule-633.mypinata.cloud'
          }
       ]
    },
