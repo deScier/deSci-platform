@@ -104,13 +104,21 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
                         width={160}
                         height={160}
                         alt="profile-image"
-                        src={avatarPreview}
-                        className="flex-shrink-0 w-40 h-40 bg-status-pending rounded-full mx-auto my-0 lg:w-28 lg:h-28 2xl:w-36 2xl:h-36"
+                        src={avatarPreview || '/images/profile_dk08wk.png'}
+                        className="flex-shrink-0 w-40 h-40 rounded-full mx-auto my-0 lg:w-28 lg:h-28 2xl:w-36 2xl:h-36 object-cover"
                      />
                   ) : (
-                     <div className="flex-shrink-0 flex justify-center items-center w-40 h-40 bg-status-pending rounded-full mx-auto my-0">
-                        <p className="text-5xl w-full px-6 text-center">{name.charAt(0).toUpperCase()}</p>
-                     </div>
+                     //  <div className="flex-shrink-0 flex justify-center items-center w-40 h-40 rounded-full mx-auto my-0">
+                     //     <p className="text-5xl w-full px-6 text-center">{name.charAt(0).toUpperCase()}</p>
+                     //  </div>
+                     <Image
+                        width={144}
+                        quality={50}
+                        height={144}
+                        alt="profile-image"
+                        src={'/images/profile_dk08wk.png'}
+                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover"
+                     />
                   )}
                   <div className="w-full">
                      <Dropzone

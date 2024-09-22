@@ -100,44 +100,46 @@ export default function ProfilePage() {
                   <div className="grid gap-2">
                      <h1 className="text-xl text-secundary_blue-main font-semibold flex justify-center lg:text-lg 2xl:text-xl">{session?.user?.name}</h1>
                      <div className="grid md:grid-flow-col items-center justify-center gap-2 md:gap-4">
-                        <React.Fragment>
-                           <p className="text-sm text-primary-main font-regular select-none text-center">{session?.user?.userInfo.title || '-'}</p>
-                           <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
-                           <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
-                        </React.Fragment>
+                        {session?.user?.userInfo.title && (
+                           <React.Fragment>
+                              <p className="text-sm text-primary-main font-regular select-none text-center">{session?.user?.userInfo.title}</p>
+                              <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
+                              <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
+                           </React.Fragment>
+                        )}
                         <div className="flex items-center gap-2">
                            <Envelope className="w-4 h-5 fill-neutral-gray" />
                            <p className="text-sm text-neutral-gray select-none">{session?.user?.email || '-'}</p>
                         </div>
-                        <React.Fragment>
-                           <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
-                           <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
-                           <div className="flex items-center gap-2 mx-auto my-0 md:mx-0 md:my-0">
-                              <p className="text-sm text-neutral-gray select-none">
-                                 {session?.user?.userInfo.walletAddress ? formatAddress(session?.user?.userInfo.walletAddress) : '-'}
-                              </p>
-                              <HoverCard closeDelay={1000} open={isCopied}>
-                                 <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
-                                    <svg
-                                       xmlns="http://www.w3.org/2000/svg"
-                                       width="14"
-                                       height="14"
-                                       fill="currentColor"
-                                       className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
-                                       viewBox="0 0 16 16"
-                                    >
-                                       <path
-                                          fillRule="evenodd"
-                                          d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
-                                       />
-                                    </svg>
-                                 </HoverCardTrigger>
-                                 <HoverCardContent className="p-2 py-1" side="bottom">
-                                    <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
-                                 </HoverCardContent>
-                              </HoverCard>
-                           </div>
-                        </React.Fragment>
+                        {session?.user?.userInfo.walletAddress && (
+                           <React.Fragment>
+                              <Separator orientation="vertical" className="h-4 bg-gray-300 hidden md:block" />
+                              <Separator orientation="horizontal" className=" bg-gray-300 md:hidden" />
+                              <div className="flex items-center gap-2 mx-auto my-0 md:mx-0 md:my-0">
+                                 <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress)}</p>
+                                 <HoverCard closeDelay={1000} open={isCopied}>
+                                    <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
+                                       <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="14"
+                                          height="14"
+                                          fill="currentColor"
+                                          className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
+                                          viewBox="0 0 16 16"
+                                       >
+                                          <path
+                                             fillRule="evenodd"
+                                             d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
+                                          />
+                                       </svg>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="p-2 py-1" side="bottom">
+                                       <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
+                                    </HoverCardContent>
+                                 </HoverCard>
+                              </div>
+                           </React.Fragment>
+                        )}
                      </div>
                   </div>
                </div>

@@ -47,7 +47,6 @@ const nextConfig = {
       ALCHEMY_API_URL: process.env.ALCHEMY_API_URL,
       ALCHEMY_API_URL_TEST: process.env.ALCHEMY_API_URL_TEST,
       GOOGLE_ID: process.env.GOOGLE_ID,
-      WEB3AUTH_NEW_LOGIN_CLIENT_ID: process.env.WEB3AUTH_NEW_LOGIN_CLIENT_ID,
       WEB3AUTH_VERIFIER: process.env.WEB3AUTH_VERIFIER
    },
    // See more in: https://nextjs.org/docs/app/api-reference/next-config-js/redirects

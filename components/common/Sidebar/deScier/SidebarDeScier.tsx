@@ -96,7 +96,16 @@ import { uniqueId } from 'lodash'
 import { signOut } from 'next-auth/react'
 import { PlusCircle } from 'react-bootstrap-icons'
 
+import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
+
 const items = [
+   {
+      id: uniqueId(),
+      text: 'Dashboard',
+      icon: <SummaryIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
+      path: home_routes.summary,
+      divider: false
+   },
    {
       id: uniqueId(),
       text: 'Articles for approval',

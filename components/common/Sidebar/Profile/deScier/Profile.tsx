@@ -55,7 +55,7 @@ const ProfileDeScier: React.FC = () => {
                      </div>
                      <ShapeDeScierHandBookBottom className="absolute bottom-[-0.5rem] right-0" />
                   </div>
-                  <hr className="divider-h" />
+                  {/* <hr className="divider-h" /> */}
                </div>
             </div>
          </aside>

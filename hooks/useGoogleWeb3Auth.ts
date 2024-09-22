@@ -31,7 +31,7 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
             const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } })
 
             const web3auth = new Web3AuthNoModal({
-               clientId: process.env.WEB3AUTH_NEW_LOGIN_CLIENT_ID || 'your_client_id',
+               clientId: process.env.WEB3AUTH_CLIENT_ID || 'your_client_id',
                web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
                privateKeyProvider
             })
