@@ -495,8 +495,8 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                                     <React.Fragment key={item.id}>
                                        {item.type === 'label' && (
                                           <React.Fragment>
-                                             {index !== 0 && <Separator />}
                                              <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                             <Separator />
                                           </React.Fragment>
                                        )}
                                        {item.type === 'item' && (

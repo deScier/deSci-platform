@@ -542,197 +542,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }
    return (
       <React.Fragment>
-         <Dialog.Root open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}>
-            <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20')}>
-               {dialog.reasoning && (
-                  <Reasoning
-                     message={state.comment_to_edit?.reason || ''}
-                     documentAuthor={data?.user?.userInfo.name}
-                     onClose={() => setDialog({ ...dialog, reasoning: false })}
-                     onConfirm={(value) => {
-                        handleApproveDocument('REJECTED', state.comment_to_edit?.id!, value)
-                        dispatch({
-                           type: 'reject_comment',
-                           payload: {
-                              id: state.comment_to_edit?.id,
-                              commentId: state.comment_to_edit?.id,
-                              comment_content: state.comment_to_edit?.comment_content,
-                              comment_author: state.comment_to_edit?.comment_author,
-                              reason: value,
-                              status: 'REJECTED',
-                              user_id: state.comment_to_edit?.user_id
-                           }
-                        } as ActionComments)
-                        setDialog({ ...dialog, reasoning: false })
-                     }}
-                  />
-               )}
-               {dialog.edit_comment && (
-                  <EditComment
-                     comment={state.comment_to_edit?.comment_content as string}
-                     onConfirm={(value) => {
-                        handleEditComment(state.comment_to_edit?.id!, value)
-
-                        setDialog({ ...dialog, edit_comment: false })
-                        dispatch({ type: 'comment_to_edit', payload: null })
-                     }}
-                     onClose={() => setDialog({ ...dialog, edit_comment: false })}
-                  />
-               )}
-               {dialog.edit_author && (
-                  <AddNewAuthor
-                     onEditAuthor={author_to_edit}
-                     onUpdateAuthor={(updatedAuthor) => {
-                        setAuthors((prevItems) => {
-                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
-                        })
-                        if (!updatedAuthor.id.includes('author')) {
-                           const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id)
-                           if (authorIndex > 0) {
-                              updateAuthors[authorIndex].revenuePercent = Number(share) || 0
-                              updateAuthors[authorIndex].position = authorIndex + 1
-                              setUpdateAuthors(updateAuthors)
-                           } else {
-                              setUpdateAuthors((prev) => [
-                                 ...prev,
-                                 { ...updatedAuthor, position: authorIndex + 1, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }
-                              ])
-                           }
-                        }
-                     }}
-                     onClose={() => setDialog({ ...dialog, edit_author: false })}
-                  />
-               )}
-               {dialog.author && (
-                  <AddNewAuthor
-                     onAddAuthor={(value) => {
-                        const newAuthor = {
-                           id: value.id,
-                           name: value.name,
-                           title: value.title,
-                           email: value.email,
-                           revenuePercent: value.revenuePercent
-                        }
-                        setAuthors((prevItems) => [...prevItems, newAuthor])
-                        setValue('authors', [...authors, newAuthor])
-                        /// Update authorsOnDocuments
-                        /// fetchSingleArticle(parms.slug)
-                     }}
-                     onClose={() => setDialog({ ...dialog, author: false })}
-                  />
-               )}
-               {dialog.edit_author && (
-                  <AddNewAuthor
-                     onEditAuthor={author_to_edit}
-                     onUpdateAuthor={(updatedAuthor) => {
-                        setAuthors((prevItems) => {
-                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
-                        })
-                        if (!updatedAuthor.id.includes('author')) {
-                           const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id)
-                           if (authorIndex > 0) {
-                              updateAuthors[authorIndex].revenuePercent = Number(share) || 0
-                              setUpdateAuthors(updateAuthors)
-                           } else {
-                              setUpdateAuthors((prev) => [...prev, { ...updatedAuthor, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }])
-                           }
-                        }
-                     }}
-                     onClose={() => setDialog({ ...dialog, edit_author: false })}
-                  />
-               )}
-               {dialog.share_split && (
-                  <React.Fragment>
-                     <div className="grid gap-6">
-                        <Dialog.Title title="Share split" onClose={() => setDialog({ ...dialog, share_split: false })} />
-                        <div className="grid gap-6">
-                           <div className="flex items-center gap-6">
-                              <Input.Root>
-                                 <Input.Label>Share</Input.Label>
-                                 <Input.Percentage
-                                    defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
-                                    placeholder="% of the revenue"
-                                    onValueChange={(value) => {
-                                       setShare(value as string)
-                                    }}
-                                 />
-                              </Input.Root>
-                              <Input.Root>
-                                 <Input.Label optional>Wallet</Input.Label>
-                                 <Input.Input
-                                    defaultValue={edit_share_split?.wallet || undefined}
-                                    placeholder="Crypto wallet adress to recieve the revenue"
-                                    onChange={(e) => setWallet(e.target.value)}
-                                 />
-                              </Input.Root>
-                           </div>
-                           <Button.Button
-                              variant="primary"
-                              onClick={() => {
-                                 if (!authorship_settings?.id) {
-                                    console.error('Authorship settings does not have an ID!')
-                                    return
-                                 }
-
-                                 const updatedAuthor: Author = {
-                                    ...authorship_settings!,
-                                    id: authorship_settings!.id,
-                                    name: authorship_settings!.name,
-                                    title: authorship_settings!.title,
-                                    email: authorship_settings!.email,
-                                    wallet: authorship_settings!.wallet,
-                                    share: share.includes('%') ? share : share + '%'
-                                 }
-
-                                 const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
-
-                                 const updatedAuthors = [...authors]
-                                 updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%'
-                                 updatedAuthors[authorIndex].wallet = wallet
-                                 setAuthors(updatedAuthors)
-
-                                 if (!updatedAuthor.id.includes('author')) {
-                                    const authorIndex = updateAuthors.findIndex((item) => item.email === updatedAuthor.email)
-
-                                    if (authorIndex >= 0) {
-                                       updateAuthors[authorIndex].revenuePercent = Number(share) || 0
-                                       setUpdateAuthors(updateAuthors)
-                                    } else {
-                                       setUpdateAuthors((prev) => [
-                                          ...prev,
-                                          {
-                                             id: updatedAuthor.id,
-                                             email: updatedAuthor.email,
-                                             name: updatedAuthor.email,
-                                             revenuePercent: Number(share) || 0,
-                                             walletAddress: wallet
-                                          }
-                                       ])
-                                    }
-                                 } else {
-                                    const newAuthorsUpdate = updatedAuthors.map((item) => ({
-                                       email: item.email,
-                                       name: item.name,
-                                       title: item.title,
-                                       revenuePercent: share,
-                                       walletAddress: item.wallet || ''
-                                    }))
-
-                                    setValue('authors', newAuthorsUpdate)
-                                    trigger('authors')
-                                 }
-
-                                 onSaveShareSettings()
-                              }}
-                           >
-                              Add share split
-                           </Button.Button>
-                        </div>
-                     </div>
-                  </React.Fragment>
-               )}
-            </Dialog.Content>
-         </Dialog.Root>
          <div className="grid gap-8">
             <div className="flex items-center gap-4">
                <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
@@ -1376,6 +1185,197 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                {documentSaved && <p className="text-base text-center text-status-green select-none"> Changes saved successfully! </p>}
             </Box>
          </div>
+         <Dialog.Root open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}>
+            <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20')}>
+               {dialog.reasoning && (
+                  <Reasoning
+                     message={state.comment_to_edit?.reason || ''}
+                     documentAuthor={data?.user?.userInfo.name}
+                     onClose={() => setDialog({ ...dialog, reasoning: false })}
+                     onConfirm={(value) => {
+                        handleApproveDocument('REJECTED', state.comment_to_edit?.id!, value)
+                        dispatch({
+                           type: 'reject_comment',
+                           payload: {
+                              id: state.comment_to_edit?.id,
+                              commentId: state.comment_to_edit?.id,
+                              comment_content: state.comment_to_edit?.comment_content,
+                              comment_author: state.comment_to_edit?.comment_author,
+                              reason: value,
+                              status: 'REJECTED',
+                              user_id: state.comment_to_edit?.user_id
+                           }
+                        } as ActionComments)
+                        setDialog({ ...dialog, reasoning: false })
+                     }}
+                  />
+               )}
+               {dialog.edit_comment && (
+                  <EditComment
+                     comment={state.comment_to_edit?.comment_content as string}
+                     onConfirm={(value) => {
+                        handleEditComment(state.comment_to_edit?.id!, value)
+
+                        setDialog({ ...dialog, edit_comment: false })
+                        dispatch({ type: 'comment_to_edit', payload: null })
+                     }}
+                     onClose={() => setDialog({ ...dialog, edit_comment: false })}
+                  />
+               )}
+               {dialog.edit_author && (
+                  <AddNewAuthor
+                     onEditAuthor={author_to_edit}
+                     onUpdateAuthor={(updatedAuthor) => {
+                        setAuthors((prevItems) => {
+                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
+                        })
+                        if (!updatedAuthor.id.includes('author')) {
+                           const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id)
+                           if (authorIndex > 0) {
+                              updateAuthors[authorIndex].revenuePercent = Number(share) || 0
+                              updateAuthors[authorIndex].position = authorIndex + 1
+                              setUpdateAuthors(updateAuthors)
+                           } else {
+                              setUpdateAuthors((prev) => [
+                                 ...prev,
+                                 { ...updatedAuthor, position: authorIndex + 1, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }
+                              ])
+                           }
+                        }
+                     }}
+                     onClose={() => setDialog({ ...dialog, edit_author: false })}
+                  />
+               )}
+               {dialog.author && (
+                  <AddNewAuthor
+                     onAddAuthor={(value) => {
+                        const newAuthor = {
+                           id: value.id,
+                           name: value.name,
+                           title: value.title,
+                           email: value.email,
+                           revenuePercent: value.revenuePercent
+                        }
+                        setAuthors((prevItems) => [...prevItems, newAuthor])
+                        setValue('authors', [...authors, newAuthor])
+                        /// Update authorsOnDocuments
+                        /// fetchSingleArticle(parms.slug)
+                     }}
+                     onClose={() => setDialog({ ...dialog, author: false })}
+                  />
+               )}
+               {dialog.edit_author && (
+                  <AddNewAuthor
+                     onEditAuthor={author_to_edit}
+                     onUpdateAuthor={(updatedAuthor) => {
+                        setAuthors((prevItems) => {
+                           return prevItems.map((item) => (item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item))
+                        })
+                        if (!updatedAuthor.id.includes('author')) {
+                           const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id)
+                           if (authorIndex > 0) {
+                              updateAuthors[authorIndex].revenuePercent = Number(share) || 0
+                              setUpdateAuthors(updateAuthors)
+                           } else {
+                              setUpdateAuthors((prev) => [...prev, { ...updatedAuthor, revenuePercent: Number(updatedAuthor.revenuePercent || '0') }])
+                           }
+                        }
+                     }}
+                     onClose={() => setDialog({ ...dialog, edit_author: false })}
+                  />
+               )}
+               {dialog.share_split && (
+                  <React.Fragment>
+                     <div className="grid gap-6">
+                        <Dialog.Title title="Share split" onClose={() => setDialog({ ...dialog, share_split: false })} />
+                        <div className="grid gap-6">
+                           <div className="flex items-center gap-6">
+                              <Input.Root>
+                                 <Input.Label>Share</Input.Label>
+                                 <Input.Percentage
+                                    defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
+                                    placeholder="% of the revenue"
+                                    onValueChange={(value) => {
+                                       setShare(value as string)
+                                    }}
+                                 />
+                              </Input.Root>
+                              <Input.Root>
+                                 <Input.Label optional>Wallet</Input.Label>
+                                 <Input.Input
+                                    defaultValue={edit_share_split?.wallet || undefined}
+                                    placeholder="Crypto wallet adress to recieve the revenue"
+                                    onChange={(e) => setWallet(e.target.value)}
+                                 />
+                              </Input.Root>
+                           </div>
+                           <Button.Button
+                              variant="primary"
+                              onClick={() => {
+                                 if (!authorship_settings?.id) {
+                                    console.error('Authorship settings does not have an ID!')
+                                    return
+                                 }
+
+                                 const updatedAuthor: Author = {
+                                    ...authorship_settings!,
+                                    id: authorship_settings!.id,
+                                    name: authorship_settings!.name,
+                                    title: authorship_settings!.title,
+                                    email: authorship_settings!.email,
+                                    wallet: authorship_settings!.wallet,
+                                    share: share.includes('%') ? share : share + '%'
+                                 }
+
+                                 const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
+
+                                 const updatedAuthors = [...authors]
+                                 updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%'
+                                 updatedAuthors[authorIndex].wallet = wallet
+                                 setAuthors(updatedAuthors)
+
+                                 if (!updatedAuthor.id.includes('author')) {
+                                    const authorIndex = updateAuthors.findIndex((item) => item.email === updatedAuthor.email)
+
+                                    if (authorIndex >= 0) {
+                                       updateAuthors[authorIndex].revenuePercent = Number(share) || 0
+                                       setUpdateAuthors(updateAuthors)
+                                    } else {
+                                       setUpdateAuthors((prev) => [
+                                          ...prev,
+                                          {
+                                             id: updatedAuthor.id,
+                                             email: updatedAuthor.email,
+                                             name: updatedAuthor.email,
+                                             revenuePercent: Number(share) || 0,
+                                             walletAddress: wallet
+                                          }
+                                       ])
+                                    }
+                                 } else {
+                                    const newAuthorsUpdate = updatedAuthors.map((item) => ({
+                                       email: item.email,
+                                       name: item.name,
+                                       title: item.title,
+                                       revenuePercent: share,
+                                       walletAddress: item.wallet || ''
+                                    }))
+
+                                    setValue('authors', newAuthorsUpdate)
+                                    trigger('authors')
+                                 }
+
+                                 onSaveShareSettings()
+                              }}
+                           >
+                              Add share split
+                           </Button.Button>
+                        </div>
+                     </div>
+                  </React.Fragment>
+               )}
+            </Dialog.Content>
+         </Dialog.Root>
       </React.Fragment>
    )
 }

@@ -3,6 +3,7 @@
 import * as Button from '@components/common/Button/Button'
 import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Input from '@components/common/Input/Input'
+import * as Tooltip from '@components/common/Tooltip/Tooltip'
 
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer'
@@ -11,7 +12,7 @@ import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
 import { header_editor_reviewer } from '@/mock/article_under_review'
-import { Author, authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
+import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
 import { approveByAdminService } from '@/services/admin/approve.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
@@ -20,9 +21,6 @@ import { DocumentComment, DocumentGetProps } from '@/services/document/getArticl
 import { updateDocumentService } from '@/services/document/update.service'
 import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
-import { getArticleTypeLabel } from '@/utils/generate_labels'
-import { keywordsArray } from '@/utils/keywords_format'
-import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Check } from 'react-bootstrap-icons'
@@ -35,7 +33,18 @@ import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { useLimitCharacters } from '@/hooks/useLimitCharacters'
+import { cn } from '@/lib/utils'
+import { article_types_submit_article } from '@/mock/articles_types'
+import { UpdateDocumentProps, UpdateDocumentSchema } from '@/schemas/update_document'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { uniqueId } from 'lodash'
 import React from 'react'
+import { PlusCircle, X } from 'react-bootstrap-icons'
+import { useFieldArray, useForm } from 'react-hook-form'
+import slug from 'slug'
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
    const { data: session } = useSession()
@@ -45,23 +54,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
    const [items, setItems] = React.useState(authors_mock)
-   const [share, setShare] = React.useState('')
-   const [authors, setAuthors] = React.useState<Author[]>([])
    const [access_type, setAccessType] = React.useState('open-access')
-   const [authorship_settings, setAuthorshipSettings] = React.useState<Author>()
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false })
-   const [loading, setLoading] = React.useState({
-      approve: false,
-      reject: false
-   })
-   const [chartError, setChartError] = React.useState<boolean>(false)
-   const [nftData, setNftData] = React.useState({
-      nftLink: '',
-      nftHash: ''
-   })
+   const [loading, setLoading] = React.useState({ approve: false, reject: false })
+   const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '' })
    const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false)
    const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false)
-
    const [file, setFile] = React.useState<StoredFile>()
 
    const { editorApprovals, getApprovals, reviewerApprovals } = useGetApprovals()
@@ -169,6 +167,58 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [params.slug, session?.user?.userInfo?.id])
 
+   const {
+      register,
+      watch,
+      formState: { errors },
+      setValue,
+      trigger,
+      getValues,
+      control,
+      setError
+   } = useForm<UpdateDocumentProps>({
+      resolver: zodResolver(UpdateDocumentSchema),
+      defaultValues: {
+         abstract: '',
+         abstractChart: '',
+         accessType: 'FREE',
+         documentType: '',
+         field: '',
+         price: '',
+         title: '',
+         file: [],
+         authors: [],
+         keywords: [],
+         category: '',
+         cover: {}
+      }
+   })
+
+   const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
+
+   const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '')
+   const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '')
+   const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch('abstract') || '')
+
+   const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
+
+   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.keyCode === 13) {
+         if (keywords_temp && keywords_temp.trim() !== '') {
+            e.preventDefault()
+            append({ id: uniqueId('key'), name: keywords_temp as string })
+            setKeywordsTemp('')
+         } else {
+            setError('keywords', {
+               type: 'manual',
+               message: 'Keyword is required.'
+            })
+         }
+      }
+   }
+
+   const [documentType, setDocumentType] = React.useState<string | null>(null)
+
    return (
       <React.Fragment>
          <Dialog.Root open={dialog.reasoning}>
@@ -190,65 +240,204 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                <h1 className="text-1xl font-semibold">Article in review</h1>
             </div>
             <Box className="grid gap-8 h-fit py-6 px-8">
-               {/* <ArticleStatus status={article?.document.status || 'PENDING'} /> */}
-               <div className="grid md:grid-cols-2 gap-6">
-                  <div className="grid grid-cols-1">
-                     <span className="text-sm font-semibold">Title</span>
-                     <span className="text-sm">{article?.document?.title}</span>
-                  </div>
-                  <div className="grid gap-2">
-                     <p className="text-sm font-semibold">Add keywords</p>
-                     <div className="flex flex-wrap gap-1 sm:gap-2">
-                        {keywordsArray(article?.document.keywords as string)?.length > 0 ? (
-                           <React.Fragment>
-                              {keywordsArray(article?.document.keywords as string).map((tag, index) => (
-                                 <div
-                                    className="border rounded-md border-neutral-stroke_light flex items-center px-1 sm:px-2 py-[2px] bg-white"
-                                    key={index}
-                                 >
-                                    <span className="text-xxs sm:text-xs text-primary-main">{tag}</span>
-                                 </div>
-                              ))}
-                           </React.Fragment>
-                        ) : (
-                           <p className="text-sm text-gray-500 mt-8">There are no keywords inserted into this document.</p>
-                        )}
-                     </div>
-                  </div>
-               </div>
-               <div className="grid md:grid-cols-2 gap-6">
-                  <div className="grid grid-cols-1">
-                     <span className="text-sm font-semibold">Area of knowledge</span>
-                     <span className="text-sm">{article?.document?.field}</span>
-                  </div>
-               </div>
-               <div className="grid gap-2">
-                  <h3 className="text-sm font-semibold">Document type</h3>
-                  <p className="text-sm font-regular first-letter:uppercase lowercase">{getArticleTypeLabel(article?.document.documentType as string)}</p>
-               </div>
-               <div className="grid gap-2">
-                  <h3 className="text-sm font-semibold">Abstract</h3>
-                  <p className="text-sm font-regular">{article?.document.abstract}</p>
-               </div>
-               {article?.document?.cover && (
-                  <div className="grid gap-4">
-                     <p className="text-sm font-semibold">Cover</p>
-                     <div className="w-full h-56 rounded-md overflow-hidden relative">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                           loading="lazy"
-                           src={article?.document.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
-                           alt="cover-preview"
-                           className="absolute w-full h-full object-cover"
+               <div className="grid gap-x-6 gap-y-4">
+                  <div className="grid md:grid-cols-2 items-start gap-6">
+                     <Input.Root>
+                        <Input.Label className="flex gap-2 items-center">
+                           <span className="text-sm font-semibold">Title</span>
+                           <span className="text-sm text-neutral-light_gray">{titleLenght}/100 characters</span>
+                        </Input.Label>
+                        <Input.Input
+                           placeholder="Title of the article"
+                           {...register('title')}
+                           onInput={(e) => {
+                              titleLimit({
+                                 e: e as React.ChangeEvent<HTMLInputElement>,
+                                 limit: 100,
+                                 onInput: (value) => {
+                                    setValue('title', value.currentTarget.value)
+                                    trigger('title')
+                                 }
+                              })
+                           }}
                         />
-                     </div>
-                     {article?.document.updatedAt && (
-                        <p className="text-sm font-regular">
-                           Last updated on {format(new Date(article?.document.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
-                        </p>
-                     )}
+                        <Input.Error>{errors.title?.message}</Input.Error>
+                     </Input.Root>
+                     <Input.Root>
+                        <Input.Label
+                           className="text-sm font-semibold"
+                           tooltip_message="Add up to 5 keywords that best describe the content and focus of your document. This helps others discover your work."
+                        >
+                           Add keywords
+                        </Input.Label>
+                        <Input.Input
+                           placeholder="Type a keyword"
+                           value={keywords_temp}
+                           onKeyDown={(e) => handleKeyDown(e)}
+                           onInput={(e) => setKeywordsTemp(e.currentTarget.value)}
+                           end
+                           icon={
+                              <React.Fragment>
+                                 <Button.Button
+                                    type="button"
+                                    variant="outline"
+                                    className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
+                                    onClick={() => {
+                                       append({ id: uniqueId('key'), name: keywords_temp as string })
+                                       setKeywordsTemp('')
+                                    }}
+                                 >
+                                    <PlusCircle className="w-3 fill-neutral-light_gray" />
+                                    <span className="font-semibold text-xs text-neutral-light_gray">Add keyword</span>
+                                 </Button.Button>
+                              </React.Fragment>
+                           }
+                        />
+                        <Input.Error>{errors.keywords?.message}</Input.Error>
+                        <div className="flex flex-wrap gap-1">
+                           {keywords.map((keyword, index) => (
+                              <div
+                                 className="border rounded-md border-neutral-stroke_light flex items-center px-1 sm:px-2 py-[2px] bg-white w-fit"
+                                 key={keyword.id}
+                              >
+                                 <X
+                                    className="w-5 fill-neutral-stroke_light hover:fill-status-error cursor-pointer transition-all duration-200 hover:scale-110"
+                                    onClick={() => remove(index)}
+                                 />
+                                 <span className="text-xxs sm:text-xs text-primary-main">{keyword.name}</span>
+                              </div>
+                           ))}
+                        </div>
+                     </Input.Root>
                   </div>
-               )}
+                  <div className="grid md:grid-cols-2 items-start gap-6">
+                     <Input.Root>
+                        <Input.Label className="flex gap-2 items-center">
+                           <span className="text-sm  font-semibold">Area of knowledge</span>
+                           <span className="text-sm text-neutral-light_gray">{fieldLength}/300 characters</span>
+                        </Input.Label>
+                        <Input.Input
+                           placeholder="Title of the field"
+                           {...register('field')}
+                           onInput={(e) => {
+                              fieldLimit({
+                                 e: e as React.ChangeEvent<HTMLInputElement>,
+                                 limit: 300,
+                                 onInput: (value) => {
+                                    setValue('field', value.currentTarget.value)
+                                    trigger('field')
+                                 }
+                              })
+                           }}
+                        />
+                        <Input.Error>{errors.field?.message}</Input.Error>
+                     </Input.Root>
+                     <Input.Root>
+                        <Input.Label className="flex gap-2 items-center">
+                           <span className="text-sm  font-semibold">Article type</span>
+                        </Input.Label>
+                        <Select
+                           value={documentType || undefined}
+                           onValueChange={(value) => {
+                              setDocumentType(value)
+
+                              const findLabelItem = article_types_submit_article.find((item) => item.type === 'label' && item.related?.includes(value))
+
+                              if (findLabelItem) {
+                                 const labelName = findLabelItem.label
+                                 setValue('category', slug(labelName, { lower: true, replacement: '-' }))
+                                 trigger('category')
+                              }
+
+                              setValue('documentType', value)
+                              trigger('documentType')
+                           }}
+                        >
+                           <SelectTrigger
+                              className={cn(
+                                 'justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray',
+                                 {
+                                    'text-black': documentType
+                                 }
+                              )}
+                           >
+                              <SelectValue asChild placeholder="Select the article type">
+                                 <span>{article_types_submit_article.find((item) => item.value === documentType)?.label || null}</span>
+                              </SelectValue>
+                           </SelectTrigger>
+                           <SelectContent>
+                              <React.Fragment>
+                                 {article_types_submit_article.map((item, index) => (
+                                    <React.Fragment key={item.id}>
+                                       {item.type === 'label' && (
+                                          <React.Fragment>
+                                             <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
+                                             <Separator />
+                                          </React.Fragment>
+                                       )}
+                                       {item.type === 'item' && (
+                                          <SelectItem
+                                             value={item.value as string}
+                                             className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                             onMouseUp={() => setDocumentType(item.value)}
+                                          >
+                                             {item.label}
+                                          </SelectItem>
+                                       )}
+                                    </React.Fragment>
+                                 ))}
+                              </React.Fragment>
+                           </SelectContent>
+                        </Select>
+                     </Input.Root>
+                  </div>
+               </div>
+               <Input.Root>
+                  <Input.Label className="flex gap-2 items-center">
+                     <span className="text-sm font-semibold">Abstract</span>
+                     <span className="text-sm text-neutral-light_gray">{abstractLenght}/1000 characters</span>
+                     <span className="text-sm text-neutral-light_gray italic">Optional</span>
+                     <Tooltip.Information content="Abstract might change after revision, so don't worry too much." />
+                  </Input.Label>
+                  <Input.TextArea
+                     {...register('abstract')}
+                     rows={4}
+                     defaultValue={article?.document.abstract}
+                     placeholder="Type your abstract"
+                     onInput={(e) => {
+                        abstractLimit({
+                           e: e,
+                           limit: 1000,
+                           onInput: (value) => {
+                              setValue('abstract', value.currentTarget.value)
+                              trigger('abstract')
+                           }
+                        })
+                     }}
+                  />
+                  <Input.Error>{errors.abstract?.message}</Input.Error>
+               </Input.Root>
+               <div className="grid gap-4">
+                  <p className="text-sm font-semibold">Cover</p>
+                  <Dropzone
+                     thumbnail
+                     accept="images"
+                     placeholder="Upload cover picture (.png, .jpg)"
+                     setSelectedFile={(file) => {
+                        setValue('cover', file as StoredFile)
+                        trigger('cover')
+                     }}
+                     defaultCover={{
+                        lastModified: getValues('cover')?.lastModified || 0,
+                        lastModifiedDate: getValues('cover')?.lastModifiedDate || new Date(),
+                        name: getValues('cover')?.name || '',
+                        path: getValues('cover')?.path || '',
+                        preview: getValues('cover')?.preview || '',
+                        size: getValues('cover')?.size || 0,
+                        type: getValues('cover')?.type || ''
+                     }}
+                  />
+               </div>
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
                <div className="grid gap-6">
