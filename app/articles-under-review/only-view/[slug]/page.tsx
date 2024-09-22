@@ -170,8 +170,6 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
    }
 
    const handleEditComment = async (commentId: string, newComment: string) => {
-      console.log('commentId', commentId)
-      console.log('newComment', newComment)
       setButtonLoading({
          comment: true
       })
@@ -209,7 +207,6 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
-      console.log('download...')
       const response = await downloadDocumentVersionService({
          documentId: article?.document.id!,
          fileId,
@@ -530,7 +527,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                            <CurrencyInput
                               currency="USD"
                               defaultValue={article?.document.price}
-                              onChangeValue={(event, originalValue, maskedValue) => console.log(maskedValue)}
+                              onChangeValue={(event, originalValue, maskedValue) => console.log(event, originalValue, maskedValue)}
                               InputElement={<Input.Input placeholder="USD" disabled />}
                            />
                         </Input.Root>

@@ -221,9 +221,7 @@ const Select = React.forwardRef<HTMLInputElement, SelectInputProps>(
       /** @dev Get ref object to set width of content */
       const triggerRef = useRef<HTMLDivElement>(null)
 
-      useEffect(() => {
-         console.log(triggerRef.current?.clientWidth)
-      }, [windowDimension])
+      useEffect(() => {}, [windowDimension])
 
       return (
          <S.Root

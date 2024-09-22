@@ -58,7 +58,6 @@ export default class EthereumRpc {
          })
 
          const address = await walletClient.getAddresses()
-         console.log(address)
 
          const chainId = await walletClient.getChainId()
          return chainId.toString()
@@ -111,7 +110,7 @@ export default class EthereumRpc {
 
          const address = await this.getAccounts()
          const balance = await publicClient.getBalance({ address: address[0] })
-         console.log(balance)
+
          return formatEther(balance)
       } catch (error) {
          return error as string
@@ -141,7 +140,7 @@ export default class EthereumRpc {
             to: destination,
             value: amount
          })
-         console.log(hash)
+
          const receipt = await publicClient.waitForTransactionReceipt({ hash })
 
          return this.toObject(receipt)
@@ -166,8 +165,6 @@ export default class EthereumRpc {
             account: address[0],
             message: originalMessage
          })
-
-         console.log(hash)
 
          return hash.toString()
       } catch (error) {

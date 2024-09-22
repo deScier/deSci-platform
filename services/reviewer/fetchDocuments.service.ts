@@ -45,8 +45,6 @@ export const useArticleToReview = () => {
 
                const response: DocumentPaginationProps = await request.json()
 
-               console.log('response', response)
-
                const formatted_response: ReviewerItemProps[] = response?.documents?.map((article) => {
                   return {
                      id: article.id,

@@ -33,7 +33,6 @@ import React from 'react'
 const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack }: RegisterModalProps) => {
    const router = useRouter()
    const { data: session, update } = useSession()
-   console.log('register_session', session)
 
    /** @dev Initializes form handling and validation using useForm with Zod schema */
    const {
@@ -48,9 +47,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       defaultValues: { name: '', email: '', password: '', wallet_address: null },
       reValidateMode: 'onChange'
    })
-
-   console.log('register_errors', errors)
-   console.log('register_watch', watch())
 
    const { loading, start, stop } = useLoading()
 

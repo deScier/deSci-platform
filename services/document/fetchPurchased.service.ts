@@ -1,7 +1,7 @@
+import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing'
 import { getSession, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from './getArticles'
-import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing'
 
 /**
  * @title useFetchPurchasedArticles
@@ -44,8 +44,6 @@ export const useFetchPurchasedArticles = () => {
                })
 
                const response: DocumentPaginationProps = await request.json()
-
-               console.log('response', response)
 
                const formatted_response: ArticleCardProps[] = response?.documents?.map((article) => {
                   return {

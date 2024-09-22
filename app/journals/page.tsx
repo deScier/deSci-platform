@@ -22,7 +22,6 @@ import Link from 'next/link'
 
 export default function JournalsPage() {
    const { journals, journal_loading } = useJournals()
-   console.log('journals', journals)
 
    const per_page = 8
    const [page, setPage] = React.useState(1)

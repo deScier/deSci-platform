@@ -11,7 +11,6 @@ type TruncateWithHoverCardProps = {
 
 const TruncateWithHoverCard: React.FC<TruncateWithHoverCardProps> = ({ text, className, truncateLength }: TruncateWithHoverCardProps) => {
    const { windowDimension } = useDimension()
-   console.log(`${windowDimension}px`)
 
    if (!windowDimension) return null
 

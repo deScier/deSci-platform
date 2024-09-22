@@ -81,7 +81,6 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
             await web3auth.init()
 
             if (web3auth.connected) {
-               console.log('web3auth.connected', web3auth.connected)
             }
          } catch (error) {
             console.error(error)

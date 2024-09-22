@@ -71,9 +71,6 @@ export default function NewJournalPage() {
       }
    })
 
-   console.log('watch', watch())
-   console.log('errors', errors)
-
    const { append: append_member } = useFieldArray({ control, name: 'members' })
 
    const onReorder = (newMembers: MembersDTO[]) => {
@@ -407,7 +404,6 @@ export default function NewJournalPage() {
                         <MembersListDragabble
                            members={members}
                            onReorder={(newMember) => {
-                              console.log('newMember', newMember)
                               onReorder(newMember)
                            }}
                            onDelete={(member) => {

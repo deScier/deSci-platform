@@ -78,9 +78,6 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       }
    })
 
-   console.log('watch', watch())
-   console.log('errors', errors)
-
    const { append: append_member } = useFieldArray({ control, name: 'members' })
 
    const onReorder = (newMembers: MembersDTO[]) => {

@@ -14,14 +14,18 @@ body {
    scroll-behavior: smooth;
    -webkit-overflow-scrolling: touch;
    background-color: #f6f6f6;
-   font: 400 1rem 'Poppins', sans-serif;
+   font:
+      400 1rem 'Poppins',
+      sans-serif;
 }
 
 body,
 input,
 textarea,
 button {
-   font: 400 1rem 'Poppins', sans-serif;
+   font:
+      400 1rem 'Poppins',
+      sans-serif;
 
    input[type='number']::-webkit-inner-spin-button,
    input[type='number']::-webkit-outer-spin-button {

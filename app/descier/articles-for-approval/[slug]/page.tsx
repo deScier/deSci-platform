@@ -141,7 +141,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
-      console.log('download...')
       const response = await downloadDocumentVersionService({
          documentId: article?.document.id!,
          fileId,
@@ -280,7 +279,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                      placeholder="Update document file (.pdf)"
                      thumbnail={false}
                      setSelectedFile={(file) => {
-                        console.log('file', file)
                         setFile(file as StoredFile)
                      }}
                   />
@@ -413,7 +411,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                            <CurrencyInput
                               currency="USD"
                               defaultValue={article?.document.price}
-                              onChangeValue={(event, originalValue, maskedValue) => console.log(maskedValue)}
+                              onChangeValue={(event, originalValue, maskedValue) => console.log(event, originalValue, maskedValue)}
                               InputElement={<Input.Input placeholder="USD" disabled />}
                            />
                         </Input.Root>

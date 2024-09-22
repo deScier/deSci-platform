@@ -68,7 +68,7 @@ export const uploadJournalCoverService = async (body: UploadFileProps): Promise<
 
 export const uploadDocumentFileService = async (body: UploadFileProps) => {
    const session = await getSession()
-   console.log('body', body)
+
    const file = await localUrlToFile(body.fileLocalUrl, body.filename)
    const formData = new FormData()
    formData.append('file', file)

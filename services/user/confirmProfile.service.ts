@@ -8,7 +8,6 @@ export const confirmProfileService = async (data: ConfirmProfileRequestProps) =>
    })
 
    const profileData = await response.json()
-   console.log(profileData)
 
    if (response.status === 201) {
       return {

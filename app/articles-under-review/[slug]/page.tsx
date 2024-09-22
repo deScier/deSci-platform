@@ -111,8 +111,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       }
    })
 
-   console.log('watch', watch())
-
    const {
       watch: watch_comment,
       setValue: setValue_comment,
@@ -131,7 +129,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
    const fetchSingleArticle = async (documentId: string) => {
       await fetch_article(documentId).then((res) => {
-         console.log('res', res)
          setArticle(res as DocumentGetProps)
          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
@@ -249,7 +246,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }, [article, setValue])
 
    const onReorder = (newOrder: typeof items) => {
-      console.log('new order', newOrder)
       setAuthors(newOrder)
       setValue('authors', newOrder)
       const updateNewOrder: UpdateAuthor[] = newOrder.map((item, index) => ({
@@ -321,14 +317,9 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }
 
    const handleSaveDocument = async () => {
-      console.log('update')
-      console.log('authors update', authors)
-
-      console.log('update author', updateAuthors)
-
       if (!article) return
       setSaveLoading(true)
-      console.log('access', access_type)
+
       const updateResponse = await updateDocumentService({
          documentId: article.document.id!,
          document: {
@@ -403,7 +394,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
-      console.log('download...')
       const response = await downloadDocumentVersionService({
          documentId: article?.document.id!,
          fileId,
@@ -560,7 +550,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                      documentAuthor={data?.user?.userInfo.name}
                      onClose={() => setDialog({ ...dialog, reasoning: false })}
                      onConfirm={(value) => {
-                        console.log('state', state.comment_to_edit)
                         handleApproveDocument('REJECTED', state.comment_to_edit?.id!, value)
                         dispatch({
                            type: 'reject_comment',
@@ -695,8 +684,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                                     share: share.includes('%') ? share : share + '%'
                                  }
 
-                                 console.log('authors update', authors)
-
                                  const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id)
 
                                  const updatedAuthors = [...authors]
@@ -705,9 +692,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                                  setAuthors(updatedAuthors)
 
                                  if (!updatedAuthor.id.includes('author')) {
-                                    console.log('updte', updateAuthors)
                                     const authorIndex = updateAuthors.findIndex((item) => item.email === updatedAuthor.email)
-                                    console.log('index', authorIndex)
+
                                     if (authorIndex >= 0) {
                                        updateAuthors[authorIndex].revenuePercent = Number(share) || 0
                                        setUpdateAuthors(updateAuthors)
@@ -1245,7 +1231,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                                                 className="px-4 py-2 w-fit text-sm"
                                                 onClick={() => {
                                                    setDialog({ ...dialog, share_split: true })
-                                                   console.log(author)
+
                                                    setAuthorshipSettings(author)
                                                    setEditShare(author)
                                                 }}

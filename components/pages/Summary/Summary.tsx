@@ -20,7 +20,6 @@ import React, { useEffect, useState } from 'react'
 
 export function SummaryComponent() {
    const { data: session } = useSession()
-   console.log('session', session)
 
    const router = useRouter()
    const queryParams = useSearchParams()

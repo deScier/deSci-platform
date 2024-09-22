@@ -13,7 +13,7 @@ export const downloadDocumentVersionService = async (data: DownloadProps) => {
 
    if (response.status === 200) {
       const responseBlob = await response.blob()
-      console.log(responseBlob)
+
       return {
          success: true,
          message: 'Download successfully',

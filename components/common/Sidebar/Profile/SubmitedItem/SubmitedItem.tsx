@@ -8,7 +8,6 @@ import { BadgeProps, SubmitedItemProps } from '../Typing'
  * @param {SubmitedItemProps} props - The properties passed to the component.
  */
 const SubmitedItem: React.FC<SubmitedItemProps> = ({ id, title, date, status, onClick }: SubmitedItemProps) => {
-   console.log('SubmitedItemProps', status)
    return (
       <React.Fragment>
          <p className="text-sm cursor-pointer hover:text-primary-hover hover:underline transition-all duration-200" onClick={onClick}>

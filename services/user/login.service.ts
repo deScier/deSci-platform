@@ -16,8 +16,6 @@ export const loginUserService = () => {
 
       const response: Web3AuthenticateResponse = await request.json()
 
-      console.log('response_service', response)
-
       return {
          status: request.status,
          message: request.ok ? 'Authentication successful' : 'Authentication failed',

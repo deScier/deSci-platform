@@ -507,9 +507,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                         handlePurchase()
                      }}
                      onClose={() => setPurchase({ ...purchase, checkout: false })}
-                     onSetPaymentOption={(value) => {
-                        console.log(value)
-                     }}
+                     onSetPaymentOption={(value) => {}}
                   />
                )}
                {purchase.login && component === login_component && (

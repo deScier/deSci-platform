@@ -62,7 +62,7 @@ export default function ProfilePage() {
    // TODO: verify if this is necessary or the best way to get the user info
 
    //    React.useEffect(() => {
-   //       console.log(session?.user)
+   //
    //       if (session?.user) {
    //          setProfileInfo(session?.user?.userInfo)
    //       }

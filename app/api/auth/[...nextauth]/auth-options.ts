@@ -17,8 +17,6 @@ export const authOptions: NextAuthOptions = {
          },
          async authorize(credentials): Promise<User | null> {
             try {
-               console.log('credentials', credentials)
-
                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -29,7 +27,6 @@ export const authOptions: NextAuthOptions = {
                })
 
                const data: { user: UserProps; token: string } = await response.json()
-               console.log('data', data)
 
                const user = {
                   ...{ email: credentials?.email },
@@ -37,8 +34,6 @@ export const authOptions: NextAuthOptions = {
                   token: data.token,
                   userInfo: data.user
                }
-
-               console.log('user', user)
 
                return user
             } catch (error) {
@@ -94,7 +89,6 @@ export const authOptions: NextAuthOptions = {
             idToken: { label: 'Id Token', type: 'text' }
          },
          async authorize(credentials): Promise<User | null> {
-            console.log('credentials', credentials)
             if (!credentials) return null
 
             const { web3GoogleAuthenticate } = loginUserService()
