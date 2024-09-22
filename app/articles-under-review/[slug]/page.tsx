@@ -53,7 +53,6 @@ import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApp
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import EditComment from '@/components/modules/deScier/Article/EditComment'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
-import mermaid from 'mermaid'
 import Link from 'next/link'
 
 export default function ArticleInReviewPage({ params }: { params: { slug: string } }) {
@@ -444,20 +443,6 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
          isAuthor()
       }
    }, [article?.document?.userId, data?.user?.userInfo?.id])
-
-   React.useEffect(() => {
-      const runMermaid = async () => {
-         mermaid.initialize({ startOnLoad: false, fontSize: 25 })
-         await mermaid.run({ querySelector: '.mermaid' }).catch((err) => {
-            setMermaidError(err.message)
-         })
-      }
-
-      if (article?.document.abstractChart) {
-         runMermaid()
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [article?.document.abstractChart])
 
    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.keyCode === 13) {

@@ -1,14 +1,13 @@
 'use client'
 
-import Box from '@/components/common/Box/Box'
-import CommentItem from '@/components/common/Comment/Comment'
-import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
-import Dropzone from '@/components/common/Dropzone/Dropzone'
+import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Input from '@components/common/Input/Input'
+
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer'
 import { File } from '@/components/common/File/File'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
-import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
 import { header_editor_reviewer } from '@/mock/article_under_review'
@@ -23,18 +22,20 @@ import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
 import { keywordsArray } from '@/utils/keywords_format'
-import * as Button from '@components/common/Button/Button'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Input from '@components/common/Input/Input'
 import { format } from 'date-fns'
-import mermaid from 'mermaid'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import { ArrowLeft, Check } from 'react-bootstrap-icons'
 import { CurrencyInput } from 'react-currency-mask'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
+
+import Box from '@/components/common/Box/Box'
+import CommentItem from '@/components/common/Comment/Comment'
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import Dropzone from '@/components/common/Dropzone/Dropzone'
+import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import React from 'react'
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
    const { data: session } = useSession()
@@ -168,26 +169,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [params.slug, session?.user?.userInfo?.id])
-
-   React.useEffect(() => {
-      const runMermaid = async () => {
-         try {
-            mermaid.initialize({ startOnLoad: false })
-            await mermaid.run({ querySelector: '.mermaid' }).catch((error) => {
-               console.log('Erro ao renderizar o Mermaid: ', error)
-               setChartError(true)
-            })
-         } catch (error) {
-            console.error('Erro ao renderizar o Mermaid: ', error)
-            setChartError(true)
-         }
-      }
-
-      if (article?.document.abstractChart) {
-         runMermaid()
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [article?.document.abstractChart])
 
    return (
       <React.Fragment>

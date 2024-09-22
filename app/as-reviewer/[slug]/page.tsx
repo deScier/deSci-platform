@@ -31,7 +31,6 @@ import * as Input from '@components/common/Input/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { isEqual, uniqueId } from 'lodash'
-import mermaid from 'mermaid'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useReducer } from 'react'
@@ -251,28 +250,6 @@ export default function AsReviwerPageDetails({ params }: { params: { slug: strin
          isAuthor()
       }
    }, [article?.document?.userId, data?.user?.userInfo?.id])
-
-   React.useEffect(() => {
-      const runMermaid = async () => {
-         try {
-            mermaid.initialize({ startOnLoad: false })
-            await mermaid.run({ querySelector: '.mermaid' }).catch((error) => {
-               console.log('Erro ao renderizar o Mermaid: ', error)
-               setChartError(true)
-            })
-         } catch (error) {
-            console.error('Erro ao renderizar o Mermaid: ', error)
-            setChartError(true)
-         }
-      }
-
-      if (article?.document.abstractChart) {
-         runMermaid()
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [article?.document.abstractChart])
-
-   console.log('article', article)
 
    return (
       <React.Fragment>
