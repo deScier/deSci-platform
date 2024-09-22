@@ -1,9 +1,11 @@
 'use client'
+
 import { Session } from 'next-auth'
 import { getSession, useSession } from 'next-auth/react'
-import useSWR from 'swr'
 import { DocumentProps } from '../document/getArticles'
 import { MembersRoles } from './submit.service'
+
+import useSWR from 'swr'
 
 export const useJournals = () => {
    const { data } = useSession()

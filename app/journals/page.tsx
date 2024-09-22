@@ -5,7 +5,6 @@ import React from 'react'
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
-import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -23,6 +22,7 @@ import Link from 'next/link'
 
 export default function JournalsPage() {
    const { journals, journal_loading } = useJournals()
+   console.log('journals', journals)
 
    const per_page = 8
    const [page, setPage] = React.useState(1)
@@ -63,7 +63,7 @@ export default function JournalsPage() {
       setTotalPages(Math.ceil(results.length / per_page))
    }, [results, per_page])
 
-   const withoutFilters = status === 'ALL' && debouncedSearchTerm === ''
+   const withoutFilters = status === 'ALL' && debouncedSearchTerm === '' && originatesFrom === ''
 
    return (
       <React.Suspense>
@@ -76,14 +76,38 @@ export default function JournalsPage() {
                   <Input.Search value={searchTerm} placeholder="Find journal with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
                <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <Dropdown
+                  {/* <Dropdown
                      label="The journal originates from: "
                      selected={journal_originate_from.find((item) => item.value === originatesFrom)?.label || undefined}
                      className="min-w-[180px] w-full"
                      items={journal_originate_from}
                      onSelect={(value) => setOriginatesFrom(value)}
-                  />
-                  <Select value={status || undefined} onValueChange={(value) => setStatus(value)}>
+                  /> */}
+                  <Select value={originatesFrom || 'all'} onValueChange={(value) => setOriginatesFrom(value)}>
+                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                        <SelectValue asChild>
+                           <p>
+                              The journal originates from: {journal_originate_from.find((item) => item.value === originatesFrom)?.label || 'All journals'}
+                           </p>
+                        </SelectValue>
+                     </SelectTrigger>
+                     <SelectContent>
+                        <React.Fragment>
+                           {journal_originate_from.map((item, index) => (
+                              <React.Fragment key={item.id}>
+                                 <SelectItem
+                                    value={item.value || 'all'}
+                                    className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
+                                    onMouseUp={() => setOriginatesFrom(item.value)}
+                                 >
+                                    {item.label}
+                                 </SelectItem>
+                              </React.Fragment>
+                           ))}
+                        </React.Fragment>
+                     </SelectContent>
+                  </Select>
+                  <Select value={status || 'all'} onValueChange={(value) => setStatus(value)}>
                      <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
                         <SelectValue asChild>
                            <p>Status: {journal_status_option.find((item) => item.value === status)?.label || 'All'}</p>
@@ -101,8 +125,9 @@ export default function JournalsPage() {
                      <p
                         className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"
                         onClick={() => {
-                           setStatus('')
+                           setStatus('ALL')
                            setSearchTerm('')
+                           setOriginatesFrom('')
                         }}
                      >
                         Clear Filters
