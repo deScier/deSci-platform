@@ -101,7 +101,7 @@ export default function JournalsPage() {
                                        title={journal.name}
                                        since={journal.createdAt as unknown as string}
                                        image={journal.cover}
-                                       link={`/journals/${journal.id}`}
+                                       link={`/descier/journals-for-approval/${journal.id}`}
                                        status={journal.status}
                                     />
                                  </React.Fragment>

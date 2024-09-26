@@ -10,8 +10,13 @@ import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/Edit
 import { File } from '@/components/common/File/File'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
+import { useLimitCharacters } from '@/hooks/useLimitCharacters'
+import { cn } from '@/lib/utils'
 import { header_editor_reviewer } from '@/mock/article_under_review'
+import { article_types_submit_article } from '@/mock/articles_types'
 import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
 import { approveByAdminService } from '@/services/admin/approve.service'
@@ -21,10 +26,13 @@ import { DocumentComment, DocumentGetProps } from '@/services/document/getArticl
 import { updateDocumentService } from '@/services/document/update.service'
 import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { uniqueId } from 'lodash'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Check } from 'react-bootstrap-icons'
+import { ArrowLeft, Check, PlusCircle, X } from 'react-bootstrap-icons'
 import { CurrencyInput } from 'react-currency-mask'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
@@ -33,23 +41,15 @@ import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
-import { useLimitCharacters } from '@/hooks/useLimitCharacters'
-import { cn } from '@/lib/utils'
-import { article_types_submit_article } from '@/mock/articles_types'
-import { UpdateDocumentProps, UpdateDocumentSchema } from '@/schemas/update_document'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { uniqueId } from 'lodash'
+import { Skeleton } from '@/components/ui/skeleton'
+import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
 import React from 'react'
-import { PlusCircle, X } from 'react-bootstrap-icons'
-import { useFieldArray, useForm } from 'react-hook-form'
 import slug from 'slug'
 
-export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
-   const { data: session } = useSession()
+export default function ArticleForApprovalPage({ params }: { params: { id: string } }) {
    const router = useRouter()
 
+   const { data: session } = useSession()
    const { fetch_article } = useFetchAdminArticles()
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
@@ -66,6 +66,58 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
 
    const onReorder = (newOrder: typeof items) => setItems((prevItems) => [...newOrder])
 
+   const {
+      register,
+      handleSubmit,
+      watch,
+      formState: { errors, isDirty },
+      setValue,
+      trigger,
+      getValues,
+      control,
+      setError,
+      clearErrors,
+      unregister,
+      reset,
+      resetField
+   } = useForm<CreateDocumentProps>({
+      resolver: zodResolver(CreateDocumentSchema),
+      defaultValues: {
+         abstract: '',
+         abstractChart: '',
+         accessType: 'FREE',
+         documentType: '',
+         field: '',
+         price: '',
+         journalId: '',
+         title: '',
+         file: {
+            lastModified: 0,
+            lastModifiedDate: new Date(),
+            name: '',
+            path: '',
+            preview: '',
+            size: 0,
+            type: ''
+         },
+         cover: {
+            lastModified: 0,
+            lastModifiedDate: new Date(),
+            name: '',
+            path: '',
+            preview: '',
+            size: 0,
+            type: ''
+         },
+         category: '',
+         authors: [],
+         keywords: []
+      }
+   })
+   console.log('watch', watch())
+
+   const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
+
    const fetchSingleArticle = async (documentId: string) => {
       await fetch_article(documentId).then((res) => {
          setArticle(res as DocumentGetProps)
@@ -76,6 +128,54 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
          getApprovals(res?.document.reviewersOnDocuments || [])
+
+         setValue('title', res?.document.title || '')
+         setValue('abstract', res?.document.abstract || '')
+         setValue('field', res?.document.field || '')
+         setValue('documentType', res?.document.documentType || '')
+         setDocumentType(res?.document.documentType || '')
+         setValue('accessType', (res?.document.accessType || 'FREE') as 'PAID' | 'FREE')
+         setValue('price', res?.document.price?.toString() || '')
+         setValue('journalId', res?.document.id || '')
+         setValue('category', res?.document.category || '')
+         setValue('cover', {
+            lastModified: 0,
+            lastModifiedDate: new Date(),
+            name: res?.document.cover || '',
+            path: res?.document.cover || '',
+            preview: res?.document.cover || '',
+            size: 0,
+            type: ''
+         })
+         setValue('file', {
+            lastModified: 0,
+            lastModifiedDate: new Date(),
+            name: res?.document.documentVersions?.[0]?.fileName || '',
+            path: '',
+            preview: '',
+            size: 0,
+            type: ''
+         })
+
+         const keywordsArray =
+            res?.document.keywords?.split(';').map((keyword) => ({
+               id: uniqueId('key'),
+               name: keyword.trim()
+            })) || []
+         setValue('keywords', keywordsArray)
+
+         const authorsArray =
+            res?.document.authorsOnDocuments?.map((author) => ({
+               id: author.id,
+               name: author.author?.name || '',
+               email: author.author?.email || '',
+               title: author.author?.title || '',
+               revenuePercent: author.revenuePercent?.toString() || '0',
+               walletAddress: author.author?.walletAddress || ''
+            })) || []
+         setValue('authors', authorsArray)
+
+         trigger()
       })
    }
 
@@ -102,7 +202,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    const handleUpdateNftData = async () => {
       setUpdateNftLoading(true)
       const response = await updateDocumentService({
-         documentId: params.slug,
+         documentId: params.id,
          document: {
             ...nftData
          }
@@ -122,7 +222,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       setUploadFileLoading(true)
       if (!file) return
       const uploadDocumentSuccess = await uploadDocumentFileService({
-         documentId: params.slug,
+         documentId: params.id,
          fileLocalUrl: file.preview,
          filename: file.name,
          mimetype: file.type
@@ -134,7 +234,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
          return
       }
 
-      fetchSingleArticle(params.slug)
+      fetchSingleArticle(params.id)
       toast.success('File uploaded successfully!')
    }
 
@@ -161,40 +261,11 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    }
 
    React.useEffect(() => {
-      if (params.slug !== undefined) {
-         fetchSingleArticle(params.slug)
+      if (params.id !== undefined) {
+         fetchSingleArticle(params.id)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [params.slug, session?.user?.userInfo?.id])
-
-   const {
-      register,
-      watch,
-      formState: { errors },
-      setValue,
-      trigger,
-      getValues,
-      control,
-      setError
-   } = useForm<UpdateDocumentProps>({
-      resolver: zodResolver(UpdateDocumentSchema),
-      defaultValues: {
-         abstract: '',
-         abstractChart: '',
-         accessType: 'FREE',
-         documentType: '',
-         field: '',
-         price: '',
-         title: '',
-         file: [],
-         authors: [],
-         keywords: [],
-         category: '',
-         cover: {}
-      }
-   })
-
-   const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
+   }, [params.id, session?.user?.userInfo?.id])
 
    const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '')
    const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '')
@@ -218,6 +289,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
    }
 
    const [documentType, setDocumentType] = React.useState<string | null>(null)
+   console.log('documentType', documentType)
 
    return (
       <React.Fragment>
@@ -419,7 +491,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                </Input.Root>
                <div className="grid gap-4">
                   <p className="text-sm font-semibold">Cover</p>
-                  <Dropzone
+                  {/* <Dropzone
                      thumbnail
                      accept="images"
                      placeholder="Upload cover picture (.png, .jpg)"
@@ -436,7 +508,17 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         size: getValues('cover')?.size || 0,
                         type: getValues('cover')?.type || ''
                      }}
-                  />
+                  /> */}
+                  <div className="grid gap-4 min-h-[140px]">
+                     {article?.document?.cover ? (
+                        <React.Fragment>
+                           {/* eslint-disable-next-line @next/next/no-img-element */}
+                           <img src={article?.document.cover} alt="cover" className="w-full h-44 object-cover rounded-md brightness-50" loading="lazy" />
+                        </React.Fragment>
+                     ) : (
+                        <Skeleton className="w-full h-44 rounded-md" />
+                     )}
+                  </div>
                </div>
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">

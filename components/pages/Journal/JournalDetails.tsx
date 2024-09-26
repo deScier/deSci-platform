@@ -28,12 +28,14 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import Box from '@/components/common/Box/Box'
+import { home_routes } from '@/routes/home'
 import NProgress from 'nprogress'
 import React from 'react'
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
    const journal = params.journal
    const router = useRouter()
+
    const { data: session } = useSession()
 
    const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
@@ -50,7 +52,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
    const {
       register,
       watch,
-      formState: { errors, isDirty, isValid },
+      formState: { errors, isDirty },
       setValue,
       trigger,
       control,
@@ -85,11 +87,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       setValue('members', newMembers)
    }
 
-   const {
-      append: append_keyword,
-      fields: keywords,
-      remove: remove_keyword
-   } = useFieldArray({
+   const { append: append_keyword, fields: keywords } = useFieldArray({
       control,
       name: 'keywords'
    })
@@ -133,6 +131,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       setJournalStatus(status)
 
       toast.success(response.message)
+      router.push(home_routes.descier.journals_for_approval)
    }
 
    React.useEffect(() => {
@@ -169,9 +168,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [isDirty])
 
-   const handleLeave = () => {
-      router.push(targetUrl)
-   }
+   const handleLeave = () => router.push(targetUrl)
 
    const handleClose = () => {
       setDialog({ ...dialog, warning_on_change_page: false })
@@ -438,9 +435,9 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      <Button.Button
                         variant="primary"
                         className="flex items-center"
-                        onClick={() => handleApproveJournal('APPROVED')}
                         loading={loading.approve_journal}
                         disabled={loading.reject_journal}
+                        onClick={() => handleApproveJournal('APPROVED')}
                      >
                         <Check className="w-5 h-5" />
                         Approve journal
@@ -448,9 +445,9 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                      <Button.Button
                         variant="outline"
                         className="flex items-center"
-                        onClick={() => handleApproveJournal('REJECTED')}
                         loading={loading.reject_journal}
                         disabled={loading.approve_journal}
+                        onClick={() => handleApproveJournal('REJECTED')}
                      >
                         <X className="w-5 h-5" />
                         Reject journal

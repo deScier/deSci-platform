@@ -1,8 +1,10 @@
-import Footer from '@/components/common/Footer/Footer'
+import '@styles/layout.css'
+
 import { SidebarMobile } from '@/components/common/Sidebar/Mobile/Sidebar'
+
+import Footer from '@/components/common/Footer/Footer'
 import ProfileDeScier from '@/components/common/Sidebar/Profile/deScier/Profile'
 import SidebarDeScier from '@/components/common/Sidebar/deScier/SidebarDeScier'
-import '@styles/layout.css'
 import React from 'react'
 
 export default function DeScierLayout({ children }: { children: React.ReactNode }) {
