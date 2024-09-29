@@ -1,6 +1,6 @@
 import { formatDate } from '@/utils/date_format'
 import React from 'react'
-import { Download, FileEarmarkText } from 'react-bootstrap-icons'
+import { Download, FileEarmarkText, Trash } from 'react-bootstrap-icons'
 import { FileProps } from './Typing'
 
 /**
@@ -8,7 +8,7 @@ import { FileProps } from './Typing'
  * @notice Handles the display and download functionality for a single file.
  * @dev This component takes in file properties and renders UI for file information and download option.
  */
-const File: React.FC<FileProps> = ({ file_name, onDownload, uploaded_at, uploaded_by }: FileProps) => {
+const File: React.FC<FileProps> = ({ file_name, onDownload, uploaded_at, uploaded_by, onDelete }: FileProps) => {
    return (
       <React.Fragment>
          <div className="flex justify-between items-center">
@@ -21,9 +21,16 @@ const File: React.FC<FileProps> = ({ file_name, onDownload, uploaded_at, uploade
                   </p>
                </div>
             </div>
-            <button onClick={onDownload}>
-               <Download className="w-5 h-5 cursor-pointer hover:text-status-green transition-all duration-200 ease-out" />
-            </button>
+            <div className="flex gap-4">
+               <button onClick={onDownload}>
+                  <Download className="w-5 h-5 cursor-pointer hover:text-blue-500 transition-all duration-200 ease-out" />
+               </button>
+               {onDelete && (
+                  <button onClick={onDelete}>
+                     <Trash className="w-5 h-5 cursor-pointer hover:text-red-500 transition-all duration-200 ease-out" />
+                  </button>
+               )}
+            </div>
          </div>
       </React.Fragment>
    )

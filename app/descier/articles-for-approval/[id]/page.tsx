@@ -41,6 +41,7 @@ import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
+import { deleteFileByAdminService } from '@/services/admin/deleteFile.service'
 import React from 'react'
 import slug from 'slug'
 
@@ -334,7 +335,22 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    }
 
    const [documentType, setDocumentType] = React.useState<string | null>(null)
-   console.log('documentType', documentType)
+
+   const handleDeleteFile = async (versionId: string) => {
+      if (article?.document.documentVersions && article.document.documentVersions.length <= 1) {
+         toast.error('The last version cannot be deleted.')
+         return
+      }
+
+      const response = await deleteFileByAdminService(versionId)
+
+      if (response.success) {
+         toast.success(response.message)
+         fetchSingleArticle(params.id)
+      } else {
+         toast.error(response.message)
+      }
+   }
 
    return (
       <React.Fragment>
@@ -582,6 +598,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                                     }}
                                     uploaded_at={new Date(file.createdAt).toLocaleDateString('pt-BR')}
                                     uploaded_by={article.document.user?.name || ''}
+                                    onDelete={() => handleDeleteFile(file.id)}
                                  />
                               ))
                            ) : (

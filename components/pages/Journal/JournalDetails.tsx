@@ -14,8 +14,9 @@ import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMemb
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
+import { home_routes } from '@/routes/home'
 import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal'
-import { approveJournalByAdminService } from '@/services/admin/approve-journal.service'
+import { approveJournalByAdminService } from '@/services/admin/approveJournal.service'
 import { JournalProps } from '@/services/journal/getJournals.service'
 import { keywordsArray } from '@/utils/keywords_format'
 import { slugfy } from '@/utils/slugfy'
@@ -28,7 +29,6 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import Box from '@/components/common/Box/Box'
-import { home_routes } from '@/routes/home'
 import NProgress from 'nprogress'
 import React from 'react'
 

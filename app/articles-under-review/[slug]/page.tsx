@@ -40,7 +40,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { isEqual, uniqueId } from 'lodash'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React, { useReducer } from 'react'
 import { ArrowLeft, FileEarmarkText, Pencil, PlusCircle, PlusCircleDotted, Trash, X } from 'react-bootstrap-icons'
 import { CurrencyInput } from 'react-currency-mask'
 import { useFieldArray, useForm } from 'react-hook-form'
@@ -54,13 +53,14 @@ import Dropzone from '@/components/common/Dropzone/Dropzone'
 import EditComment from '@/components/modules/deScier/Article/EditComment'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import Link from 'next/link'
+import React from 'react'
 
 export default function ArticleInReviewPage({ params }: { params: { slug: string } }) {
    const router = useRouter()
 
    const { data } = useSession()
    const { fetch_article } = useArticles()
-   const [state, dispatch] = useReducer(reducer_comments, comments_initial_state)
+   const [state, dispatch] = React.useReducer(reducer_comments, comments_initial_state)
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
    const [items, setItems] = React.useState(authors_mock)

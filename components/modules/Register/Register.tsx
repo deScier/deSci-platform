@@ -138,8 +138,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       }
    }
 
-   const { handleMetamaskAuth, handleGetMetamaskAccount } = useMetamaskAuth()
    const { handleGoogleAuth, handleGetGoogleAccount } = useGoogleWeb3Auth()
+   const { handleMetamaskAuth, handleGetMetamaskAccount } = useMetamaskAuth()
 
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
