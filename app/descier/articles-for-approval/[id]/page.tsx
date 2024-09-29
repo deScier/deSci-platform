@@ -22,7 +22,7 @@ import { home_routes } from '@/routes/home'
 import { approveByAdminService } from '@/services/admin/approve.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
-import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles'
+import { DocumentGetProps } from '@/services/document/getArticles'
 import { updateDocumentService } from '@/services/document/update.service'
 import { uploadDocumentFileService } from '@/services/file/file.service'
 import { formatFileName } from '@/utils/format_file_name'
@@ -34,10 +34,8 @@ import { ArrowLeft, Check, PlusCircle, X } from 'react-bootstrap-icons'
 import { CurrencyInput } from 'react-currency-mask'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { twMerge } from 'tailwind-merge'
 
 import Box from '@/components/common/Box/Box'
-import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
@@ -181,32 +179,79 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
    const handleApproveDocument = async (approve: boolean) => {
       setLoading({ ...loading, approve: true })
-      const response = await approveByAdminService({
+
+      const updateResponse = await updateDocumentService({
+         documentId: article?.document.id!,
+         document: {
+            title: watch('title'),
+            abstract: watch('abstract'),
+            abstractChart: watch('abstractChart'),
+            keywords: watch('keywords').map((k) => k.name),
+            field: watch('field'),
+            documentType: watch('documentType'),
+            accessType: watch('accessType'),
+            category: watch('category'),
+            price: Number(watch('price')) || 0,
+            nftHash: nftData.nftHash,
+            nftLink: nftData.nftLink
+         }
+      })
+
+      if (!updateResponse.success) {
+         setLoading({ ...loading, approve: false })
+         toast.error(updateResponse.message)
+         return
+      }
+
+      if (file) {
+         const uploadFileResponse = await uploadDocumentFileService({
+            documentId: article?.document.id!,
+            fileLocalUrl: file.preview,
+            filename: file.name,
+            mimetype: file.type
+         })
+
+         if (!uploadFileResponse) {
+            setLoading({ ...loading, approve: false })
+            toast.error('Error in upload file.')
+            return
+         }
+      }
+
+      if (watch('cover')?.preview && watch('cover')?.preview !== article?.document.cover) {
+         const uploadCoverSuccess = await uploadDocumentFileService({
+            documentId: article?.document.id!,
+            fileLocalUrl: watch('cover')?.preview!,
+            filename: watch('cover')?.name!,
+            mimetype: watch('cover')?.type!
+         })
+
+         if (!uploadCoverSuccess) {
+            toast.warning('There was an error uploading your cover file. But you can upload later.')
+         }
+      }
+
+      const approveResponse = await approveByAdminService({
          documentId: article?.document.id!,
          approve: approve
       })
 
       setLoading({ ...loading, approve: false })
 
-      if (!response.success) {
-         toast.error(response.message)
+      if (!approveResponse.success) {
+         toast.error(approveResponse.message)
          return
       }
 
       const status = approve ? 'approved' : 'rejected'
-      toast.success(`Document ${status} successfully!`)
+      toast.success(`Document updated and ${status} successfully!`)
 
       router.push(home_routes.descier.index)
    }
 
    const handleUpdateNftData = async () => {
       setUpdateNftLoading(true)
-      const response = await updateDocumentService({
-         documentId: params.id,
-         document: {
-            ...nftData
-         }
-      })
+      const response = await updateDocumentService({ documentId: params.id, document: { ...nftData } })
 
       setUpdateNftLoading(false)
 
@@ -586,7 +631,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                   Save
                </Button.Button>
             </Box>
-            <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
+            {/* <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
                <div className="grid gap-2">
                   <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Comments</h3>
                   <p className="text-sm">The reviewing team can publish comments, suggesting updates on your document.</p>
@@ -616,7 +661,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                      </div>
                   </ScrollArea>
                </div>
-            </Box>
+            </Box> */}
             <Box className="grid gap-8 h-fit py-6 px-8">
                <div className="grid gap-6">
                   <div className="grid gap-2">
@@ -736,24 +781,21 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                {article?.document.adminApproval === 0 && (
                   <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
                )}
-
                <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
-               {article?.document.status !== 'SUBMITTED' && (
-                  <>
-                     <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
-                        <Check className="w-5 h-5" />
-                        Approve article
-                     </Button.Button>
-                     <Button.Button
-                        variant="outline"
-                        className="flex items-center"
-                        onClick={() => setDialog({ ...dialog, reasoning: true })}
-                        loading={loading.reject}
-                     >
-                        Reject article
-                     </Button.Button>
-                  </>
-               )}
+
+               <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
+                  <Check className="w-5 h-5" />
+                  Approve article
+               </Button.Button>
+               <Button.Button
+                  variant="outline"
+                  className="flex items-center"
+                  onClick={() => setDialog({ ...dialog, reasoning: true })}
+                  loading={loading.reject}
+               >
+                  Reject article
+               </Button.Button>
+
                {article?.document.status === 'REJECTED' && (
                   <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
                )}
