@@ -211,33 +211,35 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                   </div>
                </div>
             </Box>
-            <Box className="grid gap-8 h-fit py-6 px-8">
-               <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
-               <div className="grid md:grid-cols-2 items-start gap-6">
-                  <Input.Root>
-                     <Input.Label className="flex gap-2 items-center">
-                        <span className="text-sm font-semibold">NFT hash</span>
-                     </Input.Label>
-                     <Input.Input
-                        disabled
-                        placeholder="Ex: 0x495f9472767...0045cb7b5e"
-                        value={nftData.nftHash}
-                        onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
-                     />
-                  </Input.Root>
-                  <Input.Root>
-                     <Input.Label className="flex gap-2 items-center">
-                        <span className="text-sm font-semibold">NFT link</span>
-                     </Input.Label>
-                     <Input.Input
-                        disabled
-                        placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
-                        value={nftData.nftLink}
-                        onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
-                     />
-                  </Input.Root>
-               </div>
-            </Box>
+            {article?.document?.nftHash && article?.document?.nftLink && (
+               <Box className="grid gap-8 h-fit py-6 px-8">
+                  <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
+                  <div className="grid md:grid-cols-2 items-start gap-6">
+                     <Input.Root>
+                        <Input.Label className="flex gap-2 items-center">
+                           <span className="text-sm font-semibold">NFT hash</span>
+                        </Input.Label>
+                        <Input.Input
+                           disabled
+                           placeholder="Ex: 0x495f9472767...0045cb7b5e"
+                           value={nftData.nftHash}
+                           onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
+                        />
+                     </Input.Root>
+                     <Input.Root>
+                        <Input.Label className="flex gap-2 items-center">
+                           <span className="text-sm font-semibold">NFT link</span>
+                        </Input.Label>
+                        <Input.Input
+                           disabled
+                           placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
+                           value={nftData.nftLink}
+                           onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
+                        />
+                     </Input.Root>
+                  </div>
+               </Box>
+            )}
             <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
                <div className="grid gap-2">
                   <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Comments</h3>
@@ -385,9 +387,6 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                )}
             </Box>
             <Box className="grid gap-4 h-fit py-6 px-8">
-               {article?.document?.adminApproval === 0 && (
-                  <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
-               )}
                {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments?.length > 0 && (
                   <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
                )}

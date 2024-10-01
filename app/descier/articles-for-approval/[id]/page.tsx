@@ -42,6 +42,7 @@ import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
 import { deleteFileByAdminService } from '@/services/admin/deleteFile.service'
+import { generateNftAdminService } from '@/services/admin/generateNft.service'
 import React from 'react'
 import slug from 'slug'
 
@@ -54,9 +55,9 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
-   const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false })
-   const [loading, setLoading] = React.useState({ approve: false, reject: false })
-   const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '' })
+   const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false, nftAmount: false })
+   const [loading, setLoading] = React.useState({ approve: false, reject: false, generateNFT: false })
+   const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '', nftAmount: 1 })
    const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false)
    const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false)
    const [file, setFile] = React.useState<StoredFile>()
@@ -67,18 +68,12 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
    const {
       register,
-      handleSubmit,
       watch,
       formState: { errors, isDirty },
       setValue,
       trigger,
-      getValues,
       control,
-      setError,
-      clearErrors,
-      unregister,
-      reset,
-      resetField
+      setError
    } = useForm<CreateDocumentProps>({
       resolver: zodResolver(CreateDocumentSchema),
       defaultValues: {
@@ -113,7 +108,6 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
          keywords: []
       }
    })
-   console.log('watch', watch())
 
    const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
 
@@ -122,7 +116,8 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
          setArticle(res as DocumentGetProps)
          setNftData({
             nftHash: res?.document.nftHash || '',
-            nftLink: res?.document.nftLink || ''
+            nftLink: res?.document.nftLink || '',
+            nftAmount: res?.document.nftAmount || 1
          })
          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
@@ -352,19 +347,88 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       }
    }
 
+   const handleGenerateNFT = async () => {
+      if (!article?.document.id) {
+         toast.error('Document ID is missing.')
+         return
+      }
+
+      setLoading((prev) => ({ ...prev, generateNFT: true }))
+
+      try {
+         const response = await generateNftAdminService({
+            documentId: article.document.id,
+            numCopies: nftData.nftAmount
+         })
+
+         if (response.success) {
+            toast.success(response.message)
+         } else {
+            toast.error(response.message)
+         }
+      } catch (error) {
+         console.error('Error generating NFT:', error)
+         toast.error('An error occurred while generating the NFT.')
+      } finally {
+         setLoading((prev) => ({ ...prev, generateNFT: false }))
+      }
+   }
+
    return (
       <React.Fragment>
-         <Dialog.Root open={dialog.reasoning}>
+         <Dialog.Root open={dialog.reasoning || dialog.nftAmount}>
             <Dialog.Content className="py-14 px-16 max-w-[600px]">
-               <Reasoning
-                  message={''}
-                  documentAuthor={article?.document.user?.name!}
-                  onClose={() => setDialog({ ...dialog, reasoning: false })}
-                  onConfirm={(value) => {
-                     setDialog({ ...dialog, reasoning: false })
-                     handleApproveDocument(false)
-                  }}
-               />
+               {dialog.reasoning && (
+                  <Reasoning
+                     message={''}
+                     documentAuthor={article?.document.user?.name!}
+                     onClose={() => setDialog({ ...dialog, reasoning: false })}
+                     onConfirm={(value) => {
+                        setDialog({ ...dialog, reasoning: false })
+                        handleApproveDocument(false)
+                     }}
+                  />
+               )}
+               {dialog.nftAmount && (
+                  <React.Fragment>
+                     <X
+                        className="w-8 h-8 absolute top-4 right-4 cursor-pointer hover:text-status-error transition-all duration-500 ease-out hover:scale-110 hover:rotate-180 transform"
+                        onClick={() => setDialog({ ...dialog, nftAmount: false })}
+                     />
+                     <div className="grid gap-6">
+                        <div className="grid gap-2">
+                           <h3 className="text-xl font-semibold">Generate NFT Copies</h3>
+                           <p className="text-sm">
+                              Specify the number of NFT copies you&apos;d like to create for this document. Each copy represents a unique digital asset.
+                           </p>
+                           <p className="text-sm text-gray-600">Tip: Consider the rarity and potential value when deciding on the number of copies.</p>
+                        </div>
+                        <Input.Root>
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">Quantidade de cópias</span>
+                           </Input.Label>
+                           <Input.Input
+                              placeholder="Ex: 10"
+                              value={nftData.nftAmount}
+                              type="number"
+                              onChange={(e) => {
+                                 setNftData({ ...nftData, nftAmount: Number(e.target.value) })
+                              }}
+                           />
+                        </Input.Root>
+                        <Button.Button
+                           variant="primary"
+                           className="flex items-center"
+                           onClick={() => {
+                              handleGenerateNFT()
+                           }}
+                           loading={loading.generateNFT}
+                        >
+                           Generate NFT
+                        </Button.Button>
+                     </div>
+                  </React.Fragment>
+               )}
             </Dialog.Content>
          </Dialog.Root>
          <div className="grid gap-8">
@@ -552,24 +616,6 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                </Input.Root>
                <div className="grid gap-4">
                   <p className="text-sm font-semibold">Cover</p>
-                  {/* <Dropzone
-                     thumbnail
-                     accept="images"
-                     placeholder="Upload cover picture (.png, .jpg)"
-                     setSelectedFile={(file) => {
-                        setValue('cover', file as StoredFile)
-                        trigger('cover')
-                     }}
-                     defaultCover={{
-                        lastModified: getValues('cover')?.lastModified || 0,
-                        lastModifiedDate: getValues('cover')?.lastModifiedDate || new Date(),
-                        name: getValues('cover')?.name || '',
-                        path: getValues('cover')?.path || '',
-                        preview: getValues('cover')?.preview || '',
-                        size: getValues('cover')?.size || 0,
-                        type: getValues('cover')?.type || ''
-                     }}
-                  /> */}
                   <div className="grid gap-4 min-h-[140px]">
                      {article?.document?.cover ? (
                         <React.Fragment>
@@ -622,7 +668,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
                <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
-               <div className="grid md:grid-cols-2 items-start gap-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start gap-6">
                   <Input.Root>
                      <Input.Label className="flex gap-2 items-center">
                         <span className="text-sm font-semibold">NFT hash</span>
@@ -644,9 +690,14 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                      />
                   </Input.Root>
                </div>
-               <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
-                  Save
-               </Button.Button>
+               <div className="grid gap-4">
+                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
+                     Save
+                  </Button.Button>
+                  <Button.Button variant="outline" className="flex items-center" onClick={() => setDialog({ ...dialog, nftAmount: true })}>
+                     Generate NFT
+                  </Button.Button>
+               </div>
             </Box>
             {/* <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
                <div className="grid gap-2">
