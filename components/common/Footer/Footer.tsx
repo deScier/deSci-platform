@@ -20,6 +20,9 @@ const Footer: React.FC = () => {
             <div className="grid gap-4 items-center justify-items-center content-center">
                <LogoDeScier className="w-full max-w-[137px] md:max-w-[160px] lg:w-32 2xl:w-40" />
                <p className="text-sm text-neutral-light_gray max-w-[20ch] text-center">© 2023 Maxi Science LLC. All rights reserved.</p>
+               <div className="border border-neutral-light_gray rounded-md px-2 py-0.5 mb-8 md:mb-0">
+                  <p className="text-xs text-neutral-light_gray text-left md:text-center">Powered by web3</p>
+               </div>
             </div>
             <div className="grid gap-4 w-full content-start">
                <p className="text-lg font-semibold text-neutral-white">Social media</p>
@@ -59,11 +62,6 @@ const Footer: React.FC = () => {
                   </div>
                   <p className="text-sm text-neutral-white font-regular select-none hover:text-secundary-main cursor-pointer">maxi@maxi.science</p>
                </Link>
-            </div>
-            <div className="col-span-full w-full">
-               <p className="text-sm text-neutral-light_gray text-left md:text-center mt-8 md:mt-0">
-                  Powered by Web3 technology for decentralized and secure experiences.
-               </p>
             </div>
          </footer>
       </React.Fragment>
