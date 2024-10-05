@@ -54,7 +54,7 @@ export const useArticles = () => {
                likes: article.likes,
                views: article.views,
                tags: article.keywords.split(';')?.map((item) => ({ id: uniqueId('keyword'), name: item })) || [],
-               publishedAt: new Date(article.createdAt),
+               publishedAt: new Date(article.publishedAt!),
                documentType: article.documentType,
                accessType: article.accessType === 'FREE' ? 'open' : 'paid',
                field: article.field,

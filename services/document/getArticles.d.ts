@@ -34,6 +34,7 @@ export type DocumentPublicProps = {
    updatedAt: Date
    nftHash: string | null
    nftLink: string | null
+   publishedAt: Date | null
    authors?: AuthorsPublicInfo[]
    reviewers?: ReviewersPublicInfo[]
    documentLikes: DocumentLikeProps[]
@@ -64,6 +65,7 @@ export type DocumentProps = {
    nftHash?: string
    nftLink?: string
    nftAmount?: number
+   publishedAt: Date | null
    journal: DocumentJournalProps
    reviewerInviteLink: string | null
    documentLike?: DocumentLikeProps[]
