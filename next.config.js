@@ -41,6 +41,9 @@ const nextConfig = {
          },
          {
             hostname: 'aquamarine-used-mule-633.mypinata.cloud'
+         },
+         {
+            hostname: 'descier.mypinata.cloud'
          }
       ]
    },

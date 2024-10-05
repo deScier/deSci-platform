@@ -251,7 +251,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                <ArticleAcess
                   access_type={(article?.document?.accessType as 'PAID' | 'FREE') || 'PAID'}
                   access_status={formatAccessType()}
-                  date={new Date(article?.document?.createdAt!).toLocaleDateString('pt-BR')}
+                  date={new Date(article?.document?.publishedAt!).toLocaleDateString('pt-BR')}
                   value={article?.document?.price || 0}
                   onBuyDocument={() => handlePurchase()}
                   onViewDocument={() => handleDownloadDocument()}
@@ -497,7 +497,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                   <Checkout
                      article={{
                         image: article?.document.cover || 'https://source.unsplash.com/random/900×700/?technology',
-                        date: new Date(article?.document.createdAt!).toLocaleDateString() || '',
+                        date: new Date(article?.document.publishedAt!).toLocaleDateString() || '',
                         id: article?.document.id || '',
                         price: article?.document.price || 0,
                         title: article?.document.title || ''
