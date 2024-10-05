@@ -184,14 +184,14 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
             <div className="bg-white rounded-xl h-fit p-6 flex flex-col gap-4">
                <div className="flex flex-col gap-2">
                   <div className="hidden md:flex items-center gap-2">
-                     <Badge className="w-fit flex-shrink flex-grow-0" access_type={article?.document.accessType as 'PAID' | 'FREE'} />
+                     <Badge className="w-fit flex-shrink flex-grow-0" access_type={article?.document?.accessType as 'PAID' | 'FREE'} />
                      <span className="text-black font-semibold">•</span>
                      <p className="text-lg font-semibold">{capitalizeWord(getArticleTypeLabel(article?.document?.documentType as string) || 'paper')}</p>
                      {/* <span className="text-black font-semibold">•</span>
                      <p className="text-lg font-semibold text-primary-main">{article?.document?.field}</p> */}
                   </div>
                   <div className="flex flex-col md:hidden md:items-center gap-2">
-                     <Badge className="w-full" access_type={article?.document.accessType as 'PAID' | 'FREE'} />
+                     <Badge className="w-full" access_type={article?.document?.accessType as 'PAID' | 'FREE'} />
                      <HoverCard>
                         <div className="grid gap-0">
                            <HoverCardTrigger className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
@@ -230,7 +230,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                   ))}
                </div>
                <div className="relative h-80 md:h-96 rounded-lg overflow-hidden">
-                  {article?.document.cover ? (
+                  {article?.document?.cover ? (
                      <React.Fragment>
                         <Image
                            fill
@@ -249,7 +249,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
             </div>
             <div className="flex items-start flex-col lg:flex-row-reverse gap-8 mb-10">
                <ArticleAcess
-                  access_type={(article?.document.accessType as 'PAID' | 'FREE') || 'PAID'}
+                  access_type={(article?.document?.accessType as 'PAID' | 'FREE') || 'PAID'}
                   access_status={formatAccessType()}
                   date={new Date(article?.document?.createdAt!).toLocaleDateString('pt-BR')}
                   value={article?.document?.price || 0}
@@ -269,7 +269,6 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                            <p className="text-lg text-neutral-gray">{viewsAmount} views</p>
                         </div>
                      </div>
-
                      <div className="flex items-center gap-4">
                         <p className="text-lg text-neutral-gray">Share</p>
                         <HoverCard open={popoverOpen}>
@@ -402,7 +401,7 @@ export default function ArticleDetails({ params }: { params: { id: string } }) {
                   <div className="grid md:grid-cols-3 gap-4">
                      <div className="flex flex-col">
                         <p className="text-base font-semibold">NFT Hash</p>
-                        {article?.document.nftHash !== null && article?.document.nftHash !== undefined ? (
+                        {article?.document?.nftHash !== null && article?.document.nftHash !== undefined ? (
                            <div
                               className="truncate hover:underline cursor-copy"
                               onClick={() => {

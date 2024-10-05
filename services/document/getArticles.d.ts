@@ -67,6 +67,7 @@ export type DocumentProps = {
    journal: DocumentJournalProps
    reviewerInviteLink: string | null
    documentLike?: DocumentLikeProps[]
+   hoi?: string
    createdAt: Date
    updatedAt: Date
    authorsOnDocuments?: AuthorsOnDocuments[]

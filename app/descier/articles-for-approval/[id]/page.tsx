@@ -12,6 +12,7 @@ import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
@@ -19,8 +20,11 @@ import { header_editor_reviewer } from '@/mock/article_under_review'
 import { article_types_submit_article } from '@/mock/articles_types'
 import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document'
 import { home_routes } from '@/routes/home'
+import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
 import { approveByAdminService } from '@/services/admin/approve.service'
+import { deleteFileByAdminService } from '@/services/admin/deleteFile.service'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
+import { generateNftAdminService } from '@/services/admin/generateNft.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
 import { DocumentGetProps } from '@/services/document/getArticles'
 import { updateDocumentService } from '@/services/document/update.service'
@@ -39,10 +43,9 @@ import Box from '@/components/common/Box/Box'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
-import { Skeleton } from '@/components/ui/skeleton'
-import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document'
-import { deleteFileByAdminService } from '@/services/admin/deleteFile.service'
-import { generateNftAdminService } from '@/services/admin/generateNft.service'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import CopyIcon from 'public/svgs/common/copy.svg'
 import React from 'react'
 import slug from 'slug'
 
@@ -53,6 +56,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    const { fetch_article } = useFetchAdminArticles()
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
+   console.log('article', article)
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false, nftAmount: false })
@@ -363,6 +367,10 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
          if (response.success) {
             toast.success(response.message)
+            setDialog({ ...dialog, nftAmount: false })
+            if (typeof window !== 'undefined') {
+               window.location.reload()
+            }
          } else {
             toast.error(response.message)
          }
@@ -373,6 +381,9 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
          setLoading((prev) => ({ ...prev, generateNFT: false }))
       }
    }
+
+   const { isCopied: isHoiCopied, copyToClipboard: copyHoiToClipboard } = useCopyToClipboard()
+   const { isCopied: isNftLinkCopied, copyToClipboard: copyNftLinkToClipboard } = useCopyToClipboard()
 
    return (
       <React.Fragment>
@@ -416,14 +427,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                               }}
                            />
                         </Input.Root>
-                        <Button.Button
-                           variant="primary"
-                           className="flex items-center"
-                           onClick={() => {
-                              handleGenerateNFT()
-                           }}
-                           loading={loading.generateNFT}
-                        >
+                        <Button.Button variant="primary" className="flex items-center" onClick={() => handleGenerateNFT()} loading={loading.generateNFT}>
                            Generate NFT
                         </Button.Button>
                      </div>
@@ -668,68 +672,87 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
             </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
                <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Document links</h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start gap-6">
-                  <Input.Root>
-                     <Input.Label className="flex gap-2 items-center">
-                        <span className="text-sm font-semibold">NFT hash</span>
-                     </Input.Label>
-                     <Input.Input
-                        placeholder="Ex: 0x495f9472767...0045cb7b5e"
-                        value={nftData.nftHash}
-                        onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
-                     />
-                  </Input.Root>
-                  <Input.Root>
-                     <Input.Label className="flex gap-2 items-center">
-                        <span className="text-sm font-semibold">NFT link</span>
-                     </Input.Label>
-                     <Input.Input
-                        placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
-                        value={nftData.nftLink}
-                        onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
-                     />
-                  </Input.Root>
-               </div>
-               <div className="grid gap-4">
-                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
-                     Save
-                  </Button.Button>
-                  <Button.Button variant="outline" className="flex items-center" onClick={() => setDialog({ ...dialog, nftAmount: true })}>
-                     Generate NFT
-                  </Button.Button>
-               </div>
-            </Box>
-            {/* <Box className="grid gap-4 md:gap-8 h-fit py-6 px-8">
-               <div className="grid gap-2">
-                  <h3 className="text-xl text-primary-main font-semibold lg:text-lg 2xl:text-xl">Comments</h3>
-                  <p className="text-sm">The reviewing team can publish comments, suggesting updates on your document.</p>
-               </div>
-               <div className="border rounded-md p-4">
-                  <ScrollArea
-                     className={twMerge(
-                        'h-[342px]',
-                        `${article?.document.documentComments && article?.document?.documentComments?.length == 0 && 'h-full'}`
-                     )}
-                  >
-                     <div className="grid gap-4">
-                        {article?.document.documentComments && article?.document?.documentComments?.length > 0 ? (
-                           article?.document.documentComments?.map((comment: DocumentComment) => (
-                              <React.Fragment key={comment.id}>
-                                 <CommentItem
-                                    comment_author={comment.user.name}
-                                    comment_content={comment.comment}
-                                    status={comment.approvedByAuthor as 'APPROVED' | 'REJECTED' | 'PENDING'}
-                                    user_id={comment.userId}
-                                 />
-                              </React.Fragment>
-                           ))
-                        ) : (
-                           <p className="text-sm md:text-base text-center col-span-2 text-gray-500">There are no comments inserted into this document.</p>
-                        )}
+               {article?.document.nftHash && article?.document.nftLink && (
+                  <React.Fragment>
+                     <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-6 relative">
+                        <div className="w-full gap-2 flex flex-col">
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">HOI</span>
+                           </Input.Label>
+                           <div className="flex items-center gap-2 w-full">
+                              <div className="flex-grow min-w-0">
+                                 <p className="text-base truncate">{article?.document.hoi}</p>
+                              </div>
+                              <div className="flex-shrink-0">
+                                 <HoverCard closeDelay={1000} open={isHoiCopied}>
+                                    <HoverCardTrigger onClick={() => copyHoiToClipboard(article?.document.hoi || 'N/A')}>
+                                       <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="p-2 py-1" side="bottom">
+                                       <h4 className="text-xs font-semibold text-status-green select-none">HOI copied to the clipboard!</h4>
+                                    </HoverCardContent>
+                                 </HoverCard>
+                              </div>
+                           </div>
+                        </div>
+                        <div className="w-full gap-2 flex flex-col">
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">NFT link</span>
+                           </Input.Label>
+                           <div className="flex items-center gap-2 w-full">
+                              <div className="flex-grow min-w-0">
+                                 <p className="text-base truncate">{article?.document.nftLink}</p>
+                              </div>
+                              <div className="flex-shrink-0">
+                                 <HoverCard closeDelay={1000} open={isNftLinkCopied}>
+                                    <HoverCardTrigger onClick={() => copyNftLinkToClipboard(article?.document.nftLink || 'N/A')}>
+                                       <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="p-2 py-1" side="bottom">
+                                       <h4 className="text-xs font-semibold text-status-green select-none">NFT link copied to the clipboard!</h4>
+                                    </HoverCardContent>
+                                 </HoverCard>
+                              </div>
+                           </div>
+                        </div>
                      </div>
-                  </ScrollArea>
-               </div>
-            </Box> */}
+                  </React.Fragment>
+               )}
+               {!article?.document.nftHash && !article?.document.nftLink && (
+                  <React.Fragment>
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start gap-6">
+                        <Input.Root>
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">NFT hash</span>
+                           </Input.Label>
+                           <Input.Input
+                              placeholder="Ex: 0x495f9472767...0045cb7b5e"
+                              value={nftData.nftHash}
+                              onChange={(e) => setNftData({ ...nftData, nftHash: e.target.value })}
+                           />
+                        </Input.Root>
+                        <Input.Root>
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">NFT link</span>
+                           </Input.Label>
+                           <Input.Input
+                              placeholder="Ex: https://opensea.io/assets/ethereum/0x495..."
+                              value={nftData.nftLink}
+                              onChange={(e) => setNftData({ ...nftData, nftLink: e.target.value })}
+                           />
+                        </Input.Root>
+                     </div>
+                     <div className="grid gap-4">
+                        <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
+                           Save
+                        </Button.Button>
+                        <Button.Button variant="outline" className="flex items-center" onClick={() => setDialog({ ...dialog, nftAmount: true })}>
+                           Generate NFT
+                        </Button.Button>
+                     </div>
+                  </React.Fragment>
+               )}
+            </Box>
             <Box className="grid gap-8 h-fit py-6 px-8">
                <div className="grid gap-6">
                   <div className="grid gap-2">
@@ -845,32 +868,34 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                   </React.Fragment>
                )}
             </Box>
-            <Box className="grid gap-4 h-fit py-6 px-8">
-               {article?.document.adminApproval === 0 && (
-                  <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
-               )}
-               <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
+            {article?.document.status !== 'SUBMITTED' && (
+               <Box className="grid gap-4 h-fit py-6 px-8">
+                  {article?.document.adminApproval === 0 && (
+                     <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
+                  )}
+                  <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
 
-               <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
-                  <Check className="w-5 h-5" />
-                  Approve article
-               </Button.Button>
-               <Button.Button
-                  variant="outline"
-                  className="flex items-center"
-                  onClick={() => setDialog({ ...dialog, reasoning: true })}
-                  loading={loading.reject}
-               >
-                  Reject article
-               </Button.Button>
+                  <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
+                     <Check className="w-5 h-5" />
+                     Approve article
+                  </Button.Button>
+                  <Button.Button
+                     variant="outline"
+                     className="flex items-center"
+                     onClick={() => setDialog({ ...dialog, reasoning: true })}
+                     loading={loading.reject}
+                  >
+                     Reject article
+                  </Button.Button>
 
-               {article?.document.status === 'REJECTED' && (
-                  <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
-               )}
-               {article?.document.status === 'APPROVED' && (
-                  <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
-               )}
-            </Box>
+                  {article?.document.status === 'REJECTED' && (
+                     <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
+                  )}
+                  {article?.document.status === 'APPROVED' && (
+                     <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
+                  )}
+               </Box>
+            )}
          </div>
       </React.Fragment>
    )

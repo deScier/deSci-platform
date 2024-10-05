@@ -31,7 +31,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                            <div className="grid md:grid-cols-3 items-center px-0 py-3 rounded-md cursor-grab">
                               <div className="flex items-center gap-4">
                                  <div className="flex gap-0 items-center">
-                                    {is_admin === true ? <></> : <CircleIcon className="w-8" />}
+                                    {is_admin === true ? null : <CircleIcon className="w-8" />}
                                     <p className="text-sm text-blue-gray">{index + 1}º</p>
                                  </div>
                                  <div>
@@ -39,8 +39,8 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                     <div className="block md:hidden">
                                        <p className="text-sm text-secundary_blue-main">{item.author?.title == '' ? '-' : item.author?.title}</p>
                                     </div>
-                                    <div className="block md:hidden">
-                                       <p className="text-sm text-secundary_blue-main">{item.author?.email}</p>
+                                    <div className="block md:hidden relative overflow-hidden">
+                                       <p className="text-sm text-secundary_blue-main truncate">{item.author?.email}</p>
                                        {item.id !== session?.user?.userInfo.id && !read_only && (
                                           <React.Fragment>
                                              <div className="flex items-center gap-2">
@@ -81,8 +81,10 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                               <div className="hidden md:block">
                                  <p className="text-sm text-secundary_blue-main truncate">{item.author?.title == '' ? '-' : item.author?.title}</p>
                               </div>
-                              <div className="hidden md:flex items-center justify-between">
-                                 <p className="text-sm text-secundary_blue-main">{item.author?.email}</p>
+                              <div className="hidden md:flex items-center gap-2 w-full">
+                                 <div className="flex-grow min-w-0">
+                                    <p className="text-sm text-secundary_blue-main truncate">{item.author?.email}</p>
+                                 </div>
                                  {item.id !== session?.user?.userInfo.id && !read_only && (
                                     <React.Fragment>
                                        <div className="flex items-center gap-2">

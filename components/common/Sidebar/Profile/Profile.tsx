@@ -22,6 +22,7 @@ import { ProfileProps } from './Typing'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import CopyIcon from 'public/svgs/common/copy.svg'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
@@ -186,19 +187,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                               <p className="text-sm text-neutral-gray select-none">{formatAddress(session?.user?.userInfo.walletAddress || 'N/A')}</p>
                               <HoverCard closeDelay={1000} open={isCopied}>
                                  <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
-                                    <svg
-                                       xmlns="http://www.w3.org/2000/svg"
-                                       width="14"
-                                       height="14"
-                                       fill="currentColor"
-                                       className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5"
-                                       viewBox="0 0 16 16"
-                                    >
-                                       <path
-                                          fillRule="evenodd"
-                                          d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
-                                       />
-                                    </svg>
+                                    <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
                                  </HoverCardTrigger>
                                  <HoverCardContent className="p-2 py-1" side="bottom">
                                     <h4 className="text-xs font-semibold text-status-green select-none">Wallet address copied to the clipboard!</h4>
