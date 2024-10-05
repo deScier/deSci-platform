@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
          <footer className="bg-[#110838] grid md:grid-cols-4 justify-items-center md:gap-12 w-full h-fit py-14 px-6 md:py-14">
             <div className="grid gap-4 items-center justify-items-center content-center">
                <LogoDeScier className="w-full max-w-[137px] md:max-w-[160px] lg:w-32 2xl:w-40" />
-               <p className="text-sm text-neutral-light_gray max-w-[20ch] text-center">© 2023 Maxi Science LLC. All rights reserved.</p>
+               <p className="text-sm text-neutral-light_gray max-w-[20ch] text-center">© 2023 Maxi Science. All rights reserved.</p>
                <div className="border border-neutral-light_gray rounded-md px-2 py-0.5 mb-8 md:mb-0">
                   <p className="text-xs text-neutral-light_gray text-left md:text-center">Powered by web3</p>
                </div>
