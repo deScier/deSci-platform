@@ -77,7 +77,8 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       setValue,
       trigger,
       control,
-      setError
+      setError,
+      reset
    } = useForm<CreateDocumentProps>({
       resolver: zodResolver(CreateDocumentSchema),
       defaultValues: {
@@ -115,66 +116,133 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
    const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control })
 
+   //    const fetchSingleArticle = async (documentId: string) => {
+   //       await fetch_article(documentId).then((res) => {
+   //          setArticle(res as DocumentGetProps)
+   //          setNftData({
+   //             nftHash: res?.document.nftHash || '',
+   //             nftLink: res?.document.nftLink || '',
+   //             nftAmount: res?.document.nftAmount || 1
+   //          })
+   //          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
+   //          setAccessType(access)
+   //          getApprovals(res?.document.reviewersOnDocuments || [])
+
+   //          setValue('title', res?.document.title || '')
+   //          setValue('abstract', res?.document.abstract || '')
+   //          setValue('field', res?.document.field || '')
+   //          setValue('documentType', res?.document.documentType || '')
+   //          setDocumentType(res?.document.documentType || '')
+   //          setValue('accessType', (res?.document.accessType || 'FREE') as 'PAID' | 'FREE')
+   //          setValue('price', res?.document.price?.toString() || '')
+   //          setValue('journalId', res?.document.id || '')
+   //          setValue('category', res?.document.category || '')
+   //          setValue('cover', {
+   //             lastModified: 0,
+   //             lastModifiedDate: new Date(),
+   //             name: res?.document.cover || '',
+   //             path: res?.document.cover || '',
+   //             preview: res?.document.cover || '',
+   //             size: 0,
+   //             type: ''
+   //          })
+   //          setValue('file', {
+   //             lastModified: 0,
+   //             lastModifiedDate: new Date(),
+   //             name: res?.document.documentVersions?.[0]?.fileName || '',
+   //             path: '',
+   //             preview: '',
+   //             size: 0,
+   //             type: ''
+   //          })
+
+   //          const keywordsArray =
+   //             res?.document.keywords?.split(';').map((keyword) => ({
+   //                id: uniqueId('key'),
+   //                name: keyword.trim()
+   //             })) || []
+   //          setValue('keywords', keywordsArray)
+
+   //          const authorsArray =
+   //             res?.document.authorsOnDocuments?.map((author) => ({
+   //                id: author.id,
+   //                name: author.author?.name || '',
+   //                email: author.author?.email || '',
+   //                title: author.author?.title || '',
+   //                revenuePercent: author.revenuePercent?.toString() || '0',
+   //                walletAddress: author.author?.walletAddress || ''
+   //             })) || []
+   //          setValue('authors', authorsArray)
+
+   //          trigger()
+   //       })
+   //    }
+
    const fetchSingleArticle = async (documentId: string) => {
-      await fetch_article(documentId).then((res) => {
+      try {
+         const res = await fetch_article(documentId)
+
          setArticle(res as DocumentGetProps)
          setNftData({
             nftHash: res?.document.nftHash || '',
             nftLink: res?.document.nftLink || '',
             nftAmount: res?.document.nftAmount || 1
          })
+
          const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access'
          setAccessType(access)
          getApprovals(res?.document.reviewersOnDocuments || [])
 
-         setValue('title', res?.document.title || '')
-         setValue('abstract', res?.document.abstract || '')
-         setValue('field', res?.document.field || '')
-         setValue('documentType', res?.document.documentType || '')
          setDocumentType(res?.document.documentType || '')
-         setValue('accessType', (res?.document.accessType || 'FREE') as 'PAID' | 'FREE')
-         setValue('price', res?.document.price?.toString() || '')
-         setValue('journalId', res?.document.id || '')
-         setValue('category', res?.document.category || '')
-         setValue('cover', {
-            lastModified: 0,
-            lastModifiedDate: new Date(),
-            name: res?.document.cover || '',
-            path: res?.document.cover || '',
-            preview: res?.document.cover || '',
-            size: 0,
-            type: ''
-         })
-         setValue('file', {
-            lastModified: 0,
-            lastModifiedDate: new Date(),
-            name: res?.document.documentVersions?.[0]?.fileName || '',
-            path: '',
-            preview: '',
-            size: 0,
-            type: ''
-         })
 
-         const keywordsArray =
-            res?.document.keywords?.split(';').map((keyword) => ({
-               id: uniqueId('key'),
-               name: keyword.trim()
-            })) || []
-         setValue('keywords', keywordsArray)
-
-         const authorsArray =
-            res?.document.authorsOnDocuments?.map((author) => ({
-               id: author.id,
-               name: author.author?.name || '',
-               email: author.author?.email || '',
-               title: author.author?.title || '',
-               revenuePercent: author.revenuePercent?.toString() || '0',
-               walletAddress: author.author?.walletAddress || ''
-            })) || []
-         setValue('authors', authorsArray)
+         reset({
+            title: res?.document.title || '',
+            abstract: res?.document.abstract || '',
+            field: res?.document.field || '',
+            documentType: res?.document.documentType || '',
+            accessType: (res?.document.accessType || 'FREE') as 'PAID' | 'FREE',
+            price: res?.document.price?.toString() || '',
+            journalId: res?.document.id || '',
+            category: res?.document.category || '',
+            cover: {
+               lastModified: 0,
+               lastModifiedDate: new Date(),
+               name: res?.document.cover || '',
+               path: res?.document.cover || '',
+               preview: res?.document.cover || '',
+               size: 0,
+               type: ''
+            },
+            file: {
+               lastModified: 0,
+               lastModifiedDate: new Date(),
+               name: res?.document.documentVersions?.[0]?.fileName || '',
+               path: '',
+               preview: '',
+               size: 0,
+               type: ''
+            },
+            keywords:
+               res?.document.keywords?.split(';').map((keyword) => ({
+                  id: uniqueId('key'),
+                  name: keyword.trim()
+               })) || [],
+            authors:
+               res?.document.authorsOnDocuments?.map((author) => ({
+                  id: author.id,
+                  name: author.author?.name || '',
+                  email: author.author?.email || '',
+                  title: author.author?.title || '',
+                  revenuePercent: author.revenuePercent?.toString() || '0',
+                  walletAddress: author.author?.walletAddress || ''
+               })) || []
+         })
 
          trigger()
-      })
+      } catch (error) {
+         console.error('Error fetching article:', error)
+         toast.error('Failed to fetch article data')
+      }
    }
 
    const handleApproveDocument = async (approve: boolean) => {
@@ -624,7 +692,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                      {article?.document?.cover ? (
                         <React.Fragment>
                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                           <img src={article?.document.cover} alt="cover" className="w-full h-44 object-cover rounded-md brightness-50" loading="lazy" />
+                           <img src={article?.document.cover} alt="cover" className="w-full h-44 object-cover rounded-md" loading="lazy" />
                         </React.Fragment>
                      ) : (
                         <Skeleton className="w-full h-44 rounded-md" />
