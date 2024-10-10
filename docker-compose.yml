@@ -1,0 +1,15 @@
+services:
+   descier-app:
+      build:
+         context: .
+         dockerfile: Dockerfile
+      image: descier-app-image
+      ports:
+         - '3000:3000'
+      working_dir: /app
+      command: npm start
+      deploy:
+         replicas: 1
+         restart_policy:
+            condition: on-failure
+      pull_policy: never

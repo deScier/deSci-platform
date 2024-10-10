@@ -1,0 +1,81 @@
+name: Build, Push Docker Image, and Deploy to ECS
+
+on:
+   push:
+      branches:
+         - develop
+
+jobs:
+   build-and-deploy:
+      if: github.ref == 'refs/heads/develop'
+      name: CD deScier Front-End (Develop)
+      runs-on: ubuntu-latest
+      timeout-minutes: 6
+
+      steps:
+         - name: Checkout code
+           uses: actions/checkout@v3
+
+         - name: Set up QEMU
+           uses: docker/setup-qemu-action@v2
+
+         - name: Set up Docker Buildx
+           uses: docker/setup-buildx-action@v2
+
+         - name: Configure AWS credentials
+           uses: aws-actions/configure-aws-credentials@v2
+           with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ secrets.AWS_REGION }}
+
+         - name: Log in to Amazon ECR
+           id: login-ecr
+           uses: aws-actions/amazon-ecr-login@v2
+           with:
+              registry-type: private
+
+         - name: Extract ECR repository URI
+           id: ecr
+           run: |
+              echo "uri=$(aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY_DEV }} --region ${{ secrets.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)" >> $GITHUB_ENV
+
+         - name: Get Secrets from AWS Secrets Manager
+           id: get-secrets
+           run: |
+              secret=$(aws secretsmanager get-secret-value --secret-id pm-frontend-dev-env --query SecretString --output text)
+              echo "$secret" > .env
+              echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
+
+         - name: Build, Tag, and Push Docker image
+           id: build-image
+           run: |
+              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest .
+              docker push ${{ env.uri }}:latest
+              echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
+
+         - name: Download current ECS task definition
+           id: download-task-def
+           run: |
+              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
+
+         - name: Update image in ECS task definition
+           id: update-task-def
+           run: |
+              jq --arg image "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $image | del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .requiresAttributes, .compatibilities)' task-definition.json > updated-task-definition.json
+         - name: Register new ECS task definition
+           id: register-task-def
+           run: |
+              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION }} --query 'taskDefinition.taskDefinitionArn' --output text)
+              echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
+
+         - name: Deploy Amazon ECS task definition
+           uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+           with:
+              task-definition: updated-task-definition.json
+              service: ${{ secrets.ECS_SERVICE_NAME_DEV }}
+              cluster: ${{ secrets.ECS_CLUSTER_NAME_DEV }}
+
+         - name: Log out of Amazon ECR
+           run: |
+              docker logout ${{ env.uri }}
