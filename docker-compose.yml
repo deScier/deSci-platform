@@ -13,3 +13,5 @@ services:
          restart_policy:
             condition: on-failure
       pull_policy: never
+      environment:
+         NODE_ENV: production
