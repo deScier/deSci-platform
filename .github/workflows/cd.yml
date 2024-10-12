@@ -40,13 +40,6 @@ jobs:
            run: |
               echo "uri=$(aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY_DEV }} --region ${{ secrets.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)" >> $GITHUB_ENV
 
-         - name: Get Secrets from AWS Secrets Manager
-           id: get-secrets
-           run: |
-              secret=$(aws secretsmanager get-secret-value --secret-id pm-frontend-dev-env --query SecretString --output text)
-              echo "$secret" > .env
-              echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
-
          - name: Build, Tag, and Push Docker image
            id: build-image
            run: |
