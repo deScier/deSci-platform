@@ -40,6 +40,17 @@ jobs:
            run: |
               echo "uri=$(aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY_DEV }} --region ${{ secrets.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)" >> $GITHUB_ENV
 
+         - name: Debug URI
+           run: |
+              echo "URI: ${{ env.uri }}"
+
+         - name: Validate URI
+           run: |
+              if [ -z "${{ env.uri }}" ]; then
+                 echo "Erro: A variável 'uri' está vazia. Verifique as configurações do ECR e os segredos do GitHub."
+                 exit 1
+              fi
+
          - name: Build, Tag, and Push Docker image
            id: build-image
            run: |
