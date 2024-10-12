@@ -10,7 +10,7 @@ RUN echo "$ENV_FILE" > .env
 
 # Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm install
 
 # Copy the rest of the app
 COPY . .
