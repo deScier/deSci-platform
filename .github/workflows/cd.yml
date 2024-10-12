@@ -40,16 +40,12 @@ jobs:
            run: |
               echo "uri=$(aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY_DEV }} --region ${{ secrets.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)" >> $GITHUB_ENV
 
-         - name: Debug URI
+         - name: Get Secrets from AWS Secrets Manager
+           id: get-secrets
            run: |
-              echo "URI: ${{ env.uri }}"
-
-         - name: Validate URI
-           run: |
-              if [ -z "${{ env.uri }}" ]; then
-                 echo "Erro: A variável 'uri' está vazia. Verifique as configurações do ECR e os segredos do GitHub."
-                 exit 1
-              fi
+              secret=$(aws secretsmanager get-secret-value --secret-id desci-app-dev-env --query SecretString --output text)
+              echo "$secret" > .env
+              echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
 
          - name: Build, Tag, and Push Docker image
            id: build-image
