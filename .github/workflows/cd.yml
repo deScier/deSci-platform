@@ -1,4 +1,4 @@
-name: Build, Push Docker Image, and Deploy to ECS
+name: Build, Push Docker Image, and Deploy to ECS (Develop)
 
 on:
    push:
