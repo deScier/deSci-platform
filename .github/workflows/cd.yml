@@ -85,9 +85,15 @@ jobs:
                 echo "Error: ECR URI is empty. Make sure the previous step to extract ECR repository URI was successful."
                 exit 1
               fi
-              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest .
+              # Get the short SHA of the commit
+              SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+              # Build the image
+              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest -t ${{ env.uri }}:$SHORT_SHA .
+              # Push both tags
               docker push ${{ env.uri }}:latest
-              echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
+              docker push ${{ env.uri }}:$SHORT_SHA
+              # Set the output to the tagged image
+              echo "image=${{ env.uri }}:$SHORT_SHA" >> $GITHUB_OUTPUT
 
          - name: Download current ECS task definition
            id: download-task-def
