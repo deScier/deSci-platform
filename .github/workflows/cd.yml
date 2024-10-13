@@ -35,6 +35,11 @@ jobs:
            with:
               registry-type: private
 
+         - name: List ECR repositories
+           run: |
+              echo "Listing all ECR repositories:"
+                aws ecr describe-repositories --region "${{ secrets.AWS_REGION }}" --query 'repositories[*].repositoryName' --output table
+
          - name: Extract ECR repository URI
            id: ecr
            run: |
@@ -72,11 +77,6 @@ jobs:
               echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
               echo "ECR_REPOSITORY_DEV: ${{ secrets.ECR_REPOSITORY_DEV }}"
               echo "uri: ${{ env.uri }}"
-
-         - name: List ECR repositories
-           run: |
-              echo "Listing all ECR repositories:"
-              aws ecr describe-repositories --region "${{ secrets.AWS_REGION }}" --query 'repositories[*].repositoryName' --output table
 
          - name: Build, Tag, and Push Docker image
            id: build-image
