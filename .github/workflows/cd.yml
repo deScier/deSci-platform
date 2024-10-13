@@ -43,7 +43,7 @@ jobs:
          - name: Get Secrets from AWS Secrets Manager
            id: get-secrets
            run: |
-              secret=$(aws secretsmanager get-secret-value --secret-id desci-app-dev-env --query SecretString --output text)
+              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
               echo "$secret" > .env
               echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
 
