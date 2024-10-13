@@ -39,6 +39,11 @@ jobs:
            id: ecr
            run: |
               echo "uri=$(aws ecr describe-repositories --repository-names ${{ secrets.ECR_REPOSITORY_DEV }} --region ${{ secrets.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)" >> $GITHUB_ENV
+              if [ -z "${{ env.uri }}" ]; then
+                echo "Error: Failed to extract ECR repository URI"
+                exit 1
+              fi
+              echo "Extracted ECR URI: ${{ env.uri }}"
 
          - name: Get Secrets from AWS Secrets Manager
            id: get-secrets
@@ -52,9 +57,22 @@ jobs:
          - name: Debug .env file
            run: cat .env
 
+         - name: Debug environment variables
+           run: |
+              echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
+              echo "ECR_REPOSITORY_DEV: ${{ secrets.ECR_REPOSITORY_DEV }}"
+              echo "uri: ${{ env.uri }}"
+
+         - name: List ECR repositories
+           run: aws ecr describe-repositories --region ${{ secrets.AWS_REGION }}
+
          - name: Build, Tag, and Push Docker image
            id: build-image
            run: |
+              if [ -z "${{ env.uri }}" ]; then
+                echo "Error: ECR URI is empty. Make sure the previous step to extract ECR repository URI was successful."
+                exit 1
+              fi
               docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest .
               docker push ${{ env.uri }}:latest
               echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
