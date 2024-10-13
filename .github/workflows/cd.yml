@@ -44,8 +44,13 @@ jobs:
            id: get-secrets
            run: |
               secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
-              echo "$secret" > .env
-              echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
+              echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+              echo "ENV_FILE<<EOF" >> $GITHUB_ENV
+              cat .env >> $GITHUB_ENV
+              echo "EOF" >> $GITHUB_ENV
+
+         - name: Debug .env file
+           run: cat .env
 
          - name: Build, Tag, and Push Docker image
            id: build-image
