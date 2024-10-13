@@ -43,22 +43,33 @@ jobs:
          - name: Extract ECR repository URI
            id: ecr
            run: |
-              echo "Attempting to describe ECR repository: ${{ secrets.ECR_REPOSITORY_DEV }}"
+              echo "Attempting to extract ECR repository URI from: ${{ secrets.ECR_REPOSITORY_DEV }}"
               if [ -z "${{ secrets.ECR_REPOSITORY_DEV }}" ]; then
                 echo "Error: ECR_REPOSITORY_DEV secret is empty"
                 exit 1
               fi
-              uri=$(aws ecr describe-repositories --repository-names "${{ secrets.ECR_REPOSITORY_DEV }}" --region "${{ secrets.AWS_REGION }}" --query 'repositories[0].repositoryUri' --output text)
-              if [ $? -ne 0 ]; then
-                echo "Error: Failed to describe ECR repository"
-                exit 1
-              fi
+
+              # Extrair o URI do repositório (removendo a tag e o nome da imagem)
+              uri=$(echo "${{ secrets.ECR_REPOSITORY_DEV }}" | sed 's/\(.*\)\/.*:.*/\1/')
+
               if [ -z "$uri" ]; then
-                echo "Error: ECR repository URI is empty"
+                echo "Error: Failed to extract ECR repository URI"
                 exit 1
               fi
+
               echo "uri=$uri" >> $GITHUB_ENV
               echo "Extracted ECR URI: $uri"
+
+              # Verificar se o repositório existe
+              aws ecr describe-repositories --repository-names $(basename $uri) --region "${{ secrets.AWS_REGION }}" > /dev/null 2>&1
+              if [ $? -ne 0 ]; then
+                echo "Error: ECR repository does not exist or cannot be accessed"
+                exit 1
+              fi
+
+              echo "Full ECR_REPOSITORY_DEV value: ${{ secrets.ECR_REPOSITORY_DEV }}"
+              echo "Extracted repository name: $(basename $uri)"
+              echo "AWS Region: ${{ secrets.AWS_REGION }}"
 
          - name: Get Secrets from AWS Secrets Manager
            id: get-secrets
