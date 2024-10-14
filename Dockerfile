@@ -2,24 +2,29 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Accept the build argument for the .env file content
-ARG ENV_FILE
-
-# Write the .env content into the .env file in the container
-RUN echo "$ENV_FILE" > .env
-
-# Copy package.json and install dependencies
+# Copiar package.json e package-lock.json
 COPY package*.json ./
+
+# Instalar dependências
 RUN npm install
 
-# Copy the rest of the app
+# Copiar o restante do código da aplicação
 COPY . .
 
-# Build the app
+# Construir a aplicação (se necessário)
 RUN npm run build
 
-# Expose the port
+# Expor a porta da aplicação
 EXPOSE 3000
 
-# Use a non-root user for better security
+# Copiar o script de entrypoint
+COPY entrypoint.sh /app/entrypoint.sh
+
+# Dar permissão executável ao script de entrypoint
+RUN chmod +x /app/entrypoint.sh
+
+# Usar um usuário não root para maior segurança
 USER node
+
+# Definir o entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
