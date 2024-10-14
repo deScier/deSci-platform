@@ -5,9 +5,9 @@ services:
          dockerfile: Dockerfile
       image: descier-app-image
       ports:
-         - '3000:3000'
+         - '80:80'
       working_dir: /app
-      command: npm start
+      command: npm run start -p 80
       deploy:
          replicas: 1
          restart_policy:

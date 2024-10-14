@@ -2,4 +2,4 @@
 
 cd /app
 
-npm run start
+npm run start -p 80
