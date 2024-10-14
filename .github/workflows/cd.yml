@@ -1,4 +1,4 @@
-name: Build, Push Docker Image, and Deploy to ECS
+name: Build and Push Docker Image to ECR
 
 on:
    push:
@@ -6,11 +6,11 @@ on:
          - develop
 
 jobs:
-   build-and-deploy:
+   build-and-push:
       if: github.ref == 'refs/heads/develop'
-      name: CD deScier Front-End (Develop)
+      name: Build and Push Docker Image to ECR
       runs-on: ubuntu-latest
-      timeout-minutes: 6
+      timeout-minutes: 15
 
       steps:
          - name: Checkout code
@@ -32,13 +32,6 @@ jobs:
          - name: Log in to Amazon ECR
            id: login-ecr
            uses: aws-actions/amazon-ecr-login@v2
-           with:
-              registry-type: private
-
-         - name: List ECR repositories
-           run: |
-              echo "Listing all ECR repositories:"
-                aws ecr describe-repositories --region "${{ secrets.AWS_REGION }}" --query 'repositories[*].repositoryName' --output table
 
          - name: Extract ECR repository URI
            id: ecr
@@ -65,18 +58,9 @@ jobs:
            run: |
               secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
               echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
-              echo "ENV_FILE<<EOF" >> $GITHUB_ENV
-              cat .env >> $GITHUB_ENV
-              echo "EOF" >> $GITHUB_ENV
 
          - name: Debug .env file
            run: cat .env
-
-         - name: Debug environment variables
-           run: |
-              echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
-              echo "ECR_REPOSITORY_DEV: ${{ secrets.ECR_REPOSITORY_DEV }}"
-              echo "uri: ${{ env.uri }}"
 
          - name: Build, Tag, and Push Docker image
            id: build-image
@@ -85,37 +69,10 @@ jobs:
                 echo "Error: ECR URI is empty. Make sure the previous step to extract ECR repository URI was successful."
                 exit 1
               fi
-              # Get the short SHA of the commit
-              SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-              # Build the image
-              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest -t ${{ env.uri }}:$SHORT_SHA .
-              # Push both tags
+              # Build the Docker image
+              docker build --build-arg ENV_FILE=.env -t ${{ env.uri }}:latest .
+              # Push the Docker image to ECR
               docker push ${{ env.uri }}:latest
-              docker push ${{ env.uri }}:$SHORT_SHA
-              # Set the output to the tagged image
-              echo "image=${{ env.uri }}:$SHORT_SHA" >> $GITHUB_OUTPUT
-
-         - name: Download current ECS task definition
-           id: download-task-def
-           run: |
-              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
-
-         - name: Update image in ECS task definition
-           id: update-task-def
-           run: |
-              jq --arg image "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $image | del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .requiresAttributes, .compatibilities)' task-definition.json > updated-task-definition.json
-         - name: Register new ECS task definition
-           id: register-task-def
-           run: |
-              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION }} --query 'taskDefinition.taskDefinitionArn' --output text)
-              echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
-
-         - name: Deploy Amazon ECS task definition
-           uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-           with:
-              task-definition: updated-task-definition.json
-              service: ${{ secrets.ECS_SERVICE_NAME_DEV }}
-              cluster: ${{ secrets.ECS_CLUSTER_NAME_DEV }}
 
          - name: Log out of Amazon ECR
            run: |
