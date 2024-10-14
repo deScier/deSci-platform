@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Escrever o conteúdo da variável de ambiente ENV_FILE em um arquivo .env
-echo "$ENV_FILE" > .env
+cd /app
 
-# Iniciar a aplicação
-npm start
+npm run start
