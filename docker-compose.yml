@@ -3,16 +3,29 @@ services:
       build:
          context: .
          dockerfile: Dockerfile
-      image: descier-app-image
+      image: descier-app-image:${APP_VERSION:-latest}
       ports:
-         - '3000:3000'
+         - '${PORT:-3000}:3000'
       working_dir: /app
       command: npm start
       deploy:
-         replicas: 1
+         replicas: ${REPLICAS:-1}
          restart_policy:
             condition: on-failure
       pull_policy: never
       environment:
-         NODE_ENV: production
-         PORT: 3000
+         NODE_ENV: ${NODE_ENV:-production}
+         PORT: ${PORT:-3000}
+      healthcheck:
+         test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+         interval: 30s
+         timeout: 10s
+         retries: 3
+      volumes:
+         - ./logs:/app/logs
+      networks:
+         - descier-network
+
+networks:
+   descier-network:
+      driver: bridge

@@ -69,8 +69,8 @@ jobs:
                 echo "Error: ECR URI is empty. Make sure the previous step to extract ECR repository URI was successful."
                 exit 1
               fi
-              # Build the Docker image
-              docker build --build-arg ENV_FILE=.env -t ${{ env.uri }}:latest .
+              # Build the Docker image with the content of .env as ENV_FILE build argument
+              docker build --build-arg ENV_FILE="$(cat .env)" -t ${{ env.uri }}:latest .
               # Push the Docker image to ECR
               docker push ${{ env.uri }}:latest
 
