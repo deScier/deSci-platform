@@ -54,10 +54,12 @@ jobs:
               echo "Extracted ECR URI: $uri"
 
          - name: Get Secrets from AWS Secrets Manager
-           id: get-secrets
            run: |
-              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
-              echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+              echo "Fetching secrets from AWS Secrets Manager"
+                SECRET_NAME="${{ secrets.AWS_SECRET_MANAGER_SECRET_NAME }}"
+                SECRETS_JSON=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region ${{ secrets.AWS_REGION }} --query SecretString --output text)
+                echo "$SECRETS_JSON" > .env
+                echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
 
          - name: Debug .env file
            run: cat .env
@@ -65,14 +67,25 @@ jobs:
          - name: Build, Tag, and Push Docker image
            id: build-image
            run: |
-              if [ -z "${{ env.uri }}" ]; then
-                echo "Error: ECR URI is empty. Make sure the previous step to extract ECR repository URI was successful."
-                exit 1
-              fi
-              # Build the Docker image with the content of .env as ENV_FILE build argument
-              docker build --build-arg ENV_FILE="$(cat .env)" -t ${{ env.uri }}:latest .
-              # Push the Docker image to ECR
+              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest .
               docker push ${{ env.uri }}:latest
+              echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
+
+         - name: Download current ECS task definition
+           id: download-task-def
+           run: |
+              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION_DEV }} --query 'taskDefinition' > task-definition.json
+
+         - name: Update image in ECS task definition
+           id: update-task-def
+           run: |
+              jq --arg image "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $image | del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .requiresAttributes, .compatibilities)' task-definition.json > updated-task-definition.json
+
+         - name: Register new ECS task definition
+           id: register-task-def
+           run: |
+              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION_DEV }} --query 'taskDefinition.taskDefinitionArn' --output text)
+              echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
 
          - name: Log out of Amazon ECR
            run: |
