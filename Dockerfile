@@ -15,9 +15,6 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
-# Set execution permission for entrypoint.sh
-RUN chmod +x entrypoint.sh
-
 # Build the app
 RUN npm run build
 
@@ -30,5 +27,8 @@ USER node
 # Expose the port
 EXPOSE 3000
 
-# Set the entrypoint
-ENTRYPOINT ["/bin/sh", "entrypoint.sh"]
+# List directories and check for .env file
+RUN ls -la /app && echo "Checking for .env file:" && ls -la /app/.env || echo ".env file not found"
+
+# Run the app
+CMD ["npm", "start"]
