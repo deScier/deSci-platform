@@ -27,8 +27,5 @@ USER node
 # Expose the port
 EXPOSE 3000
 
-# List directories and check for .env file
-RUN ls -la /app && echo "Checking for .env file:" && ls -la /app/.env || echo ".env file not found"
-
 # Run the app
 CMD ["npm", "start"]
