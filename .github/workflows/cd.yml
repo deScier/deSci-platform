@@ -54,12 +54,10 @@ jobs:
               echo "Extracted ECR URI: $uri"
 
          - name: Get Secrets from AWS Secrets Manager
+           id: get-secrets
            run: |
-              echo "Fetching secrets from AWS Secrets Manager"
-                SECRET_NAME="${{ secrets.AWS_SECRET_MANAGER_SECRET_NAME }}"
-                SECRETS_JSON=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region ${{ secrets.AWS_REGION }} --query SecretString --output text)
-                echo "$SECRETS_JSON" > .env
-                echo "ENV_FILE=$(cat .env)" >> $GITHUB_ENV
+              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
+              echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
 
          - name: Debug .env file
            run: cat .env
