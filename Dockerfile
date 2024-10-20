@@ -15,8 +15,17 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
+# Set execution permission for entrypoint.sh
+RUN chmod +x entrypoint.sh
+
 # Build the app
 RUN npm run build
+
+# Set ownership of app directory
+RUN chown -R node:node /app
+
+# Switch to the node user
+USER node
 
 # Expose the port
 EXPOSE 3000
