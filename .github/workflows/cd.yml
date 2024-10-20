@@ -68,8 +68,8 @@ jobs:
          - name: Build, Tag, and Push Docker image
            id: build-image
            run: |
-              echo "Building Docker image with ENV_FILE: ${{ env.ENV_FILE }}"
-              docker build --build-arg ENV_FILE="${{ env.ENV_FILE }}" -t ${{ env.uri }}:latest .
+              echo "Building Docker image"
+              docker build -t ${{ env.uri }}:latest .
               echo "Pushing Docker image to ${{ env.uri }}:latest"
               docker push ${{ env.uri }}:latest
               echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
