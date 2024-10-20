@@ -2,11 +2,11 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy .env file into the image
-COPY .env .env
+# Accept the build argument for the .env file content
+ARG ENV_FILE
 
-# Print the .env file content
-RUN echo "Conteúdo do .env no build:" && cat .env
+# Write the .env content into the .env file in the container (without showing the content in the logs)
+RUN sh -c 'echo "$ENV_FILE" > .env'
 
 # Copy package.json and install dependencies
 COPY package*.json ./
