@@ -157,9 +157,9 @@ export function HomeComponent({ journals }: HomeProps) {
                <IllustrationHero className="w-[90%] sm:w-3/4 h-auto mt-8 sm:mt-12 max-w-[372px] md:max-w-[454px] lg:hidden" />
                <ShapeMobile className="absolute z-[-1] w-[250vw] sm:w-[200vw] md:w-[164vw] lg:hidden" />
             </div>
-            {/* <div className="space-y-6 w-screen lg:w-auto">
+            <div className="space-y-6 w-screen lg:w-auto">
                <OurJournalsDynamic journals={journals} />
-            </div> */}
+            </div>
             <div className="lg:px-20 2xl:px-52 px-4 sm:px-6">
                <div className="relative h-fit">
                   <div className="border-neutral-stroke_light rounded-3xl shadow-search backdrop-blur-md bg-white-home px-8 py-6 grid gap-4 relative z-10">
