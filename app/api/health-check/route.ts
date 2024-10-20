@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
       version: 'v1.3',
       status: 'OK',
-      message: 'Health check successful.'
+      message: 'Health check successful'
    }
 
    return NextResponse.json(healthCheck, { status: 200 })
