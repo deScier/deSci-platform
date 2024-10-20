@@ -84,16 +84,12 @@ jobs:
          - name: Update image in ECS task definition
            id: update-task-def
            run: |
-              # Remover o digest da imagem antiga
               jq '.containerDefinitions[].image |= split("@")[0]' task-definition.json > task-definition-no-digest.json
 
-              # Atualizar a imagem para a nova
               jq --arg image "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $image' task-definition-no-digest.json > updated-task-definition.json
 
-              # Remover campos desnecessários
               jq 'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .requiresAttributes, .compatibilities)' updated-task-definition.json > final-task-definition.json
 
-              # Substituir o arquivo de definição da task
               mv final-task-definition.json updated-task-definition.json
 
          - name: Register new ECS task definition
@@ -101,6 +97,13 @@ jobs:
            run: |
               TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION }} --query 'taskDefinition.taskDefinitionArn' --output text)
               echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
+
+         - name: Deploy Amazon ECS task definition
+           uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+           with:
+              task-definition: updated-task-definition.json
+              service: ${{ secrets.ECS_SERVICE_NAME_DEV }}
+              cluster: ${{ secrets.ECS_CLUSTER_NAME_DEV }}
 
          - name: Log out of Amazon ECR
            run: |
