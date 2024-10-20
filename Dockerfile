@@ -5,6 +5,9 @@ WORKDIR /app
 # Copy .env file into the image
 COPY .env .env
 
+# Print the .env file content
+RUN echo "Conteúdo do .env no build:" && cat .env
+
 # Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
