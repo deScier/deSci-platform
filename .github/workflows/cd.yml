@@ -27,7 +27,7 @@ jobs:
            with:
               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws-region: ${{ secrets.AWS_REGION_DEV }}
+              aws-region: ${{ secrets.AWS_REGION }}
 
          - name: Log in to Amazon ECR
            id: login-ecr
@@ -79,7 +79,7 @@ jobs:
          - name: Download current ECS task definition
            id: download-task-def
            run: |
-              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION_DEV }} --query 'taskDefinition' > task-definition.json
+              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
 
          - name: Update image in ECS task definition
            id: update-task-def
@@ -89,7 +89,7 @@ jobs:
          - name: Register new ECS task definition
            id: register-task-def
            run: |
-              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION_DEV }} --query 'taskDefinition.taskDefinitionArn' --output text)
+              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION }} --query 'taskDefinition.taskDefinitionArn' --output text)
               echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
 
          - name: Log out of Amazon ECR
