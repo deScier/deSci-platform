@@ -8,14 +8,14 @@ import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useDebounce from '@/hooks/useDebounce'
+import { articles_types_filter } from '@/mock/articles_types'
 import { reviewer_filter_status } from '@/mock/dropdow_filter_options'
 import { useArticleToReview } from '@/services/reviewer/fetchDocuments.service'
 
 import ReviewerItem from '@/components/modules/AsReviewer/ReviewerItem/ReviewerItem'
-import { Separator } from '@/components/ui/separator'
-import { articles_types_filter } from '@/mock/articles_types'
 import React from 'react'
 
 export default function AsReviewerPage() {
@@ -63,7 +63,7 @@ export default function AsReviewerPage() {
 
       let filteredArticles = [...articles]
 
-      if (documentType) {
+      if (documentType && documentType !== 'all') {
          filteredArticles = filteredArticles.filter((article) => article.document_type?.toLowerCase() == documentType?.toLowerCase())
       }
 

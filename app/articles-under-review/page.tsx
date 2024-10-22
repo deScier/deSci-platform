@@ -19,63 +19,30 @@ import useDebounce from '@/hooks/useDebounce'
 import React from 'react'
 
 export default function ArticlesUnderReviewPage() {
-   /**
-    * @notice Fetch the articles and their loading state.
-    * @dev Using a custom hook "useArticles" to fetch articles.
-    */
    const { data: session } = useSession()
    const { articles, loading } = useArticles()
 
-   /** @dev Number of articles displayed per page. */
    const per_page = 8
-
-   /** @notice Current page number state.*/
    const [page, setPage] = React.useState(1)
-
-   /** @notice State for the selected document type filter. */
    const [documentType, setDocumentType] = React.useState<string | null>(null)
-
-   /** @notice State for the search term. */
    const [searchTerm, setSearchTerm] = React.useState('')
-
-   /** @notice Debounces the search term. */
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
-   /** @notice State for the selected status filter. */
-   const [status, setStatus] = React.useState<string | null>('pending')
-
-   /** @notice Holds the list of filtered articles to be displayed. */
+   const [status, setStatus] = React.useState<string | null>(null)
    const [results, setResults] = React.useState<ArticleUnderReviewProps[]>([])
-
-   /** @notice Holds the total number of pages based on the number of results and articles per page. */
-   const [totalPages, setTotalPages] = React.useState(Math.ceil(results.length / per_page))
+   const [totalPages, setTotalPages] = React.useState(0)
 
    const redirectToArticle = (authors: AuthorsOnDocuments[], mainAuthorId: string, articleId: string) => {
       const isCoAuthor = authors.some((item) => item.author?.userId === session?.user?.userInfo.id && item.author?.userId !== mainAuthorId)
-
-      if (isCoAuthor) {
-         return home_routes.articles.in_review + '/' + 'only-view' + '/' + articleId
-      }
-
-      return home_routes.articles.in_review + '/' + articleId
+      return isCoAuthor ? `${home_routes.articles.in_review}/only-view/${articleId}` : `${home_routes.articles.in_review}/${articleId}`
    }
 
-   /**
-    * @notice Updates the results state whenever articles data changes.
-    * @dev This effect listens for changes in the articles data and updates the results accordingly.
-    */
    React.useEffect(() => {
-      setResults(articles || [])
+      if (articles) {
+         setResults(articles)
+         setTotalPages(Math.ceil(articles.length / per_page))
+      }
    }, [articles])
 
-   /**
-    * @notice Filters articles based on selected document type, status, and title search.
-    * @dev This effect listens for changes in the articles, documentType, status, and debouncedSearchTerm states
-    * and updates the results with the filtered list of articles. It filters articles based on the following criteria:
-    * - Document Type: If a document type is selected, only articles with a matching document type will be displayed.
-    * - Status: If a status is selected, only articles with a matching status will be displayed.
-    * - Title Search: If a search term is provided, only articles with titles containing the search term (case-insensitive) will be displayed.
-    */
    React.useEffect(() => {
       if (!articles) return
 
@@ -86,7 +53,7 @@ export default function ArticlesUnderReviewPage() {
       }
 
       if (status) {
-         filteredArticles = filteredArticles.filter((article) => article.status?.toLocaleLowerCase() == status?.toLowerCase())
+         filteredArticles = filteredArticles.filter((article) => article.status?.toLowerCase() === status.toLowerCase())
       }
 
       if (debouncedSearchTerm) {
@@ -94,17 +61,10 @@ export default function ArticlesUnderReviewPage() {
       }
 
       setResults(filteredArticles)
+      setTotalPages(Math.ceil(filteredArticles.length / per_page))
    }, [articles, documentType, status, debouncedSearchTerm])
 
-   /**
-    * @notice Recalculates the total number of pages whenever the list of results changes.
-    * @dev This effect listens for changes in the results and per_page states and recalculates the total pages accordingly.
-    */
-   React.useEffect(() => {
-      setTotalPages(Math.ceil(results.length / per_page))
-   }, [results, per_page])
-
-   const withoutFilters = !documentType && status === 'pending' && debouncedSearchTerm === ''
+   const withoutFilters = !documentType && !status && debouncedSearchTerm === ''
 
    return (
       <React.Fragment>
@@ -117,7 +77,7 @@ export default function ArticlesUnderReviewPage() {
                   <Input.Search value={searchTerm} placeholder="Find articles with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
                <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  <Select value={documentType || 'all'} onValueChange={(value) => setDocumentType(value)}>
+                  <Select value={documentType || 'all'} onValueChange={(value) => setDocumentType(value === 'all' ? null : value)}>
                      <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
                         <SelectValue asChild>
                            <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || 'All articles'}</p>
@@ -137,7 +97,6 @@ export default function ArticlesUnderReviewPage() {
                                     <SelectItem
                                        value={item.value as string}
                                        className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
-                                       onMouseUp={() => setDocumentType(item.value)}
                                     >
                                        {item.label}
                                     </SelectItem>
@@ -147,13 +106,14 @@ export default function ArticlesUnderReviewPage() {
                         </React.Fragment>
                      </SelectContent>
                   </Select>
-                  <Select value={status || undefined} onValueChange={(value) => setStatus(value)}>
+                  <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? null : value)}>
                      <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
-                        <SelectValue asChild>
-                           <p>Status: {filter_status.find((item) => item.value === status)?.label || undefined}</p>
-                        </SelectValue>
+                        <SelectValue placeholder="All statuses" />
                      </SelectTrigger>
                      <SelectContent>
+                        <SelectItem value="all" className="text-primary-main font-semibold">
+                           All status
+                        </SelectItem>
                         {filter_status.map((item) => (
                            <SelectItem key={item.value} value={item.value} className="text-primary-main font-semibold">
                               {item.label}
@@ -166,7 +126,7 @@ export default function ArticlesUnderReviewPage() {
                         className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"
                         onClick={() => {
                            setDocumentType(null)
-                           setStatus('pending')
+                           setStatus(null)
                            setSearchTerm('')
                         }}
                      >
