@@ -126,17 +126,27 @@ export default function NewJournalPage() {
    const [targetUrl, setTargetUrl] = React.useState('')
 
    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.keyCode === 13) {
-         if (keywords_temp && keywords_temp.trim() !== '') {
-            e.preventDefault()
-            append_keyword({ id: uniqueId('key'), name: keywords_temp as string })
-            setKeywordsTemp('')
-         } else {
-            setError('keywords', {
-               type: 'manual',
-               message: 'Keyword is required.'
-            })
-         }
+      if (e.key === 'Enter' || e.key === ',') {
+         e.preventDefault()
+         addKeywords()
+      }
+   }
+
+   const addKeywords = () => {
+      if (keywords_temp && keywords_temp.trim() !== '') {
+         const newKeywords = keywords_temp
+            .split(',')
+            .map((keyword) => keyword.trim())
+            .filter((keyword) => keyword !== '')
+         newKeywords.forEach((keyword) => {
+            append_keyword({ id: uniqueId('key'), name: keyword })
+         })
+         setKeywordsTemp('')
+      } else {
+         setError('keywords', {
+            type: 'manual',
+            message: 'Keyword is required.'
+         })
       }
    }
 
@@ -273,9 +283,9 @@ export default function NewJournalPage() {
                            Add keywords
                         </Input.Label>
                         <Input.Input
-                           placeholder="Type a keyword"
+                           placeholder="Type keywords (separate with commas)"
                            value={keywords_temp}
-                           onKeyDown={(e) => handleKeyDown(e)}
+                           onKeyDown={handleKeyDown}
                            onInput={(e) => setKeywordsTemp(e.currentTarget.value)}
                            end
                            icon={
@@ -284,13 +294,10 @@ export default function NewJournalPage() {
                                     type="button"
                                     variant="outline"
                                     className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
-                                    onClick={() => {
-                                       append_keyword({ id: uniqueId('key'), name: keywords_temp as string })
-                                       setKeywordsTemp('')
-                                    }}
+                                    onClick={addKeywords}
                                  >
                                     <PlusCircle className="w-3 fill-neutral-light_gray" />
-                                    <span className="font-semibold text-xs text-neutral-light_gray">Add keyword</span>
+                                    <span className="font-semibold text-xs text-neutral-light_gray">Add keyword(s)</span>
                                  </Button.Button>
                               </React.Fragment>
                            }

@@ -357,6 +357,26 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
       setDialog({ ...dialog, warning_on_change_page: false })
    }
 
+   const addKeywords = () => {
+      if (keywords_temp && keywords_temp.trim() !== '') {
+         const newKeywords = keywords_temp
+            .split(',')
+            .map((keyword) => keyword.trim())
+            .filter((keyword) => keyword !== '')
+         newKeywords.forEach((keyword) => {
+            if (keywords.length < 5) {
+               append({ id: uniqueId('key'), name: keyword })
+            }
+         })
+         setKeywordsTemp('')
+      } else {
+         setError('keywords', {
+            type: 'manual',
+            message: 'Keyword is required.'
+         })
+      }
+   }
+
    return (
       <React.Fragment>
          <Title.Root>
@@ -395,9 +415,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                            Add keywords
                         </Input.Label>
                         <Input.Input
-                           placeholder="Type a keyword"
+                           placeholder="Type keywords (separate with commas)"
                            value={keywords_temp}
-                           onKeyDown={(e) => handleKeyDown(e)}
+                           onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ',') {
+                                 e.preventDefault()
+                                 addKeywords()
+                              }
+                           }}
                            onInput={(e) => setKeywordsTemp(e.currentTarget.value)}
                            end
                            icon={
@@ -406,13 +431,10 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                                     type="button"
                                     variant="outline"
                                     className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
-                                    onClick={() => {
-                                       append({ id: uniqueId('key'), name: keywords_temp as string })
-                                       setKeywordsTemp('')
-                                    }}
+                                    onClick={addKeywords}
                                  >
                                     <PlusCircle className="w-3 fill-neutral-light_gray" />
-                                    <span className="font-semibold text-xs text-neutral-light_gray">Add keyword</span>
+                                    <span className="font-semibold text-xs text-neutral-light_gray">Add keyword(s)</span>
                                  </Button.Button>
                               </React.Fragment>
                            }
