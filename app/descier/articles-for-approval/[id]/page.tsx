@@ -9,10 +9,12 @@ import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer'
 import { File } from '@/components/common/File/File'
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
 import { cn } from '@/lib/utils'
@@ -43,8 +45,6 @@ import Box from '@/components/common/Box/Box'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Dropzone from '@/components/common/Dropzone/Dropzone'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import CopyIcon from 'public/svgs/common/copy.svg'
 import React from 'react'
 import slug from 'slug'
@@ -60,7 +60,12 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false, nftAmount: false })
-   const [loading, setLoading] = React.useState({ approve: false, reject: false, generateNFT: false })
+   const [loading, setLoading] = React.useState({
+      approve: false,
+      reject: false,
+      generateNFT: false,
+      update: false
+   })
    const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '', nftAmount: 1 })
    const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false)
    const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false)
@@ -287,6 +292,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
       fetchSingleArticle(params.id)
       toast.success('File uploaded successfully!')
+      setFile(undefined)
    }
 
    const handleDownloadDocument = async (fileId: string, filename: string) => {
@@ -391,56 +397,69 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    const { isCopied: isHoiCopied, copyToClipboard: copyHoiToClipboard } = useCopyToClipboard()
    const { isCopied: isNftLinkCopied, copyToClipboard: copyNftLinkToClipboard } = useCopyToClipboard()
 
+   const handleUpdateDocument = async () => {
+      try {
+         setLoading((prev) => ({ ...prev, update: true }))
+
+         const updateResponse = await updateDocumentService({
+            documentId: article?.document.id!,
+            document: {
+               title: watch('title'),
+               abstract: watch('abstract'),
+               abstractChart: watch('abstractChart'),
+               keywords: watch('keywords').map((k) => k.name),
+               field: watch('field'),
+               documentType: watch('documentType'),
+               accessType: watch('accessType'),
+               category: watch('category'),
+               price: Number(watch('price')) || 0
+            }
+         })
+
+         if (!updateResponse.success) {
+            toast.error(updateResponse.message)
+            return
+         }
+
+         if (file) {
+            const uploadFileResponse = await uploadDocumentFileService({
+               documentId: article?.document.id!,
+               fileLocalUrl: file.preview,
+               filename: file.name,
+               mimetype: file.type
+            })
+
+            if (!uploadFileResponse) {
+               toast.error('Error in upload file.')
+               return
+            }
+         }
+
+         if (watch('cover')?.preview && watch('cover')?.preview !== article?.document.cover) {
+            const uploadCoverSuccess = await uploadDocumentFileService({
+               documentId: article?.document.id!,
+               fileLocalUrl: watch('cover')?.preview!,
+               filename: watch('cover')?.name!,
+               mimetype: watch('cover')?.type!
+            })
+
+            if (!uploadCoverSuccess) {
+               toast.warning('There was an error uploading your cover file. But you can upload later.')
+            }
+         }
+
+         toast.success('Document updated successfully!')
+         fetchSingleArticle(params.id)
+      } catch (error) {
+         console.error('Error updating document:', error)
+         toast.error('Failed to update document')
+      } finally {
+         setLoading((prev) => ({ ...prev, update: false }))
+      }
+   }
+
    return (
       <React.Fragment>
-         <Dialog.Root open={dialog.reasoning || dialog.nftAmount}>
-            <Dialog.Content className="py-14 px-16 max-w-[600px]">
-               {dialog.reasoning && (
-                  <Reasoning
-                     message={''}
-                     documentAuthor={article?.document.user?.name!}
-                     onClose={() => setDialog({ ...dialog, reasoning: false })}
-                     onConfirm={(value) => {
-                        setDialog({ ...dialog, reasoning: false })
-                        handleApproveDocument(false)
-                     }}
-                  />
-               )}
-               {dialog.nftAmount && (
-                  <React.Fragment>
-                     <X
-                        className="w-8 h-8 absolute top-4 right-4 cursor-pointer hover:text-status-error transition-all duration-500 ease-out hover:scale-110 hover:rotate-180 transform"
-                        onClick={() => setDialog({ ...dialog, nftAmount: false })}
-                     />
-                     <div className="grid gap-6">
-                        <div className="grid gap-2">
-                           <h3 className="text-xl font-semibold">Generate NFT Copies</h3>
-                           <p className="text-sm">
-                              Specify the number of NFT copies you&apos;d like to create for this document. Each copy represents a unique digital asset.
-                           </p>
-                           <p className="text-sm text-gray-600">Tip: Consider the rarity and potential value when deciding on the number of copies.</p>
-                        </div>
-                        <Input.Root>
-                           <Input.Label className="flex gap-2 items-center">
-                              <span className="text-sm font-semibold">Quantidade de cópias</span>
-                           </Input.Label>
-                           <Input.Input
-                              placeholder="Ex: 10"
-                              value={nftData.nftAmount}
-                              type="number"
-                              onChange={(e) => {
-                                 setNftData({ ...nftData, nftAmount: Number(e.target.value) })
-                              }}
-                           />
-                        </Input.Root>
-                        <Button.Button variant="primary" className="flex items-center" onClick={() => handleGenerateNFT()} loading={loading.generateNFT}>
-                           Generate NFT
-                        </Button.Button>
-                     </div>
-                  </React.Fragment>
-               )}
-            </Dialog.Content>
-         </Dialog.Root>
          <div className="grid gap-8">
             <div className="flex items-center gap-4">
                <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
@@ -671,7 +690,13 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                         setFile(file as StoredFile)
                      }}
                   />
-                  <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateArticleFile} loading={uploadFileLoading}>
+                  <Button.Button
+                     variant="primary"
+                     className="flex items-center"
+                     onClick={() => handleUpdateArticleFile()}
+                     loading={uploadFileLoading}
+                     disabled={!file}
+                  >
                      Update file
                   </Button.Button>
                </div>
@@ -749,7 +774,13 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                         </Input.Root>
                      </div>
                      <div className="grid gap-4">
-                        <Button.Button variant="primary" className="flex items-center" onClick={handleUpdateNftData} loading={updateNftDataLoading}>
+                        <Button.Button
+                           variant="primary"
+                           className="flex items-center"
+                           onClick={() => handleUpdateNftData()}
+                           loading={updateNftDataLoading}
+                           disabled={!nftData.nftHash || !nftData.nftLink}
+                        >
                            Save
                         </Button.Button>
                         <Button.Button variant="outline" className="flex items-center" onClick={() => setDialog({ ...dialog, nftAmount: true })}>
@@ -874,13 +905,27 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                   </React.Fragment>
                )}
             </Box>
-            {article?.document.status !== 'SUBMITTED' && (
+            {article?.document?.status === 'SUBMITTED' && (
+               <React.Fragment>
+                  <Box className="grid gap-4 h-fit py-6 px-8">
+                     <Button.Button
+                        variant="primary"
+                        className="flex items-center"
+                        onClick={handleUpdateDocument}
+                        loading={loading.update}
+                        disabled={!isDirty}
+                     >
+                        Update document
+                     </Button.Button>
+                  </Box>
+               </React.Fragment>
+            )}
+            {article?.document?.status !== 'SUBMITTED' && (
                <Box className="grid gap-4 h-fit py-6 px-8">
                   {article?.document.adminApproval === 0 && (
                      <h3 className="text-lg font-semibold text-status-pending flex justify-center">Your approval is still pending</h3>
                   )}
                   <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
-
                   <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
                      <Check className="w-5 h-5" />
                      Approve article
@@ -893,7 +938,6 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                   >
                      Reject article
                   </Button.Button>
-
                   {article?.document.status === 'REJECTED' && (
                      <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
                   )}
@@ -903,6 +947,54 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                </Box>
             )}
          </div>
+         <Dialog.Root open={dialog.reasoning || dialog.nftAmount}>
+            <Dialog.Content className="py-14 px-16 max-w-[600px]">
+               {dialog.reasoning && (
+                  <Reasoning
+                     message={''}
+                     documentAuthor={article?.document.user?.name!}
+                     onClose={() => setDialog({ ...dialog, reasoning: false })}
+                     onConfirm={(value) => {
+                        setDialog({ ...dialog, reasoning: false })
+                        handleApproveDocument(false)
+                     }}
+                  />
+               )}
+               {dialog.nftAmount && (
+                  <React.Fragment>
+                     <X
+                        className="w-8 h-8 absolute top-4 right-4 cursor-pointer hover:text-status-error transition-all duration-500 ease-out hover:scale-110 hover:rotate-180 transform"
+                        onClick={() => setDialog({ ...dialog, nftAmount: false })}
+                     />
+                     <div className="grid gap-6">
+                        <div className="grid gap-2">
+                           <h3 className="text-xl font-semibold">Generate NFT Copies</h3>
+                           <p className="text-sm">
+                              Specify the number of NFT copies you&apos;d like to create for this document. Each copy represents a unique digital asset.
+                           </p>
+                           <p className="text-sm text-gray-600">Tip: Consider the rarity and potential value when deciding on the number of copies.</p>
+                        </div>
+                        <Input.Root>
+                           <Input.Label className="flex gap-2 items-center">
+                              <span className="text-sm font-semibold">Quantidade de cópias</span>
+                           </Input.Label>
+                           <Input.Input
+                              placeholder="Ex: 10"
+                              value={nftData.nftAmount}
+                              type="number"
+                              onChange={(e) => {
+                                 setNftData({ ...nftData, nftAmount: Number(e.target.value) })
+                              }}
+                           />
+                        </Input.Root>
+                        <Button.Button variant="primary" className="flex items-center" onClick={() => handleGenerateNFT()} loading={loading.generateNFT}>
+                           Generate NFT
+                        </Button.Button>
+                     </div>
+                  </React.Fragment>
+               )}
+            </Dialog.Content>
+         </Dialog.Root>
       </React.Fragment>
    )
 }
