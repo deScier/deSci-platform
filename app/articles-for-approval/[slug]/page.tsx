@@ -16,6 +16,7 @@ import { home_routes } from '@/routes/home'
 import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service'
 import { downloadDocumentVersionService } from '@/services/document/download.service'
 import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles'
+import { ApproveArticleForJournal } from '@/services/journal/approveArticle.service'
 import { formatFileName } from '@/utils/format_file_name'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
 import { keywordsArray } from '@/utils/keywords_format'
@@ -31,7 +32,6 @@ import Box from '@/components/common/Box/Box'
 import CommentItem from '@/components/common/Comment/Comment'
 import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
 import Reasoning from '@/components/modules/deScier/Article/Reasoning'
-import { ApproveArticleForJournal } from '@/services/journal/approveArticle.service'
 import React from 'react'
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
@@ -390,8 +390,13 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments?.length > 0 && (
                   <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
                )}
-               {article?.document?.status !== 'SUBMITTED' && (
-                  <>
+               {article?.document?.status === 'PENDING' && (
+                  <p className="text-lg text-center text-status-pending font-semibold select-none">
+                     This article is awaiting admin approval before it can be approved or rejected
+                  </p>
+               )}
+               {article?.document?.status === 'ADMIN_APPROVE' && (
+                  <React.Fragment>
                      <Button.Button variant="primary" className="flex items-center" onClick={() => handleApproveDocument(true)} loading={loading.approve}>
                         <Check className="w-5 h-5" />
                         Approve article
@@ -404,7 +409,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                      >
                         Reject article
                      </Button.Button>
-                  </>
+                  </React.Fragment>
                )}
                {article?.document?.status === 'REJECTED' && (
                   <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
