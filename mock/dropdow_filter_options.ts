@@ -179,8 +179,8 @@ export const journal_originate_from: Option[] = [
 export const reviewer_filter_status = [
    {
       id: uniqueId(),
-      label: 'All',
-      value: ''
+      label: 'All status',
+      value: 'all'
    },
    {
       id: uniqueId(),

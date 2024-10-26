@@ -3,7 +3,6 @@
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
-import { Dropdown } from '@/components/common/Dropdown/Dropdown'
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview'
 import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing'
@@ -39,7 +38,7 @@ export default function AsReviewerPage() {
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
    /** @notice State for the selected status filter. */
-   const [status, setStatus] = React.useState<string | null>('')
+   const [status, setStatus] = React.useState<string | null>(null)
 
    /** @notice Holds the list of filtered articles to be displayed. */
    const [results, setResults] = React.useState<ReviewerItemProps[]>([])
@@ -78,7 +77,7 @@ export default function AsReviewerPage() {
       setResults(filteredArticles)
    }, [articles, documentType, status, debouncedSearchTerm, current])
 
-   const withoutFilters = documentType === 'all' && status === '' && debouncedSearchTerm === ''
+   const withoutFilters = documentType === 'all' && status === null && debouncedSearchTerm === ''
 
    return (
       <React.Fragment>
@@ -146,19 +145,24 @@ export default function AsReviewerPage() {
                      </Select>
                      {current !== 'published' && (
                         <React.Fragment>
-                           <Dropdown
-                              label="Status:"
-                              selected={status || undefined}
-                              className="min-w-[180px]"
-                              items={reviewer_filter_status}
-                              onSelect={(value) => setStatus(value)}
-                           />
+                           <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? null : value)}>
+                              <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                                 <SelectValue placeholder="All statuses" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                 {reviewer_filter_status.map((item) => (
+                                    <SelectItem key={item.value} value={item.value} className="text-primary-main font-semibold">
+                                       {item.label}
+                                    </SelectItem>
+                                 ))}
+                              </SelectContent>
+                           </Select>
                            {withoutFilters ? null : (
                               <p
                                  className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"
                                  onClick={() => {
-                                    setDocumentType(null)
-                                    setStatus('pending')
+                                    setDocumentType('all')
+                                    setStatus(null)
                                     setSearchTerm('')
                                  }}
                               >
