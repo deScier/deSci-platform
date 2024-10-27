@@ -1,13 +1,15 @@
+import * as Button from '@components/common/Button/Button'
+import * as Input from '@components/common/Input/Input'
+
 import { UpdateUserProps } from '@/schemas/update_user'
 import { checkPasswordService } from '@/services/user/checkPassword.service'
 import { updateUserService } from '@/services/user/update.service'
-import * as Button from '@components/common/Button/Button'
-import * as Input from '@components/common/Input/Input'
 import { useSession } from 'next-auth/react'
-import React from 'react'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+
+import React from 'react'
 import GenericSuccess from './Success'
 
 /**

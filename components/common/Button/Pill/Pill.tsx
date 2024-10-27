@@ -1,6 +1,7 @@
 import { DocumentTypes } from '@/mock/document_types'
-import React from 'react'
 import { twMerge } from 'tailwind-merge'
+
+import React from 'react'
 
 /**
  * @title Pills Component

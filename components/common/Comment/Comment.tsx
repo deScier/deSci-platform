@@ -1,7 +1,8 @@
+import { CommentItemProps } from '@components/common/Comment/Typing'
 import { useSession } from 'next-auth/react'
-import React from 'react'
 import { Check, Pencil, X } from 'react-bootstrap-icons'
-import { CommentItemProps } from './Typing'
+
+import React from 'react'
 /**
  * @title CommentItem Component
  * @notice Handles the display and interaction of a single comment item.

@@ -1,4 +1,5 @@
 import * as Button from '@components/common/Button/Button'
+
 import Success from 'public/svgs/common/profile/update-email.svg'
 import React from 'react'
 

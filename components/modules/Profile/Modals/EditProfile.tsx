@@ -1,16 +1,18 @@
-import Dropzone from '@/components/common/Dropzone/Dropzone'
+import * as Button from '@components/common/Button/Button'
+import * as Input from '@components/common/Input/Input'
+
 import { StoredFile } from '@/components/common/Dropzone/Typing'
 import { UpdateUserProps } from '@/schemas/update_user'
 import { uploadAvatarService } from '@/services/file/file.service'
 import { updateUserService } from '@/services/user/update.service'
-import * as Button from '@components/common/Button/Button'
-import * as Input from '@components/common/Input/Input'
 import { useSession } from 'next-auth/react'
-import Image from 'next/image'
-import React, { useState } from 'react'
 import { X } from 'react-bootstrap-icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+
+import Dropzone from '@/components/common/Dropzone/Dropzone'
+import Image from 'next/image'
+import React from 'react'
 import GenericSuccess from './Success'
 
 /**
@@ -38,7 +40,7 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
    /** @dev Initialize file state for the avatar */
    const [file, setFile] = React.useState<StoredFile | null>()
    /** @dev Initialize avatar preview state */
-   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(image)
+   const [avatarPreview, setAvatarPreview] = React.useState<string | undefined>(image)
 
    /** @dev Function to submit the form and update the profile */
    const onSubmit: SubmitHandler<UpdateUserProps> = async (data) => {
