@@ -12,6 +12,7 @@ import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { addWalletService } from '@/services/user/addWallet.service'
 import { registerUserService } from '@/services/user/register.service'
+import { verifyEmailService } from '@/services/user/verifyEmail.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -21,7 +22,6 @@ import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
 
 import LoginAnimation from '@/components/modules/Login/Animation/Animation'
-import { verifyEmailService } from '@/services/user/verifyEmail.service'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
@@ -191,7 +191,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      <Step.Indicator last_item total_items={3} current={currentStep} step={3} completed={completed[2]} all_completed={allCompleted} />
                   </Step.Root>
                </div>
-
                {currentStep === 1 && (
                   <React.Fragment>
                      <div className="space-y-1">
@@ -218,7 +217,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      </Input.Root>
                   </React.Fragment>
                )}
-
                {currentStep === 1 && (
                   <Button.Button
                      loading={loading.loading}
@@ -246,59 +244,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      Continue
                   </Button.Button>
                )}
-
-               {currentStep === 1 && (
-                  <React.Fragment>
-                     <div className="relative">
-                        <Separator color="#A9A9A9" className="h-[0.5px]" />
-                        <p className="text-base p-2 px-3 text-neutral-light_gray absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white">
-                           or
-                        </p>
-                     </div>
-                     <Button.Button
-                        variant="outline"
-                        className="px-4 py-2"
-                        onClick={(e) => {
-                           handleMetamaskAuth(e, {
-                              onSuccess: () => router.push(home_routes.summary),
-                              onClose
-                           })
-                        }}
-                     >
-                        <MetamaskLogo className="w-6" />
-                        <span className="text-base font-semibold">Login with wallet</span>
-                     </Button.Button>
-                     <div className="space-y-2">
-                        <Button.Button
-                           variant="outline"
-                           className="px-4 py-2"
-                           onClick={(e) => {
-                              handleGoogleAuth(e, {
-                                 onSuccess: () => router.push(home_routes.summary),
-                                 onClose
-                              })
-                           }}
-                        >
-                           <GoogleIcon className="w-6" />
-                           <span className="text-base font-semibold">Login with Google</span>
-                        </Button.Button>
-                        <p className="text-[10px] font-regular text-neutral-light_gray text-center">
-                           When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over
-                           your assets.
-                        </p>
-                     </div>
-                     <p className="text-secundary_blue-main text-sm text-center" onClick={() => onBack()}>
-                        Already have an account?{' '}
-                        <span
-                           className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
-                           onClick={() => onLogin()}
-                        >
-                           Login here.
-                        </span>
-                     </p>
-                  </React.Fragment>
-               )}
-
                {currentStep === 2 && (
                   <React.Fragment>
                      <div className="space-y-1">
@@ -324,15 +269,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      </Input.Root>
                   </React.Fragment>
                )}
-
                {currentStep === 2 && (
                   <Button.Button variant="primary" loading={loading.loading} className="px-4 py-2" onClick={() => nextStep()}>
                      Create account
                   </Button.Button>
                )}
-
                {currentStep === 3 && <RegisterStepThree register={register} errors={errors} />}
-
                {currentStep === 3 && (
                   <React.Fragment>
                      <div className="space-y-4">
@@ -495,52 +437,16 @@ const RegisterStepTwo: React.FC<RegisterStepProps> = ({ register, errors }: Regi
 const RegisterStepThree: React.FC<RegisterStepProps> = ({}: RegisterStepProps) => {
    return (
       <React.Fragment>
-         <div className="space-y-1">
+         <div className="space-y-2">
             <h2 className="font-semibold text-1xl">Your account is ready!</h2>
             <p className="text-base">
-               To make the most of it, register your wallet. This will ensure the security and authenticity of your transactions and publications.
+               To make the most of it, you can optionally register your wallet. This will enhance the security and authenticity of your transactions and
+               publications, but it&apos;s not required to use the platform.
             </p>
+            <p className="text-sm text-neutral-light_gray">Note: The wallet created through this process will be on the Polygon network.</p>
          </div>
       </React.Fragment>
    )
 }
 
 export default RegisterModal
-
-interface EIP6963ProviderInfo {
-   rdns: string
-   uuid: string
-   name: string
-   icon: string
-}
-
-interface EIP6963ProviderDetail {
-   info: EIP6963ProviderInfo
-   provider: EIP1193Provider
-}
-
-type EIP6963AnnounceProviderEvent = {
-   detail: {
-      info: EIP6963ProviderInfo
-      provider: Readonly<EIP1193Provider>
-   }
-}
-
-interface EIP1193Provider {
-   isStatus?: boolean
-   host?: string
-   path?: string
-   sendAsync?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
-   send?: (request: { method: string; params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
-   request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>
-}
-
-const formatBalance = (rawBalance: string) => {
-   const balance = (parseInt(rawBalance) / 1000000000000000000).toFixed(2)
-   return balance
-}
-
-const formatChainAsNum = (chainIdHex: string) => {
-   const chainIdNum = parseInt(chainIdHex)
-   return chainIdNum
-}
