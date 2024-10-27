@@ -1,7 +1,5 @@
 'use client'
 
-import React from 'react'
-
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
@@ -19,6 +17,7 @@ import { truncate } from 'lodash'
 import PaginationComponent from '@/components/common/Pagination/Pagination'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react'
 
 export default function JournalsPage() {
    const { journals, journal_loading } = useJournals()
@@ -74,16 +73,9 @@ export default function JournalsPage() {
                <div className="flex items-center gap-2">
                   <Input.Search value={searchTerm} placeholder="Find journal with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
-               <div className="flex flex-col md:flex-row md:items-center gap-2">
-                  {/* <Dropdown
-                     label="The journal originates from: "
-                     selected={journal_originate_from.find((item) => item.value === originatesFrom)?.label || undefined}
-                     className="min-w-[180px] w-full"
-                     items={journal_originate_from}
-                     onSelect={(value) => setOriginatesFrom(value)}
-                  /> */}
+               <div className="flex flex-wrap md:flex-row md:items-center gap-2">
                   <Select value={originatesFrom || 'all'} onValueChange={(value) => setOriginatesFrom(value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue asChild>
                            <p>
                               The journal originates from: {journal_originate_from.find((item) => item.value === originatesFrom)?.label || 'All journals'}
@@ -107,7 +99,7 @@ export default function JournalsPage() {
                      </SelectContent>
                   </Select>
                   <Select value={status || 'all'} onValueChange={(value) => setStatus(value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue asChild>
                            <p>Status: {journal_status_option.find((item) => item.value === status)?.label || 'All'}</p>
                         </SelectValue>

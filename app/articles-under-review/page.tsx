@@ -76,9 +76,9 @@ export default function ArticlesUnderReviewPage() {
                <div className="flex items-center gap-2">
                   <Input.Search value={searchTerm} placeholder="Find articles with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
-               <div className="flex flex-col md:flex-row md:items-center gap-2">
+               <div className="flex flex-wrap md:flex-row md:items-center gap-2">
                   <Select value={documentType || 'all'} onValueChange={(value) => setDocumentType(value === 'all' ? null : value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue asChild>
                            <p>Article type: {articles_types_filter.find((item) => item.value === documentType)?.label || 'All articles'}</p>
                         </SelectValue>
@@ -107,7 +107,7 @@ export default function ArticlesUnderReviewPage() {
                      </SelectContent>
                   </Select>
                   <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? null : value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue placeholder="All statuses" />
                      </SelectTrigger>
                      <SelectContent>

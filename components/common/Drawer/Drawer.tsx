@@ -1,7 +1,8 @@
 import { DrawerContentProps, DrawerOverlayProps, DrawerRootProps } from '@components/common/Drawer/Typing'
 import { usePathname } from 'next/navigation'
-import React from 'react'
 import { twJoin, twMerge } from 'tailwind-merge'
+
+import React from 'react'
 
 /**
  * Overlay Component

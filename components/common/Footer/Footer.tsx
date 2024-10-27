@@ -2,6 +2,7 @@
 
 import { links, social_media } from '@/mock/footer_items'
 import { home_routes } from '@/routes/home'
+
 import Link from 'next/link'
 import EmailIcon from 'public/svgs/common/footer/icons-footer/email.svg'
 import WhatsApp from 'public/svgs/common/footer/icons-footer/whatsapp.svg'

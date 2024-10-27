@@ -1,11 +1,13 @@
 'use client'
-import { formatFileName } from '@/utils/format_file_name'
 import * as Button from '@components/common/Button/Button'
-import React, { useEffect } from 'react'
+
+import { formatFileName } from '@/utils/format_file_name'
 import { Eye, FileEarmarkText, Upload } from 'react-bootstrap-icons'
 import { Accept, useDropzone } from 'react-dropzone'
 import { twMerge } from 'tailwind-merge'
 import { DropzoneProps, StoredFile } from './Typing'
+
+import React from 'react'
 
 /** @title Dropzone Component
  *  @notice This component creates a customizable dropzone for file uploads, allowing for thumbnail display and specific file type restrictions.
@@ -15,7 +17,7 @@ const Dropzone = React.forwardRef(({ setSelectedFile, setValue, placeholder, mes
    const [files, setFiles] = React.useState<Array<StoredFile>>([])
 
    /** @dev Effect to set a default cover image if provided */
-   useEffect(() => {
+   React.useEffect(() => {
       if (defaultCover?.preview !== undefined && defaultCover?.preview !== null && defaultCover?.preview !== '') {
          setFiles([defaultCover])
       } else {

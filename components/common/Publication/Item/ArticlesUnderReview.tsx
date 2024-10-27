@@ -1,3 +1,5 @@
+import './Item.css'
+
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AuthorsOnDocuments } from '@/services/document/getArticles'
@@ -6,7 +8,6 @@ import { truncate } from 'lodash'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import './Item.css'
 
 /**
  * @title Article Under Review Component

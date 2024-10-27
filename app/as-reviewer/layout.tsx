@@ -1,8 +1,10 @@
-import Footer from '@/components/common/Footer/Footer'
+import '@styles/layout.css'
+
 import { SidebarMobile } from '@/components/common/Sidebar/Mobile/Sidebar'
+
+import Footer from '@/components/common/Footer/Footer'
 import Profile from '@/components/common/Sidebar/Profile/Profile'
 import Sidebar from '@/components/common/Sidebar/Sidebar'
-import '@styles/layout.css'
 import React from 'react'
 
 export default function SummaryLayout({ children }: { children: React.ReactNode }) {

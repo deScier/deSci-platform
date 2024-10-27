@@ -56,7 +56,6 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
    const { fetch_article } = useFetchAdminArticles()
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
-   console.log('article', article)
    const [items, setItems] = React.useState(authors_mock)
    const [access_type, setAccessType] = React.useState('open-access')
    const [dialog, setDialog] = React.useState({ author: false, share_split: false, edit_author: false, reasoning: false, nftAmount: false })

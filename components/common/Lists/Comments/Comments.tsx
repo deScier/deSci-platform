@@ -1,9 +1,10 @@
-import CommentItem from '@/components/common/Comment/Comment'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { comments_initial_state, reducer_comments } from '@/states/reducer_comments'
-import React, { useReducer } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { EditorReviewListProps } from './Typing'
+
+import CommentItem from '@/components/common/Comment/Comment'
+import React from 'react'
 
 /**
  * @title Comments List Component
@@ -15,7 +16,7 @@ export const CommentsList: React.FC<EditorReviewListProps> = ({ article, onAppro
     * @dev Initializes the useReducer hook with the reducer_comments function and comments_initial_state initial state.
     * @return State and dispatch function from the useReducer hook.
     */
-   const [state, dispatch] = useReducer(reducer_comments, comments_initial_state)
+   const [state, dispatch] = React.useReducer(reducer_comments, comments_initial_state)
    return (
       <React.Fragment>
          <div className="border rounded-md p-4">

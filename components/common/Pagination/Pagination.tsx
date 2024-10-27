@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { PaginationProps } from '@components/common/Pagination/Typing'
 import { CaretLeft, CaretLeftSquare, CaretRight, CaretRightSquare } from 'react-bootstrap-icons'
-import { PaginationProps } from './Typing'
+
+import React from 'react'
 /**
  * @title Pagination Component
  * @notice Handles the display and interaction of a pagination system in a React application
@@ -19,13 +20,13 @@ export default function PaginationComponent({
     * @dev State to track total number of records
     * @param total The total number of records passed as a prop
     */
-   const [totalRecords, setTotalRecords] = useState(total)
+   const [totalRecords, setTotalRecords] = React.useState(total)
 
    /**
     * @dev State to keep track of the current page
     * @param current The current page number passed as a prop
     */
-   const [currentPage, setCurrentPage] = useState(current)
+   const [currentPage, setCurrentPage] = React.useState(current)
 
    /**
     * @dev Constant to define maximum number of records per page
@@ -45,7 +46,7 @@ export default function PaginationComponent({
     * @dev Effect hook to synchronize currentPage state with current prop
     * @param current Dependency array including the current page
     */
-   useEffect(() => {
+   React.useEffect(() => {
       setCurrentPage(current)
    }, [current])
 

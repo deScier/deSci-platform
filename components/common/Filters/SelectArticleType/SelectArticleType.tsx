@@ -1,11 +1,12 @@
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select'
 import { article_types_submit_article, articles_types_filter } from '@/mock/articles_types'
-import React from 'react'
-import slug from 'slug'
 import { twMerge } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
 import { SelectArticleTypeProps } from './Typing'
+
+import React from 'react'
+import slug from 'slug'
 
 /**
  * @title SelectArticleType Component

@@ -1,12 +1,14 @@
-import useDimension from '@/hooks/useWindowDimension'
-import { ErrorProps, InputProps, LabelProps, SelectInputProps, TextAreaProps, WrapperInputProps } from '@components/common/Input/Typing'
 import * as S from '@components/common/Select/Select'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
-import React, { LegacyRef, useEffect, useRef, useState } from 'react'
+
+import { ErrorProps, InputProps, LabelProps, SelectInputProps, TextAreaProps, WrapperInputProps } from '@components/common/Input/Typing'
 import { CaretDown, Eye, EyeSlash, Search as SearchIcon } from 'react-bootstrap-icons'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { twMerge } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
+
+import useDimension from '@/hooks/useWindowDimension'
+import React from 'react'
 
 /** @dev Tailwind CSS variant for standard input */
 export const input = tv({
@@ -99,7 +101,7 @@ const TextArea = React.forwardRef<HTMLInputElement, TextAreaProps>(({ icon, star
                   {icon}
                </div>
             )}
-            <textarea ref={ref as LegacyRef<HTMLTextAreaElement>} className={twMerge(textArea({ hasIcon: iconPosition }), className)} {...props} />
+            <textarea ref={ref as React.LegacyRef<HTMLTextAreaElement>} className={twMerge(textArea({ hasIcon: iconPosition }), className)} {...props} />
          </div>
       </React.Fragment>
    )
@@ -112,7 +114,7 @@ const TextArea = React.forwardRef<HTMLInputElement, TextAreaProps>(({ icon, star
  * @return JSX Element
  */
 const Password = React.forwardRef<HTMLInputElement, InputProps>(({ ...props }, ref) => {
-   const [isVisible, setIsVisible] = useState(false)
+   const [isVisible, setIsVisible] = React.useState(false)
 
    return (
       <React.Fragment>
@@ -219,9 +221,9 @@ const Select = React.forwardRef<HTMLInputElement, SelectInputProps>(
       const { windowDimension } = useDimension()
 
       /** @dev Get ref object to set width of content */
-      const triggerRef = useRef<HTMLDivElement>(null)
+      const triggerRef = React.useRef<HTMLDivElement>(null)
 
-      useEffect(() => {}, [windowDimension])
+      React.useEffect(() => {}, [windowDimension])
 
       return (
          <S.Root

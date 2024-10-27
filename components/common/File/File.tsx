@@ -1,7 +1,8 @@
 import { formatDate } from '@/utils/date_format'
-import React from 'react'
+import { FileProps } from '@components/common/File/Typing'
 import { Download, FileEarmarkText, Trash } from 'react-bootstrap-icons'
-import { FileProps } from './Typing'
+
+import React from 'react'
 
 /**
  * @title File Component

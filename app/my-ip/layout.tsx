@@ -1,5 +1,6 @@
-import Sidebar from '@/components/common/Sidebar/Sidebar'
 import '@styles/layout.css'
+
+import Sidebar from '@/components/common/Sidebar/Sidebar'
 import React from 'react'
 
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {

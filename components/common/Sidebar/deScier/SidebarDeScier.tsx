@@ -1,15 +1,17 @@
 'use client'
 
 import * as Button from '@components/common/Button/Button'
-import Image from 'next/image'
+
 import { usePathname, useRouter } from 'next/navigation'
+
+import Item from '@components/common/Sidebar/Item/Item'
+import Image from 'next/image'
 import deScierLogo from 'public/svgs/common/logo/deScier - Logo.png'
 import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg'
 import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
 import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
 import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg'
 import React from 'react'
-import Item from '../Item/Item'
 
 /**
  * @title Sidebar Component for the DeScier Platform

@@ -415,7 +415,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                            Add keywords
                         </Input.Label>
                         <Input.Input
-                           placeholder="Type keywords (separate with commas)"
+                           placeholder="Type keywords"
                            value={keywords_temp}
                            onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ',') {

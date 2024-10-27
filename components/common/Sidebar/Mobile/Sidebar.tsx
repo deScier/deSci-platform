@@ -1,18 +1,20 @@
 'use client'
 
-import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles'
-import useDimension from '@/hooks/useWindowDimension'
-import { article_key } from '@/mock/sidebar_items'
-import { home_routes } from '@/routes/home'
 import * as Dialog from '@components/common/Dialog/Digalog'
 import * as Drawer from '@components/common/Drawer/Drawer'
-import Link from 'next/link'
-import LogoDeScier from 'public/svgs/common/logo/deScier - Logo copy.svg'
-import React from 'react'
+
+import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles'
+import { article_key } from '@/mock/sidebar_items'
+import { home_routes } from '@/routes/home'
 import { Person } from 'react-bootstrap-icons'
 import { twMerge } from 'tailwind-merge'
 import { MobileSidebarComponent } from './MobileSidebar'
 import { MobileProfileComponent } from './ProfileSidebar'
+
+import useDimension from '@/hooks/useWindowDimension'
+import Link from 'next/link'
+import LogoDeScier from 'public/svgs/common/logo/deScier - Logo copy.svg'
+import React from 'react'
 
 /**
  * @title Mobile Sidebar Component

@@ -1,8 +1,9 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { truncate } from '@/utils/format_texts'
-import React from 'react'
+import { EditorAndReviewerProps } from '@components/common/EditorsAndReviwers/Typing'
 import { twMerge } from 'tailwind-merge'
-import { EditorAndReviewerProps } from './Typing'
+
+import React from 'react'
 /**
  * @title Editors and Reviewers Component
  * @notice This component displays the editors and reviewers associated with an article.

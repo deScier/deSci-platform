@@ -3,8 +3,9 @@ import { home_routes } from '@/routes/home'
 import { formatName } from '@/utils/format_texts'
 import { handleLogout } from '@/utils/logout'
 import { useSession } from 'next-auth/react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+
+import Image from 'next/image'
 import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg'
 import React from 'react'
 

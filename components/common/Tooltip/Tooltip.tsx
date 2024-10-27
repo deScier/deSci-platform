@@ -1,9 +1,12 @@
-import * as Tooltip from '@radix-ui/react-tooltip'
 import '@styles/tooltip.css'
-import HelpIcon from 'public/svgs/common/help.svg'
-import React from 'react'
+
+import * as Tooltip from '@radix-ui/react-tooltip'
+
 import { twMerge } from 'tailwind-merge'
 import { TooltipInformationProps } from './Typing'
+
+import HelpIcon from 'public/svgs/common/help.svg'
+import React from 'react'
 
 /**
  * @title Tooltip Components

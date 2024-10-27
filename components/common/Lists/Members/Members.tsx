@@ -1,11 +1,11 @@
 import { MembersListDragabbleProps } from '@components/common/Lists/Members/Typing'
+import { TruncateWithHoverCard } from '@components/common/Truncate/TruncateWithHoverCard'
 import { Reorder, useDragControls } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { Pencil, Trash } from 'react-bootstrap-icons'
 
 import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
 import React from 'react'
-import { TruncateWithHoverCard } from '../../Truncate/TruncateWithHoverCard'
 
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({ members, onReorder, onDelete, onEdit, is_admin = false }) => {
    const { data: session } = useSession()

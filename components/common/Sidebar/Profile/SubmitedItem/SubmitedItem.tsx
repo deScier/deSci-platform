@@ -1,5 +1,6 @@
+import { BadgeProps, SubmitedItemProps } from '@components/common/Sidebar/Profile/Typing'
+
 import React from 'react'
-import { BadgeProps, SubmitedItemProps } from '../Typing'
 
 /**
  * @title SubmitedItem Functional Component

@@ -283,7 +283,7 @@ export default function NewJournalPage() {
                            Add keywords
                         </Input.Label>
                         <Input.Input
-                           placeholder="Type keywords (separate with commas)"
+                           placeholder="Type keywords"
                            value={keywords_temp}
                            onKeyDown={handleKeyDown}
                            onInput={(e) => setKeywordsTemp(e.currentTarget.value)}

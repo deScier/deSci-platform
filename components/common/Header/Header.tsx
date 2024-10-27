@@ -1,25 +1,27 @@
 'use client'
 
-import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
+import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
+
 import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles'
-import LoginModal from '@/components/modules/Login/Login'
-import RegisterModal from '@/components/modules/Register/Register'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { dashboard_key, links } from '@/mock/sidebar_home_items'
 import { home_routes } from '@/routes/home'
 import { formatName } from '@/utils/format_texts'
 import { handleLogout } from '@/utils/logout'
-import * as Button from '@components/common/Button/Button'
-import * as Dialog from '@components/common/Dialog/Digalog'
 import { useSession } from 'next-auth/react'
+import { usePathname, useRouter } from 'next/navigation'
+import { twMerge } from 'tailwind-merge'
+
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
+import LoginModal from '@/components/modules/Login/Login'
+import RegisterModal from '@/components/modules/Register/Register'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
 import DeScierLogo from 'public/svgs/common/logo/deScier - Logo.svg'
 import ArrowDown from 'public/svgs/modules/home/arrow-down.svg'
 import React from 'react'
-import { twMerge } from 'tailwind-merge'
 
 /**
  * @title Header Component

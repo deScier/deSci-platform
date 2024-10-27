@@ -1,9 +1,12 @@
-import { TriggerProps } from '@components/common/Select/Typing'
-import * as Select from '@radix-ui/react-select'
 import '@styles/select.css'
-import React from 'react'
+
+import * as Select from '@radix-ui/react-select'
+
+import { TriggerProps } from '@components/common/Select/Typing'
 import { twMerge } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
+
+import React from 'react'
 
 /** @dev Defines a set of styles for different types of select components */
 const select = tv({

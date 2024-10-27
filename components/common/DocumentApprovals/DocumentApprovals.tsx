@@ -1,7 +1,8 @@
 import { uniqueId } from 'lodash'
-import React from 'react'
 import { Check, Clock, X } from 'react-bootstrap-icons'
 import { DocumentApprovalsProps } from './Typing'
+
+import React from 'react'
 
 /**
  * @title Document Approvals Component

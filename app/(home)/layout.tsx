@@ -1,7 +1,9 @@
+import '@styles/layout.css'
+
+import { HeaderMobile } from '@/components/common/Header/HeaderHome'
+
 import Footer from '@/components/common/Footer/Footer'
 import Header from '@/components/common/Header/Header'
-import { HeaderMobile } from '@/components/common/Header/HeaderHome'
-import '@styles/layout.css'
 import React from 'react'
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {

@@ -1,7 +1,9 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import * as Button from '@components/common/Button/Button'
+
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { InviteLinkProps } from '@components/common/InviteLink/Typing'
+
 import React from 'react'
-import { InviteLinkProps } from './Typing'
 
 /**
  * @title InviteLink Component

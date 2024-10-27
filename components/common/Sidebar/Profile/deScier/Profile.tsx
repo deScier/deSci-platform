@@ -1,14 +1,15 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { CaretRight } from 'react-bootstrap-icons'
+import { twMerge } from 'tailwind-merge'
+
+import Link from 'next/link'
 import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg'
 import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
 import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
 import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
 import React from 'react'
-import { CaretRight } from 'react-bootstrap-icons'
-import { twMerge } from 'tailwind-merge'
 
 /**
  * @title ProfileDeScier Component

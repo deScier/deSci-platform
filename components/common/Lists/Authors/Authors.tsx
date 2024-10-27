@@ -1,9 +1,10 @@
 import { Reorder } from 'framer-motion'
 import { useSession } from 'next-auth/react'
-import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
-import React from 'react'
 import { Pencil, Trash } from 'react-bootstrap-icons'
 import { AuthorsListDragabbleProps } from './Typing'
+
+import CircleIcon from 'public/svgs/modules/new-document/circles.svg'
+import React from 'react'
 
 /**
  * @title Authors List Draggable Component

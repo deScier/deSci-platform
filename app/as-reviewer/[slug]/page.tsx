@@ -1,14 +1,13 @@
 'use client'
 
-import Box from '@/components/common/Box/Box'
-import CommentItem from '@/components/common/Comment/Comment'
-import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import * as Button from '@components/common/Button/Button'
+import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Input from '@components/common/Input/Input'
+
 import { File } from '@/components/common/File/File'
 import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFlags'
 import { InviteLink } from '@/components/common/InviteLink/InviteLink'
 import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview'
-import EditComment from '@/components/modules/deScier/Article/EditComment'
-import Reasoning from '@/components/modules/deScier/Article/Reasoning'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetApprovals } from '@/hooks/useGetApprovals'
@@ -25,27 +24,30 @@ import { updateCommentService } from '@/services/reviewer/updateComment.service'
 import { ActionComments, comments_initial_state, reducer_comments } from '@/states/reducer_comments'
 import { getArticleTypeLabel } from '@/utils/generate_labels'
 import { keywordsArray } from '@/utils/keywords_format'
-import * as Button from '@components/common/Button/Button'
-import * as Dialog from '@components/common/Dialog/Digalog'
-import * as Input from '@components/common/Input/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { isEqual, uniqueId } from 'lodash'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React, { useReducer } from 'react'
 import { ArrowLeft, Check } from 'react-bootstrap-icons'
 import { CurrencyInput } from 'react-currency-mask'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
+import Box from '@/components/common/Box/Box'
+import CommentItem from '@/components/common/Comment/Comment'
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals'
+import EditComment from '@/components/modules/deScier/Article/EditComment'
+import Reasoning from '@/components/modules/deScier/Article/Reasoning'
+import React from 'react'
+
 export default function AsReviwerPageDetails({ params }: { params: { slug: string } }) {
    const router = useRouter()
    const { data } = useSession()
    const { fetch_article } = useArticleToReview()
 
-   const [state, dispatch] = useReducer(reducer_comments, comments_initial_state)
+   const [state, dispatch] = React.useReducer(reducer_comments, comments_initial_state)
 
    const [article, setArticle] = React.useState<DocumentGetProps | null>(null)
    const [items, setItems] = React.useState(authors_mock)

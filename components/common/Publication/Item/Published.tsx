@@ -1,9 +1,10 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons'
+import { twMerge } from 'tailwind-merge'
+
 import useDimension from '@/hooks/useWindowDimension'
 import Image from 'next/image'
 import React from 'react'
-import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons'
-import { twMerge } from 'tailwind-merge'
 
 /**
  * @title PublicationItem Component

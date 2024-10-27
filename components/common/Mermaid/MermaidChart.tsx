@@ -1,6 +1,7 @@
-import React from 'react'
+import { RenderMermaidChartProps } from '@components/common/Mermaid/Typing'
 import { twMerge } from 'tailwind-merge'
-import { RenderMermaidChartProps } from './Typing'
+
+import React from 'react'
 /**
  * @title RenderMermaidChart Component
  * @notice This component is used for rendering mermaid charts in a flexible and error-handling way

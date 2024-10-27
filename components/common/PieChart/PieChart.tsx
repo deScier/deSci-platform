@@ -3,7 +3,7 @@ import { Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { ChartProps } from './Typing'
 
 export default function PieChartComponent({ pendingAmount, publishedAmount, totalDocuments }: ChartProps) {
-   const { windowDimension, md, lg, xl, xxl } = useDimension()
+   const { windowDimension } = useDimension()
 
    if (!windowDimension) return null
    const data = [

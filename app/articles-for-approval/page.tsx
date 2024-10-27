@@ -3,30 +3,27 @@
 import * as Input from '@components/common/Input/Input'
 import * as Title from '@components/common/Title/Page'
 
-import { ApprovalStatus, DocumentProps, JournalProps } from '@/types/document'
-import { authenticated_url, fetcher_authenticated } from '@/utils/fetcher'
-import { useSession } from 'next-auth/react'
-
-import PaginationComponent from '@/components/common/Pagination/Pagination'
-import React from 'react'
-import useSWR from 'swr'
-
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { PublicJournalProps, PublicJournalsProps } from '@/services/journal/getJournals.service'
+import { ApprovalStatus, DocumentProps, JournalProps } from '@/types/document'
+import { authenticated_url, fetcher_authenticated } from '@/utils/fetcher'
 import 'components/common/Publication/Item/Item.css'
 import { format, isValid, parseISO } from 'date-fns'
 import { truncate } from 'lodash'
+import { useSession } from 'next-auth/react'
 
+import PaginationComponent from '@/components/common/Pagination/Pagination'
 import useDebounce from '@/hooks/useDebounce'
-import { PublicJournalProps, PublicJournalsProps } from '@/services/journal/getJournals.service'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react'
+import useSWR from 'swr'
 
 export default function ArticlesForApprovalPage() {
    const { data: session } = useSession()
-   console.log('session', session)
 
    const [searchTerm, setSearchTerm] = React.useState('')
    const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -88,9 +85,9 @@ export default function ArticlesForApprovalPage() {
                <div className="flex items-center gap-2">
                   <Input.Search value={searchTerm} placeholder="Find journal with these terms" onChange={(e) => setSearchTerm(e.target.value)} />
                </div>
-               <div className="flex flex-col md:flex-row md:items-center gap-2">
+               <div className="flex flex-wrap md:flex-row md:items-center gap-2">
                   <Select value={originatesFrom || 'all'} onValueChange={(value) => setOriginatesFrom(value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[300px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue asChild>
                            <p>Journal: {journals.find((item) => item.id === originatesFrom)?.name || 'All journals'}</p>
                         </SelectValue>
@@ -112,7 +109,7 @@ export default function ArticlesForApprovalPage() {
                      </SelectContent>
                   </Select>
                   <Select value={status || 'all'} onValueChange={(value) => setStatus(value)}>
-                     <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
+                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                         <SelectValue asChild>
                            <p>Status: {status || 'All'}</p>
                         </SelectValue>

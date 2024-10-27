@@ -1,6 +1,7 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import useDimension from '@/hooks/useWindowDimension'
 import { cn } from '@/lib/utils'
+
+import useDimension from '@/hooks/useWindowDimension'
 import React from 'react'
 
 type TruncateWithHoverCardProps = {
