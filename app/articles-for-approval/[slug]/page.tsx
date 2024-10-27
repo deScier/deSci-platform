@@ -391,7 +391,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                )}
                {article?.document?.status === 'PENDING' && (
                   <p className="text-lg text-center text-status-pending font-semibold select-none">
-                     This article is awaiting admin approval before it can be approved or rejected
+                     This article is awaiting approval from editors and reviewers before it can be approved or rejected
                   </p>
                )}
                {article?.document?.status === 'ADMIN_APPROVE' && (
