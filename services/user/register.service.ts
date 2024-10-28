@@ -10,7 +10,7 @@ export const registerUserService = async (data: RegisterRequestProps) => {
    if (String(response.status).startsWith('20')) {
       return {
          success: true,
-         message: 'Register user successfully'
+         message: 'User registered successfully'
       }
    }
 
