@@ -75,7 +75,9 @@ const Header: React.FC = () => {
             <Dialog.Content
                className={twMerge(
                   `${component !== purchased && 'md:w-[85%] max-w-[1200px] p-0 transition-all duration-300'}`,
-                  component === forgot_password_component && 'max-w-[554px]'
+                  `${component === forgot_password_component && 'max-w-[554px]'}`,
+                  `${component === login_component && 'w-full !max-w-[1200px] p-0'}`,
+                  `${component === register_component && 'w-full !max-w-[1200px] p-0'}`
                )}
             >
                {component === login_component && (

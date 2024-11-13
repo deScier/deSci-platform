@@ -138,8 +138,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       }
    }
 
-   const { handleGoogleAuth, handleGetGoogleAccount } = useGoogleWeb3Auth()
-   const { handleMetamaskAuth, handleGetMetamaskAccount } = useMetamaskAuth()
+   const { handleGetGoogleAccount } = useGoogleWeb3Auth()
+   const { handleGetMetamaskAccount } = useMetamaskAuth()
 
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -274,7 +274,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                      Create account
                   </Button.Button>
                )}
-               {currentStep === 3 && <RegisterStepThree register={register} errors={errors} />}
+               {currentStep === 3 && <RegisterStepThree />}
                {currentStep === 3 && (
                   <React.Fragment>
                      <div className="space-y-4">
@@ -434,16 +434,16 @@ const RegisterStepTwo: React.FC<RegisterStepProps> = ({ register, errors }: Regi
    )
 }
 
-const RegisterStepThree: React.FC<RegisterStepProps> = ({}: RegisterStepProps) => {
+const RegisterStepThree: React.FC = () => {
    return (
       <React.Fragment>
          <div className="space-y-2">
             <h2 className="font-semibold text-1xl">Your account is ready!</h2>
             <p className="text-base">
-               To make the most of it, you can optionally register your wallet. This will enhance the security and authenticity of your transactions and
-               publications, but it&apos;s not required to use the platform.
+               You can Connect with your MetaMask wallet. We operate on the Polygon network. Alternatively, you can Go to your dashboard and add your
+               digital wallet there at any time.
             </p>
-            <p className="text-sm text-neutral-light_gray">Note: The wallet created through this process will be on the Polygon network.</p>
+            <p className="text-sm text-neutral-gray">Note: The wallet created through this process will be on the Polygon network.</p>
          </div>
       </React.Fragment>
    )

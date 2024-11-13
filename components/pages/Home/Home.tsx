@@ -84,7 +84,14 @@ export function HomeComponent({ journals }: HomeProps) {
    return (
       <React.Fragment>
          <Dialog.Root open={open}>
-            <Dialog.Content className={twMerge('w-[80%] max-w-[1200px] p-0', component === forgot_password_component && 'max-w-[554px]')}>
+            <Dialog.Content
+               className={twMerge(
+                  'w-[80%] max-w-[1200px] p-0',
+                  `${component === forgot_password_component && 'max-w-[554px]'}`,
+                  `${component === login_component && 'w-full !max-w-[1200px] p-0'}`,
+                  `${component === register_component && 'w-full !max-w-[1200px] p-0'}`
+               )}
+            >
                {component === login_component && (
                   <LoginModal
                      onClose={() => setOpen(false)}
