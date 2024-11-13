@@ -12,7 +12,9 @@ import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
 import { useLimitCharacters } from '@/hooks/useLimitCharacters'
+import { cn } from '@/lib/utils'
 import { access_type_options } from '@/mock/access_type'
 import { article_types_submit_article } from '@/mock/articles_types'
 import { Author, authors_headers, authorship_headers } from '@/mock/submit_new_document'
@@ -34,11 +36,9 @@ import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 
 import Box from '@/components/common/Box/Box'
-import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
 import NProgress from 'nprogress'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import slug from 'slug'
 
 const Dropzone = dynamic(() => import('@/components/common/Dropzone/Dropzone'), { ssr: false })
@@ -53,17 +53,23 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    const { data: session, update: updateSession } = useSession()
 
    /** @dev Initialize states for loading indicators, dialog settings, and various form inputs */
-   const [loading, setLoading] = useState(false)
-   const [dialog, setDialog] = useState({ author: false, share_split: false, edit_author: false, edit_share_split: false, warning_on_change_page: false })
-   const [access_type, setAccessType] = useState('open-access')
-   const [share, setShare] = useState('')
-   const [wallet, setWallet] = useState('')
-   const [authors, setAuthors] = useState<Author[]>([])
-   const [edit_share_split, setEditShare] = useState<Author | null>()
-   const [authorship_settings, setAuthorshipSettings] = useState<Author>()
-   const [author_to_edit, setAuthorToEdit] = useState<Author | undefined>(undefined)
-   const [keywords_temp, setKeywordsTemp] = useState<string | undefined>()
-   const [abstractChart, setAbstractChart] = useState<string>('')
+   const [loading, setLoading] = React.useState(false)
+   const [dialog, setDialog] = React.useState({
+      author: false,
+      share_split: false,
+      edit_author: false,
+      edit_share_split: false,
+      warning_on_change_page: false
+   })
+   const [access_type, setAccessType] = React.useState('open-access')
+   const [share, setShare] = React.useState('')
+   const [wallet, setWallet] = React.useState('')
+   const [authors, setAuthors] = React.useState<Author[]>([])
+   const [edit_share_split, setEditShare] = React.useState<Author | null>()
+   const [authorship_settings, setAuthorshipSettings] = React.useState<Author>()
+   const [author_to_edit, setAuthorToEdit] = React.useState<Author | undefined>(undefined)
+   const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>()
+   const [abstractChart, setAbstractChart] = React.useState<string>('')
    const [documentType, setDocumentType] = React.useState<string | null>(null)
 
    /**
@@ -222,7 +228,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    /**
     * @dev useEffect hook to set initial author details from session
     */
-   useEffect(() => {
+   React.useEffect(() => {
       if (session?.user) {
          const author = {
             id: session.user.userInfo.id,
@@ -313,9 +319,9 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters()
    const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters()
 
-   const [targetUrl, setTargetUrl] = useState('')
+   const [targetUrl, setTargetUrl] = React.useState('')
 
-   useEffect(() => {
+   React.useEffect(() => {
       if (typeof window === 'undefined') {
          return
       }
