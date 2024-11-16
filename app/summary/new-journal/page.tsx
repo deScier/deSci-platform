@@ -7,7 +7,6 @@ import * as Title from '@components/common/Title/Page'
 import * as Tooltip from '@components/common/Tooltip/Tooltip'
 
 import { StoredFile } from '@/components/common/Dropzone/Typing'
-import { Option } from '@/components/common/Input/Typing'
 import { MembersListDragabble } from '@/components/common/Lists/Members/Members'
 import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage'
 import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember'
@@ -18,7 +17,7 @@ import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/cre
 import { uploadJournalCoverService } from '@/services/file/file.service'
 import { submitNewJournalService } from '@/services/journal/submit.service'
 import { ErrorMessage } from '@/utils/error_message'
-import { slugfy } from '@/utils/slugfy'
+import { journal_originate_from } from '@/utils/journal_originate_from'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqueId } from 'lodash'
 import { useRouter } from 'next/navigation'
@@ -324,7 +323,7 @@ export default function NewJournalPage() {
                         </Input.Label>
                         <Input.Select
                            options={journal_originate_from}
-                           placeholder="Select"
+                           placeholder="Select the origin of the journal"
                            onValueChange={(value) => {
                               const value_access = value as string
                               setValue('originatesFrom', value_access)
@@ -449,15 +448,4 @@ const editors_in_chief = [
       id: 1,
       label: 'E-mail'
    }
-]
-
-const journal_originate_from: Option[] = [
-   { id: uniqueId(), label: 'New Area of Knowledge', value: slugfy('New Area of Knowledge') },
-   { id: uniqueId(), label: 'Community', value: slugfy('Community') },
-   { id: uniqueId(), label: 'University', value: slugfy('University') },
-   { id: uniqueId(), label: 'Faculty', value: slugfy('Faculty') },
-   { id: uniqueId(), label: 'Conference', value: slugfy('Conference') },
-   { id: uniqueId(), label: 'Event', value: slugfy('Event') },
-   { id: uniqueId(), label: 'Association', value: slugfy('Association') },
-   { id: uniqueId(), label: 'Other', value: slugfy('Other') }
 ]
