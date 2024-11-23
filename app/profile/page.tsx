@@ -167,7 +167,7 @@ export default function ProfilePage() {
                         <motion.div
                            whileTap={{ scale: 0.95 }}
                            className="border py-6 md:py-14 px-2 flex items-center justify-center gap-4 rounded-lg cursor-pointer hover:border-primary-light transition-colors duration-300 ease-in-out"
-                           onClick={() => setPassword({ ...password, insert_password_to_edit_password: true })}
+                           onClick={() => setPasswordRecovery({ ...passwordRecovery, insert_email_to_recover_password: true })}
                         >
                            <Lock className="w-5 h-5 fill-neutral-gray" />
                            <p className="text-base text-neutral-gray">Change password</p>
