@@ -19,8 +19,6 @@ import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 export function SummaryComponent() {
-   const { data: session } = useSession()
-
    const router = useRouter()
    const queryParams = useSearchParams()
 

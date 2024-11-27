@@ -11,7 +11,7 @@ import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
 import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { addWalletService } from '@/services/user/addWallet.service'
-import { registerUserService } from '@/services/user/register.service'
+import { RegisterRequestProps, registerUserService } from '@/services/user/register.service'
 import { verifyEmailService } from '@/services/user/verifyEmail.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn, useSession } from 'next-auth/react'
@@ -20,6 +20,8 @@ import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
+import { COOKIE_KEYS } from '@/utils/cookies_keys'
+import { getCookie } from 'cookies-next'
 
 import LoginAnimation from '@/components/modules/Login/Animation/Animation'
 import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
@@ -44,9 +46,11 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       trigger
    } = useForm<RegisterProps>({
       resolver: zodResolver(RegisterSchema),
-      defaultValues: { name: '', email: '', password: '', wallet_address: null },
+      defaultValues: { name: '', email: '', password: '', wallet_address: getCookie(COOKIE_KEYS.WALLET) || null },
       reValidateMode: 'onChange'
    })
+
+   console.log('watch', watch())
 
    const { loading, start, stop } = useLoading()
 
@@ -78,11 +82,17 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       }
 
       try {
-         const res = await registerUserService({
+         let payload: RegisterRequestProps = {
             name: data.name,
             email: data.email,
             password: data.password
-         })
+         }
+
+         if (data.wallet_address && data.wallet_address !== '') {
+            payload.walletAddress = data.wallet_address
+         }
+
+         const res = await registerUserService(payload)
 
          if (!res.success) {
             toast.error('An error occurred during registration. Please try again.')
@@ -281,6 +291,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                         <Button.Button
                            variant="outline"
                            className="px-4 py-2"
+                           disabled={watch('wallet_address') !== null && watch('wallet_address') !== ''}
                            onClick={async () => {
                               const account = await handleGetMetamaskAccount()
 
@@ -323,6 +334,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                            <Button.Button
                               variant="outline"
                               className="px-4 py-2"
+                              disabled={watch('wallet_address') !== null && watch('wallet_address') !== ''}
                               onClick={async (e) => {
                                  const account = await handleGetGoogleAccount()
 

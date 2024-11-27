@@ -11,7 +11,9 @@ import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
 import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
 import { LoginProps, LoginSchema } from '@/schemas/login'
+import { COOKIE_KEYS } from '@/utils/cookies_keys'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { setCookie } from 'cookies-next'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { X } from 'react-bootstrap-icons'
@@ -131,6 +133,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      onClick={(e) =>
                         handleMetamaskAuth(e, {
                            onSuccess: () => router.push(home_routes.summary),
+                           onWallet: (address) => setCookie(COOKIE_KEYS.WALLET, address),
                            noRedirect,
                            onRegister,
                            onClose

@@ -13,7 +13,8 @@ export const authOptions: NextAuthOptions = {
          name: 'Login with credentials',
          credentials: {
             email: { label: 'Email', type: 'email' },
-            password: { label: 'Password', type: 'password' }
+            password: { label: 'Password', type: 'password' },
+            wallet_address: { label: 'Wallet Address', type: 'text' }
          },
          async authorize(credentials): Promise<User | null> {
             try {

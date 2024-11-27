@@ -35,7 +35,10 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
       }
    }
 
-   const handleMetamaskAuth = async (e: React.MouseEvent<HTMLElement>, { onSuccess, onError, noRedirect, onRegister, onClose }: MetamaskAuthOptions) => {
+   const handleMetamaskAuth = async (
+      e: React.MouseEvent<HTMLElement>,
+      { onSuccess, onError, noRedirect, onRegister, onClose, onWallet }: MetamaskAuthOptions
+   ) => {
       e.preventDefault()
 
       await handleConnectProvider()
@@ -71,6 +74,8 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
             toast.error('Failed to sign message. Please try again.')
             return
          }
+
+         onWallet?.(account)
 
          const data: Web3AuthenticateDTO = {
             walletAddress: account,
@@ -131,6 +136,7 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
          }
 
          const nonce = await getNounce()
+
          const signature = await walletClient.signMessage({
             account: walletAddress,
             message: nonce.nonce
@@ -153,6 +159,7 @@ interface MetamaskAuthOptions {
    onError?: () => void
    onRegister?: () => void
    onClose?: () => void
+   onWallet?: (address: string) => void
 }
 
 interface UseMetamaskAuthReturn {

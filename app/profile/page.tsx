@@ -57,17 +57,6 @@ export default function ProfilePage() {
       router.push(home_routes.home.index)
    }
 
-   // Hook to get the user info
-   // ---------------------------------------------------------------
-   // TODO: verify if this is necessary or the best way to get the user info
-
-   //    React.useEffect(() => {
-   //
-   //       if (session?.user) {
-   //          setProfileInfo(session?.user?.userInfo)
-   //       }
-   //    }, [session])
-
    const { isCopied, copyToClipboard } = useCopyToClipboard()
 
    return (
@@ -85,7 +74,7 @@ export default function ProfilePage() {
                         height={144}
                         alt="profile-image"
                         src={session?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
-                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
+                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover object-center"
                      />
                   ) : (
                      <Image
@@ -94,7 +83,7 @@ export default function ProfilePage() {
                         height={144}
                         alt="profile-image"
                         src={'/images/profile_dk08wk.png'}
-                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36"
+                        className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover object-center"
                      />
                   )}
                   <div className="grid gap-2">
@@ -189,8 +178,8 @@ export default function ProfilePage() {
             <Dialog.Content
                className={twMerge(
                   'pt-6 px-6 pb-14 md:py-14 md:px-16',
-                  `${profile.edit_profile && 'max-w-[808px]'}`,
-                  `${profile.edit_profile_sucess && 'max-w-[480px]'}`
+                  `${profile.edit_profile && 'md:max-w-[808px]'}`,
+                  `${profile.edit_profile_sucess && 'md:max-w-[480px]'}`
                )}
             >
                <UpdateProfile
@@ -205,7 +194,7 @@ export default function ProfilePage() {
             </Dialog.Content>
          </Dialog.Root>
          <Dialog.Root open={email.insert_password_to_edit_email || email.new_email || email.new_email_sucess}>
-            <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 max-w-[480px]')}>
+            <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]')}>
                <UpdateEmail
                   insert_password={email.insert_password_to_edit_email}
                   new_email={email.new_email}
@@ -227,7 +216,7 @@ export default function ProfilePage() {
             </Dialog.Content>
          </Dialog.Root>
          <Dialog.Root open={password.insert_password_to_edit_password || password.new_password || password.new_password_sucess}>
-            <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 max-w-[480px]')}>
+            <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]')}>
                <UpdatePassword
                   new_password={password.new_password}
                   insert_current_password={password.insert_password_to_edit_password}
@@ -256,7 +245,7 @@ export default function ProfilePage() {
                passwordRecovery.recover_password_sucess
             }
          >
-            <Dialog.Content className={twMerge('py-0 px-0 max-w-[480px]')}>
+            <Dialog.Content className={twMerge('py-0 px-0 md:max-w-[480px]')}>
                <ForgotPasswordModal
                   onBack={() => {}}
                   onClose={() => {

@@ -1,9 +1,7 @@
 export const registerUserService = async (data: RegisterRequestProps) => {
    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, {
       method: 'POST',
-      headers: {
-         'content-type': 'application/json'
-      },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(data)
    })
 
@@ -23,8 +21,9 @@ export const registerUserService = async (data: RegisterRequestProps) => {
    }
 }
 
-type RegisterRequestProps = {
+export type RegisterRequestProps = {
    name: string
    email: string
    password: string
+   walletAddress?: string | null
 }
