@@ -48,7 +48,7 @@ jobs:
               echo "  ECS Task Definition Dev: ${{ secrets.ECS_TASK_DEFINITION_DEV }}"
               echo "  ECS Service Name Dev: ${{ secrets.ECS_SERVICE_NAME_DEV }}"
               echo "  ECS Cluster Name Dev: ${{ secrets.ECS_CLUSTER_NAME_DEV }}"
-              echo "  AWS Secret Manager Secret Dev: ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }}"
+              echo "  AWS Secret Manager Secret Dev: ${{ secrets.AWS_SECRET_MANAGER_SECRET }}"
 
               echo "\nEnvironment Variables:"
               env | sort
@@ -79,7 +79,7 @@ jobs:
          - name: Get Secrets from AWS Secrets Manager
            id: get-secrets
            run: |
-              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET_DEV }} --query SecretString --output text)
+              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET }} --query SecretString --output text)
               echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
 
          - name: Debug ENV_FILE
