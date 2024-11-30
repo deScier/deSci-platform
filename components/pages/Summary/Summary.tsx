@@ -7,7 +7,6 @@ import { PurchaseSuccess } from '@/components/modules/Home/Search/Purchase/Succe
 import { home_routes } from '@/routes/home'
 import { useStatistics } from '@/services/document/getStatistics.service'
 import '@styles/summary.css'
-import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import Box from '@/components/common/Box/Box'
@@ -54,9 +53,6 @@ export function SummaryComponent() {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
-
-   const { data: session } = useSession()
-   console.log('session', session)
 
    return (
       <React.Fragment>
