@@ -35,27 +35,6 @@ jobs:
            with:
               registry-type: private
 
-         - name: Debug Secrets and Environment Variables
-           run: |
-              echo "=== Debug Information ==="
-              echo "GitHub Context:"
-              echo "  Branch: ${{ github.ref }}"
-              echo "  Repository: ${{ github.repository }}"
-
-              echo "\nAWS Configuration:"
-              echo "  AWS Region: ${{ secrets.AWS_REGION }}"
-              echo "  ECR Repository Dev: ${{ secrets.ECR_REPOSITORY_DEV }}"
-              echo "  ECS Task Definition Dev: ${{ secrets.ECS_TASK_DEFINITION_DEV }}"
-              echo "  ECS Service Name Dev: ${{ secrets.ECS_SERVICE_NAME_DEV }}"
-              echo "  ECS Cluster Name Dev: ${{ secrets.ECS_CLUSTER_NAME_DEV }}"
-              echo "  AWS Secret Manager Secret Dev: ${{ secrets.AWS_SECRET_MANAGER_SECRET }}"
-
-              echo "\nEnvironment Variables:"
-              env | sort
-
-              echo "\nGitHub Environment:"
-              echo $GITHUB_ENV
-
          - name: Extract ECR repository URI
            id: ecr
            run: |
