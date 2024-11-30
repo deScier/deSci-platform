@@ -7,6 +7,7 @@ import { PurchaseSuccess } from '@/components/modules/Home/Search/Purchase/Succe
 import { home_routes } from '@/routes/home'
 import { useStatistics } from '@/services/document/getStatistics.service'
 import '@styles/summary.css'
+import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import Box from '@/components/common/Box/Box'
@@ -15,8 +16,7 @@ import Publications from '@/components/modules/Summary/Publications/Publications
 import Statistics from '@/components/modules/Summary/Statistics/Statistics'
 import Submission from '@/components/modules/Summary/Submission/Submission'
 import TopPapers from '@/components/modules/Summary/TopPapers/TopPapers'
-import { useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 export function SummaryComponent() {
    const router = useRouter()
@@ -24,16 +24,16 @@ export function SummaryComponent() {
 
    const { statistics } = useStatistics()
 
-   const [open, setOpen] = useState(false)
-   const [paymentSuccess, setPaymentSuccess] = useState(false)
-   const [documentId, setDocumentId] = useState('')
-   const [inviteData, setInviteData] = useState({
+   const [open, setOpen] = React.useState(false)
+   const [paymentSuccess, setPaymentSuccess] = React.useState(false)
+   const [documentId, setDocumentId] = React.useState('')
+   const [inviteData, setInviteData] = React.useState({
       article: '',
       author: '',
       inviteCode: ''
    })
 
-   useEffect(() => {
+   React.useEffect(() => {
       const encodedInviteData = queryParams.get('invite') || localStorage.getItem('invite')
 
       if (encodedInviteData) {
@@ -55,6 +55,9 @@ export function SummaryComponent() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
+   const { data: session } = useSession()
+   console.log('session', session)
+
    return (
       <React.Fragment>
          <Dialog.Root open={open || paymentSuccess}>
@@ -67,7 +70,6 @@ export function SummaryComponent() {
                      inviteCode={inviteData.inviteCode}
                   />
                )}
-
                {paymentSuccess && (
                   <PurchaseSuccess
                      onClose={() => {

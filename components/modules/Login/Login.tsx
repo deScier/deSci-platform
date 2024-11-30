@@ -7,7 +7,6 @@ import * as Input from '@components/common/Input/Input'
 
 import { LoginModalProps } from '@/components/modules/Login/Typing'
 import { Separator } from '@/components/ui/separator'
-import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
 import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
 import { LoginProps, LoginSchema } from '@/schemas/login'
@@ -75,7 +74,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
    }
 
    const { handleMetamaskAuth } = useMetamaskAuth()
-   const { handleGoogleAuth } = useGoogleWeb3Auth()
+
+   const loginWithGoogle = async (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+
+      try {
+         await signIn('google', {
+            callbackUrl: '/summary',
+            redirect: true,
+            prompt: 'select_account'
+         })
+      } catch (error) {
+         console.error('Google SignIn Error:', error)
+         toast.error('Error signing in with Google')
+      }
+   }
 
    return (
       <React.Fragment>
@@ -144,18 +157,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      <span className="text-base font-semibold">Continue with MetaMask</span>
                   </Button.Button>
                   <div className="space-y-2">
-                     <Button.Button
-                        variant="outline"
-                        className="px-4 py-2"
-                        onClick={(e) =>
-                           handleGoogleAuth(e, {
-                              onSuccess: () => router.push(home_routes.summary),
-                              noRedirect,
-                              onRegister,
-                              onClose
-                           })
-                        }
-                     >
+                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => loginWithGoogle(e)}>
                         <GoogleIcon className="w-6" />
                         <span className="text-base font-semibold">Continue with Google</span>
                      </Button.Button>

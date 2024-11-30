@@ -2,7 +2,11 @@
 
 import * as Button from '@components/common/Button/Button'
 
+import { home_routes } from '@/routes/home'
+import { handleLogout } from '@/utils/logout'
+import { uniqueId } from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
+import { PlusCircle } from 'react-bootstrap-icons'
 
 import Item from '@components/common/Sidebar/Item/Item'
 import Image from 'next/image'
@@ -11,6 +15,7 @@ import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg'
 import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg'
 import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg'
 import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg'
+import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
 import React from 'react'
 
 /**
@@ -57,15 +62,6 @@ const SidebarDeScier: React.FC = () => {
 const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: () => void }) => {
    /** @dev Initializes Next.js router for navigation after logout. */
    const router = useRouter()
-
-   /**
-    * @dev Handles the logout process, signs out the user and redirects to the homepage.
-    * @return Redirects to the homepage after logout.
-    */
-   const handleLogout = async () => {
-      await signOut()
-      router.push(home_routes.home.index)
-   }
    return (
       <React.Fragment>
          <div className="grid grid-flow-col items-center justify-start gap-4">
@@ -85,20 +81,13 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
                <LogoutIcon
                   width={18}
                   className="fill-neutral-light_gray cursor-pointer hover:fill-primary-main transition-all duration-300 hover:scale-110 mt-[2px]"
-                  onClick={handleLogout}
+                  onClick={() => handleLogout(() => router.push(home_routes.home.index))}
                />
             </div>
          </div>
       </React.Fragment>
    )
 }
-
-import { home_routes } from '@/routes/home'
-import { uniqueId } from 'lodash'
-import { signOut } from 'next-auth/react'
-import { PlusCircle } from 'react-bootstrap-icons'
-
-import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg'
 
 const items = [
    {

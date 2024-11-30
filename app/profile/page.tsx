@@ -9,8 +9,9 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import { home_routes } from '@/routes/home'
 import { UserSession as User } from '@/types/next-auth'
 import { formatAddress } from '@/utils/format_wallet'
+import { handleLogout } from '@/utils/logout'
 import { motion } from 'framer-motion'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { BoxArrowRight, Envelope, Lock, Pencil } from 'react-bootstrap-icons'
 import { twMerge } from 'tailwind-merge'
@@ -51,11 +52,6 @@ export default function ProfilePage() {
       insert_new_password: false,
       recover_password_sucess: false
    })
-
-   const handleLogout = async () => {
-      await signOut()
-      router.push(home_routes.home.index)
-   }
 
    const { isCopied, copyToClipboard } = useCopyToClipboard()
 
@@ -164,7 +160,7 @@ export default function ProfilePage() {
                         <motion.div
                            whileTap={{ scale: 0.95 }}
                            className="border py-6 md:py-14 px-2 flex items-center justify-center gap-4 rounded-lg cursor-pointer hover:border-primary-light transition-colors duration-300 ease-in-out"
-                           onClick={handleLogout}
+                           onClick={() => handleLogout(() => router.push(home_routes.home.index))}
                         >
                            <BoxArrowRight className="w-5 h-5 fill-neutral-gray" />
                            <p className="text-base text-neutral-gray">Log out</p>

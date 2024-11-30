@@ -3,6 +3,7 @@ import { UserProps } from '@/types/user'
 import { NextAuthOptions, Session, User } from 'next-auth'
 
 import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 
 export const authOptions: NextAuthOptions = {
    secret: process.env.NEXTAUTH_SECRET,
@@ -80,42 +81,14 @@ export const authOptions: NextAuthOptions = {
             }
          }
       }),
-      CredentialsProvider({
-         id: 'google',
-         name: 'Login with Google (Web3 Auth)',
-         credentials: {
-            walletAddress: { label: 'Wallet Address', type: 'text' },
-            signature: { label: 'Signature', type: 'text' },
-            nonce: { label: 'Nonce', type: 'text' },
-            idToken: { label: 'Id Token', type: 'text' }
-         },
-         async authorize(credentials): Promise<User | null> {
-            if (!credentials) return null
-
-            const { web3GoogleAuthenticate } = loginUserService()
-
-            try {
-               const data = {
-                  walletAddress: credentials.walletAddress,
-                  signature: credentials.signature,
-                  nonce: credentials.nonce,
-                  provider: 'google',
-                  idToken: credentials.idToken
-               }
-
-               const response: { user: UserProps; token: string } = await web3GoogleAuthenticate(data)
-
-               const user = {
-                  ...{ email: response.user.email },
-                  id: response.user.id,
-                  token: response.token,
-                  userInfo: response.user
-               }
-
-               return user
-            } catch (error) {
-               console.error('Auth error on id: wallet', error)
-               return null
+      GoogleProvider({
+         clientId: process.env.GOOGLE_ID as string,
+         clientSecret: process.env.GOOGLE_SECRET as string,
+         authorization: {
+            params: {
+               prompt: 'consent',
+               access_type: 'offline',
+               response_type: 'code'
             }
          }
       })
@@ -138,6 +111,43 @@ export const authOptions: NextAuthOptions = {
                ...account
             }
             return obj
+         }
+
+         if (account?.type === 'oauth') {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/google`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({
+                  email: profile?.email,
+                  name: profile?.name,
+                  googleId: account.providerAccountId,
+                  avatar: profile?.image || token?.picture
+               })
+            })
+
+            const data = await response.json()
+
+            if (!data?.token) {
+               return Promise.resolve({
+                  ...data,
+                  googleId: account?.providerAccountId,
+                  redirectToRegister: true
+               })
+            }
+
+            if (response.status !== 200) {
+               throw new Error('To perform this function please log in first.')
+            }
+
+            token.token = data.token
+            token.userInfo = data.user
+
+            return {
+               ...token,
+               ...user,
+               ...profile,
+               ...account
+            }
          }
 
          return { ...token, ...user, ...profile, ...account }

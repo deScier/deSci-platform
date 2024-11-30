@@ -44,6 +44,9 @@ const nextConfig = {
          },
          {
             hostname: 'descier.mypinata.cloud'
+         },
+         {
+            hostname: 'lh3.googleusercontent.com'
          }
       ]
    },
