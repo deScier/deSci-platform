@@ -146,6 +146,7 @@ export const useMetamaskAuth = (): UseMetamaskAuthReturn => {
       } catch (error) {
          console.error('MetaMask account retrieval error:', error)
          toast.error('Failed to get account')
+         toast.info('Please try open MetaMask extension and try again.')
          return undefined
       }
    }

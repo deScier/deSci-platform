@@ -2,13 +2,10 @@
 
 import * as Button from '@components/common/Button/Button'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
-import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
 import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
-import { cn } from '@/lib/utils'
 import { home_routes } from '@/routes/home'
 import { useArticles } from '@/services/document/getArticles.service'
 import { addWalletService } from '@/services/user/addWallet.service'
@@ -23,8 +20,6 @@ import { ProfileProps } from './Typing'
 import Image from 'next/image'
 import Link from 'next/link'
 import CopyIcon from 'public/svgs/common/copy.svg'
-import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
-import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg'
 import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg'
 import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg'
@@ -54,7 +49,6 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
 
    /** @dev Initialize hook to connect wallet */
    const { handleGetMetamaskAccount } = useMetamaskAuth()
-   const { handleGetGoogleAccount } = useGoogleWeb3Auth()
 
    return (
       <React.Fragment>
@@ -89,46 +83,51 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                         </h1>
                         {!session?.user?.userInfo.walletAddress ? (
                            <React.Fragment>
-                              <DropdownMenu>
-                                 <DropdownMenuTrigger asChild className="w-full">
-                                    <Button.Button ref={button_ref} variant="outline" className="mx-auto px-2 py-3 my-0 text-sm">
-                                       Connect wallet
-                                       <PlusCircle className="w-4" />
-                                    </Button.Button>
-                                 </DropdownMenuTrigger>
+                              {/* <DropdownMenu>
+                                 <DropdownMenuTrigger asChild className="w-full"> */}
+                              <Button.Button
+                                 ref={button_ref}
+                                 variant="outline"
+                                 className="mx-auto px-2 py-3 my-0 text-sm"
+                                 onClick={async () => {
+                                    const account = await handleGetMetamaskAccount()
+
+                                    if (account) {
+                                       await addWalletService({
+                                          walletAddress: account.walletAddress,
+                                          signature: account.signature,
+                                          nonce: account.nonce
+                                       }).then(async (res) => {
+                                          if (res.success) {
+                                             toast.success('MetaMask wallet connected successfully.')
+
+                                             let data = {
+                                                user: {
+                                                   ...session?.user,
+                                                   userInfo: {
+                                                      ...session?.user?.userInfo,
+                                                      walletAddress: account.walletAddress
+                                                   }
+                                                }
+                                             }
+
+                                             update(data)
+                                             router.refresh()
+                                          } else {
+                                             toast.error(res.message)
+                                          }
+                                       })
+                                    }
+                                 }}
+                              >
+                                 Connect wallet
+                                 <PlusCircle className="w-4" />
+                              </Button.Button>
+                              {/* </DropdownMenuTrigger>
                                  <DropdownMenuContent className={cn('min-w-[242px]')} style={{ width: button_ref?.current?.clientWidth }}>
                                     <DropdownMenuItem
                                        className="px-3 py-2 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
-                                       onClick={async () => {
-                                          const account = await handleGetMetamaskAccount()
-
-                                          if (account) {
-                                             await addWalletService({
-                                                walletAddress: account.walletAddress,
-                                                signature: account.signature,
-                                                nonce: account.nonce
-                                             }).then(async (res) => {
-                                                if (res.success) {
-                                                   toast.success('MetaMask wallet connected successfully.')
-
-                                                   let data = {
-                                                      user: {
-                                                         ...session?.user,
-                                                         userInfo: {
-                                                            ...session?.user?.userInfo,
-                                                            walletAddress: account.walletAddress
-                                                         }
-                                                      }
-                                                   }
-
-                                                   update(data)
-                                                   router.refresh()
-                                                } else {
-                                                   toast.error(res.message)
-                                                }
-                                             })
-                                          }
-                                       }}
+                                       
                                     >
                                        <div className="flex items-center gap-2">
                                           <MetamaskLogo className="w-4" />
@@ -180,7 +179,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                                        </div>
                                     </DropdownMenuItem>
                                  </DropdownMenuContent>
-                              </DropdownMenu>
+                              </DropdownMenu> */}
                            </React.Fragment>
                         ) : (
                            <div className="flex items-center gap-2 mx-auto my-0">
