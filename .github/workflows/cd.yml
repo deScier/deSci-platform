@@ -50,7 +50,6 @@ jobs:
               echo "  ECS Cluster Name Dev: ${{ secrets.ECS_CLUSTER_NAME_DEV }}"
               echo "  AWS Secret Manager Secret Dev: ${{ secrets.AWS_SECRET_MANAGER_SECRET }}"
 
-
               echo "\nEnvironment Variables:"
               env | sort
 
