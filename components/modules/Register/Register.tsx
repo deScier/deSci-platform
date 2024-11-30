@@ -5,7 +5,6 @@ import * as Button from '@components/common/Button/Button'
 import * as Input from '@components/common/Input/Input'
 
 import { Separator } from '@/components/ui/separator'
-import { useGoogleWeb3Auth } from '@/hooks/useGoogleWeb3Auth'
 import { useLoading } from '@/hooks/useLoading'
 import { useMetamaskAuth } from '@/hooks/useMetamaskAuth'
 import { home_routes } from '@/routes/home'
@@ -13,18 +12,17 @@ import { RegisterProps, RegisterSchema } from '@/schemas/register'
 import { addWalletService } from '@/services/user/addWallet.service'
 import { RegisterRequestProps, registerUserService } from '@/services/user/register.service'
 import { verifyEmailService } from '@/services/user/verifyEmail.service'
+import { COOKIE_KEYS } from '@/utils/cookies_keys'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getCookie } from 'cookies-next'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, X } from 'react-bootstrap-icons'
 import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { RegisterModalProps } from './Typing'
-import { COOKIE_KEYS } from '@/utils/cookies_keys'
-import { getCookie } from 'cookies-next'
 
 import LoginAnimation from '@/components/modules/Login/Animation/Animation'
-import GoogleIcon from 'public/svgs/modules/login/google_icon.svg'
 import MetamaskLogo from 'public/svgs/modules/login/metamask.svg'
 import React from 'react'
 
@@ -148,7 +146,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
       }
    }
 
-   const { handleGetGoogleAccount } = useGoogleWeb3Auth()
    const { handleGetMetamaskAccount } = useMetamaskAuth()
 
    return (
@@ -330,54 +327,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                            <MetamaskLogo className="w-6" />
                            <span className="text-base font-semibold">Connect with MetaMask</span>
                         </Button.Button>
-                        <div className="space-y-2">
-                           <Button.Button
-                              variant="outline"
-                              className="px-4 py-2"
-                              disabled={watch('wallet_address') !== null && watch('wallet_address') !== ''}
-                              onClick={async (e) => {
-                                 const account = await handleGetGoogleAccount()
-
-                                 if (account?.walletAddress) {
-                                    setValue('wallet_address', account.walletAddress)
-
-                                    await addWalletService({
-                                       walletAddress: account.walletAddress,
-                                       signature: account.signature,
-                                       nonce: account.nonce
-                                    }).then(async (res) => {
-                                       if (res.success) {
-                                          toast.success('Connected wallet successfully.')
-
-                                          let data = {
-                                             user: {
-                                                ...session?.user,
-                                                userInfo: {
-                                                   ...session?.user?.userInfo,
-                                                   walletAddress: account.walletAddress
-                                                }
-                                             }
-                                          }
-
-                                          update(data)
-
-                                          router.refresh()
-                                          router.push(home_routes.summary)
-                                       } else {
-                                          toast.error(res.message)
-                                       }
-                                    })
-                                 }
-                              }}
-                           >
-                              <GoogleIcon className="w-6" />
-                              <span className="text-base font-semibold">Connect with Google</span>
-                           </Button.Button>
-                           <p className="text-[10px] font-regular text-neutral-light_gray text-center">
-                              When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over
-                              your assets.
-                           </p>
-                        </div>
                      </div>
                      <div className="relative">
                         <Separator color="#A9A9A9" className="h-[0.5px]" />

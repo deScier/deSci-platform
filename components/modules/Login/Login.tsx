@@ -156,16 +156,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ withLink = false, authorName, o
                      <MetamaskLogo className="w-6" />
                      <span className="text-base font-semibold">Continue with MetaMask</span>
                   </Button.Button>
-                  <div className="space-y-2">
-                     <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => loginWithGoogle(e)}>
-                        <GoogleIcon className="w-6" />
-                        <span className="text-base font-semibold">Continue with Google</span>
-                     </Button.Button>
-                     <p className="text-[10px] font-regular text-neutral-light_gray text-center">
-                        When connecting via Google, a self-custodial digital wallet will be created using Web3Auth. You will have full control over your
-                        assets.
-                     </p>
-                  </div>
+                  <Button.Button variant="outline" className="px-4 py-2" onClick={(e) => loginWithGoogle(e)}>
+                     <GoogleIcon className="w-6" />
+                     <span className="text-base font-semibold">Continue with Google</span>
+                  </Button.Button>
                   <p className="text-secundary_blue-main text-sm text-center">
                      Don&apos;t have an account yet?{' '}
                      <span className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline" onClick={onRegister}>
