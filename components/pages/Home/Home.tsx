@@ -66,7 +66,8 @@ export function HomeComponent({ journals }: HomeProps) {
 
    React.useEffect(() => {
       if (articles) {
-         const papers = articles.slice(0, 3).sort((a, b) => b.likes! - a.likes!)
+         console.log('articles', articles)
+         const papers = articles.sort((a, b) => b.likes! - a.likes!).slice(0, 3)
          setTopPapers(papers)
       }
    }, [articles])
