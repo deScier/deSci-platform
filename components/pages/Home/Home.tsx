@@ -84,6 +84,7 @@ export function HomeComponent({ journals }: HomeProps) {
    const [component, setComponent] = React.useState(login_component)
    return (
       <React.Fragment>
+         ,
          <Dialog.Root open={open}>
             <Dialog.Content
                className={twMerge(
