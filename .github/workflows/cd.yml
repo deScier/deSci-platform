@@ -38,12 +38,12 @@ jobs:
          - name: Extract ECR repository URI
            id: ecr
            run: |
-              echo "Attempting to describe ECR repository: ${{ secrets.ECR_REPOSITORY_DEV }}"
-              if [ -z "${{ secrets.ECR_REPOSITORY_DEV }}" ]; then
-                echo "Error: ECR_REPOSITORY_DEV secret is empty"
+              echo "Attempting to describe ECR repository: ${{ secrets.ECR_REPOSITORY }}"
+              if [ -z "${{ secrets.ECR_REPOSITORY }}" ]; then
+                echo "Error: ECR_REPOSITORY secret is empty"
                 exit 1
               fi
-              uri=$(aws ecr describe-repositories --repository-names "${{ secrets.ECR_REPOSITORY_DEV }}" --region "${{ secrets.AWS_REGION }}" --query 'repositories[0].repositoryUri' --output text)
+              uri=$(aws ecr describe-repositories --repository-names "${{ secrets.ECR_REPOSITORY }}" --region "${{ secrets.AWS_REGION }}" --query 'repositories[0].repositoryUri' --output text)
               if [ $? -ne 0 ]; then
                 echo "Error: Failed to describe ECR repository"
                 exit 1
@@ -79,7 +79,7 @@ jobs:
          - name: Download current ECS task definition
            id: download-task-def
            run: |
-              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_DEV }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
+              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
 
          - name: Update image in ECS task definition
            id: update-task-def
@@ -102,8 +102,8 @@ jobs:
            uses: aws-actions/amazon-ecs-deploy-task-definition@v2
            with:
               task-definition: updated-task-definition.json
-              service: ${{ secrets.ECS_SERVICE_NAME_DEV }}
-              cluster: ${{ secrets.ECS_CLUSTER_NAME_DEV }}
+              service: ${{ secrets.ECS_SERVICE_NAME }}
+              cluster: ${{ secrets.ECS_CLUSTER_NAME }}
 
          - name: Log out of Amazon ECR
            run: |
