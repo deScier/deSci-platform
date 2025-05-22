@@ -130,4 +130,4 @@ jobs:
 
          - name: Deployment Status
            run: |
-              echo "✅ Deployment completed for ${{ github.ref_name }} at $(date)"
+              echo "Deployment completed for ${{ github.ref_name }} at $(date)"
