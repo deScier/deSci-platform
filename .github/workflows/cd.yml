@@ -7,51 +7,17 @@ on:
          - main
 
 jobs:
-   deploy:
-      name: Deploy to VPS
+   prepare:
+      name: Prepare Repository
       runs-on: self-hosted
-      timeout-minutes: 30
+      timeout-minutes: 5
+      outputs:
+         branch: ${{ github.ref_name }}
       steps:
          - name: Checkout Code
            uses: actions/checkout@v3
            with:
               fetch-depth: 0
-
-         - name: Setup Node
-           uses: actions/setup-node@v3
-           with:
-              node-version: 23
-
-         - name: Setup pnpm
-           uses: pnpm/action-setup@v2
-           with:
-              version: 8
-              run_install: false
-
-         - name: Get pnpm store directory
-           id: pnpm-cache
-           shell: bash
-           run: |
-              echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-         - name: Setup pnpm cache
-           uses: actions/cache@v3
-           with:
-              path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-              restore-keys: |
-                 ${{ runner.os }}-pnpm-store-
-
-         - name: Check system resources
-           run: |
-              echo "Operating system: $(uname -a)"
-              echo "Node.js version: $(node -v)"
-              echo "PNPM version: $(pnpm -v)"
-              echo "Current directory: $(pwd)"
-              echo "Deployment started at: $(date)"
-              echo "Available memory: $(free -h || echo 'free command not available')"
-              echo "Disk space: $(df -h || echo 'df command not available')"
-              echo "CPU info: $(lscpu || echo 'lscpu command not available')"
 
          - name: Pull Latest Code
            run: |
@@ -63,53 +29,72 @@ jobs:
            run: |
               if [ -n "${{ secrets.ENV_PROD }}" ]; then
                 echo "${{ secrets.ENV_PROD }}" > .env
+                echo "env-set=true" >> $GITHUB_OUTPUT
               else
                 echo "Error: ENV_PROD secret is not configured. Set it in Settings > Secrets and variables > Actions"
                 exit 1
               fi
 
-         - name: Install Dependencies
-           id: install
-           continue-on-error: true
-           run: pnpm install --no-frozen-lockfile
+   build:
+      name: Build Application
+      needs: prepare
+      runs-on: self-hosted
+      timeout-minutes: 25
+      steps:
+         - name: Setup Node
+           uses: actions/setup-node@v3
+           with:
+              node-version: 23
 
-         - name: Retry Install on Failure
-           if: steps.install.outcome == 'failure'
-           run: |
-              echo "First attempt failed, cleaning cache and reinstalling..."
-              pnpm store prune
-              pnpm install --no-frozen-lockfile
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v2
+           with:
+              version: 8
+              run_install: false
 
-         - name: Clear Next.js cache
+         - name: Clear caches
            run: |
               rm -rf .next
               rm -rf node_modules/.cache
+              rm -rf node_modules
 
-         - name: Build Application with Debug
+         - name: Install Dependencies
+           run: pnpm install --no-frozen-lockfile
+           timeout-minutes: 10
+
+         - name: Build Application
            run: |
-              echo "Starting build with increased memory limit..."
               export NODE_OPTIONS="--max-old-space-size=4096"
               pnpm run build
            timeout-minutes: 15
 
-         - name: Ensure PM2 is installed
-           run: |
-              if ! command -v pm2 &> /dev/null; then
-                npm install -g pm2
-              fi
+         - name: Cache build artifacts
+           uses: actions/cache@v3
+           with:
+              path: |
+                 .next
+                 node_modules
+              key: build-${{ github.sha }}
+              restore-keys: |
+                 build-
+
+   deploy:
+      name: Deploy to Server
+      needs: build
+      runs-on: self-hosted
+      timeout-minutes: 5
+      steps:
+         - name: Restore build artifacts
+           uses: actions/cache@v3
+           with:
+              path: |
+                 .next
+                 node_modules
+              key: build-${{ github.sha }}
 
          - name: Kill processes in port 3000
            run: |
-              # Alternativa sem usar sudo
-              PID=$(lsof -t -i:3000 2>/dev/null || echo "")
-              if [ -n "$PID" ]; then
-                echo "Killing process on port 3000 (PID: $PID)"
-                kill -15 $PID 2>/dev/null || echo "Failed to kill process using SIGTERM"
-                sleep 2
-                kill -9 $PID 2>/dev/null || echo "Process may already be terminated"
-              else
-                echo "No process found on port 3000"
-              fi
+              sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
 
          - name: Restart Application
            run: |
@@ -134,4 +119,4 @@ jobs:
 
          - name: Deployment Status
            run: |
-              echo "Deployment completed for ${{ github.ref_name }} at $(date)"
+              echo "Deployment completed for needs.prepare.outputs.branch at $(date)"
