@@ -20,7 +20,13 @@ jobs:
            uses: actions/setup-node@v3
            with:
               node-version: 23
-              cache: 'npm'
+
+         - name: Check environment
+           run: |
+              echo "Sistema operacional: $(uname -a)"
+              echo "Node.js version: $(node -v)"
+              echo "NPM version: $(npm -v)"
+              echo "Diretório atual: $(pwd)"
 
          - name: Pull Latest Code
            run: |
@@ -51,7 +57,12 @@ jobs:
 
          - name: Kill processes in port 3000
            run: |
-              sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
+              if command -v lsof &> /dev/null; then
+                sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
+              else
+                echo "lsof não encontrado, tentando alternativa..."
+                sudo fuser -k 3000/tcp || echo "No process to kill"
+              fi
 
          - name: Restart Application
            run: |
@@ -64,3 +75,11 @@ jobs:
          - name: Notify deployment status
            run: |
               echo "Deployment concluído com sucesso para ${{ github.ref_name }} em $(date)"
+
+         - name: Cleanup Docker resources (for act testing)
+           if: ${{ env.ACT }}
+           run: |
+              echo "Limpando recursos Docker após teste com act..."
+              docker ps -a | grep act | awk '{print $1}' | xargs -r docker rm -f
+              docker images | grep act | awk '{print $3}' | xargs -r docker rmi -f
+              echo "Limpeza concluída!"
