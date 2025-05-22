@@ -100,11 +100,15 @@ jobs:
 
          - name: Kill processes in port 3000
            run: |
-              if command -v lsof &> /dev/null; then
-                sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
+              # Alternativa sem usar sudo
+              PID=$(lsof -t -i:3000 2>/dev/null || echo "")
+              if [ -n "$PID" ]; then
+                echo "Killing process on port 3000 (PID: $PID)"
+                kill -15 $PID 2>/dev/null || echo "Failed to kill process using SIGTERM"
+                sleep 2
+                kill -9 $PID 2>/dev/null || echo "Process may already be terminated"
               else
-                echo "lsof not found, trying alternative..."
-                sudo fuser -k 3000/tcp || echo "No process to kill"
+                echo "No process found on port 3000"
               fi
 
          - name: Restart Application
