@@ -10,17 +10,43 @@ jobs:
    quality:
       name: Code Quality Check
       runs-on: ubuntu-latest
+      timeout-minutes: 15
       steps:
          - name: Checkout code
            uses: actions/checkout@v3
 
-         - name: Set up Node.js
+         - name: Setup Node.js
            uses: actions/setup-node@v3
            with:
               node-version: '23'
 
-         - name: Install pnpm
-           run: npm install -g pnpm
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v2
+           with:
+              version: 8
+              run_install: false
+
+         - name: Get pnpm store directory
+           id: pnpm-cache
+           shell: bash
+           run: |
+              echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+         - name: Setup pnpm cache
+           uses: actions/cache@v3
+           with:
+              path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                 ${{ runner.os }}-pnpm-store-
+
+         - name: Cache node_modules
+           uses: actions/cache@v3
+           with:
+              path: '**/node_modules'
+              key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                 ${{ runner.os }}-modules-
 
          - name: Install dependencies
            run: pnpm install --no-frozen-lockfile
@@ -29,7 +55,21 @@ jobs:
            run: pnpm run lint
 
          - name: Type check
-           run: pnpm run typecheck || echo "Sem verificação de tipos configurada"
+           run: pnpm run typecheck || echo "No type check configured"
+
+         - name: Clear Next.js cache
+           run: |
+              rm -rf .next
+              rm -rf node_modules/.cache
 
          - name: Build check
-           run: pnpm run build
+           run: |
+              export NODE_OPTIONS="--max-old-space-size=4096"
+              pnpm run build
+           timeout-minutes: 10
+
+         - name: Cache build
+           uses: actions/cache@v3
+           with:
+              path: .next
+              key: ${{ runner.os }}-next-build-${{ github.sha }}

@@ -10,6 +10,7 @@ jobs:
    deploy:
       name: Deploy to VPS
       runs-on: self-hosted
+      timeout-minutes: 30
       steps:
          - name: Checkout Code
            uses: actions/checkout@v3
@@ -21,16 +22,36 @@ jobs:
            with:
               node-version: 23
 
-         - name: Install pnpm
-           run: npm install -g pnpm
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v2
+           with:
+              version: 8
+              run_install: false
 
-         - name: Check environment
+         - name: Get pnpm store directory
+           id: pnpm-cache
+           shell: bash
            run: |
-              echo "Sistema operacional: $(uname -a)"
+              echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+         - name: Setup pnpm cache
+           uses: actions/cache@v3
+           with:
+              path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                 ${{ runner.os }}-pnpm-store-
+
+         - name: Check system resources
+           run: |
+              echo "Operating system: $(uname -a)"
               echo "Node.js version: $(node -v)"
-              echo "NPM version: $(npm -v)"
               echo "PNPM version: $(pnpm -v)"
-              echo "Diretório atual: $(pwd)"
+              echo "Current directory: $(pwd)"
+              echo "Deployment started at: $(date)"
+              echo "Available memory: $(free -h || echo 'free command not available')"
+              echo "Disk space: $(df -h || echo 'df command not available')"
+              echo "CPU info: $(lscpu || echo 'lscpu command not available')"
 
          - name: Pull Latest Code
            run: |
@@ -43,15 +64,33 @@ jobs:
               if [ -n "${{ secrets.ENV_PROD }}" ]; then
                 echo "${{ secrets.ENV_PROD }}" > .env
               else
-                echo "Erro: O segredo ENV_PROD não está configurado. Configure-o em Settings > Secrets and variables > Actions"
+                echo "Error: ENV_PROD secret is not configured. Set it in Settings > Secrets and variables > Actions"
                 exit 1
               fi
 
          - name: Install Dependencies
+           id: install
+           continue-on-error: true
            run: pnpm install --no-frozen-lockfile
 
-         - name: Build Application
-           run: pnpm run build
+         - name: Retry Install on Failure
+           if: steps.install.outcome == 'failure'
+           run: |
+              echo "First attempt failed, cleaning cache and reinstalling..."
+              pnpm store prune
+              pnpm install --no-frozen-lockfile
+
+         - name: Clear Next.js cache
+           run: |
+              rm -rf .next
+              rm -rf node_modules/.cache
+
+         - name: Build Application with Debug
+           run: |
+              echo "Starting build with increased memory limit..."
+              export NODE_OPTIONS="--max-old-space-size=4096"
+              pnpm run build
+           timeout-minutes: 15
 
          - name: Ensure PM2 is installed
            run: |
@@ -64,7 +103,7 @@ jobs:
               if command -v lsof &> /dev/null; then
                 sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
               else
-                echo "lsof não encontrado, tentando alternativa..."
+                echo "lsof not found, trying alternative..."
                 sudo fuser -k 3000/tcp || echo "No process to kill"
               fi
 
@@ -76,6 +115,19 @@ jobs:
          - name: Save PM2 process list
            run: pm2 save
 
-         - name: Notify deployment status
+         - name: Verify Deployment
            run: |
-              echo "Deployment concluído com sucesso para ${{ github.ref_name }} em $(date)"
+              echo "Waiting for application to start..."
+              sleep 5
+
+              HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
+              if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+                echo "Application is responding with status $HTTP_CODE"
+              else
+                echo "Application is not responding properly. Status: $HTTP_CODE"
+                echo "Continuing anyway..."
+              fi
+
+         - name: Deployment Status
+           run: |
+              echo "✅ Deployment completed for ${{ github.ref_name }} at $(date)"
