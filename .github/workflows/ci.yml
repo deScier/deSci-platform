@@ -4,13 +4,12 @@ on:
    pull_request:
       branches:
          - main
-         - develop
+         - feat/rafael/ci-cd-vps
 
 jobs:
-   build:
-      name: CI deScier Front-End (Pull Request)
+   quality:
+      name: Code Quality Check
       runs-on: ubuntu-latest
-
       steps:
          - name: Checkout code
            uses: actions/checkout@v3
@@ -18,7 +17,8 @@ jobs:
          - name: Set up Node.js
            uses: actions/setup-node@v3
            with:
-              node-version: '18'
+              node-version: '23'
+              cache: 'npm'
 
          - name: Install dependencies
            run: npm install
@@ -26,5 +26,8 @@ jobs:
          - name: Run lint checks
            run: npm run lint
 
-         - name: Build the app
+         - name: Type check
+           run: npm run typecheck || echo "Sem verificação de tipos configurada"
+
+         - name: Build check
            run: npm run build

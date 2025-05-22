@@ -1,110 +1,66 @@
-name: Build and Push Docker Image to ECR
+name: Continuous Deployment
 
 on:
    push:
       branches:
-         - develop
+         - feat/rafael/ci-cd-vps
+         - main
 
 jobs:
-   build-and-push:
-      if: github.ref == 'refs/heads/develop'
-      name: Build and Push Docker Image to ECR
-      runs-on: ubuntu-latest
-      timeout-minutes: 15
-
+   deploy:
+      name: Deploy to VPS
+      runs-on: self-hosted
       steps:
-         - name: Checkout code
+         - name: Checkout Code
            uses: actions/checkout@v3
-
-         - name: Set up QEMU
-           uses: docker/setup-qemu-action@v2
-
-         - name: Set up Docker Buildx
-           uses: docker/setup-buildx-action@v2
-
-         - name: Configure AWS credentials
-           uses: aws-actions/configure-aws-credentials@v2
            with:
-              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws-region: ${{ secrets.AWS_REGION }}
+              fetch-depth: 0
 
-         - name: Log in to Amazon ECR
-           id: login-ecr
-           uses: aws-actions/amazon-ecr-login@v2
+         - name: Setup Node
+           uses: actions/setup-node@v3
            with:
-              registry-type: private
+              node-version: 23
+              cache: 'npm'
 
-         - name: Extract ECR repository URI
-           id: ecr
+         - name: Pull Latest Code
            run: |
-              echo "Attempting to describe ECR repository: ${{ secrets.ECR_REPOSITORY }}"
-              if [ -z "${{ secrets.ECR_REPOSITORY }}" ]; then
-                echo "Error: ECR_REPOSITORY secret is empty"
+              git fetch --all
+              git reset --hard origin/${{ github.ref_name }}
+              git pull
+
+         - name: Set .env
+           run: |
+              if [ -n "${{ secrets.ENV_PROD }}" ]; then
+                echo "${{ secrets.ENV_PROD }}" > .env
+              else
+                echo "Erro: O segredo ENV_PROD não está configurado. Configure-o em Settings > Secrets and variables > Actions"
                 exit 1
               fi
-              uri=$(aws ecr describe-repositories --repository-names "${{ secrets.ECR_REPOSITORY }}" --region "${{ secrets.AWS_REGION }}" --query 'repositories[0].repositoryUri' --output text)
-              if [ $? -ne 0 ]; then
-                echo "Error: Failed to describe ECR repository"
-                exit 1
+
+         - name: Install Dependencies
+           run: npm install
+
+         - name: Build Application
+           run: npm run build
+
+         - name: Ensure PM2 is installed
+           run: |
+              if ! command -v pm2 &> /dev/null; then
+                npm install -g pm2
               fi
-              if [ -z "$uri" ]; then
-                echo "Error: ECR repository URI is empty"
-                exit 1
-              fi
-              echo "uri=$uri" >> $GITHUB_ENV
-              echo "Extracted ECR URI: $uri"
 
-         - name: Get Secrets from AWS Secrets Manager
-           id: get-secrets
+         - name: Kill processes in port 3000
            run: |
-              secret=$(aws secretsmanager get-secret-value --secret-id ${{ secrets.AWS_SECRET_MANAGER_SECRET }} --query SecretString --output text)
-              echo "$secret" | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+              sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
 
-         - name: Debug ENV_FILE
+         - name: Restart Application
            run: |
-              echo "ENV_FILE value: ${{ env.ENV_FILE }}"
-              echo "Contents of .env file:"
-              cat .env
+              pm2 delete "deScier Platform" || echo "No process to delete"
+              pm2 start --name "deScier Platform" npm -- start
 
-         - name: Build, Tag, and Push Docker image
-           id: build-image
+         - name: Save PM2 process list
+           run: pm2 save
+
+         - name: Notify deployment status
            run: |
-              echo "Building Docker image"
-              docker build -t ${{ env.uri }}:latest .
-              echo "Pushing Docker image to ${{ env.uri }}:latest"
-              docker push ${{ env.uri }}:latest
-              echo "image=${{ env.uri }}:latest" >> $GITHUB_OUTPUT
-
-         - name: Download current ECS task definition
-           id: download-task-def
-           run: |
-              aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION }} --region ${{ secrets.AWS_REGION }} --query 'taskDefinition' > task-definition.json
-
-         - name: Update image in ECS task definition
-           id: update-task-def
-           run: |
-              jq '.containerDefinitions[].image |= split("@")[0]' task-definition.json > task-definition-no-digest.json
-
-              jq --arg image "${{ steps.build-image.outputs.image }}" '.containerDefinitions[0].image = $image' task-definition-no-digest.json > updated-task-definition.json
-
-              jq 'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .requiresAttributes, .compatibilities)' updated-task-definition.json > final-task-definition.json
-
-              mv final-task-definition.json updated-task-definition.json
-
-         - name: Register new ECS task definition
-           id: register-task-def
-           run: |
-              TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json --region ${{ secrets.AWS_REGION }} --query 'taskDefinition.taskDefinitionArn' --output text)
-              echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
-
-         - name: Deploy Amazon ECS task definition
-           uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-           with:
-              task-definition: updated-task-definition.json
-              service: ${{ secrets.ECS_SERVICE_NAME }}
-              cluster: ${{ secrets.ECS_CLUSTER_NAME }}
-
-         - name: Log out of Amazon ECR
-           run: |
-              docker logout ${{ env.uri }}
+              echo "Deployment concluído com sucesso para ${{ github.ref_name }} em $(date)"
