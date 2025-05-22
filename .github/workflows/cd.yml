@@ -94,12 +94,29 @@ jobs:
 
          - name: Kill processes in port 3000
            run: |
-              sudo kill -9 $(sudo lsof -t -i:3000) || echo "No process to kill"
+              sudo kill -9 $(sudo lsof -t -i:3000 2>/dev/null) 2>/dev/null || echo "No process running on port 3000"
+
+         - name: Ensure PM2 is installed
+           run: |
+              if ! command -v pm2 &> /dev/null; then
+                npm install -g pm2
+              fi
+
+         - name: Get pnpm and npm paths
+           id: get_paths
+           run: |
+              echo "PNPM_PATH=$(which pnpm)" >> $GITHUB_OUTPUT
+              echo "NPM_PATH=$(which npm)" >> $GITHUB_OUTPUT
+              echo "NODE_PATH=$(which node)" >> $GITHUB_OUTPUT
+              echo "WORKING_DIR=$(pwd)" >> $GITHUB_OUTPUT
 
          - name: Restart Application
            run: |
-              pm2 delete "deScier Platform" || echo "No process to delete"
-              pm2 start --name "deScier Platform" pnpm -- start
+              echo "Stopping existing process if any..."
+              pm2 delete "deScier Platform" 2>/dev/null || echo "No process to delete"
+
+              echo "Starting application with PM2..."
+              cd "$GITHUB_WORKSPACE" && pm2 start npm --name "deScier Platform" -- start
 
          - name: Save PM2 process list
            run: pm2 save
