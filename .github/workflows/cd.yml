@@ -21,11 +21,15 @@ jobs:
            with:
               node-version: 23
 
+         - name: Install pnpm
+           run: npm install -g pnpm
+
          - name: Check environment
            run: |
               echo "Sistema operacional: $(uname -a)"
               echo "Node.js version: $(node -v)"
               echo "NPM version: $(npm -v)"
+              echo "PNPM version: $(pnpm -v)"
               echo "Diretório atual: $(pwd)"
 
          - name: Pull Latest Code
@@ -44,10 +48,10 @@ jobs:
               fi
 
          - name: Install Dependencies
-           run: npm install
+           run: pnpm install --no-frozen-lockfile
 
          - name: Build Application
-           run: npm run build
+           run: pnpm run build
 
          - name: Ensure PM2 is installed
            run: |
@@ -67,7 +71,7 @@ jobs:
          - name: Restart Application
            run: |
               pm2 delete "deScier Platform" || echo "No process to delete"
-              pm2 start --name "deScier Platform" npm -- start
+              pm2 start --name "deScier Platform" pnpm -- start
 
          - name: Save PM2 process list
            run: pm2 save
