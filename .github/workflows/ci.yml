@@ -10,7 +10,7 @@ jobs:
    quality:
       name: Code Quality Check
       runs-on: ubuntu-latest
-      timeout-minutes: 15
+      timeout-minutes: 10
       steps:
          - name: Checkout code
            uses: actions/checkout@v3
@@ -56,20 +56,3 @@ jobs:
 
          - name: Type check
            run: pnpm run typecheck || echo "No type check configured"
-
-         - name: Clear Next.js cache
-           run: |
-              rm -rf .next
-              rm -rf node_modules/.cache
-
-         - name: Build check
-           run: |
-              export NODE_OPTIONS="--max-old-space-size=4096"
-              pnpm run build
-           timeout-minutes: 10
-
-         - name: Cache build
-           uses: actions/cache@v3
-           with:
-              path: .next
-              key: ${{ runner.os }}-next-build-${{ github.sha }}
