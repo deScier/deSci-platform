@@ -22,7 +22,7 @@ const nextConfig = {
       return config
    },
    compiler: {
-      removeConsole: process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? true : false
+      removeConsole: process.env.NODE_ENV === 'production' ? true : false
    },
    images: {
       remotePatterns: [

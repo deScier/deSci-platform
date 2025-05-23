@@ -8,6 +8,17 @@ import GoogleProvider from 'next-auth/providers/google'
 export const authOptions: NextAuthOptions = {
    secret: process.env.NEXTAUTH_SECRET,
    session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
+   cookies: {
+      state: {
+         name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.state' : 'next-auth.state',
+         options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: process.env.NODE_ENV === 'production'
+         }
+      }
+   },
    providers: [
       CredentialsProvider({
          id: 'credentials',
@@ -88,8 +99,12 @@ export const authOptions: NextAuthOptions = {
             params: {
                prompt: 'consent',
                access_type: 'offline',
-               response_type: 'code'
+               response_type: 'code',
+               scope: 'openid profile email'
             }
+         },
+         httpOptions: {
+            timeout: 10000
          }
       })
    ],

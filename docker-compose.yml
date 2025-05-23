@@ -14,10 +14,10 @@ services:
             condition: on-failure
       pull_policy: never
       environment:
-         NODE_ENV: ${NODE_ENV:-production}
+         NODE_ENV: production
          PORT: ${PORT:-3000}
       healthcheck:
-         test: ['CMD', 'curl', '-f', 'http://localhost:3000/home']
+         test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health-check']
          interval: 30s
          timeout: 10s
          retries: 3
