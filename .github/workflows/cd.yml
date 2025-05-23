@@ -92,39 +92,23 @@ jobs:
                  node_modules
               key: build-${{ github.sha }}
 
-         - name: Kill processes in port 3000
+         - name: Stop existing containers
            run: |
-              sudo kill -9 $(sudo lsof -t -i:3000 2>/dev/null) 2>/dev/null || echo "No process running on port 3000"
+              docker-compose down 2>/dev/null || echo "No containers to stop"
+              docker stop $(docker ps -q --filter "ancestor=descier-app-image") 2>/dev/null || echo "No running containers"
 
-         - name: Ensure PM2 is installed
+         - name: Build Docker image
            run: |
-              if ! command -v pm2 &> /dev/null; then
-                npm install -g pm2
-              fi
+              docker build -t descier-app-image:latest .
 
-         - name: Get pnpm and npm paths
-           id: get_paths
+         - name: Start application with Docker
            run: |
-              echo "PNPM_PATH=$(which pnpm)" >> $GITHUB_OUTPUT
-              echo "NPM_PATH=$(which npm)" >> $GITHUB_OUTPUT
-              echo "NODE_PATH=$(which node)" >> $GITHUB_OUTPUT
-              echo "WORKING_DIR=$(pwd)" >> $GITHUB_OUTPUT
-
-         - name: Restart Application
-           run: |
-              echo "Stopping existing process if any..."
-              pm2 delete "deScier Platform" 2>/dev/null || echo "No process to delete"
-
-              echo "Starting application with PM2..."
-              cd "$GITHUB_WORKSPACE" && pm2 start npm --name "deScier Platform" -- start
-
-         - name: Save PM2 process list
-           run: pm2 save
+              docker-compose up -d
 
          - name: Verify Deployment
            run: |
               echo "Waiting for application to start..."
-              sleep 5
+              sleep 10
 
               HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
               if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
