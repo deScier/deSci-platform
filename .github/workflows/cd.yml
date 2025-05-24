@@ -46,7 +46,7 @@ jobs:
               docker-compose down 2>/dev/null || echo "No containers to stop"
               docker stop $(docker ps -q --filter "ancestor=descier-app-image") 2>/dev/null || echo "No running containers"
 
-         - name: Build Docker image (with application build inside)
+         - name: Build Docker image
            run: |
               docker build --no-cache --build-arg ENV_FILE="$(cat .env)" -t descier-app-image:latest .
            timeout-minutes: 25
