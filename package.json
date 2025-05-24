@@ -81,14 +81,8 @@
       "uuidv4": "^6.2.13",
       "viem": "^2.20.0",
       "web3": "^4.6.0",
-      "zod": "^3.22.4"
-   },
-   "overrides": {
-      "node-gyp-build": "4.7.1"
-   },
-   "devDependencies": {
+      "zod": "^3.22.4",
       "@svgr/webpack": "^8.1.0",
-      "@types/slug": "^5.0.8",
       "cookies-next": "4.3.0",
       "embla-carousel": "^8.0.0",
       "embla-carousel-auto-scroll": "^8.0.0",
@@ -96,5 +90,11 @@
       "ethers": "^6.13.2",
       "postcss-import": "^15.1.0",
       "postcss-nesting": "^12.1.0"
+   },
+   "overrides": {
+      "node-gyp-build": "4.7.1"
+   },
+   "devDependencies": {
+      "@types/slug": "^5.0.8"
    }
 }

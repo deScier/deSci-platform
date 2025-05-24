@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN sh -c 'echo "$ENV_FILE" > .env'
 
 # Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the app
 COPY . .
