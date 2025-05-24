@@ -89,12 +89,11 @@
       "embla-carousel-react": "^8.0.0",
       "ethers": "^6.13.2",
       "postcss-import": "^15.1.0",
-      "postcss-nesting": "^12.1.0"
+      "postcss-nesting": "^12.1.0",
+      "@types/slug": "^5.0.8"
    },
    "overrides": {
       "node-gyp-build": "4.7.1"
    },
-   "devDependencies": {
-      "@types/slug": "^5.0.8"
-   }
+   "devDependencies": {}
 }

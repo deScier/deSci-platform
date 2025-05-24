@@ -48,7 +48,7 @@ jobs:
 
          - name: Build Docker image (with application build inside)
            run: |
-              docker build --build-arg ENV_FILE="$(cat .env)" -t descier-app-image:latest .
+              docker build --no-cache --build-arg ENV_FILE="$(cat .env)" -t descier-app-image:latest .
            timeout-minutes: 25
 
          - name: Start application with Docker
