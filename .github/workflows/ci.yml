@@ -3,8 +3,8 @@ name: CI Pipeline (Pull Request)
 on:
    pull_request:
       branches:
+         - develop
          - main
-         - feat/rafael/ci-cd-vps
 
 jobs:
    quality:

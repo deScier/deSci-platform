@@ -3,7 +3,7 @@ name: Continuous Deployment
 on:
    push:
       branches:
-         - feat/rafael/ci-cd-vps
+         - develop
          - main
 
 jobs:
