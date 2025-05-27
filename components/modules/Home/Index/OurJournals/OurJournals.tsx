@@ -98,7 +98,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
             id_carroussel: uniqueId(`${journal.id}_`)
          }))
       } else {
-         if (journals.length >= 6) {
+         if (journals.length >= 4) {
             journal_for_carroussel = journals
                ? journals.concat(journals).map((journal, index) => ({
                     ...journal,
