@@ -37,12 +37,19 @@ jobs:
               docker tag descier-app-image:${{ steps.version.outputs.version }} descier-app-image:latest
            timeout-minutes: 20
 
+         - name: Setup Docker Network
+           run: |
+              if ! docker network ls --format "{{.Name}}" | grep -q "^descier-network$"; then
+                echo "Creating descier-network..."
+                docker network create descier-network
+              else
+                echo "Network descier-network already exists"
+              fi
+
          - name: Start New Instance
            run: |
               NEW_VERSION=${{ steps.version.outputs.version }}
               NEW_CONTAINER="descier-app-new"
-
-              docker network ls | grep -q descier-network || docker network create descier-network
 
               docker run -d \
                 --name "$NEW_CONTAINER" \
