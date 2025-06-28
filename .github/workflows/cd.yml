@@ -51,6 +51,13 @@ jobs:
               NEW_VERSION=${{ steps.version.outputs.version }}
               NEW_CONTAINER="descier-app-new"
 
+              # Remove existing container if it exists
+              if docker ps -a --format "{{.Names}}" | grep -q "^$NEW_CONTAINER$"; then
+                echo "Container $NEW_CONTAINER already exists, stopping and removing..."
+                docker stop "$NEW_CONTAINER" 2>/dev/null || true
+                docker rm "$NEW_CONTAINER" 2>/dev/null || true
+              fi
+
               docker run -d \
                 --name "$NEW_CONTAINER" \
                 --network descier-network \
