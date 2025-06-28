@@ -68,17 +68,51 @@ jobs:
                 --restart unless-stopped \
                 descier-app-image:$NEW_VERSION
 
+              # Wait a bit and check initial container status
+              sleep 5
+              CONTAINER_STATUS=$(docker ps --filter "name=$NEW_CONTAINER" --format "{{.Status}}" | head -1)
+              if [ -z "$CONTAINER_STATUS" ]; then
+                echo "ERROR: Container failed to start!"
+                echo "Container logs:"
+                docker logs "$NEW_CONTAINER" --tail 50 2>/dev/null || echo "No logs available"
+                exit 1
+              else
+                echo "Container started successfully: $CONTAINER_STATUS"
+                echo "Initial logs:"
+                docker logs "$NEW_CONTAINER" --tail 20 2>/dev/null || echo "No logs available yet"
+              fi
+
          - name: Health Check
            run: |
               RETRY_COUNT=0
               MAX_RETRIES=20
 
+              echo "Starting health check for descier-app-new..."
+              
               while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+                # Check if container is still running
+                CONTAINER_STATUS=$(docker ps --filter "name=descier-app-new" --format "{{.Status}}" | head -1)
+                if [ -z "$CONTAINER_STATUS" ]; then
+                  echo "ERROR: Container descier-app-new is not running!"
+                  echo "Container logs:"
+                  docker logs descier-app-new --tail 50 2>/dev/null || echo "No logs available"
+                  exit 1
+                fi
+                
+                echo "Attempt $((RETRY_COUNT + 1))/$MAX_RETRIES - Container status: $CONTAINER_STATUS"
+                
                 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 || echo "000")
+                echo "HTTP response code: $HTTP_CODE"
                 
                 if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+                  echo "Health check passed!"
                   break
                 elif [ $RETRY_COUNT -eq $((MAX_RETRIES - 1)) ]; then
+                  echo "Health check failed after $MAX_RETRIES attempts"
+                  echo "Final container logs:"
+                  docker logs descier-app-new --tail 100 2>/dev/null || echo "No logs available"
+                  echo "Container inspect:"
+                  docker inspect descier-app-new --format='{{.State.Status}}: {{.State.Error}}' 2>/dev/null || echo "Cannot inspect container"
                   docker stop descier-app-new && docker rm descier-app-new
                   exit 1
                 else
