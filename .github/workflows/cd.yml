@@ -104,7 +104,7 @@ jobs:
                 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 || echo "000")
                 echo "HTTP response code: $HTTP_CODE"
                 
-                if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+                if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ] || [ "$HTTP_CODE" = "308" ]; then
                   echo "Health check passed!"
                   break
                 elif [ $RETRY_COUNT -eq $((MAX_RETRIES - 1)) ]; then
@@ -146,7 +146,7 @@ jobs:
            run: |
               sleep 10
               HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
-              if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "301" ] && [ "$HTTP_CODE" != "302" ]; then
+              if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "301" ] && [ "$HTTP_CODE" != "302" ] && [ "$HTTP_CODE" != "308" ]; then
                 exit 1
               fi
 
