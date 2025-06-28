@@ -1,72 +1,165 @@
 name: Continuous Deployment
 
 on:
-   push:
+   workflow_run:
+      workflows: ["CI Pipeline"]
+      types:
+         - completed
       branches:
          - main
 
 jobs:
-   prepare:
-      name: Prepare Repository
+   deploy:
+      name: Deploy to Server
       runs-on: self-hosted
-      timeout-minutes: 5
-      outputs:
-         branch: ${{ github.ref_name }}
+      timeout-minutes: 30
       steps:
+         - name: Check CI Status
+           run: |
+              if [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+                echo "CI Pipeline failed or was cancelled. Aborting deployment."
+                exit 1
+              fi
+              echo "CI Pipeline passed successfully. Proceeding with deployment."
+
          - name: Checkout Code
            uses: actions/checkout@v3
            with:
               fetch-depth: 0
 
-         - name: Pull Latest Code
+         - name: Generate Version
+           id: version
            run: |
-              git fetch --all
-              git reset --hard origin/${{ github.ref_name }}
-              git pull
+              VERSION=$(git rev-parse --short HEAD)
+              echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-         - name: Set .env
+         - name: Set .env from secrets
            run: |
               if [ -n "${{ secrets.ENV_PROD }}" ]; then
                 echo "${{ secrets.ENV_PROD }}" > .env
-                echo "env-set=true" >> $GITHUB_OUTPUT
               else
-                echo "Error: ENV_PROD secret is not configured. Set it in Settings > Secrets and variables > Actions"
+                echo "Error: ENV_PROD secret is not configured"
                 exit 1
               fi
 
-   deploy:
-      name: Deploy to Server
-      needs: prepare
-      runs-on: self-hosted
-      timeout-minutes: 30
-      steps:
-         - name: Stop existing containers
+         - name: Build New Docker Image
            run: |
-              docker-compose down 2>/dev/null || echo "No containers to stop"
-              docker stop $(docker ps -q --filter "ancestor=descier-app-image") 2>/dev/null || echo "No running containers"
+              docker build -t descier-app-image:${{ steps.version.outputs.version }} .
+              docker tag descier-app-image:${{ steps.version.outputs.version }} descier-app-image:latest
+           timeout-minutes: 20
 
-         - name: Build Docker image
+         - name: Setup Docker Network
            run: |
-              docker build --no-cache --build-arg ENV_FILE="$(cat .env)" -t descier-app-image:latest .
-           timeout-minutes: 25
+              if ! docker network ls --format "{{.Name}}" | grep -q "^descier-network$"; then
+                echo "Creating descier-network..."
+                docker network create descier-network
+              else
+                echo "Network descier-network already exists"
+              fi
 
-         - name: Start application with Docker
+         - name: Start New Instance
            run: |
-              docker compose up -d
+              NEW_VERSION=${{ steps.version.outputs.version }}
+              NEW_CONTAINER="descier-app-new"
+
+              # Remove existing container if it exists
+              if docker ps -a --format "{{.Names}}" | grep -q "^$NEW_CONTAINER$"; then
+                echo "Container $NEW_CONTAINER already exists, stopping and removing..."
+                docker stop "$NEW_CONTAINER" 2>/dev/null || true
+                docker rm "$NEW_CONTAINER" 2>/dev/null || true
+              fi
+
+              docker run -d \
+                --name "$NEW_CONTAINER" \
+                --network descier-network \
+                -p 3001:3000 \
+                -e NODE_ENV=production \
+                -e HOST=0.0.0.0 \
+                -e PORT=3000 \
+                --restart unless-stopped \
+                descier-app-image:$NEW_VERSION
+
+              # Wait a bit and check initial container status
+              sleep 5
+              CONTAINER_STATUS=$(docker ps --filter "name=$NEW_CONTAINER" --format "{{.Status}}" | head -1)
+              if [ -z "$CONTAINER_STATUS" ]; then
+                echo "ERROR: Container failed to start!"
+                echo "Container logs:"
+                docker logs "$NEW_CONTAINER" --tail 50 2>/dev/null || echo "No logs available"
+                exit 1
+              else
+                echo "Container started successfully: $CONTAINER_STATUS"
+                echo "Initial logs:"
+                docker logs "$NEW_CONTAINER" --tail 20 2>/dev/null || echo "No logs available yet"
+              fi
+
+         - name: Health Check
+           run: |
+              RETRY_COUNT=0
+              MAX_RETRIES=20
+
+              echo "Starting health check for descier-app-new..."
+              
+              while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+                # Check if container is still running
+                CONTAINER_STATUS=$(docker ps --filter "name=descier-app-new" --format "{{.Status}}" | head -1)
+                if [ -z "$CONTAINER_STATUS" ]; then
+                  echo "ERROR: Container descier-app-new is not running!"
+                  echo "Container logs:"
+                  docker logs descier-app-new --tail 50 2>/dev/null || echo "No logs available"
+                  exit 1
+                fi
+                
+                echo "Attempt $((RETRY_COUNT + 1))/$MAX_RETRIES - Container status: $CONTAINER_STATUS"
+                
+                HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 || echo "000")
+                echo "HTTP response code: $HTTP_CODE"
+                
+                if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ] || [ "$HTTP_CODE" = "308" ]; then
+                  echo "Health check passed!"
+                  break
+                elif [ $RETRY_COUNT -eq $((MAX_RETRIES - 1)) ]; then
+                  echo "Health check failed after $MAX_RETRIES attempts"
+                  echo "Final container logs:"
+                  docker logs descier-app-new --tail 100 2>/dev/null || echo "No logs available"
+                  echo "Container inspect:"
+                  docker inspect descier-app-new --format='{{.State.Status}}: {{.State.Error}}' 2>/dev/null || echo "Cannot inspect container"
+                  docker stop descier-app-new && docker rm descier-app-new
+                  exit 1
+                else
+                  sleep 15
+                  RETRY_COUNT=$((RETRY_COUNT + 1))
+                fi
+              done
+
+         - name: Switch Traffic
+           run: |
+              OLD_CONTAINER=$(docker ps --filter "name=descier-app-current" --format "{{.Names}}" | head -1)
+              if [ -n "$OLD_CONTAINER" ]; then
+                docker stop "$OLD_CONTAINER"
+                docker rm "$OLD_CONTAINER"
+              fi
+
+              docker stop descier-app-new
+              docker run -d \
+                --name "descier-app-current" \
+                --network descier-network \
+                -p 3000:3000 \
+                -e NODE_ENV=production \
+                -e HOST=0.0.0.0 \
+                -e PORT=3000 \
+                --restart unless-stopped \
+                descier-app-image:${{ steps.version.outputs.version }}
+
+              docker rm descier-app-new
 
          - name: Verify Deployment
            run: |
-              echo "Waiting for application to start..."
-              sleep 15
-
+              sleep 10
               HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
-              if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
-                echo "Application is responding with status $HTTP_CODE"
-              else
-                echo "Application is not responding properly. Status: $HTTP_CODE"
-                echo "Continuing anyway..."
+              if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "301" ] && [ "$HTTP_CODE" != "302" ] && [ "$HTTP_CODE" != "308" ]; then
+                exit 1
               fi
 
-         - name: Deployment Status
-           run: |
-              echo "Deployment completed for ${{ needs.prepare.outputs.branch }} at $(date)"
+         - name: Cleanup Old Images
+           run: docker image prune -f 2>/dev/null || true

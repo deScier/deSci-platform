@@ -1,9 +1,8 @@
-name: CI Pipeline (Pull Request)
+name: CI Pipeline
 
 on:
-   pull_request:
+   push:
       branches:
-         - develop
          - main
 
 jobs:
@@ -54,5 +53,5 @@ jobs:
          - name: Run lint checks
            run: pnpm run lint
 
-         - name: Type check
-           run: pnpm run typecheck || echo "No type check configured"
+         - name: Build check
+           run: pnpm run build
