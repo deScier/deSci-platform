@@ -1,9 +1,9 @@
-name: CI Pipeline (Pull Request)
+name: CI Pipeline
 
 on:
-   pull_request:
+   push:
       branches:
-         - feat/rafael/zero-downtime-cd
+         - main
 
 jobs:
    quality:
@@ -53,5 +53,5 @@ jobs:
          - name: Run lint checks
            run: pnpm run lint
 
-         - name: Type check
-           run: pnpm run typecheck || echo "No type check configured"
+         - name: Build check
+           run: pnpm run build
