@@ -301,11 +301,11 @@ export function HomeComponent({ journals }: HomeProps) {
 
 const StampWinner = () => {
    return (
-      <div className='absolute -top-24 -right-[138px] rotate-6'>
-         <div className="relative w-[140px] h-[140px] md:w-40 md:h-40">
+      <div className='absolute -top-6 -right-[110px] md:-top-24 md:-right-[138px] rotate-6'>
+         <div className="relative w-28 h-28 md:w-40 md:h-40">
             <div className="absolute inset-0 rounded-full p-[2px]">
                <div className="flex flex-col items-center justify-center w-full h-full bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
-                  <div className="text-2xl md:text-5xl font-bold bg-linear-gradient bg-clip-text text-transparent drop-shadow-lg">
+                  <div className="text-3xl md:text-5xl font-bold bg-linear-gradient bg-clip-text text-transparent drop-shadow-lg">
                      🏆
                   </div>
                </div>
@@ -324,7 +324,7 @@ const StampWinner = () => {
                      </linearGradient>
                   </defs>
                   <text
-                     className="text-[6px] md:text-[11px] font-semibold"
+                     className="text-[10px] md:text-[11px] font-semibold"
                      fill="url(#text-gradient)"
                      letterSpacing="2"
                   >
