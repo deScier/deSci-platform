@@ -27,7 +27,6 @@ import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg'
 import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg'
 import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg'
 import React from 'react'
-import { Banner } from '@/components/common/Banner/Banner'
 
 const OurJournalsDynamic = dynamic(() => import('@/components/modules/Home/Index/OurJournals/OurJournals').then((mod) => mod.OurJournals), {
    loading: () => (
