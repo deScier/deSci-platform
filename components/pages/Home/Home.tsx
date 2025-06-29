@@ -301,19 +301,16 @@ export function HomeComponent({ journals }: HomeProps) {
 
 const StampWinner = () => {
    return (
-      <div className='absolute -top-10 -right-32 rotate-12'>
+      <div className='absolute -top-24 -right-[138px] rotate-6'>
          <div className="relative w-[140px] h-[140px] md:w-40 md:h-40">
             <div className="absolute inset-0 rounded-full p-[2px]">
                <div className="flex flex-col items-center justify-center w-full h-full bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
                   <div className="text-2xl md:text-5xl font-bold bg-linear-gradient bg-clip-text text-transparent drop-shadow-lg">
                      🏆
                   </div>
-                  <div className="text-xs md:text-sm font-semibold drop-shadow-lg bg-linear-gradient bg-clip-text text-transparent -mt-1">
-                  1º PLACE
-                  </div>
                </div>
             </div>
-            <div className="absolute inset-0 animate-spin p-1" style={{ animationDuration: '25s' }}>
+            <div className="absolute inset-0 animate-spin p-1.5" style={{ animationDuration: '25s' }}>
                <svg className="w-full h-full" viewBox="0 0 140 140">
                   <defs>
                      <path 
@@ -327,12 +324,12 @@ const StampWinner = () => {
                      </linearGradient>
                   </defs>
                   <text
-                     className="text-[8px] md:text-[9px] font-semibold"
+                     className="text-[6px] md:text-[11px] font-semibold"
                      fill="url(#text-gradient)"
-                     letterSpacing="1.2"
+                     letterSpacing="2"
                   >
                      <textPath href="#circle-path" startOffset="0%">
-                        • SCIENCETHON I HACKATHON • $1000 USDT PRIZE • DESCIER PLATFORM • DESCI DAY GRANT WINNER • AURASCI PARTNERSHIP • BLOCKCHAIN FOR GOOD ALLIANCE 
+                       • SCIENCETHON I WINNERS • ISLAND DAO GRANTEES • DESCIER PLATFORM • DESCI DAY GRANT WINNER • AURASCI PARTNERSHIP • BLOCKCHAIN FOR GOOD ALLIANCE 
                      </textPath>
                   </text>
                </svg>
