@@ -301,8 +301,8 @@ export function HomeComponent({ journals }: HomeProps) {
 
 const StampWinner = () => {
    return (
-      <div className='absolute -top-4 -right-[110px] md:-top-4 md:-right-[124px] lg:-top-24 lg:-right-[138px] rotate-6'>
-         <div className="relative w-28 h-28 md:w-32 md:h-32 lg:w-40 lg:h-40">
+      <div className='absolute -top-4 md:-top-4 -right-[124px] lg:-top-24 lg:-right-[138px] rotate-6'>
+         <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40">
             <div className="absolute inset-0 rounded-full p-[2px]">
                <div className="flex flex-col items-center justify-center w-full h-full bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
                   <div className="text-3xl md:text-5xl font-bold bg-linear-gradient bg-clip-text text-transparent drop-shadow-lg">
