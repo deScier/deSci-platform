@@ -17,7 +17,7 @@ import React from 'react'
 const Footer: React.FC = () => {
    return (
       <React.Fragment>
-         <footer className="bg-[#110838] grid md:grid-cols-4 justify-items-center md:gap-12 w-full h-fit py-14 px-6 md:py-14">
+         <footer className="bg-[#110838] grid gap-6 md:grid-cols-4 justify-items-center md:gap-12 w-full h-fit py-14 px-6 md:py-14">
             <div className="grid gap-4 items-center justify-items-center content-center">
                <LogoDeScier className="w-full max-w-[137px] md:max-w-[160px] lg:w-32 2xl:w-40" />
                <p className="text-sm text-neutral-light_gray max-w-[20ch] text-center">@2025  DeSci Reviews</p>
