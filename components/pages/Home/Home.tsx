@@ -128,7 +128,7 @@ export function HomeComponent({ journals }: HomeProps) {
                   <div className="grid gap-4 mt-6 lg:mt-24 xl:mt-16 relative">
                      <div className="grid relative gap-2 w-fit justify-start">
                         <div>
-                           <h1 className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl xl:text-6xl font-bold lg:max-w-[20ch] bg-linear-gradient bg-clip-text text-transparent h-8 sm:h-14 flex items-center">
+                           <h1 className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl xl:text-6xl font-bold lg:max-w-[20ch] bg-linear-gradient bg-clip-text text-transparent h-8 sm:h-16 flex items-center">
                               DeSci Reviews
                            </h1>
                            <h3 className="text-1xl md:text-3xl lg:text-3xl xl:text-4xl font-bold bg-linear-gradient bg-clip-text text-transparent flex md:h-14 lg:h-auto">
