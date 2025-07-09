@@ -139,10 +139,10 @@ export function HomeComponent({ journals }: HomeProps) {
                      </div>
                      <div className="text-sm md:text-base lg:text-lg lg:max-w-[50ch] 2xl:max-w-[60ch] space-y-4">
                         <p>
-                           Introducing the <strong>first blockchain-enabled</strong> scientific publishing platform to combine NFT ownership with traditional peer review: the only blockchain publisher offering 100% copyright retention.
+                           Introducing the <strong>first blockchain-enabled</strong> scientific publishing platform to combine <strong>NFT ownership</strong> with traditional peer review: the only blockchain publisher offering <strong>100% copyright</strong> retention.
                         </p>
                         <p>
-                           Create your journal, publish your scientific and technical papers with complete ownership, and earn from your intellectual contributions.
+                           <strong>Create your journal</strong>, publish your scientific and technical papers with complete ownership, and earn from your intellectual contributions.
                         </p>
                         <p>
                            Join the future of academic publishing where authors control their content, rights, and revenue.
