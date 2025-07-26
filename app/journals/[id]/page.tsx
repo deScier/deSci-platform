@@ -14,7 +14,7 @@ export default async function JournalDetailsPage({ params }: { params: { id: str
    const options = authOptions as NextAuthOptions
    const session = await getServerSession(options)
 
-   const fetchJournal = async (journalId: string, data: Session | null) => {
+   const fetchJournal = async (journalId: string) => {
       if (session?.user?.token) {
          const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/${journalId}`, {
             method: 'GET',
@@ -29,7 +29,7 @@ export default async function JournalDetailsPage({ params }: { params: { id: str
       }
    }
 
-   const journal = await fetchJournal(params.id, session)
+   const journal = await fetchJournal(params.id)
 
    if (!journal) redirect(home_routes.journals)
 
