@@ -17,7 +17,13 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: ['/', '/home/search/*', '/paper/*', '/articles-for-approval'],
+      allow: [
+        '/',
+        '/journals/*',
+        '/home/search/*',
+        '/paper/*',
+        '/articles-for-approval'
+      ],
       disallow: [
         '/api/',
         '/profile/',
@@ -26,7 +32,6 @@ export default function robots(): MetadataRoute.Robots {
         '/as-reviewer/',
         '/summary/',
         '/descier/',
-        '/journals/*',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
