@@ -9,6 +9,8 @@ on:
       branches:
          - main
 
+run-name: ${{ github.event.workflow_run.head_commit.message || github.event.head_commit.message || 'Manual deployment' }}
+
 jobs:
    deploy:
       name: Deploy to Server
