@@ -1,0 +1,35 @@
+import type { MetadataRoute } from 'next'
+
+/**
+ * @notice Generates robots.txt configuration for search engine crawlers
+ * @dev Defines allowed/disallowed paths and sitemap location for SEO optimization
+ * @return MetadataRoute.Robots Configuration object with crawler rules and sitemap reference
+ * @custom:routes Specifically allows journals/* and paper/* for research content indexing
+ * @custom:sitemap Points to dynamically generated XML sitemap for content discovery
+ */
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci-platform.vercel.app'
+  
+  return {
+    rules: {
+      userAgent: '*',
+      allow: [
+        '/',
+        '/journals/*',
+        '/home/search/*',
+        '/paper/*',
+        '/articles-for-approval'
+      ],
+      disallow: [
+        '/api/',
+        '/profile/',
+        '/my-ip/',
+        '/articles-under-review/',
+        '/as-reviewer/',
+        '/summary/',
+        '/descier/'
+      ],
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+  }
+}
