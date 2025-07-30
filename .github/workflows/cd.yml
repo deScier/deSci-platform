@@ -171,10 +171,14 @@ jobs:
           
           # Clean old images but protect current version
           echo "Cleaning up old images..."
-          for img in $(docker images 'descier-app-image' -q); do
-            # Skip current version and 'latest' tag
-            if ! docker images --format "{{.Tag}}" --no-trunc | grep -q "^$CURRENT_VERSION$\|^latest$"; then
-              docker rmi $img -f || true
+          # Get all descier-app-image images with their tags
+          docker images 'descier-app-image' --format "{{.ID}} {{.Tag}}" | while read img_id tag; do
+            # Skip if tag is the current version or latest
+            if [ "$tag" != "$CURRENT_VERSION" ] && [ "$tag" != "latest" ]; then
+              echo "Removing image with tag: $tag (ID: $img_id)"
+              docker rmi "descier-app-image:$tag" -f || true
+            else
+              echo "Keeping image with tag: $tag (ID: $img_id)"
             fi
           done
           
