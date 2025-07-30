@@ -69,3 +69,20 @@ jobs:
 
       - name: Build check
         run: pnpm run build
+
+      - name: Docker build test
+        run: |
+          # Create a temporary .env file for Docker build
+          if [ -n "${{ secrets.ENV_PROD }}" ]; then
+            echo "${{ secrets.ENV_PROD }}" > .env.temp
+          else
+            echo "Creating minimal .env for build test"
+            echo "NODE_ENV=production" > .env.temp
+          fi
+          
+          # Test Docker image build
+          docker build --build-arg ENV_FILE="$(cat .env.temp)" -t descier-app-test:ci-build .
+          
+          # Clean up
+          rm -f .env.temp
+          docker rmi descier-app-test:ci-build || true
