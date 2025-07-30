@@ -1,15 +1,15 @@
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
 
-import { UpdateUserProps } from "@/schemas/update_user";
-import { checkPasswordService } from "@/services/user/checkPassword.service";
-import { updateUserService } from "@/services/user/update.service";
-import { X } from "react-bootstrap-icons";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { UpdateUserProps } from '@/schemas/update_user';
+import { checkPasswordService } from '@/services/user/checkPassword.service';
+import { updateUserService } from '@/services/user/update.service';
+import { X } from 'react-bootstrap-icons';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import React from "react";
-import GenericSuccess from "./Success";
+import React from 'react';
+import GenericSuccess from './Success';
 
 /** @title UpdatePassword Component
  *  @notice This component allows the user to update their password.
@@ -30,7 +30,7 @@ const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   /** @dev Initialize loading state */
   const [loading, setLoading] = React.useState(false);
   /** @dev Initialize confirm password state */
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState('');
 
   /** @dev Function to check the current password */
   const handleCheckPassword: SubmitHandler<UpdateUserProps> = async (data) => {
@@ -102,7 +102,7 @@ const UpdatePassword: React.FC<UpdatePasswordProps> = ({
           <div className="grid gap-6">
             <Input.Root>
               <Input.Label>Password</Input.Label>
-              <Input.Password placeholder="Type your password" {...register("newPassword")} />
+              <Input.Password placeholder="Type your password" {...register('newPassword')} />
             </Input.Root>
             <Input.Root>
               <Input.Label>Password confirmation</Input.Label>
@@ -125,7 +125,7 @@ const UpdatePassword: React.FC<UpdatePasswordProps> = ({
           </div>
           <Input.Root>
             <Input.Label>Current Password</Input.Label>
-            <Input.Password placeholder="Type your current password" {...register("currentPassword")} />
+            <Input.Password placeholder="Type your current password" {...register('currentPassword')} />
           </Input.Root>
           <div className="grid gap-6">
             <Button.Button className="py-3 px-8" type="submit" loading={loading}>

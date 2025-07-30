@@ -1,6 +1,6 @@
-import useDimension from "@/hooks/useWindowDimension";
-import { Pie, PieChart, ResponsiveContainer } from "recharts";
-import { ChartProps } from "./Typing";
+import useDimension from '@/hooks/useWindowDimension';
+import { Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { ChartProps } from './Typing';
 
 export default function PieChartComponent({ pendingAmount, publishedAmount, totalDocuments }: ChartProps) {
   const { windowDimension } = useDimension();
@@ -8,14 +8,14 @@ export default function PieChartComponent({ pendingAmount, publishedAmount, tota
   if (!windowDimension) return null;
   const data = [
     {
-      name: "Group A",
+      name: 'Group A',
       value: publishedAmount,
-      fill: "#0BD2E2",
+      fill: '#0BD2E2',
     },
     {
-      name: "Group B",
+      name: 'Group B',
       value: pendingAmount,
-      fill: "#FA9963",
+      fill: '#FA9963',
     },
   ];
 

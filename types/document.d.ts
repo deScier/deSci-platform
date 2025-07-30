@@ -297,6 +297,6 @@ export type DocumentBasicProps = {
   views: number;
 };
 
-export type AccessType = "FREE" | "PAID";
+export type AccessType = 'FREE' | 'PAID';
 
-export type ApprovalStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUBMITTED" | "ADMIN_APPROVE";
+export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUBMITTED' | 'ADMIN_APPROVE';

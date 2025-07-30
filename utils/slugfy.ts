@@ -1,7 +1,7 @@
-import slug from "slug";
+import slug from 'slug';
 
 export const slugfy_options = {
-  replacement: "-",
+  replacement: '-',
   symbols: true,
   remove: null,
   lower: true,

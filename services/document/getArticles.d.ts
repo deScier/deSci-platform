@@ -78,7 +78,7 @@ export type DocumentProps = {
   documentComments?: DocumentComment[];
 };
 
-export type ApprovalStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUBMITTED" | "ADMIN_APPROVE";
+export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUBMITTED' | 'ADMIN_APPROVE';
 
 type DocumentJournalProps = {
   id: string;

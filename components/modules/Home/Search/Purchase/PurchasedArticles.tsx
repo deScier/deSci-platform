@@ -1,14 +1,14 @@
-import Spinner from "@/components/common/Loading/Spinner";
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import useDebounce from "@/hooks/useDebounce";
-import useDimension from "@/hooks/useWindowDimension";
-import { useFetchPurchasedArticles } from "@/services/document/fetchPurchased.service";
-import * as Input from "@components/common/Input/Input";
-import "@styles/home.css";
-import React from "react";
-import { Person, Search, X } from "react-bootstrap-icons";
-import { ArticleCardProps } from "../../Index/ArticleCard/Typing";
-import { ArticleCheckout } from "./ArticleCheckout";
+import Spinner from '@/components/common/Loading/Spinner';
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import useDebounce from '@/hooks/useDebounce';
+import useDimension from '@/hooks/useWindowDimension';
+import { useFetchPurchasedArticles } from '@/services/document/fetchPurchased.service';
+import * as Input from '@components/common/Input/Input';
+import '@styles/home.css';
+import React from 'react';
+import { Person, Search, X } from 'react-bootstrap-icons';
+import { ArticleCardProps } from '../../Index/ArticleCard/Typing';
+import { ArticleCheckout } from './ArticleCheckout';
 
 /**
  * @title PurchasedArticles Component
@@ -34,10 +34,10 @@ export const PurchasedArticles: React.FC<PurchasedArticlesProps> = ({ onClose }:
   const [totalPages, setTotalPages] = React.useState(1);
 
   /** @dev State for handling search term for articles */
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   /** @dev State for handling search by author name */
-  const [searchAuthor, setSearchAuthor] = React.useState("");
+  const [searchAuthor, setSearchAuthor] = React.useState('');
 
   /** @dev Use debounce hook for delayed search to improve performance */
   const debouncedSearchTerm = useDebounce(searchTerm, 500);

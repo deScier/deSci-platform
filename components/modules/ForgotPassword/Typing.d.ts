@@ -1,6 +1,6 @@
-import { ConfirmRecoveryPasswordProps } from "@/services/user/forgotPassword.service";
-import "@styles/login.css";
-import { FormState, UseFormRegister } from "react-hook-form";
+import { ConfirmRecoveryPasswordProps } from '@/services/user/forgotPassword.service';
+import '@styles/login.css';
+import { FormState, UseFormRegister } from 'react-hook-form';
 
 type ForgotPasswordModalProps = { onClose: () => void; onBack: () => void };
 
@@ -11,7 +11,7 @@ type InsertEmailProps = {
   onBack: () => void;
   onContinue: () => void;
   register: UseFormRegister<ConfirmRecoveryPasswordProps>;
-  errors: FormState<ConfirmRecoveryPasswordProps>["errors"];
+  errors: FormState<ConfirmRecoveryPasswordProps>['errors'];
 };
 
 type InsertNewPasswordProps = {
@@ -19,7 +19,7 @@ type InsertNewPasswordProps = {
   onBack: () => void;
   onContinue: () => void;
   register: UseFormRegister<ConfirmRecoveryPasswordProps>;
-  errors: FormState<ConfirmRecoveryPasswordProps>["errors"];
+  errors: FormState<ConfirmRecoveryPasswordProps>['errors'];
 };
 
 type InsertCodeProps = {
@@ -28,7 +28,7 @@ type InsertCodeProps = {
   onContinue: () => void;
   resendCode: () => void;
   register: UseFormRegister<ConfirmRecoveryPasswordProps>;
-  errors: FormState<ConfirmRecoveryPasswordProps>["errors"];
+  errors: FormState<ConfirmRecoveryPasswordProps>['errors'];
 };
 
 export {

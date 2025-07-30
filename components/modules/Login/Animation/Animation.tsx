@@ -1,8 +1,8 @@
-import "@styles/login.css";
-import Image from "next/image";
-import deScierStamp from "public/svgs/modules/login/selo.png";
-import BlobShape from "public/svgs/modules/login/shape.svg";
-import React, { useEffect } from "react";
+import '@styles/login.css';
+import Image from 'next/image';
+import deScierStamp from 'public/svgs/modules/login/selo.png';
+import BlobShape from 'public/svgs/modules/login/shape.svg';
+import React, { useEffect } from 'react';
 
 /** @title LoginAnimation Component
  *  @notice This component displays an animation during the login process.
@@ -14,7 +14,7 @@ const LoginAnimation: React.FC<LoginAnimationProps> = ({ animation_key }: LoginA
     /** @dev Function to check and play the animation */
     const checkAndPlayAnimation = () => {
       /** @dev Get the SVG animation object */
-      const svgatorObject = document.getElementById("animated-svg") as HTMLObjectElement;
+      const svgatorObject = document.getElementById('animated-svg') as HTMLObjectElement;
 
       /** @dev If the SVG object is not found, return */
       if (!svgatorObject) return;
@@ -26,7 +26,7 @@ const LoginAnimation: React.FC<LoginAnimationProps> = ({ animation_key }: LoginA
       if (!svgatorDocument) return;
 
       /** @dev Get the SVG element and its player */
-      const svgatorElement = svgatorDocument.getElementById("descier-login-animation") as unknown as SVGElement & {
+      const svgatorElement = svgatorDocument.getElementById('descier-login-animation') as unknown as SVGElement & {
         svgatorPlayer: {
           play: () => void;
         };

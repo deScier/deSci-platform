@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
 
 import {
   ArticleUnderReview,
   ArticleUnderReviewProps,
   ArticleUnderReviewSkeleton,
-} from "@/components/common/Publication/Item/ArticlesUnderReview";
-import { home_routes } from "@/routes/home";
-import { useFetchAdminArticles } from "@/services/admin/fetchDocuments.service";
+} from '@/components/common/Publication/Item/ArticlesUnderReview';
+import { home_routes } from '@/routes/home';
+import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service';
 
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import useDebounce from "@/hooks/useDebounce";
-import React from "react";
-import slug from "slug";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import useDebounce from '@/hooks/useDebounce';
+import React from 'react';
+import slug from 'slug';
 
 export default function ArticlesForApprovalPage() {
   const { articles, loading } = useFetchAdminArticles();
 
   /** @notice State for the search term. */
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   /** @notice Debounces the search term. */
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -71,10 +71,10 @@ export default function ArticlesForApprovalPage() {
                       title={article.title}
                       since={article.since}
                       image={article.image}
-                      link={home_routes.descier.articles_for_approval + "/" + slug(article.id!)}
-                      status_editor={article.status_editor as "pending" | "approved"}
-                      status_reviewer={article.status_reviewer as "pending" | "approved"}
-                      status_admin={article.status_admin as "pending" | "approved"}
+                      link={home_routes.descier.articles_for_approval + '/' + slug(article.id!)}
+                      status_editor={article.status_editor as 'pending' | 'approved'}
+                      status_reviewer={article.status_reviewer as 'pending' | 'approved'}
+                      status_admin={article.status_admin as 'pending' | 'approved'}
                     />
                   </React.Fragment>
                 ))}

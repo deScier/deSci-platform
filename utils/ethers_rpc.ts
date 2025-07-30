@@ -1,5 +1,5 @@
-import type { IProvider } from "@web3auth/base";
-import { ethers } from "ethers";
+import type { IProvider } from '@web3auth/base';
+import { ethers } from 'ethers';
 
 export default class EthereumRpc {
   private provider: IProvider;
@@ -78,19 +78,19 @@ export default class EthereumRpc {
       // const signer = ethersProvider.getSigner();
       const signer = await ethersProvider.getSigner();
 
-      const destination = "0x40e1c367Eca34250cAF1bc8330E9EddfD403fC56";
+      const destination = '0x40e1c367Eca34250cAF1bc8330E9EddfD403fC56';
 
       // Convert 1 ether to wei
       // For ethers v5
       // const amount = ethers.utils.parseEther("0.001");
-      const amount = ethers.parseEther("0.001");
+      const amount = ethers.parseEther('0.001');
 
       // Submit transaction to the blockchain
       const tx = await signer.sendTransaction({
         to: destination,
         value: amount,
-        maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
-        maxFeePerGas: "6000000000000", // Max fee per gas
+        maxPriorityFeePerGas: '5000000000', // Max priority fee per gas
+        maxFeePerGas: '6000000000000', // Max fee per gas
       });
 
       // Wait for transaction to be mined
@@ -111,7 +111,7 @@ export default class EthereumRpc {
       // For ethers v5
       // const signer = ethersProvider.getSigner();
       const signer = await ethersProvider.getSigner();
-      const originalMessage = "YOUR_MESSAGE";
+      const originalMessage = 'YOUR_MESSAGE';
 
       // Sign the message
       const signedMessage = await signer.signMessage(originalMessage);
@@ -125,7 +125,7 @@ export default class EthereumRpc {
   async getPrivateKey(): Promise<any> {
     try {
       const privateKey = await this.provider.request({
-        method: "eth_private_key",
+        method: 'eth_private_key',
       });
 
       return privateKey;

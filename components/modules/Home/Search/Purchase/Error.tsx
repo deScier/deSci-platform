@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
-import ErrorIllustration from "public/svgs/modules/home/illustration-error.svg";
-import React from "react";
-import { X } from "react-bootstrap-icons";
+import * as Button from '@components/common/Button/Button';
+import ErrorIllustration from 'public/svgs/modules/home/illustration-error.svg';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
 
 /**
  * @title PurchaseError Component

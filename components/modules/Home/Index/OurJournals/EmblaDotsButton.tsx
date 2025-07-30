@@ -1,6 +1,6 @@
-import { EmblaCarouselType } from "embla-carousel";
-import React, { PropsWithChildren, useCallback, useEffect, useState } from "react";
-import "./Embla.css";
+import { EmblaCarouselType } from 'embla-carousel';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import './Embla.css';
 
 type UseDotButtonType = {
   selectedIndex: number;
@@ -37,9 +37,9 @@ export const useDotButton = (
 
     onInit(emblaApi);
     onSelect(emblaApi);
-    emblaApi.on("reInit", onInit);
-    emblaApi.on("reInit", onSelect);
-    emblaApi.on("select", onSelect);
+    emblaApi.on('reInit', onInit);
+    emblaApi.on('reInit', onSelect);
+    emblaApi.on('select', onSelect);
   }, [emblaApi, onInit, onSelect]);
 
   return {

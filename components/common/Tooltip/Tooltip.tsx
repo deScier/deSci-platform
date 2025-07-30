@@ -1,12 +1,12 @@
-import "@styles/tooltip.css";
+import '@styles/tooltip.css';
 
-import * as Tooltip from "@radix-ui/react-tooltip";
+import * as Tooltip from '@radix-ui/react-tooltip';
 
-import { twMerge } from "tailwind-merge";
-import { TooltipInformationProps } from "./Typing";
+import { twMerge } from 'tailwind-merge';
+import { TooltipInformationProps } from './Typing';
 
-import HelpIcon from "public/svgs/common/help.svg";
-import React from "react";
+import HelpIcon from 'public/svgs/common/help.svg';
+import React from 'react';
 
 /**
  * @title Tooltip Components
@@ -48,7 +48,7 @@ const Portal: React.FC<Tooltip.TooltipPortalProps> = ({ children, ...props }) =>
  */
 const Content: React.FC<Tooltip.TooltipContentProps> = ({ className, children, ...props }) => {
   return (
-    <Tooltip.Content className={twMerge("tooltip-content", className)} sideOffset={5} {...props}>
+    <Tooltip.Content className={twMerge('tooltip-content', className)} sideOffset={5} {...props}>
       {children}
       <Tooltip.Arrow width={16} height={8} className="TooltipArrow" />
     </Tooltip.Content>

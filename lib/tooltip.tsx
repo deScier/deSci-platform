@@ -1,6 +1,6 @@
-"use client";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
-import React from "react";
+'use client';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
+import React from 'react';
 
 /**
  * @title Tooltip Provider Wrapper

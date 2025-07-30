@@ -1,13 +1,13 @@
-import { loginUserService, Web3AuthenticateDTO } from "@/services/user/login.service";
-import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { signIn } from "next-auth/react";
-import { toast } from "react-toastify";
+import { loginUserService, Web3AuthenticateDTO } from '@/services/user/login.service';
+import { CHAIN_NAMESPACES, WALLET_ADAPTERS, WEB3AUTH_NETWORK } from '@web3auth/base';
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
+import { Web3AuthNoModal } from '@web3auth/no-modal';
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-toastify';
 
-import { AddWalletDTO } from "@/services/user/addWallet.service";
-import React from "react";
+import { AddWalletDTO } from '@/services/user/addWallet.service';
+import React from 'react';
 
 export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
   const { getNounce, web3GoogleAuthenticate } = loginUserService();
@@ -19,30 +19,30 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
       try {
         const chainConfig = {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
-          chainId: "0x1",
-          rpcTarget: "https://rpc.ankr.com/eth",
-          displayName: "Ethereum Devnet",
-          blockExplorerUrl: "https://etherscan.io/",
-          ticker: "ETH",
-          tickerName: "Ethereum",
-          logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+          chainId: '0x1',
+          rpcTarget: 'https://rpc.ankr.com/eth',
+          displayName: 'Ethereum Devnet',
+          blockExplorerUrl: 'https://etherscan.io/',
+          ticker: 'ETH',
+          tickerName: 'Ethereum',
+          logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
         };
 
         const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
 
         const web3auth = new Web3AuthNoModal({
-          clientId: process.env.WEB3AUTH_CLIENT_ID || "your_client_id",
+          clientId: process.env.WEB3AUTH_CLIENT_ID || 'your_client_id',
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
           privateKeyProvider,
         });
 
         const openloginAdapter = new OpenloginAdapter({
           loginSettings: {
-            mfaLevel: "optional",
+            mfaLevel: 'optional',
           },
           adapterSettings: {
-            uxMode: "popup",
-            whiteLabel: { defaultLanguage: "en" },
+            uxMode: 'popup',
+            whiteLabel: { defaultLanguage: 'en' },
             mfaSettings: {
               deviceShareFactor: {
                 enable: true,
@@ -67,9 +67,9 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
             },
             loginConfig: {
               google: {
-                verifier: process.env.WEB3AUTH_VERIFIER || "your_verifier",
-                typeOfLogin: "google",
-                clientId: process.env.GOOGLE_ID || "google_id",
+                verifier: process.env.WEB3AUTH_VERIFIER || 'your_verifier',
+                typeOfLogin: 'google',
+                clientId: process.env.GOOGLE_ID || 'google_id',
               },
             },
           },
@@ -95,58 +95,58 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
     { onSuccess, onError, noRedirect, onRegister, onClose }: GoogleWeb3AuthOptions
   ) => {
     e.preventDefault();
-    console.info("Starting Google login process");
+    console.info('Starting Google login process');
 
     if (!web3auth) {
-      toast.error("Web3Auth not initialized yet");
+      toast.error('Web3Auth not initialized yet');
       onError?.();
       return;
     }
 
     try {
-      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: "google" });
+      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' });
 
       if (!web3authProvider) {
-        throw new Error("Failed to get Web3Auth provider");
+        throw new Error('Failed to get Web3Auth provider');
       }
 
       const userInfo = await web3auth.getUserInfo();
 
       const nonce = await getNounce();
-      const accounts = await web3authProvider.request<never, string[]>({ method: "eth_accounts" });
+      const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' });
 
       if (!accounts) {
-        throw new Error("Failed to get user accounts");
+        throw new Error('Failed to get user accounts');
       }
 
-      const from = accounts[0] ?? "from";
+      const from = accounts[0] ?? 'from';
       const signedMessage = await web3authProvider.request<[string, string], string>({
-        method: "personal_sign",
+        method: 'personal_sign',
         params: [nonce.nonce, from],
       });
 
       const data: Web3AuthenticateDTO = {
         walletAddress: from,
-        signature: signedMessage ?? "",
+        signature: signedMessage ?? '',
         nonce: nonce.nonce,
-        provider: "google",
+        provider: 'google',
         idToken: userInfo.idToken,
       };
 
       const response = await web3GoogleAuthenticate(data);
 
       if (response.status === 404) {
-        toast.info("User not found. Please register first.");
+        toast.info('User not found. Please register first.');
         onRegister?.();
         return;
       }
 
-      if (!String(response.status).startsWith("20")) {
-        toast.error(response.reason || "Authentication failed");
+      if (!String(response.status).startsWith('20')) {
+        toast.error(response.reason || 'Authentication failed');
         return;
       }
 
-      const result = await signIn("google", {
+      const result = await signIn('google', {
         redirect: false,
         walletAddress: from,
         signature: signedMessage,
@@ -158,7 +158,7 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
         toast.error(`Failed to create session: ${result.error}`);
         onError?.();
       } else {
-        toast.success("Successfully logged in with Google.");
+        toast.success('Successfully logged in with Google.');
         if (noRedirect) {
           onClose?.();
         } else {
@@ -166,10 +166,10 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
         }
       }
     } catch (error) {
-      console.error("Google login error:", error);
+      console.error('Google login error:', error);
       if (error instanceof Error) {
-        if (error.message.includes("Already connected")) {
-          toast.info("Already connected. Please disconnect first.");
+        if (error.message.includes('Already connected')) {
+          toast.info('Already connected. Please disconnect first.');
         } else {
           toast.error(`Login failed: ${error.message}`);
         }
@@ -180,33 +180,33 @@ export const useGoogleWeb3Auth = (): UseGoogleWeb3AuthReturn => {
 
   const handleGetGoogleAccount = async (): Promise<AddWalletDTO | undefined> => {
     if (!web3auth) {
-      toast.error("Web3Auth not initialized yet");
+      toast.error('Web3Auth not initialized yet');
       return undefined;
     }
 
     try {
-      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: "google" });
+      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider: 'google' });
       if (!web3authProvider) {
-        toast.error("Failed to get Web3Auth provider");
+        toast.error('Failed to get Web3Auth provider');
         return undefined;
       }
 
-      const accounts = await web3authProvider.request<never, string[]>({ method: "eth_accounts" });
+      const accounts = await web3authProvider.request<never, string[]>({ method: 'eth_accounts' });
       if (!accounts) {
-        throw new Error("Failed to get user accounts");
+        throw new Error('Failed to get user accounts');
       }
 
-      const walletAddress = accounts[0] ?? "";
+      const walletAddress = accounts[0] ?? '';
       const nonce = await getNounce();
       const signature = await web3authProvider.request<[string, string], string>({
-        method: "personal_sign",
+        method: 'personal_sign',
         params: [nonce.nonce, walletAddress],
       });
 
       return { walletAddress, signature: signature as string, nonce: nonce.nonce };
     } catch (error) {
-      console.error("Google account retrieval error:", error);
-      toast.error("Failed to get account");
+      console.error('Google account retrieval error:', error);
+      toast.error('Failed to get account');
       return undefined;
     }
   };

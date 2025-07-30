@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const updateDocumentService = async (data: UpdateDocumentProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -16,11 +16,11 @@ export const updateDocumentService = async (data: UpdateDocumentProps) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "Document updated successfully",
+      message: 'Document updated successfully',
     };
   }
 
-  const message = responseData.message ?? "Error in update document.";
+  const message = responseData.message ?? 'Error in update document.';
 
   return {
     success: false,

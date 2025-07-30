@@ -3,7 +3,7 @@ interface CommentItemProps {
   comment_author: string;
   comment_content: string;
   reason?: string;
-  status?: "PENDING" | "APPROVED" | "REJECTED";
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   user_id: string;
   onApprove?: () => void;
   onReject?: () => void;

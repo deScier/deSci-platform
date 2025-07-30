@@ -1,8 +1,8 @@
-import { ArticleUnderReviewProps } from "@/components/common/Publication/Item/ArticlesUnderReview";
-import { format } from "date-fns";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from "../document/getArticles";
+import { ArticleUnderReviewProps } from '@/components/common/Publication/Item/ArticlesUnderReview';
+import { format } from 'date-fns';
+import { getSession, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from '../document/getArticles';
 
 /**
  * @title useArticles
@@ -35,9 +35,9 @@ export const useFetchAdminArticles = () => {
 
         if (session?.user?.token) {
           const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/documents`, {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               authorization: `Bearer ${session.user.token}`,
             },
           });
@@ -48,12 +48,12 @@ export const useFetchAdminArticles = () => {
             return {
               id: article.id,
               status_editor:
-                article.editorsApprovals < 1 ? "pending" : ("approved" as ArticleUnderReviewProps["status_editor"]),
+                article.editorsApprovals < 1 ? 'pending' : ('approved' as ArticleUnderReviewProps['status_editor']),
               status_reviewer:
-                article.reviewerApprovals < 1 ? "pending" : ("approved" as ArticleUnderReviewProps["status_reviewer"]),
-              status_admin: article.adminApproval < 1 ? "pending" : ("approved" as "pending" | "approved"),
-              image: article.cover || "",
-              since: format(new Date(article.createdAt), "dd/MM/yyyy"),
+                article.reviewerApprovals < 1 ? 'pending' : ('approved' as ArticleUnderReviewProps['status_reviewer']),
+              status_admin: article.adminApproval < 1 ? 'pending' : ('approved' as 'pending' | 'approved'),
+              image: article.cover || '',
+              since: format(new Date(article.createdAt), 'dd/MM/yyyy'),
               title: article.title,
               link: `/articles/${article.id}`,
               document_type: article.documentType,
@@ -79,9 +79,9 @@ export const useFetchAdminArticles = () => {
 
       if (session?.user?.token) {
         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/private/${documentId}`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             authorization: `Bearer ${session.user.token}`,
           },
         });

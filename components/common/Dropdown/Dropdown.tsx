@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DropdownMenu,
@@ -6,13 +6,13 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { FilterOption } from "@/mock/dropdow_filter_options";
-import { CaretDown } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
-import { DropdownProps } from "./Typing";
+} from '@/components/ui/dropdown-menu';
+import { FilterOption } from '@/mock/dropdow_filter_options';
+import { CaretDown } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
+import { DropdownProps } from './Typing';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Dropdown Component
@@ -46,30 +46,30 @@ const Dropdown: React.FC<DropdownProps> = ({
   return (
     <React.Fragment>
       <DropdownMenu>
-        <DropdownMenuTrigger className={twMerge("focus:outline-none", classNameTrigger)}>
+        <DropdownMenuTrigger className={twMerge('focus:outline-none', classNameTrigger)}>
           <div
             className={twMerge(
-              "flex items-center justify-center py-2 px-4 text-sm rounded-full min-w-[200px] border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200",
+              'flex items-center justify-center py-2 px-4 text-sm rounded-full min-w-[200px] border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200',
               className
             )}
           >
             <div className="flex items-center gap-1">
               <span className="text-sm font-semibold text-primary-main">{label}</span>
               <span className="text-sm font-semibold text-primary-main first-letter:uppercase">
-                {selected !== undefined && selected !== null ? `${selected}` : ""}
+                {selected !== undefined && selected !== null ? `${selected}` : ''}
               </span>
               <span className="text-sm font-semibold text-primary-main">{custom_intial_value}</span>
             </div>
             <CaretDown className="ml-2" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className={twMerge("min-w-[200px]", className)}>
+        <DropdownMenuContent className={twMerge('min-w-[200px]', className)}>
           {items.map((item: FilterOption) => (
             <React.Fragment key={item.id}>
               <DropdownMenuItem
                 aria-valuetext={String(item.value)}
                 onClick={(e) => {
-                  const value = e.currentTarget.getAttribute("aria-valuetext");
+                  const value = e.currentTarget.getAttribute('aria-valuetext');
                   setSelected(item.label);
                   onSelect && onSelect(value as string);
                 }}

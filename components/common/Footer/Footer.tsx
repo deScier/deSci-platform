@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { links, social_media } from "@/mock/footer_items";
-import { home_routes } from "@/routes/home";
+import { links, social_media } from '@/mock/footer_items';
+import { home_routes } from '@/routes/home';
 
-import Link from "next/link";
-import EmailIcon from "public/svgs/common/footer/icons-footer/email.svg";
-import WhatsApp from "public/svgs/common/footer/icons-footer/whatsapp.svg";
-import LogoDeScier from "public/svgs/common/footer/logo-de-scier-footer.svg";
-import React from "react";
+import Link from 'next/link';
+import EmailIcon from 'public/svgs/common/footer/icons-footer/email.svg';
+import WhatsApp from 'public/svgs/common/footer/icons-footer/whatsapp.svg';
+import LogoDeScier from 'public/svgs/common/footer/logo-de-scier-footer.svg';
+import React from 'react';
 
 /**
  * @title Footer Component
@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
           {links.map((item) => (
             <Link
               href={item.link}
-              target={item.link.includes(home_routes.home.index) ? "_self" : "_blank"}
+              target={item.link.includes(home_routes.home.index) ? '_self' : '_blank'}
               rel="noopener noreferrer"
               key={item.id}
             >
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
         <div className="grid gap-4 w-full content-start">
           <p className="text-lg font-semibold text-neutral-white">Contact</p>
           <Link
-            href={"https://api.whatsapp.com/send?phone=5511983432131"}
+            href={'https://api.whatsapp.com/send?phone=5511983432131'}
             target="_blank"
             rel="noopener noreferrer"
             className="grid gap-1"
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
           </Link>
-          <Link href={"mailto:maxi@maxi.science"} className="grid gap-1">
+          <Link href={'mailto:maxi@maxi.science'} className="grid gap-1">
             <div className="flex items-center gap-3">
               <EmailIcon className="w-4 h-4" />
               <p className="text-sm text-neutral-white font-semibold select-none">E-mail</p>

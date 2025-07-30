@@ -1,9 +1,9 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { truncate } from "@/utils/format_texts";
-import { EditorAndReviewerProps } from "@components/common/EditorsAndReviwers/Typing";
-import { twMerge } from "tailwind-merge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { truncate } from '@/utils/format_texts';
+import { EditorAndReviewerProps } from '@components/common/EditorsAndReviwers/Typing';
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 /**
  * @title Editors and Reviewers Component
  * @notice This component displays the editors and reviewers associated with an article.
@@ -42,9 +42,9 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
                 <div>
                   <p
                     className={twMerge(
-                      "text-sm text-secundary_blue-main first-letter:uppercase font-semibold lowercase",
-                      `${item.role == "reviewer" && "text-[#B07F03]"}`,
-                      `${item.role == "editor" && "text-terciary-main"}`
+                      'text-sm text-secundary_blue-main first-letter:uppercase font-semibold lowercase',
+                      `${item.role == 'reviewer' && 'text-[#B07F03]'}`,
+                      `${item.role == 'editor' && 'text-terciary-main'}`
                     )}
                   >
                     {item.role}
@@ -53,12 +53,12 @@ export const EditorsAndReviewers: React.FC<EditorAndReviewerProps> = ({ article 
                 <div>
                   <p
                     className={twMerge(
-                      "text-sm text-secundary_blue-main font-semibold border py-[2px] px-1 text-center rounded-md md:border-none md:py-0 md:px-0 md:rounded-none md:text-start first-letter:uppercase lowercase",
-                      `${item.inviteStatus == "PENDING" && "text-status-pending"}`,
-                      `${item.inviteStatus == "ACCEPTED" && "text-status-green"}`
+                      'text-sm text-secundary_blue-main font-semibold border py-[2px] px-1 text-center rounded-md md:border-none md:py-0 md:px-0 md:rounded-none md:text-start first-letter:uppercase lowercase',
+                      `${item.inviteStatus == 'PENDING' && 'text-status-pending'}`,
+                      `${item.inviteStatus == 'ACCEPTED' && 'text-status-green'}`
                     )}
                   >
-                    {item.inviteStatus == "ACCEPTED" ? "Invite accepted" : item.inviteStatus}
+                    {item.inviteStatus == 'ACCEPTED' ? 'Invite accepted' : item.inviteStatus}
                   </p>
                 </div>
               </div>

@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const addCommentService = async (data: AddCommentProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviewer/comment`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -16,11 +16,11 @@ export const addCommentService = async (data: AddCommentProps) => {
   if (response.status === 201) {
     return {
       success: true,
-      message: "Added comment successfully",
+      message: 'Added comment successfully',
     };
   }
 
-  const message = responseData.message ?? "Error in add comment.";
+  const message = responseData.message ?? 'Error in add comment.';
 
   return {
     success: false,

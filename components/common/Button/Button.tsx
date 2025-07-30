@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { BackProps, ButtonProps, LinkProps } from "@components/common/Button/Typing";
-import { Slot } from "@radix-ui/react-slot";
-import { cva } from "class-variance-authority";
-import { useRouter } from "next/navigation";
+import { cn } from '@/lib/utils';
+import { BackProps, ButtonProps, LinkProps } from '@components/common/Button/Typing';
+import { Slot } from '@radix-ui/react-slot';
+import { cva } from 'class-variance-authority';
+import { useRouter } from 'next/navigation';
 
-import Spinner from "@components/common/Loading/Spinner";
-import NextLink from "next/link";
-import React from "react";
+import Spinner from '@components/common/Loading/Spinner';
+import NextLink from 'next/link';
+import React from 'react';
 
 export const buttonVariants = cva(
-  "inline-flex gap-2 w-full max-h-[42px] items-center justify-center px-4 py-3.5 rounded-md font-semibold select-none transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 transition-all duration-300",
+  'inline-flex gap-2 w-full max-h-[42px] items-center justify-center px-4 py-3.5 rounded-md font-semibold select-none transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 transition-all duration-300',
   {
     variants: {
       variant: {
-        default: "bg-primary-main text-neutral-white hover:bg-primary-hover",
-        primary: "bg-primary-main text-neutral-white hover:bg-primary-hover",
-        secondary: "bg-transparent text-neutral-white",
-        outline: "border border-primary-main text-primary-main bg-transparent hover:bg-secundary-hover",
-        warning: "bg-status-red text-white-main",
-        warining_outline: "border bg-transparent text-status-red hover:bg-status-red_hover hover:text-status-red_hover",
+        default: 'bg-primary-main text-neutral-white hover:bg-primary-hover',
+        primary: 'bg-primary-main text-neutral-white hover:bg-primary-hover',
+        secondary: 'bg-transparent text-neutral-white',
+        outline: 'border border-primary-main text-primary-main bg-transparent hover:bg-secundary-hover',
+        warning: 'bg-status-red text-white-main',
+        warining_outline: 'border bg-transparent text-status-red hover:bg-status-red_hover hover:text-status-red_hover',
         disabled:
-          "bg-status-disable_bg text-status-disable_text cursor-not-allowed fill-status-disable_text pointer-events-none",
+          'bg-status-disable_bg text-status-disable_text cursor-not-allowed fill-status-disable_text pointer-events-none',
         destructive:
-          "bg-red-500 text-neutral-white hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-white dark:hover:bg-red-900/90",
-        ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-neutral-white",
-        link: "text-slate-900 underline-offset-4 hover:underline dark:text-neutral-white",
+          'bg-red-500 text-neutral-white hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-white dark:hover:bg-red-900/90',
+        ghost: 'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-neutral-white',
+        link: 'text-slate-900 underline-offset-4 hover:underline dark:text-neutral-white',
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
     },
   }
 );
@@ -45,15 +45,15 @@ export const buttonVariants = cva(
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps & { loading?: boolean; icon?: React.ReactNode }>(
   ({ className, variant, asChild = false, loading = false, icon, children, disabled, ...props }, ref) => {
     const hasDisabled = disabled || loading;
-    const Comp = asChild ? Slot : "button";
+    const Comp = asChild ? Slot : 'button';
 
     return (
       <Comp
         ref={ref}
-        type={props.type || "button"}
+        type={props.type || 'button'}
         className={cn(
           buttonVariants({
-            variant: hasDisabled ? "disabled" : variant,
+            variant: hasDisabled ? 'disabled' : variant,
           }),
           className
         )}
@@ -72,7 +72,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & { loading?: boo
     );
   }
 );
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 /**
  * @title Link Component

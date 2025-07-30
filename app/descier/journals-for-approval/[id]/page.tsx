@@ -1,10 +1,10 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
-import { JournalDetailsProps } from "@/services/journal/getJournals.service";
-import { NextAuthOptions, Session, getServerSession } from "next-auth";
-import { unstable_noStore as noStore } from "next/cache";
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import { JournalDetailsProps } from '@/services/journal/getJournals.service';
+import { NextAuthOptions, Session, getServerSession } from 'next-auth';
+import { unstable_noStore as noStore } from 'next/cache';
 
-import JournalDetails from "@/components/pages/Journal/JournalDetails";
-import React from "react";
+import JournalDetails from '@/components/pages/Journal/JournalDetails';
+import React from 'react';
 
 export default async function JournalDetailsPage({ params }: { params: { id: string } }) {
   noStore();
@@ -15,8 +15,8 @@ export default async function JournalDetailsPage({ params }: { params: { id: str
   const fetchJournal = async (journalId: string, data: Session | null) => {
     if (session?.user?.token) {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/${journalId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", authorization: `Bearer ${session.user.token}` },
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', authorization: `Bearer ${session.user.token}` },
       });
 
       const response = (await request.json()) as JournalDetailsProps;

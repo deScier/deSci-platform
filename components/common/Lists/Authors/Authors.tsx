@@ -1,10 +1,10 @@
-import { Reorder } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { Pencil, Trash } from "react-bootstrap-icons";
-import { AuthorsListDragabbleProps } from "./Typing";
+import { Reorder } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { Pencil, Trash } from 'react-bootstrap-icons';
+import { AuthorsListDragabbleProps } from './Typing';
 
-import CircleIcon from "public/svgs/modules/new-document/circles.svg";
-import React from "react";
+import CircleIcon from 'public/svgs/modules/new-document/circles.svg';
+import React from 'react';
 
 /**
  * @title Authors List Draggable Component
@@ -41,7 +41,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                         </p>
                         <div className="block md:hidden">
                           <p className="text-sm text-secundary_blue-main">
-                            {item.author?.title == "" ? "-" : item.author?.title}
+                            {item.author?.title == '' ? '-' : item.author?.title}
                           </p>
                         </div>
                         <div className="block md:hidden relative overflow-hidden">
@@ -55,10 +55,10 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                     onClick={() =>
                                       onDelete &&
                                       onDelete({
-                                        email: item.author?.email || "",
+                                        email: item.author?.email || '',
                                         id: item.id,
-                                        name: item.author?.name || "",
-                                        title: item.author?.title || "",
+                                        name: item.author?.name || '',
+                                        title: item.author?.title || '',
                                       })
                                     }
                                   />
@@ -69,10 +69,10 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                                     onClick={() =>
                                       onEdit &&
                                       onEdit({
-                                        email: item.author?.email || "",
+                                        email: item.author?.email || '',
                                         id: item.id,
-                                        name: item.author?.name || "",
-                                        title: item.author?.title || "",
+                                        name: item.author?.name || '',
+                                        title: item.author?.title || '',
                                       })
                                     }
                                   />
@@ -85,7 +85,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                     </div>
                     <div className="hidden md:block">
                       <p className="text-sm text-secundary_blue-main truncate">
-                        {item.author?.title == "" ? "-" : item.author?.title}
+                        {item.author?.title == '' ? '-' : item.author?.title}
                       </p>
                     </div>
                     <div className="hidden md:flex items-center gap-2 w-full">
@@ -100,10 +100,10 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                               onClick={() =>
                                 onDelete &&
                                 onDelete({
-                                  email: item.author?.email || "",
+                                  email: item.author?.email || '',
                                   id: item.id,
-                                  name: item.author?.name || "",
-                                  title: item.author?.title || "",
+                                  name: item.author?.name || '',
+                                  title: item.author?.title || '',
                                 })
                               }
                             />
@@ -112,10 +112,10 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                               onClick={() =>
                                 onEdit &&
                                 onEdit({
-                                  email: item.author?.email || "",
+                                  email: item.author?.email || '',
                                   id: item.id,
-                                  name: item.author?.name || "",
-                                  title: item.author?.title || "",
+                                  name: item.author?.name || '',
+                                  title: item.author?.title || '',
                                 })
                               }
                             />
@@ -144,7 +144,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                       <div>
                         <p className="text-sm text-secundary_blue-main font-semibold md:font-regular">{item.name}</p>
                         <div className="block md:hidden">
-                          <p className="text-sm text-secundary_blue-main">{item.title == "" ? "-" : item.title}</p>
+                          <p className="text-sm text-secundary_blue-main">{item.title == '' ? '-' : item.title}</p>
                         </div>
                         <div className="block md:hidden">
                           <p className="text-sm text-secundary_blue-main">{item.email}</p>
@@ -153,7 +153,7 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
                     </div>
                     <div className="hidden md:block">
                       <p className="text-sm text-secundary_blue-main max-w-[20ch] truncate">
-                        {item.title == "" ? "-" : item.title}
+                        {item.title == '' ? '-' : item.title}
                       </p>
                     </div>
                     <div className="hidden md:flex items-center justify-between">

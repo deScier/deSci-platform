@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 /**
  *@title useIconRenderer Hook
@@ -14,7 +14,7 @@ type IconMapping = { [key: string]: React.ReactNode };
 export const useIconRenderer = (iconMapping: IconMapping) => {
   const renderIcon = React.useCallback(
     (key: string) => {
-      if (typeof iconMapping === "object" && iconMapping !== null) {
+      if (typeof iconMapping === 'object' && iconMapping !== null) {
         return iconMapping[key] || null;
       }
       return null;

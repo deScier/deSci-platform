@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import * as Dialog from "@components/common/Dialog/Digalog";
+import * as Dialog from '@components/common/Dialog/Digalog';
 
-import { PurchasedArticles } from "@/components/modules/Home/Search/Purchase/PurchasedArticles";
-import { admin_key, article_key, items } from "@/mock/sidebar_items";
-import { home_routes } from "@/routes/home";
-import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { twMerge } from "tailwind-merge";
-import { SelectCreation } from "./SelectCreation/SelectCreation";
+import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles';
+import { admin_key, article_key, items } from '@/mock/sidebar_items';
+import { home_routes } from '@/routes/home';
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
+import { SelectCreation } from './SelectCreation/SelectCreation';
 
-import LogoDeScier from "public/svgs/common/logo/deScier - Logo.svg";
-import React from "react";
-import Item from "./Item/Item";
-import Logout from "./Logout/Logout";
+import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg';
+import React from 'react';
+import Item from './Item/Item';
+import Logout from './Logout/Logout';
 
 /**
  * @title Sidebar Component
@@ -34,12 +34,12 @@ const Sidebar: React.FC = () => {
   const [purchased, setPurchased] = React.useState(false);
 
   /** @dev Check if the user role is Administrator */
-  const isAdministrator = session?.user?.userInfo.role !== "ADMIN";
+  const isAdministrator = session?.user?.userInfo.role !== 'ADMIN';
 
   return (
     <React.Fragment>
       <Dialog.Root open={purchased}>
-        <Dialog.Content className={twMerge("max-w-[1024px] w-full h-fit", `${purchased && "max-w-[80%]"}`)}>
+        <Dialog.Content className={twMerge('max-w-[1024px] w-full h-fit', `${purchased && 'max-w-[80%]'}`)}>
           {purchased && <PurchasedArticles onClose={() => setPurchased(false)} />}
         </Dialog.Content>
       </Dialog.Root>

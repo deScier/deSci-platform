@@ -1,6 +1,6 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Box Component
@@ -23,7 +23,7 @@ const Box: React.FC<{ children: React.ReactNode; className?: string }> = ({
   return (
     <React.Fragment>
       <div
-        className={twMerge("inline-grid w-full box-border bg-[#FEFEFE] shadow-box py-4 px-6 rounded-lg ", className)}
+        className={twMerge('inline-grid w-full box-border bg-[#FEFEFE] shadow-box py-4 px-6 rounded-lg ', className)}
       >
         {children}
       </div>

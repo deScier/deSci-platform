@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const submitNewDocumentService = async (data: SubmitDocumentProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -17,11 +17,11 @@ export const submitNewDocumentService = async (data: SubmitDocumentProps) => {
     return {
       success: true,
       documentId: responseData.document.id,
-      message: "Document submitted successfully",
+      message: 'Document submitted successfully',
     };
   }
 
-  const message = responseData.message ?? "Error in submit document.";
+  const message = responseData.message ?? 'Error in submit document.';
 
   return {
     success: false,

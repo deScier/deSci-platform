@@ -1,5 +1,5 @@
 export function keywordsArray(inputString: string) {
-  if (inputString === "") return [];
+  if (inputString === '') return [];
 
-  return inputString?.split(";");
+  return inputString?.split(';');
 }

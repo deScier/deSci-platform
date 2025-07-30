@@ -1,5 +1,5 @@
-import EarningsIllustration from "public/svgs/modules/statistics/earnings.svg";
-import React from "react";
+import EarningsIllustration from 'public/svgs/modules/statistics/earnings.svg';
+import React from 'react';
 
 /**
  * @title Earnings Component

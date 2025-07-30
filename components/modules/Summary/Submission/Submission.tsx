@@ -1,9 +1,9 @@
-import PieChartComponent from "@/components/common/PieChart/PieChart";
-import { home_routes } from "@/routes/home";
-import * as Button from "@components/common/Button/Button";
-import React from "react";
-import { PlusCircle } from "react-bootstrap-icons";
-import { SubmissionProps } from "./Typing";
+import PieChartComponent from '@/components/common/PieChart/PieChart';
+import { home_routes } from '@/routes/home';
+import * as Button from '@components/common/Button/Button';
+import React from 'react';
+import { PlusCircle } from 'react-bootstrap-icons';
+import { SubmissionProps } from './Typing';
 
 /**
  * @title Submission Component

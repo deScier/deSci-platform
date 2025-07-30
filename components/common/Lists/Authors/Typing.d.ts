@@ -1,5 +1,5 @@
-import { Author } from "@/mock/submit_new_document";
-import { DocumentGetProps } from "@/services/document/getArticles";
+import { Author } from '@/mock/submit_new_document';
+import { DocumentGetProps } from '@/services/document/getArticles';
 
 interface AuthorsListDragabbleProps {
   article: DocumentGetProps | null;

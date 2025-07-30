@@ -1,8 +1,8 @@
-import { uniqueId } from "lodash";
-import { Check, Clock, X } from "react-bootstrap-icons";
-import { DocumentApprovalsProps } from "./Typing";
+import { uniqueId } from 'lodash';
+import { Check, Clock, X } from 'react-bootstrap-icons';
+import { DocumentApprovalsProps } from './Typing';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Document Approvals Component
@@ -20,23 +20,23 @@ const DocumentApprovals: React.FC<DocumentApprovalsProps> = ({
           <h2 className="text-status-yellow font-semibold text-lg">Reviewer</h2>
           {reviewerApprovals?.map((item) => (
             <>
-              {item === "APPROVED" && (
+              {item === 'APPROVED' && (
                 <Check
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-8 h-8 hover:scale-125 transition-all duration-200 fill-status-green cursor-pointer"
                 />
               )}
 
-              {item === "REJECTED" && (
+              {item === 'REJECTED' && (
                 <X
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-8 h-8 hover:scale-125 transition-all duration-200 fill-status-error cursor-pointer"
                 />
               )}
 
-              {item === "PENDING" && (
+              {item === 'PENDING' && (
                 <Clock
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-6 h-6 hover:scale-125 transition-all duration-200 fill-status-pending cursor-pointer"
                 />
               )}
@@ -47,23 +47,23 @@ const DocumentApprovals: React.FC<DocumentApprovalsProps> = ({
           <h2 className="text-terciary-main font-semibold text-lg">Editor</h2>
           {editorApprovals?.map((item) => (
             <>
-              {item === "APPROVED" && (
+              {item === 'APPROVED' && (
                 <Check
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-8 h-8 hover:scale-125 transition-all duration-200 fill-status-green cursor-pointer"
                 />
               )}
 
-              {item === "REJECTED" && (
+              {item === 'REJECTED' && (
                 <X
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-8 h-8 hover:scale-125 transition-all duration-200 fill-status-error cursor-pointer"
                 />
               )}
 
-              {item === "PENDING" && (
+              {item === 'PENDING' && (
                 <Clock
-                  key={uniqueId("reviewer-approval")}
+                  key={uniqueId('reviewer-approval')}
                   className="w-6 h-6 hover:scale-125 transition-all duration-200 fill-status-pending cursor-pointer"
                 />
               )}

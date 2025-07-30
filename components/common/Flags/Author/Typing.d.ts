@@ -1,5 +1,5 @@
 interface YouAreProps {
-  role: "editor" | "reviewer";
+  role: 'editor' | 'reviewer';
 }
 
 export { YouAreProps };

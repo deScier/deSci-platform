@@ -1,5 +1,5 @@
-import * as S from "@components/common/Select/Select";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as S from '@components/common/Select/Select';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
 import {
   ErrorProps,
@@ -8,46 +8,46 @@ import {
   SelectInputProps,
   TextAreaProps,
   WrapperInputProps,
-} from "@components/common/Input/Typing";
-import { CaretDown, Eye, EyeSlash, Search as SearchIcon } from "react-bootstrap-icons";
-import CurrencyInput, { CurrencyInputProps } from "react-currency-input-field";
-import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
+} from '@components/common/Input/Typing';
+import { CaretDown, Eye, EyeSlash, Search as SearchIcon } from 'react-bootstrap-icons';
+import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
+import { twMerge } from 'tailwind-merge';
+import { tv } from 'tailwind-variants';
 
-import useDimension from "@/hooks/useWindowDimension";
-import React from "react";
+import useDimension from '@/hooks/useWindowDimension';
+import React from 'react';
 
 /** @dev Tailwind CSS variant for standard input */
 export const input = tv({
-  base: "flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main",
+  base: 'flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main',
   variants: {
     hasIcon: {
-      start: "data-[start=true]:px-11",
-      end: "data-[end=true]:px-11",
-      none: "",
+      start: 'data-[start=true]:px-11',
+      end: 'data-[end=true]:px-11',
+      none: '',
     },
     disabled: {
-      true: "bg-[#FEFEFE] text-[#6c6c6c] cursor-not-allowed",
-      false: "",
+      true: 'bg-[#FEFEFE] text-[#6c6c6c] cursor-not-allowed',
+      false: '',
     },
   },
 });
 
 /** @dev Tailwind CSS variant for text area input */
 const textArea = tv({
-  base: "flex border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base  focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-neutral-black",
+  base: 'flex border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base  focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-neutral-black',
   variants: {
     hasIcon: {
-      start: "data-[start=true]:px-11",
-      end: "data-[end=true]:px-11",
-      none: "",
+      start: 'data-[start=true]:px-11',
+      end: 'data-[end=true]:px-11',
+      none: '',
     },
   },
 });
 
 /** @dev Tailwind CSS variant for password input */
 const password = tv({
-  base: "flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main",
+  base: 'flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main',
 });
 
 /**
@@ -71,7 +71,7 @@ const Label: React.FC<LabelProps> = ({ children, optional, icon, tooltip_message
         {icon && (
           <span
             className={twMerge(
-              "material-symbols-outlined !text-2xl !font-regular !text-black-primary select-none text-center rounded-md"
+              'material-symbols-outlined !text-2xl !font-regular !text-black-primary select-none text-center rounded-md'
             )}
           >
             {icon}
@@ -103,7 +103,7 @@ const TextArea = React.forwardRef<HTMLInputElement, TextAreaProps>(
   ({ icon, start = icon ? true : false, end, className, ...props }, ref) => {
     /** @dev define if has icon */
     const hasIcon = icon !== undefined;
-    const iconPosition = start ? "start" : end ? "end" : "none";
+    const iconPosition = start ? 'start' : end ? 'end' : 'none';
 
     return (
       <React.Fragment>
@@ -139,7 +139,7 @@ const Password = React.forwardRef<HTMLInputElement, InputProps>(({ ...props }, r
   return (
     <React.Fragment>
       <div className="relative">
-        <input ref={ref} className={password()} type={isVisible ? "text" : "password"} {...props} />
+        <input ref={ref} className={password()} type={isVisible ? 'text' : 'password'} {...props} />
         <div className="absolute right-0 top-0 bottom-0 flex items-center px-3">
           {isVisible ? (
             <Eye className="cursor-pointer fill-neutral-gray" onClick={() => setIsVisible(!isVisible)} />
@@ -162,7 +162,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ icon, start = icon ? true : false, end, disabled = false, className, ...props }, ref) => {
     /** @dev define if has icon */
     const hasIcon = icon !== undefined;
-    const iconPosition = start ? "start" : end ? "end" : "none";
+    const iconPosition = start ? 'start' : end ? 'end' : 'none';
     const disabledStatus = disabled ? true : false;
 
     return (
@@ -207,7 +207,7 @@ const Search = React.forwardRef<HTMLInputElement, InputProps>(({ disabled = fals
       <Input
         ref={ref}
         disabled={disabled}
-        className={twMerge("px-4 py-3 h-fit border-none bg-neutral-white shadow-search rounded-md text-sm", className)}
+        className={twMerge('px-4 py-3 h-fit border-none bg-neutral-white shadow-search rounded-md text-sm', className)}
         {...props}
         icon={<SearchIcon className="text-neutral-gray w-[1.125rem] h-[1.125rem]" />}
       />
@@ -231,7 +231,7 @@ const Select = React.forwardRef<HTMLInputElement, SelectInputProps>(
       value,
       defaultValue,
       onValueChange,
-      variant = "input",
+      variant = 'input',
       icon,
       start = icon ? true : false,
       end,
@@ -329,10 +329,10 @@ const Percentage = React.forwardRef<HTMLInputElement, CurrencyInputProps>(({ ...
       suffix="%"
       onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        const number = parseFloat(value.replace(",", "."));
+        const number = parseFloat(value.replace(',', '.'));
 
-        if (value === "-") event.target.value = "";
-        if (number > 100) event.target.value = "100";
+        if (value === '-') event.target.value = '';
+        if (number > 100) event.target.value = '100';
       }}
       ref={ref}
       {...props}
@@ -341,11 +341,11 @@ const Percentage = React.forwardRef<HTMLInputElement, CurrencyInputProps>(({ ...
 });
 
 /** @dev Set display name for each component */
-TextArea.displayName = "TextArea";
-Password.displayName = "Password";
-Input.displayName = "Input";
-Search.displayName = "Search";
-Select.displayName = "Select";
-Percentage.displayName = "Percentage";
+TextArea.displayName = 'TextArea';
+Password.displayName = 'Password';
+Input.displayName = 'Input';
+Search.displayName = 'Search';
+Select.displayName = 'Select';
+Percentage.displayName = 'Percentage';
 
 export { Error, Input, Label, Password, Percentage, Root, Search, Select, TextArea };

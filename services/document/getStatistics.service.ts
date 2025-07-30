@@ -1,5 +1,5 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export const useStatistics = () => {
   const { data: session } = useSession();
@@ -8,9 +8,9 @@ export const useStatistics = () => {
   const getStatistics = async () => {
     if (session?.user) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/statistics`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           authorization: `Bearer ${session.user.token}`,
         },
       });

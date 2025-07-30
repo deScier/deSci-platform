@@ -1,6 +1,6 @@
-import { DocumentProps } from "./document";
+import { DocumentProps } from './document';
 
-export type UserRoles = "ADMIN" | "USER";
+export type UserRoles = 'ADMIN' | 'USER';
 
 export type CreateUserDTO = {
   name: string;

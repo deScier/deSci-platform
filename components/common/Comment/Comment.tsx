@@ -1,8 +1,8 @@
-import { CommentItemProps } from "@components/common/Comment/Typing";
-import { useSession } from "next-auth/react";
-import { Check, Pencil, X } from "react-bootstrap-icons";
+import { CommentItemProps } from '@components/common/Comment/Typing';
+import { useSession } from 'next-auth/react';
+import { Check, Pencil, X } from 'react-bootstrap-icons';
 
-import React from "react";
+import React from 'react';
 /**
  * @title CommentItem Component
  * @notice Handles the display and interaction of a single comment item.
@@ -12,7 +12,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   comment_author,
   comment_content,
   onApprove,
-  status = "PENDING",
+  status = 'PENDING',
   onReject,
   onSeeReasoning,
   onEdit,
@@ -26,7 +26,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="grid gap-2">
         <div className="flex justify-between items-center">
           <p className="text-base font-semibold">{comment_author}</p>
-          {status === "PENDING" && (
+          {status === 'PENDING' && (
             <React.Fragment>
               <div className="flex items-center gap-2">
                 {onEdit && session?.user?.userInfo.id === user_id && (
@@ -47,7 +47,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </div>
             </React.Fragment>
           )}
-          {status === "REJECTED" && (
+          {status === 'REJECTED' && (
             <div className="flex items-center gap-4">
               <p className="text-sm text-neutral-gray italic font-regular">Proposal rejected</p>
               <p
@@ -58,7 +58,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </p>
             </div>
           )}
-          {status === "APPROVED" && (
+          {status === 'APPROVED' && (
             <div>
               <p className="text-sm text-status-green italic font-regular">Proposal accepted</p>
             </div>

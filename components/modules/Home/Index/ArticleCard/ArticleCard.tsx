@@ -1,15 +1,15 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { document_types } from "@/mock/document_types";
-import { formatAuthors } from "@/utils/format_authors";
-import { ArticleCardProps } from "@components/modules/Home/Index/ArticleCard/Typing";
-import "@styles/home.css";
-import { truncate } from "lodash";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { Eye, HandThumbsUp } from "react-bootstrap-icons";
-import slug from "slug";
-import { twMerge } from "tailwind-merge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { document_types } from '@/mock/document_types';
+import { formatAuthors } from '@/utils/format_authors';
+import { ArticleCardProps } from '@components/modules/Home/Index/ArticleCard/Typing';
+import '@styles/home.css';
+import { truncate } from 'lodash';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { Eye, HandThumbsUp } from 'react-bootstrap-icons';
+import slug from 'slug';
+import { twMerge } from 'tailwind-merge';
 
 /** @title ArticleCard Component
  *  @notice This component creates a card to display article details such as authors, likes, tags, title, views, image, etc.
@@ -33,15 +33,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     <div className="grid items-start">
       <div
         className={twMerge(
-          "max-w-full sm:max-w-[180px] md:max-w-[200px] lg:max-w-[240px] grid gap-3 sm:gap-4 items-start",
+          'max-w-full sm:max-w-[180px] md:max-w-[200px] lg:max-w-[240px] grid gap-3 sm:gap-4 items-start',
           className,
-          `${responsive && "max-w-full"}`
+          `${responsive && 'max-w-full'}`
         )}
       >
         <div
           className={twMerge(
-            "w-full h-20 sm:h-48 sm:w-48 md:w-52 md:h-52 lg:w-60 lg:h-60 overflow-hidden rounded-md relative",
-            `${responsive && "w-full"}`
+            'w-full h-20 sm:h-48 sm:w-48 md:w-52 md:h-52 lg:w-60 lg:h-60 overflow-hidden rounded-md relative',
+            `${responsive && 'w-full'}`
           )}
         >
           <Image
@@ -51,7 +51,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             height={240}
             src={image}
             alt="placeholder"
-            className={twMerge("w-full h-full object-cover absolute inset-0", `${responsive && "w-full"}`)}
+            className={twMerge('w-full h-full object-cover absolute inset-0', `${responsive && 'w-full'}`)}
           />
         </div>
         <div className="grid gap-1 sm:gap-2">

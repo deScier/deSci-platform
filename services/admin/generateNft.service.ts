@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const generateNftAdminService = async (data: GenerateNftData) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/generate-nft`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify({
@@ -19,12 +19,12 @@ export const generateNftAdminService = async (data: GenerateNftData) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "NFT generated successfully",
+      message: 'NFT generated successfully',
       data: responseData.data,
     };
   }
 
-  const message = responseData.message ?? "Error in generating NFT.";
+  const message = responseData.message ?? 'Error in generating NFT.';
 
   return {
     success: false,

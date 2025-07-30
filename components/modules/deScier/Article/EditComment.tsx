@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
-import React from "react";
-import { X } from "react-bootstrap-icons";
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
 
 /**
  * @title EditComment Component

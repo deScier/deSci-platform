@@ -15,8 +15,8 @@ export function formatFileName(fileName: string, max?: number): string {
   const maxChars = max || 25;
   if (String(fileName).length <= maxChars) return fileName;
 
-  const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
-  const mainPart = fileName.slice(0, fileName.lastIndexOf("."));
+  const fileExtension = fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
+  const mainPart = fileName.slice(0, fileName.lastIndexOf('.'));
 
   const halfLength = Math.floor((maxChars - 3) / 2);
 

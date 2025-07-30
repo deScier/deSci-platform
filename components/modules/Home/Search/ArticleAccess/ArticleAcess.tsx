@@ -1,10 +1,10 @@
-import { formatDate } from "@/utils/date_format";
-import formatPriceInUSD from "@/utils/format_price_in_usd";
-import * as Button from "@components/common/Button/Button";
-import { ArticleAcessProps } from "@components/modules/Home/Search/ArticleAccess/Typing";
-import React from "react";
-import { Coin, Download, Person, Tag } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { formatDate } from '@/utils/date_format';
+import formatPriceInUSD from '@/utils/format_price_in_usd';
+import * as Button from '@components/common/Button/Button';
+import { ArticleAcessProps } from '@components/modules/Home/Search/ArticleAccess/Typing';
+import React from 'react';
+import { Coin, Download, Person, Tag } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * @title ArticleAccess Component
@@ -22,8 +22,8 @@ export const ArticleAcess: React.FC<ArticleAcessProps> = ({
 }: ArticleAcessProps) => {
   return (
     <React.Fragment>
-      <div className={twMerge("flex flex-col gap-4 bg-white rounded-xl h-fit w-full lg:w-[490px] p-6", className)}>
-        {access_status === "author" ? (
+      <div className={twMerge('flex flex-col gap-4 bg-white rounded-xl h-fit w-full lg:w-[490px] p-6', className)}>
+        {access_status === 'author' ? (
           <React.Fragment>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2 flex-grow">
@@ -37,7 +37,7 @@ export const ArticleAcess: React.FC<ArticleAcessProps> = ({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {access_status === "purchased" ? (
+            {access_status === 'purchased' ? (
               <React.Fragment>
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2 flex-grow">
@@ -45,7 +45,7 @@ export const ArticleAcess: React.FC<ArticleAcessProps> = ({
                     <p className="text-base">Purchased</p>
                   </div>
                   <div className="flex flex-grow">
-                    <Badge access_type={"PAID"} />
+                    <Badge access_type={'PAID'} />
                   </div>
                 </div>
                 <Button.Button className="flex gap-4 px-4 py-2" onClick={onViewDocument}>
@@ -64,7 +64,7 @@ export const ArticleAcess: React.FC<ArticleAcessProps> = ({
           </React.Fragment>
         )}
         <div>
-          {access_status === "paid" && (
+          {access_status === 'paid' && (
             <p className="text-sm text-center text-neutral-light_gray mb-3">This value goes to the author.</p>
           )}
           <p className="text-base text-center? font-regular">Document published in {formatDate(date)}</p>
@@ -87,17 +87,17 @@ const ArticleType: React.FC<ArticleTypeProps> = ({
 }: ArticleTypeProps) => {
   return (
     <React.Fragment>
-      {access_type === "PAID" ? (
+      {access_type === 'PAID' ? (
         <div className="flex items-center">
           <div className="flex flex-grow">
             <h3 className="text-2xl font-semibold text-status-green">{formatPriceInUSD(value)}</h3>
           </div>
-          <Badge access_type={"PAID"} />
+          <Badge access_type={'PAID'} />
         </div>
       ) : (
-        <Badge access_type={"FREE"} />
+        <Badge access_type={'FREE'} />
       )}
-      {access_type === "PAID" ? (
+      {access_type === 'PAID' ? (
         <Button.Button className="flex gap-4 px-4 py-2" onClick={onBuyDocument}>
           Purchase document to view
           <Coin className="w-5 h-5" />
@@ -120,9 +120,9 @@ const ArticleType: React.FC<ArticleTypeProps> = ({
 export const Badge: React.FC<BadgeProps> = ({ access_type, className }: BadgeProps) => {
   return (
     <React.Fragment>
-      {access_type === "PAID" ? (
+      {access_type === 'PAID' ? (
         <React.Fragment>
-          <div className={twMerge("flex flex-grow", className)}>
+          <div className={twMerge('flex flex-grow', className)}>
             <div className="border border-neutral-stroke_light rounded-md px-2 py-1 w-full flex items-center flex-shrink gap-2 justify-center">
               <div className="w-3 h-3 bg-secundary_purple-main rounded-full" />
               <p className="text-sm select-none">Paid access</p>
@@ -133,7 +133,7 @@ export const Badge: React.FC<BadgeProps> = ({ access_type, className }: BadgePro
         <React.Fragment>
           <div
             className={twMerge(
-              "border border-neutral-stroke_light rounded-md px-2 py-1 w-full flex items-center flex-shrink gap-2 justify-center",
+              'border border-neutral-stroke_light rounded-md px-2 py-1 w-full flex items-center flex-shrink gap-2 justify-center',
               className
             )}
           >
@@ -151,7 +151,7 @@ export const Badge: React.FC<BadgeProps> = ({ access_type, className }: BadgePro
  * @dev Defines the props for the Badge component, specifically the access type of the article.
  */
 interface BadgeProps {
-  access_type: ArticleAcessProps["access_type"];
+  access_type: ArticleAcessProps['access_type'];
   className?: string;
 }
 

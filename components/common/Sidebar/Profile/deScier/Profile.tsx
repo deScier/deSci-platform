@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { usePathname, useRouter } from "next/navigation";
-import { CaretRight } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { usePathname, useRouter } from 'next/navigation';
+import { CaretRight } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import Link from "next/link";
-import LogoDeScier from "public/svgs/common/logo/deScier - Logo.svg";
-import ShapeDeScierHandBookBottom from "public/svgs/modules/sidebar/Ellipse 46.svg";
-import ShapeDeScierHandBookTop from "public/svgs/modules/sidebar/Ellipse 48.svg";
-import IllustrationHandBook from "public/svgs/modules/sidebar/emojione-v1_document.svg";
-import React from "react";
+import Link from 'next/link';
+import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg';
+import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg';
+import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg';
+import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg';
+import React from 'react';
 
 /**
  * @title ProfileDeScier Component
@@ -24,7 +24,7 @@ const ProfileDeScier: React.FC = () => {
   const router = useRouter();
   return (
     <React.Fragment>
-      <aside className={twMerge("hidden md:relative md:block overflow-hidden")}>
+      <aside className={twMerge('hidden md:relative md:block overflow-hidden')}>
         <div className="flex flex-col gap-8 sticky h-[100vh] right-0 py-14 px-6 justify-between bg-[#FEFEFE]">
           <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
@@ -46,7 +46,7 @@ const ProfileDeScier: React.FC = () => {
                 <IllustrationHandBook />
                 <div className="grid w-full items-center">
                   <Link
-                    href={"https://descier-1.gitbook.io/the-desci-journal-handbook/"}
+                    href={'https://descier-1.gitbook.io/the-desci-journal-handbook/'}
                     target="_blank"
                     rel="noreferrer"
                   >

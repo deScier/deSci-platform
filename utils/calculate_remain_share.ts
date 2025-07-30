@@ -1,4 +1,4 @@
-import { Author } from "@/mock/submit_new_document";
+import { Author } from '@/mock/submit_new_document';
 /**
  * @title Calculate Remaining Share Function
  * @notice This function is used to distribute a share value evenly among authors, excluding the current author, and update their shares accordingly.
@@ -14,7 +14,7 @@ export const calculateRemainingShare = (
   authors: Author[],
   setAuthors: (authors: Author[]) => void
 ) => {
-  const newShareValue = parseFloat(newAuthorShare.replace("%", ""));
+  const newShareValue = parseFloat(newAuthorShare.replace('%', ''));
 
   const updatedAuthors = authors.map((author) => {
     if (author.id === currentAuthorId) {

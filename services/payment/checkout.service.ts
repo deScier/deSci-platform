@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const createCheckoutService = async (documentId: string) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/checkout`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify({
@@ -18,12 +18,12 @@ export const createCheckoutService = async (documentId: string) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "Checkout created successfully",
+      message: 'Checkout created successfully',
       checkoutUrl: responseData.checkout_url,
     };
   }
 
-  const message = responseData.message ?? "Error in create checkout.";
+  const message = responseData.message ?? 'Error in create checkout.';
 
   return {
     success: false,

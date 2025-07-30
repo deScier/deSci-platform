@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
-import SucessIllustration from "public/svgs/modules/home/illustration-sucess.svg";
-import React from "react";
-import { X } from "react-bootstrap-icons";
+import * as Button from '@components/common/Button/Button';
+import SucessIllustration from 'public/svgs/modules/home/illustration-sucess.svg';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
 
 /**
  *  @title PurchaseSuccess Component

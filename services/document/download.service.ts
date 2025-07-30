@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const downloadDocumentVersionService = async (data: DownloadProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/download-version`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -16,14 +16,14 @@ export const downloadDocumentVersionService = async (data: DownloadProps) => {
 
     return {
       success: true,
-      message: "Download successfully",
+      message: 'Download successfully',
       file: responseBlob!,
     };
   }
 
   const responseData = await response.json();
 
-  const message = responseData.message ?? "Error in download document.";
+  const message = responseData.message ?? 'Error in download document.';
 
   return {
     success: false,
@@ -34,9 +34,9 @@ export const downloadDocumentVersionService = async (data: DownloadProps) => {
 export const downloadDocument = async (documentId: string) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/download/${documentId}`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
   });
@@ -45,14 +45,14 @@ export const downloadDocument = async (documentId: string) => {
     const responseBlob = await response.blob();
     return {
       success: true,
-      message: "Download successfully",
+      message: 'Download successfully',
       file: responseBlob!,
     };
   }
 
   const responseData = await response.json();
 
-  const message = responseData.message ?? "Error in download document.";
+  const message = responseData.message ?? 'Error in download document.';
 
   return {
     success: false,

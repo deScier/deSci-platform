@@ -6,9 +6,9 @@
  * @return A string representing the formatted value in US Dollar (USD) currency format.
  */
 function formatPriceInUSD(value: number) {
-  return Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  return Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
   }).format(value);
 }
 

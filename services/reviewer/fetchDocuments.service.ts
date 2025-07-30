@@ -1,7 +1,7 @@
-import { ReviewerItemProps } from "@/components/modules/AsReviewer/ReviewerItem/Typing";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from "../document/getArticles";
+import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing';
+import { getSession, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from '../document/getArticles';
 
 /**
  * @title useArticlesToReview
@@ -36,9 +36,9 @@ export const useArticleToReview = () => {
 
         if (session?.user?.token) {
           const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviewer/documents`, {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               authorization: `Bearer ${session.user.token}`,
             },
           });
@@ -49,15 +49,15 @@ export const useArticleToReview = () => {
             return {
               id: article.id,
               status: article.reviewersOnDocuments?.find((item) => item.reviewerEmail === data.user?.email)
-                ?.approvedStatus as ReviewerItemProps["status"],
+                ?.approvedStatus as ReviewerItemProps['status'],
               added_as: article.reviewersOnDocuments?.find((item) => item.reviewerEmail === data.user?.email)
-                ?.role as ReviewerItemProps["added_as"],
-              image: article.cover || "",
-              since: new Date(article.createdAt).toLocaleDateString("pt-BR"),
-              link: article.documentLink || "",
+                ?.role as ReviewerItemProps['added_as'],
+              image: article.cover || '',
+              since: new Date(article.createdAt).toLocaleDateString('pt-BR'),
+              link: article.documentLink || '',
               title: article.title,
               document_type: article.documentType,
-              published: article.status === "SUBMITTED",
+              published: article.status === 'SUBMITTED',
             };
           });
 
@@ -79,9 +79,9 @@ export const useArticleToReview = () => {
 
       if (session?.user?.token) {
         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/private/${documentId}`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             authorization: `Bearer ${session.user.token}`,
           },
         });

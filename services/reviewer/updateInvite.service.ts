@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const updateInviteStatusService = async (data: UpdateInviteStatusProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviewer`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -16,11 +16,11 @@ export const updateInviteStatusService = async (data: UpdateInviteStatusProps) =
   if (response.status === 200) {
     return {
       success: true,
-      message: "Invite update successfully",
+      message: 'Invite update successfully',
     };
   }
 
-  const message = responseData.message ?? "Error in update invite status.";
+  const message = responseData.message ?? 'Error in update invite status.';
 
   return {
     success: false,
@@ -31,6 +31,6 @@ export const updateInviteStatusService = async (data: UpdateInviteStatusProps) =
 type UpdateInviteStatusProps = {
   title: string;
   role: string;
-  inviteStatus: "ACCEPTED" | "REJECTED";
+  inviteStatus: 'ACCEPTED' | 'REJECTED';
   inviteCode: string;
 };

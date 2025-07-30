@@ -1,7 +1,7 @@
-import { ArticleCardProps } from "@/components/modules/Home/Index/ArticleCard/Typing";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from "./getArticles";
+import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing';
+import { getSession, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from './getArticles';
 
 /**
  * @title useFetchPurchasedArticles
@@ -36,9 +36,9 @@ export const useFetchPurchasedArticles = () => {
 
         if (session?.user?.token) {
           const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/library`, {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               authorization: `Bearer ${session.user.token}`,
             },
           });
@@ -49,7 +49,7 @@ export const useFetchPurchasedArticles = () => {
             return {
               id: article.id,
               title: article.title,
-              image: article.cover || "",
+              image: article.cover || '',
               journal: article.journal,
               authors:
                 article.authorsOnDocuments?.map((item) => ({
@@ -77,9 +77,9 @@ export const useFetchPurchasedArticles = () => {
 
       if (session?.user?.token) {
         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/private/${documentId}`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             authorization: `Bearer ${session.user.token}`,
           },
         });

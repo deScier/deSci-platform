@@ -1,9 +1,9 @@
-import { truncate } from "@/utils/format_texts";
-import { EditorReviewListProps } from "@components/common/Lists/EditorReview/Typing";
-import { Check, Clock } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { truncate } from '@/utils/format_texts';
+import { EditorReviewListProps } from '@components/common/Lists/EditorReview/Typing';
+import { Check, Clock } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 /**
  * @title Editor Review List Component
  * @notice This component displays a list of reviewers for a given article, including their names, titles, email addresses, roles, and approval status.
@@ -30,9 +30,9 @@ export const EditorReviewList: React.FC<EditorReviewListProps> = ({ article }: E
               <div>
                 <p
                   className={twMerge(
-                    "text-sm text-secundary_blue-main first-letter:uppercase font-semibold lowercase",
-                    `${item.role == "reviewer" && "text-[#B07F03]"}`,
-                    `${item.role == "editor" && "text-terciary-main"}`
+                    'text-sm text-secundary_blue-main first-letter:uppercase font-semibold lowercase',
+                    `${item.role == 'reviewer' && 'text-[#B07F03]'}`,
+                    `${item.role == 'editor' && 'text-terciary-main'}`
                   )}
                 >
                   {item.role}
@@ -41,10 +41,10 @@ export const EditorReviewList: React.FC<EditorReviewListProps> = ({ article }: E
               <div>
                 <p
                   className={twMerge(
-                    "hidden md:grid text-sm text-secundary_blue-main font-semibold border py-[2px] px-1 text-center rounded-md md:border-none md:py-0 md:px-0 md:rounded-none md:text-start first-letter:uppercase lowercase"
+                    'hidden md:grid text-sm text-secundary_blue-main font-semibold border py-[2px] px-1 text-center rounded-md md:border-none md:py-0 md:px-0 md:rounded-none md:text-start first-letter:uppercase lowercase'
                   )}
                 >
-                  {item.approvedStatus === "APPROVED" ? (
+                  {item.approvedStatus === 'APPROVED' ? (
                     <Check size={24} className="fill-status-green" />
                   ) : (
                     <Clock size={24} className="fill-status-pending" />
@@ -52,7 +52,7 @@ export const EditorReviewList: React.FC<EditorReviewListProps> = ({ article }: E
                 </p>
                 <div className="md:hidden border py-[2px] px-1 text-center rounded-md md:border-none md:py-0 md:px-0 md:rounded-none md:text-start first-letter:uppercase lowercase">
                   <p>
-                    {item.approvedStatus === "APPROVED" ? (
+                    {item.approvedStatus === 'APPROVED' ? (
                       <p className="text-status-green font-semibold text-sm first-letter:uppercase">Approved</p>
                     ) : (
                       <p className="text-status-pending font-semibold text-sm first-letter:uppercase">Pending</p>

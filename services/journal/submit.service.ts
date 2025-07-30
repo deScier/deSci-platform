@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const submitNewJournalService = async (data: CreateJournalDTO) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -17,11 +17,11 @@ export const submitNewJournalService = async (data: CreateJournalDTO) => {
     return {
       success: true,
       journalId: responseData.journal.id,
-      message: "Journal submitted successfully!",
+      message: 'Journal submitted successfully!',
     };
   }
 
-  const message = responseData.message ?? "Error in submit journal.";
+  const message = responseData.message ?? 'Error in submit journal.';
 
   return {
     success: false,
@@ -39,7 +39,7 @@ export type CreateJournalDTO = {
   members: CreateMembersDTO[];
 };
 
-export type MembersRoles = "EDITOR_IN_CHIEF" | "MEMBER" | "EDITORIAL_BOARD_MEMBER";
+export type MembersRoles = 'EDITOR_IN_CHIEF' | 'MEMBER' | 'EDITORIAL_BOARD_MEMBER';
 
 export type CreateMembersDTO = {
   name: string;

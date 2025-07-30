@@ -1,21 +1,21 @@
-import "@styles/select.css";
+import '@styles/select.css';
 
-import * as Select from "@radix-ui/react-select";
+import * as Select from '@radix-ui/react-select';
 
-import { TriggerProps } from "@components/common/Select/Typing";
-import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
+import { TriggerProps } from '@components/common/Select/Typing';
+import { twMerge } from 'tailwind-merge';
+import { tv } from 'tailwind-variants';
 
-import React from "react";
+import React from 'react';
 
 /** @dev Defines a set of styles for different types of select components */
 const select = tv({
   variants: {
     type: {
       small:
-        "rounded-md bg-transparent shadow-sm py-1 px-4 border border-gray-stroke inline-flex items-center gap-2 data-[placeholder]:font-regular data-[placeholder]:text-sm focus:outline-none select-none text-sm font-regular text-gray-main",
+        'rounded-md bg-transparent shadow-sm py-1 px-4 border border-gray-stroke inline-flex items-center gap-2 data-[placeholder]:font-regular data-[placeholder]:text-sm focus:outline-none select-none text-sm font-regular text-gray-main',
       input:
-        "bg-transparent text-base shadow-sm border-b-[1px] p-2 pt-0 border-neutral-light_gray inline-flex items-center justify-between gap-2 data-[placeholder]:text-gray-light data-[placeholder]:text-base data-[placeholder]:text-base data-[placeholder]:text-start focus:outline-none focus:text-neutral-black select-none text-base font-regular text-black-primary w-full",
+        'bg-transparent text-base shadow-sm border-b-[1px] p-2 pt-0 border-neutral-light_gray inline-flex items-center justify-between gap-2 data-[placeholder]:text-gray-light data-[placeholder]:text-base data-[placeholder]:text-base data-[placeholder]:text-start focus:outline-none focus:text-neutral-black select-none text-base font-regular text-black-primary w-full',
     },
   },
 });
@@ -33,7 +33,7 @@ const Root: React.FC<Select.SelectProps> = ({ children, ...props }: Select.Selec
  * @dev Icon component for the select, passing className and children
  */
 const Icon: React.FC<Select.SelectIconProps> = ({ children, className }: Select.SelectIconProps) => {
-  return <Select.Icon className={twMerge("text-black-primary", className)}>{children}</Select.Icon>;
+  return <Select.Icon className={twMerge('text-black-primary', className)}>{children}</Select.Icon>;
 };
 
 /**
@@ -41,13 +41,13 @@ const Icon: React.FC<Select.SelectIconProps> = ({ children, className }: Select.
  * @dev Trigger component for the select, allowing for custom variants
  * @param variant Variant of the select trigger
  */
-const Trigger: React.FC<TriggerProps> = ({ children, className, variant = "small", ...props }: TriggerProps) => {
+const Trigger: React.FC<TriggerProps> = ({ children, className, variant = 'small', ...props }: TriggerProps) => {
   return (
     <Select.Trigger
       className={twMerge(
         select({ type: variant }),
         className,
-        "data-[placeholder]:text-neutral-light_gray data-[placeholder]:font-regular data-[placeholder]:text-base"
+        'data-[placeholder]:text-neutral-light_gray data-[placeholder]:font-regular data-[placeholder]:text-base'
       )}
       {...props}
     >
@@ -64,7 +64,7 @@ const Content: React.FC<Select.SelectContentProps> = ({ children, className, ...
   return (
     <Select.Content
       position="popper"
-      className={twMerge("bg-neutral-white rounded-sm shadow-content overflow-hidden p-1 z-[9998] absolute", className)}
+      className={twMerge('bg-neutral-white rounded-sm shadow-content overflow-hidden p-1 z-[9998] absolute', className)}
       {...props}
     >
       {children}
@@ -80,7 +80,7 @@ const Item: React.FC<Select.SelectItemProps> = ({ children, className, ...props 
   return (
     <Select.Item
       className={twMerge(
-        "text-black-primary select-none font-regular hover:text-white px-4 py-1 rounded-sm hover:outline-none focus:outline-none text-sm w-full relative cursor-pointer hover:bg-primary-main",
+        'text-black-primary select-none font-regular hover:text-white px-4 py-1 rounded-sm hover:outline-none focus:outline-none text-sm w-full relative cursor-pointer hover:bg-primary-main',
         className
       )}
       {...props}
@@ -102,7 +102,7 @@ const ItemText: React.FC<Select.SelectItemTextProps> = ({
   return (
     <Select.ItemText
       {...props}
-      className={twMerge("text-sm text-black-primary select-none font-regular hover:bg-white-hover", className)}
+      className={twMerge('text-sm text-black-primary select-none font-regular hover:bg-white-hover', className)}
     >
       {children}
     </Select.ItemText>
@@ -115,7 +115,7 @@ const ItemText: React.FC<Select.SelectItemTextProps> = ({
  */
 const Value: React.FC<Select.SelectValueProps> = ({ children, className, ...props }: Select.SelectValueProps) => {
   return (
-    <Select.Value className={twMerge("text-black-primary select-none font-regular text-sm", className)} {...props}>
+    <Select.Value className={twMerge('text-black-primary select-none font-regular text-sm', className)} {...props}>
       {children}
     </Select.Value>
   );

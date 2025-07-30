@@ -1,53 +1,53 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { EditorsAndReviewers } from "@/components/common/EditorsAndReviwers/EditorAndReviwer";
-import { File } from "@/components/common/File/File";
-import { AuthorsListDragabble } from "@/components/common/Lists/Authors/Authors";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { useGetApprovals } from "@/hooks/useGetApprovals";
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import { cn } from "@/lib/utils";
-import { header_editor_reviewer } from "@/mock/article_under_review";
-import { article_types_submit_article } from "@/mock/articles_types";
-import { authors_headers, authors_mock, authorship_headers } from "@/mock/submit_new_document";
-import { home_routes } from "@/routes/home";
-import { CreateDocumentProps, CreateDocumentSchema } from "@/schemas/create_document";
-import { approveByAdminService } from "@/services/admin/approve.service";
-import { deleteFileByAdminService } from "@/services/admin/deleteFile.service";
-import { useFetchAdminArticles } from "@/services/admin/fetchDocuments.service";
-import { generateNftAdminService } from "@/services/admin/generateNft.service";
-import { downloadDocumentVersionService } from "@/services/document/download.service";
-import { DocumentGetProps } from "@/services/document/getArticles";
-import { updateDocumentService } from "@/services/document/update.service";
-import { uploadDocumentFileService } from "@/services/file/file.service";
-import { formatFileName } from "@/utils/format_file_name";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { uniqueId } from "lodash";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, PlusCircle, X } from "react-bootstrap-icons";
-import { CurrencyInput } from "react-currency-mask";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer';
+import { File } from '@/components/common/File/File';
+import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { useGetApprovals } from '@/hooks/useGetApprovals';
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import { cn } from '@/lib/utils';
+import { header_editor_reviewer } from '@/mock/article_under_review';
+import { article_types_submit_article } from '@/mock/articles_types';
+import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document';
+import { home_routes } from '@/routes/home';
+import { CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document';
+import { approveByAdminService } from '@/services/admin/approve.service';
+import { deleteFileByAdminService } from '@/services/admin/deleteFile.service';
+import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service';
+import { generateNftAdminService } from '@/services/admin/generateNft.service';
+import { downloadDocumentVersionService } from '@/services/document/download.service';
+import { DocumentGetProps } from '@/services/document/getArticles';
+import { updateDocumentService } from '@/services/document/update.service';
+import { uploadDocumentFileService } from '@/services/file/file.service';
+import { formatFileName } from '@/utils/format_file_name';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Check, PlusCircle, X } from 'react-bootstrap-icons';
+import { CurrencyInput } from 'react-currency-mask';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import Box from "@/components/common/Box/Box";
-import DocumentApprovals from "@/components/common/DocumentApprovals/DocumentApprovals";
-import Dropzone from "@/components/common/Dropzone/Dropzone";
-import Reasoning from "@/components/modules/deScier/Article/Reasoning";
-import CopyIcon from "public/svgs/common/copy.svg";
-import React from "react";
-import slug from "slug";
+import Box from '@/components/common/Box/Box';
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
+import Dropzone from '@/components/common/Dropzone/Dropzone';
+import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import CopyIcon from 'public/svgs/common/copy.svg';
+import React from 'react';
+import slug from 'slug';
 
 export default function ArticleForApprovalPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
   const [article, setArticle] = React.useState<DocumentGetProps | null>(null);
   const [items, setItems] = React.useState(authors_mock);
-  const [access_type, setAccessType] = React.useState("open-access");
+  const [access_type, setAccessType] = React.useState('open-access');
   const [dialog, setDialog] = React.useState({
     author: false,
     share_split: false,
@@ -71,7 +71,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
     generateNFT: false,
     update: false,
   });
-  const [nftData, setNftData] = React.useState({ nftLink: "", nftHash: "", nftAmount: 1 });
+  const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '', nftAmount: 1 });
   const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false);
   const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false);
   const [file, setFile] = React.useState<StoredFile>();
@@ -92,39 +92,39 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
   } = useForm<CreateDocumentProps>({
     resolver: zodResolver(CreateDocumentSchema),
     defaultValues: {
-      abstract: "",
-      abstractChart: "",
-      accessType: "FREE",
-      documentType: "",
-      field: "",
-      price: "",
-      journalId: "",
-      title: "",
+      abstract: '',
+      abstractChart: '',
+      accessType: 'FREE',
+      documentType: '',
+      field: '',
+      price: '',
+      journalId: '',
+      title: '',
       file: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
-        preview: "",
+        name: '',
+        path: '',
+        preview: '',
         size: 0,
-        type: "",
+        type: '',
       },
       cover: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
-        preview: "",
+        name: '',
+        path: '',
+        preview: '',
         size: 0,
-        type: "",
+        type: '',
       },
-      category: "",
+      category: '',
       authors: [],
       keywords: [],
     },
   });
 
-  const { append, remove, fields: keywords } = useFieldArray({ name: "keywords", control: control });
+  const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control });
 
   const fetchSingleArticle = async (documentId: string) => {
     try {
@@ -132,64 +132,64 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
       setArticle(res as DocumentGetProps);
       setNftData({
-        nftHash: res?.document.nftHash || "",
-        nftLink: res?.document.nftLink || "",
+        nftHash: res?.document.nftHash || '',
+        nftLink: res?.document.nftLink || '',
         nftAmount: res?.document.nftAmount || 1,
       });
 
-      const access = res?.document.accessType === "FREE" ? "open-access" : "paid-access";
+      const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access';
       setAccessType(access);
       getApprovals(res?.document.reviewersOnDocuments || []);
 
-      setDocumentType(res?.document.documentType || "");
+      setDocumentType(res?.document.documentType || '');
 
       reset({
-        title: res?.document.title || "",
-        abstract: res?.document.abstract || "",
-        field: res?.document.field || "",
-        documentType: res?.document.documentType || "",
-        accessType: (res?.document.accessType || "FREE") as "PAID" | "FREE",
-        price: res?.document.price?.toString() || "",
-        journalId: res?.document.id || "",
-        category: res?.document.category || "",
+        title: res?.document.title || '',
+        abstract: res?.document.abstract || '',
+        field: res?.document.field || '',
+        documentType: res?.document.documentType || '',
+        accessType: (res?.document.accessType || 'FREE') as 'PAID' | 'FREE',
+        price: res?.document.price?.toString() || '',
+        journalId: res?.document.id || '',
+        category: res?.document.category || '',
         cover: {
           lastModified: 0,
           lastModifiedDate: new Date(),
-          name: res?.document.cover || "",
-          path: res?.document.cover || "",
-          preview: res?.document.cover || "",
+          name: res?.document.cover || '',
+          path: res?.document.cover || '',
+          preview: res?.document.cover || '',
           size: 0,
-          type: "",
+          type: '',
         },
         file: {
           lastModified: 0,
           lastModifiedDate: new Date(),
-          name: res?.document.documentVersions?.[0]?.fileName || "",
-          path: "",
-          preview: "",
+          name: res?.document.documentVersions?.[0]?.fileName || '',
+          path: '',
+          preview: '',
           size: 0,
-          type: "",
+          type: '',
         },
         keywords:
-          res?.document.keywords?.split(";").map((keyword) => ({
-            id: uniqueId("key"),
+          res?.document.keywords?.split(';').map((keyword) => ({
+            id: uniqueId('key'),
             name: keyword.trim(),
           })) || [],
         authors:
           res?.document.authorsOnDocuments?.map((author) => ({
             id: author.id,
-            name: author.author?.name || "",
-            email: author.author?.email || "",
-            title: author.author?.title || "",
-            revenuePercent: author.revenuePercent?.toString() || "0",
-            walletAddress: author.author?.walletAddress || "",
+            name: author.author?.name || '',
+            email: author.author?.email || '',
+            title: author.author?.title || '',
+            revenuePercent: author.revenuePercent?.toString() || '0',
+            walletAddress: author.author?.walletAddress || '',
           })) || [],
       });
 
       trigger();
     } catch (error) {
-      console.error("Error fetching article:", error);
-      toast.error("Failed to fetch article data");
+      console.error('Error fetching article:', error);
+      toast.error('Failed to fetch article data');
     }
   };
 
@@ -199,15 +199,15 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
     const updateResponse = await updateDocumentService({
       documentId: article?.document.id!,
       document: {
-        title: watch("title"),
-        abstract: watch("abstract"),
-        abstractChart: watch("abstractChart"),
-        keywords: watch("keywords").map((k) => k.name),
-        field: watch("field"),
-        documentType: watch("documentType"),
-        accessType: watch("accessType"),
-        category: watch("category"),
-        price: Number(watch("price")) || 0,
+        title: watch('title'),
+        abstract: watch('abstract'),
+        abstractChart: watch('abstractChart'),
+        keywords: watch('keywords').map((k) => k.name),
+        field: watch('field'),
+        documentType: watch('documentType'),
+        accessType: watch('accessType'),
+        category: watch('category'),
+        price: Number(watch('price')) || 0,
         nftHash: nftData.nftHash,
         nftLink: nftData.nftLink,
       },
@@ -229,21 +229,21 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
       if (!uploadFileResponse) {
         setLoading({ ...loading, approve: false });
-        toast.error("Error in upload file.");
+        toast.error('Error in upload file.');
         return;
       }
     }
 
-    if (watch("cover")?.preview && watch("cover")?.preview !== article?.document.cover) {
+    if (watch('cover')?.preview && watch('cover')?.preview !== article?.document.cover) {
       const uploadCoverSuccess = await uploadDocumentFileService({
         documentId: article?.document.id!,
-        fileLocalUrl: watch("cover")?.preview!,
-        filename: watch("cover")?.name!,
-        mimetype: watch("cover")?.type!,
+        fileLocalUrl: watch('cover')?.preview!,
+        filename: watch('cover')?.name!,
+        mimetype: watch('cover')?.type!,
       });
 
       if (!uploadCoverSuccess) {
-        toast.warning("There was an error uploading your cover file. But you can upload later.");
+        toast.warning('There was an error uploading your cover file. But you can upload later.');
       }
     }
 
@@ -259,7 +259,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       return;
     }
 
-    const status = approve ? "approved" : "rejected";
+    const status = approve ? 'approved' : 'rejected';
     toast.success(`Document updated and ${status} successfully!`);
 
     router.push(home_routes.descier.index);
@@ -276,7 +276,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       return;
     }
 
-    toast.success("Document updated successfully.");
+    toast.success('Document updated successfully.');
   };
 
   const handleUpdateArticleFile = async () => {
@@ -291,12 +291,12 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
     setUploadFileLoading(false);
 
     if (!uploadDocumentSuccess) {
-      toast.error("There was an error uploading your file.");
+      toast.error('There was an error uploading your file.');
       return;
     }
 
     fetchSingleArticle(params.id);
-    toast.success("File uploaded successfully!");
+    toast.success('File uploaded successfully!');
     setFile(undefined);
   };
 
@@ -313,13 +313,13 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
     }
 
     const url = URL.createObjectURL(response.file!);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
 
-    toast.success("Download will start...");
+    toast.success('Download will start...');
   };
 
   React.useEffect(() => {
@@ -329,22 +329,22 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id, session?.user?.userInfo?.id]);
 
-  const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch("field") || "");
-  const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch("title") || "");
-  const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch("abstract") || "");
+  const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '');
+  const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '');
+  const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch('abstract') || '');
 
   const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      if (keywords_temp && keywords_temp.trim() !== "") {
+      if (keywords_temp && keywords_temp.trim() !== '') {
         e.preventDefault();
-        append({ id: uniqueId("key"), name: keywords_temp as string });
-        setKeywordsTemp("");
+        append({ id: uniqueId('key'), name: keywords_temp as string });
+        setKeywordsTemp('');
       } else {
-        setError("keywords", {
-          type: "manual",
-          message: "Keyword is required.",
+        setError('keywords', {
+          type: 'manual',
+          message: 'Keyword is required.',
         });
       }
     }
@@ -354,7 +354,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
   const handleDeleteFile = async (versionId: string) => {
     if (article?.document.documentVersions && article.document.documentVersions.length <= 1) {
-      toast.error("The last version cannot be deleted.");
+      toast.error('The last version cannot be deleted.');
       return;
     }
 
@@ -370,7 +370,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
 
   const handleGenerateNFT = async () => {
     if (!article?.document.id) {
-      toast.error("Document ID is missing.");
+      toast.error('Document ID is missing.');
       return;
     }
 
@@ -385,15 +385,15 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       if (response.success) {
         toast.success(response.message);
         setDialog({ ...dialog, nftAmount: false });
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
           window.location.reload();
         }
       } else {
         toast.error(response.message);
       }
     } catch (error) {
-      console.error("Error generating NFT:", error);
-      toast.error("An error occurred while generating the NFT.");
+      console.error('Error generating NFT:', error);
+      toast.error('An error occurred while generating the NFT.');
     } finally {
       setLoading((prev) => ({ ...prev, generateNFT: false }));
     }
@@ -409,15 +409,15 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
       const updateResponse = await updateDocumentService({
         documentId: article?.document.id!,
         document: {
-          title: watch("title"),
-          abstract: watch("abstract"),
-          abstractChart: watch("abstractChart"),
-          keywords: watch("keywords").map((k) => k.name),
-          field: watch("field"),
-          documentType: watch("documentType"),
-          accessType: watch("accessType"),
-          category: watch("category"),
-          price: Number(watch("price")) || 0,
+          title: watch('title'),
+          abstract: watch('abstract'),
+          abstractChart: watch('abstractChart'),
+          keywords: watch('keywords').map((k) => k.name),
+          field: watch('field'),
+          documentType: watch('documentType'),
+          accessType: watch('accessType'),
+          category: watch('category'),
+          price: Number(watch('price')) || 0,
         },
       });
 
@@ -435,29 +435,29 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
         });
 
         if (!uploadFileResponse) {
-          toast.error("Error in upload file.");
+          toast.error('Error in upload file.');
           return;
         }
       }
 
-      if (watch("cover")?.preview && watch("cover")?.preview !== article?.document.cover) {
+      if (watch('cover')?.preview && watch('cover')?.preview !== article?.document.cover) {
         const uploadCoverSuccess = await uploadDocumentFileService({
           documentId: article?.document.id!,
-          fileLocalUrl: watch("cover")?.preview!,
-          filename: watch("cover")?.name!,
-          mimetype: watch("cover")?.type!,
+          fileLocalUrl: watch('cover')?.preview!,
+          filename: watch('cover')?.name!,
+          mimetype: watch('cover')?.type!,
         });
 
         if (!uploadCoverSuccess) {
-          toast.warning("There was an error uploading your cover file. But you can upload later.");
+          toast.warning('There was an error uploading your cover file. But you can upload later.');
         }
       }
 
-      toast.success("Document updated successfully!");
+      toast.success('Document updated successfully!');
       fetchSingleArticle(params.id);
     } catch (error) {
-      console.error("Error updating document:", error);
-      toast.error("Failed to update document");
+      console.error('Error updating document:', error);
+      toast.error('Failed to update document');
     } finally {
       setLoading((prev) => ({ ...prev, update: false }));
     }
@@ -484,14 +484,14 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the article"
-                  {...register("title")}
+                  {...register('title')}
                   onInput={(e) => {
                     titleLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("title", value.currentTarget.value);
-                        trigger("title");
+                        setValue('title', value.currentTarget.value);
+                        trigger('title');
                       },
                     });
                   }}
@@ -518,8 +518,8 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                         variant="outline"
                         className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
                         onClick={() => {
-                          append({ id: uniqueId("key"), name: keywords_temp as string });
-                          setKeywordsTemp("");
+                          append({ id: uniqueId('key'), name: keywords_temp as string });
+                          setKeywordsTemp('');
                         }}
                       >
                         <PlusCircle className="w-3 fill-neutral-light_gray" />
@@ -553,14 +553,14 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the field"
-                  {...register("field")}
+                  {...register('field')}
                   onInput={(e) => {
                     fieldLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 300,
                       onInput: (value) => {
-                        setValue("field", value.currentTarget.value);
-                        trigger("field");
+                        setValue('field', value.currentTarget.value);
+                        trigger('field');
                       },
                     });
                   }}
@@ -577,24 +577,24 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                     setDocumentType(value);
 
                     const findLabelItem = article_types_submit_article.find(
-                      (item) => item.type === "label" && item.related?.includes(value)
+                      (item) => item.type === 'label' && item.related?.includes(value)
                     );
 
                     if (findLabelItem) {
                       const labelName = findLabelItem.label;
-                      setValue("category", slug(labelName, { lower: true, replacement: "-" }));
-                      trigger("category");
+                      setValue('category', slug(labelName, { lower: true, replacement: '-' }));
+                      trigger('category');
                     }
 
-                    setValue("documentType", value);
-                    trigger("documentType");
+                    setValue('documentType', value);
+                    trigger('documentType');
                   }}
                 >
                   <SelectTrigger
                     className={cn(
-                      "justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray",
+                      'justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray',
                       {
-                        "text-black": documentType,
+                        'text-black': documentType,
                       }
                     )}
                   >
@@ -608,13 +608,13 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                     <React.Fragment>
                       {article_types_submit_article.map((item, index) => (
                         <React.Fragment key={item.id}>
-                          {item.type === "label" && (
+                          {item.type === 'label' && (
                             <React.Fragment>
                               <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
                               <Separator />
                             </React.Fragment>
                           )}
-                          {item.type === "item" && (
+                          {item.type === 'item' && (
                             <SelectItem
                               value={item.value as string}
                               className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -639,7 +639,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
               <Tooltip.Information content="Abstract might change after revision, so don't worry too much." />
             </Input.Label>
             <Input.TextArea
-              {...register("abstract")}
+              {...register('abstract')}
               rows={4}
               defaultValue={article?.document.abstract}
               placeholder="Type your abstract"
@@ -648,8 +648,8 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                   e: e,
                   limit: 1000,
                   onInput: (value) => {
-                    setValue("abstract", value.currentTarget.value);
-                    trigger("abstract");
+                    setValue('abstract', value.currentTarget.value);
+                    trigger('abstract');
                   },
                 });
               }}
@@ -685,12 +685,12 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                     article?.document.documentVersions?.map((file) => (
                       <File
                         key={file.id}
-                        file_name={formatFileName(file.fileName as string) || "file.docx"}
+                        file_name={formatFileName(file.fileName as string) || 'file.docx'}
                         onDownload={() => {
                           handleDownloadDocument(file.id, file.fileName!);
                         }}
-                        uploaded_at={new Date(file.createdAt).toLocaleDateString("pt-BR")}
-                        uploaded_by={article.document.user?.name || ""}
+                        uploaded_at={new Date(file.createdAt).toLocaleDateString('pt-BR')}
+                        uploaded_by={article.document.user?.name || ''}
                         onDelete={() => handleDeleteFile(file.id)}
                       />
                     ))
@@ -736,7 +736,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                     </div>
                     <div className="flex-shrink-0">
                       <HoverCard closeDelay={1000} open={isHoiCopied}>
-                        <HoverCardTrigger onClick={() => copyHoiToClipboard(article?.document.hoi || "N/A")}>
+                        <HoverCardTrigger onClick={() => copyHoiToClipboard(article?.document.hoi || 'N/A')}>
                           <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
                         </HoverCardTrigger>
                         <HoverCardContent className="p-2 py-1" side="bottom">
@@ -758,7 +758,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                     </div>
                     <div className="flex-shrink-0">
                       <HoverCard closeDelay={1000} open={isNftLinkCopied}>
-                        <HoverCardTrigger onClick={() => copyNftLinkToClipboard(article?.document.nftLink || "N/A")}>
+                        <HoverCardTrigger onClick={() => copyNftLinkToClipboard(article?.document.nftLink || 'N/A')}>
                           <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
                         </HoverCardTrigger>
                         <HoverCardContent className="p-2 py-1" side="bottom">
@@ -861,22 +861,22 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
           <div className="grid gap-2">
             <h3 className="text-lg md:text-xl text-status-green font-semibold">Authorship</h3>
             <p className="text-sm">
-              Decide if the project is <span className="text-terciary-main font-semibold">Open Access</span>,{" "}
+              Decide if the project is <span className="text-terciary-main font-semibold">Open Access</span>,{' '}
               <span className="text-[#EFB521] font-semibold">Paid Access</span>
             </p>
           </div>
           <div className="grid md:grid-cols-2 items-start gap-6">
             <Input.Root>
               <Input.Label>Type of access</Input.Label>
-              <Input.Input disabled defaultValue={access_type === "open-access" ? "Open access" : "Paid access"} />
+              <Input.Input disabled defaultValue={access_type === 'open-access' ? 'Open access' : 'Paid access'} />
             </Input.Root>
-            {access_type == "open-access" && (
+            {access_type == 'open-access' && (
               <Input.Root>
                 <Input.Label className="text-neutral-gray text-sm font-semibold pl-2">Price</Input.Label>
                 <Input.Input disabled placeholder="R$" />
               </Input.Root>
             )}
-            {access_type == "paid-access" && (
+            {access_type == 'paid-access' && (
               <React.Fragment>
                 <Input.Root>
                   <Input.Label>Price</Input.Label>
@@ -892,7 +892,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
               </React.Fragment>
             )}
           </div>
-          {access_type == "paid-access" && (
+          {access_type == 'paid-access' && (
             <React.Fragment>
               <div className="grid md:gap-2">
                 <p className="text-sm font-semibold">Authorship settings</p>
@@ -923,7 +923,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
                             )}
                           </div>
                           <div className="w-fit">
-                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || "-"}</p>
+                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || '-'}</p>
                           </div>
                         </div>
                         <hr className="divider-h" />
@@ -935,7 +935,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
             </React.Fragment>
           )}
         </Box>
-        {article?.document?.status === "SUBMITTED" && (
+        {article?.document?.status === 'SUBMITTED' && (
           <React.Fragment>
             <Box className="grid gap-4 h-fit py-6 px-8">
               <Button.Button
@@ -950,7 +950,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
             </Box>
           </React.Fragment>
         )}
-        {article?.document?.status !== "SUBMITTED" && (
+        {article?.document?.status !== 'SUBMITTED' && (
           <Box className="grid gap-4 h-fit py-6 px-8">
             {article?.document.adminApproval === 0 && (
               <h3 className="text-lg font-semibold text-status-pending flex justify-center">
@@ -975,10 +975,10 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
             >
               Reject article
             </Button.Button>
-            {article?.document.status === "REJECTED" && (
+            {article?.document.status === 'REJECTED' && (
               <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
             )}
-            {article?.document.status === "APPROVED" && (
+            {article?.document.status === 'APPROVED' && (
               <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
             )}
           </Box>
@@ -988,7 +988,7 @@ export default function ArticleForApprovalPage({ params }: { params: { id: strin
         <Dialog.Content className="py-14 px-16 max-w-[600px]">
           {dialog.reasoning && (
             <Reasoning
-              message={""}
+              message={''}
               documentAuthor={article?.document.user?.name!}
               onClose={() => setDialog({ ...dialog, reasoning: false })}
               onConfirm={(value) => {
@@ -1048,12 +1048,12 @@ const ArticleStatus: React.FC<{ status: string }> = ({ status }: { status: strin
   return (
     <React.Fragment>
       <div className="flex items-center gap-2 border border-neutral-stroke_light w-fit py-1 px-4 rounded-md">
-        {status === "ADMIN_APPROVE" && (
+        {status === 'ADMIN_APPROVE' && (
           <p className="text-sm text-status-pending font-semibold select-none">Final approve pending</p>
         )}
-        {status === "REJECTED" && <p className="text-sm text-status-pending font-semibold select-none">Rejected</p>}
-        {status === "APPROVED" && <p className="text-sm text-status-pending font-semibold select-none">Approved</p>}
-        {status === "SUBMITTED" && <p className="text-sm text-status-pending font-semibold select-none">Published</p>}
+        {status === 'REJECTED' && <p className="text-sm text-status-pending font-semibold select-none">Rejected</p>}
+        {status === 'APPROVED' && <p className="text-sm text-status-pending font-semibold select-none">Approved</p>}
+        {status === 'SUBMITTED' && <p className="text-sm text-status-pending font-semibold select-none">Published</p>}
       </div>
     </React.Fragment>
   );

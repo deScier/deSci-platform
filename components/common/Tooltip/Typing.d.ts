@@ -5,7 +5,7 @@ import {
   TooltipProps,
   TooltipProviderProps,
   TooltipTriggerProps,
-} from "@radix-ui/react-tooltip";
+} from '@radix-ui/react-tooltip';
 
 interface ProviderProps extends TooltipProviderProps {}
 

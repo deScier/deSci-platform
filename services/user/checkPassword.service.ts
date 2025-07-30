@@ -1,12 +1,12 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const checkPasswordService = async (data: CheckPasswordRequestProps) => {
   const session = await getSession();
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/check-password`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -15,13 +15,13 @@ export const checkPasswordService = async (data: CheckPasswordRequestProps) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "Password validate",
+      message: 'Password validate',
     };
   }
 
   const responseData = await response.json();
 
-  const message = responseData.message || "Invalid password";
+  const message = responseData.message || 'Invalid password';
 
   return {
     success: false,

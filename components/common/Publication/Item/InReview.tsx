@@ -1,10 +1,10 @@
-import "./Item.css";
+import './Item.css';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
-import useDimension from "@/hooks/useWindowDimension";
-import Image from "next/image";
-import React from "react";
+import useDimension from '@/hooks/useWindowDimension';
+import Image from 'next/image';
+import React from 'react';
 
 export const InReviewItem: React.FC<InReviewItemProps> = ({
   date,
@@ -26,7 +26,7 @@ export const InReviewItem: React.FC<InReviewItemProps> = ({
           width={420}
           height={80}
           alt={title}
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
           className="rounded-md w-full h-20 lg:w-20 xxl:w-16 xxl:h-16 2xl:w-20 2xl:h-20 object-cover"
         />
         <div className="grid gap-1 2xl:gap-2">
@@ -52,12 +52,12 @@ export const InReviewItem: React.FC<InReviewItemProps> = ({
                 </p>
               ) : (
                 <>
-                  {status_editor == "approved" && (
+                  {status_editor == 'approved' && (
                     <p className="text-xs sm:text-base font-semibold text-status-green truncate xl:text-sm flex-shrink-0">
                       Approved by editor
                     </p>
                   )}
-                  {status_editor == "pending" && (
+                  {status_editor == 'pending' && (
                     <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0">
                       Editor pending
                     </p>
@@ -65,12 +65,12 @@ export const InReviewItem: React.FC<InReviewItemProps> = ({
                   <span className="text-xs sm:text-sm font-semibold text-neutral-light_gray truncate xl:text-sm flex-shrink-0">
                     /
                   </span>
-                  {status_reviewer == "approved" && (
+                  {status_reviewer == 'approved' && (
                     <p className="text-xs sm:text-base font-semibold text-status-green truncate xl:text-sm flex-shrink-0">
                       Reviewer approval
                     </p>
                   )}
-                  {status_reviewer == "pending" && (
+                  {status_reviewer == 'pending' && (
                     <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0 lg:max-w-[10ch] 2xl:max-w-full">
                       Reviewer pending
                     </p>
@@ -90,8 +90,8 @@ export const InReviewItem: React.FC<InReviewItemProps> = ({
 
 export interface InReviewItemProps {
   id?: string;
-  status_editor?: "pending" | "approved";
-  status_reviewer?: "pending" | "approved";
+  status_editor?: 'pending' | 'approved';
+  status_reviewer?: 'pending' | 'approved';
   ready_to_publish?: boolean;
   image: string;
   date: string;

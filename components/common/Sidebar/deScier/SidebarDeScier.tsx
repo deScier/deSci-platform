@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
+import * as Button from '@components/common/Button/Button';
 
-import { home_routes } from "@/routes/home";
-import { handleLogout } from "@/utils/logout";
-import { uniqueId } from "lodash";
-import { usePathname, useRouter } from "next/navigation";
-import { PlusCircle } from "react-bootstrap-icons";
+import { home_routes } from '@/routes/home';
+import { handleLogout } from '@/utils/logout';
+import { uniqueId } from 'lodash';
+import { usePathname, useRouter } from 'next/navigation';
+import { PlusCircle } from 'react-bootstrap-icons';
 
-import Item from "@components/common/Sidebar/Item/Item";
-import Image from "next/image";
-import deScierLogo from "public/svgs/common/logo/deScier - Logo.png";
-import LogoDeScier from "public/svgs/common/logo/deScier - Logo.svg";
-import ArticlesIcon from "public/svgs/common/sidebar/Icons/articles.svg";
-import JournalIcon from "public/svgs/common/sidebar/Icons/file-text.svg";
-import LogoutIcon from "public/svgs/common/sidebar/Icons/logout.svg";
-import SummaryIcon from "public/svgs/common/sidebar/Icons/summary.svg";
-import React from "react";
+import Item from '@components/common/Sidebar/Item/Item';
+import Image from 'next/image';
+import deScierLogo from 'public/svgs/common/logo/deScier - Logo.png';
+import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg';
+import ArticlesIcon from 'public/svgs/common/sidebar/Icons/articles.svg';
+import JournalIcon from 'public/svgs/common/sidebar/Icons/file-text.svg';
+import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg';
+import SummaryIcon from 'public/svgs/common/sidebar/Icons/summary.svg';
+import React from 'react';
 
 /**
  * @title Sidebar Component for the DeScier Platform
@@ -78,7 +78,7 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
             alt="avatar"
             priority={true}
             src={deScierLogo}
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: 'contain' }}
             className="hover:scale-110 transition-all duration-300"
           />
         </div>
@@ -98,20 +98,20 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
 const items = [
   {
     id: uniqueId(),
-    text: "Dashboard",
+    text: 'Dashboard',
     icon: <SummaryIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
     path: home_routes.summary,
     divider: false,
   },
   {
     id: uniqueId(),
-    text: "Articles for approval",
+    text: 'Articles for approval',
     icon: <ArticlesIcon className="w-6 fill-neutral-light_gray lg:w-5 2xl:w-6" />,
     path: home_routes.descier.index,
   },
   {
     id: uniqueId(),
-    text: "Journals for approval",
+    text: 'Journals for approval',
     icon: <JournalIcon className="w-6 fill-neutral-light_gray md:w-5 lg:w-6" />,
     path: home_routes.descier.journals_for_approval,
   },

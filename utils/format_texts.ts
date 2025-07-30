@@ -15,8 +15,8 @@ export function truncate(name: string, max: number): string {
   const maxChars = max;
   if (String(name).length <= maxChars) return name;
 
-  const fileExtension = name.slice(((name.lastIndexOf(".") - 1) >>> 0) + 2);
-  const mainPart = name.slice(0, name.lastIndexOf("."));
+  const fileExtension = name.slice(((name.lastIndexOf('.') - 1) >>> 0) + 2);
+  const mainPart = name.slice(0, name.lastIndexOf('.'));
 
   const halfLength = Math.floor((maxChars - 3) / 2);
 
@@ -27,14 +27,14 @@ export function truncate(name: string, max: number): string {
 }
 
 export function formatName(fullName: string) {
-  const names = fullName.split(" ");
+  const names = fullName.split(' ');
 
   if (names.length < 3) {
     return fullName;
   }
 
   const firstName = names[0];
-  const middleInitial = names[1].charAt(0) + ".";
+  const middleInitial = names[1].charAt(0) + '.';
   const lastName = names[names.length - 1];
 
   const name = `${firstName} ${middleInitial} ${lastName}`;

@@ -1,44 +1,44 @@
-"use client";
+'use client';
 
-import Box from "@/components/common/Box/Box";
-import CommentItem from "@/components/common/Comment/Comment";
-import DocumentApprovals from "@/components/common/DocumentApprovals/DocumentApprovals";
-import { File } from "@/components/common/File/File";
-import { YouAre, YouAreAuthor } from "@/components/common/Flags/Author/AuthorFlags";
-import { InviteLink } from "@/components/common/InviteLink/InviteLink";
-import { EditorReviewList } from "@/components/common/Lists/EditorReview/EditorReview";
-import EditComment from "@/components/modules/deScier/Article/EditComment";
-import Reasoning from "@/components/modules/deScier/Article/Reasoning";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useGetApprovals } from "@/hooks/useGetApprovals";
-import { header_editor_reviewer } from "@/mock/article_under_review";
-import { Author, authors_headers, authors_mock, authorship_headers } from "@/mock/submit_new_document";
-import { home_routes } from "@/routes/home";
-import { AddCommentProps, addCommentSchema } from "@/schemas/comments";
-import { downloadDocumentVersionService } from "@/services/document/download.service";
-import { DocumentGetProps } from "@/services/document/getArticles";
-import { addCommentService } from "@/services/reviewer/addComment.service";
-import { updateDocumentApproveStatusService } from "@/services/reviewer/approve.service";
-import { useArticleToReview } from "@/services/reviewer/fetchDocuments.service";
-import { updateCommentService } from "@/services/reviewer/updateComment.service";
-import { ActionComments, comments_initial_state, reducer_comments } from "@/states/reducer_comments";
-import { getArticleTypeLabel } from "@/utils/generate_labels";
-import { keywordsArray } from "@/utils/keywords_format";
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { isEqual, uniqueId } from "lodash";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useReducer } from "react";
-import { ArrowLeft, Check } from "react-bootstrap-icons";
-import { CurrencyInput } from "react-currency-mask";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { twMerge } from "tailwind-merge";
+import Box from '@/components/common/Box/Box';
+import CommentItem from '@/components/common/Comment/Comment';
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
+import { File } from '@/components/common/File/File';
+import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFlags';
+import { InviteLink } from '@/components/common/InviteLink/InviteLink';
+import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview';
+import EditComment from '@/components/modules/deScier/Article/EditComment';
+import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetApprovals } from '@/hooks/useGetApprovals';
+import { header_editor_reviewer } from '@/mock/article_under_review';
+import { Author, authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document';
+import { home_routes } from '@/routes/home';
+import { AddCommentProps, addCommentSchema } from '@/schemas/comments';
+import { downloadDocumentVersionService } from '@/services/document/download.service';
+import { DocumentGetProps } from '@/services/document/getArticles';
+import { addCommentService } from '@/services/reviewer/addComment.service';
+import { updateDocumentApproveStatusService } from '@/services/reviewer/approve.service';
+import { useArticleToReview } from '@/services/reviewer/fetchDocuments.service';
+import { updateCommentService } from '@/services/reviewer/updateComment.service';
+import { ActionComments, comments_initial_state, reducer_comments } from '@/states/reducer_comments';
+import { getArticleTypeLabel } from '@/utils/generate_labels';
+import { keywordsArray } from '@/utils/keywords_format';
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { isEqual, uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import React, { useReducer } from 'react';
+import { ArrowLeft, Check } from 'react-bootstrap-icons';
+import { CurrencyInput } from 'react-currency-mask';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
 export default function AsAuhtorPageDetails({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
   const [article, setArticle] = React.useState<DocumentGetProps | null>(null);
   const [items, setItems] = React.useState(authors_mock);
   const [authors, setAuthors] = React.useState<Author[]>(authors_mock);
-  const [access_type, setAccessType] = React.useState("open-access");
+  const [access_type, setAccessType] = React.useState('open-access');
   const [authorship_settings, setAuthorshipSettings] = React.useState<Author>();
   const [popover, setPopover] = React.useState({ copy_link: false });
   const [dialog, setDialog] = React.useState({
@@ -79,8 +79,8 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
   } = useForm<AddCommentProps>({
     resolver: zodResolver(addCommentSchema),
     values: {
-      comment: "",
-      documentId: article?.document.id || "",
+      comment: '',
+      documentId: article?.document.id || '',
     },
   });
 
@@ -94,20 +94,20 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
           comment_author: comment.user.name,
           comment_content: comment.comment,
           reason: comment.authorComment,
-          status: comment.approvedByAuthor as "PENDING" | "APPROVED" | "REJECTED",
+          status: comment.approvedByAuthor as 'PENDING' | 'APPROVED' | 'REJECTED',
           user_id: comment.userId,
         }));
 
         getApprovals(res?.document.reviewersOnDocuments || []);
 
         dispatch({
-          type: "store_comments_from_api",
+          type: 'store_comments_from_api',
           payload: commentsPayload,
         } as ActionComments);
       }
 
       setArticle(res as DocumentGetProps);
-      const access = res?.document.accessType === "FREE" ? "open-access" : "paid-access";
+      const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access';
       setAccessType(access);
     });
   };
@@ -135,7 +135,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
       return;
     }
 
-    const status = approve ? "approved" : "rejected";
+    const status = approve ? 'approved' : 'rejected';
     toast.success(`Document ${status} successgully`);
     router.push(home_routes.as_reviewer);
   };
@@ -147,7 +147,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
 
     const response = await addCommentService({
       documentId: article?.document.id as string,
-      comment: getValues("comment"),
+      comment: getValues('comment'),
     });
 
     setButtonLoading({
@@ -160,16 +160,16 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
     }
 
     dispatch({
-      type: "add_new_comment",
+      type: 'add_new_comment',
       payload: {
-        id: uniqueId(watch("comment") + "_"),
+        id: uniqueId(watch('comment') + '_'),
         comment_author: data?.user?.name,
-        comment_content: watch("comment"),
-        status: "PENDING",
+        comment_content: watch('comment'),
+        status: 'PENDING',
       },
     } as ActionComments);
 
-    setValue("comment", "");
+    setValue('comment', '');
 
     fetchSingleArticle(params.slug);
     router.refresh();
@@ -194,22 +194,22 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
     }
 
     dispatch({
-      type: "update_comment",
+      type: 'update_comment',
       payload: {
         id: commentId as string,
         comment_author: data?.user?.userInfo.name as string,
-        status: "PENDING" as "PENDING" | "APPROVED" | "REJECTED",
+        status: 'PENDING' as 'PENDING' | 'APPROVED' | 'REJECTED',
         comment_content: newComment,
       },
     } as ActionComments);
 
-    setValue("comment", "");
+    setValue('comment', '');
     router.refresh();
   };
 
   const getReviewStatus = () => {
     const review = article?.document.reviewersOnDocuments?.find((item) => item.reviewerEmail === data?.user?.email);
-    return review?.approvedStatus || "PENDING";
+    return review?.approvedStatus || 'PENDING';
   };
 
   const handleDownloadDocument = async (fileId: string, filename: string) => {
@@ -225,20 +225,20 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
     }
 
     const url = URL.createObjectURL(response.file!);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
 
-    toast.success("Download will start...");
+    toast.success('Download will start...');
   };
 
   React.useEffect(() => {
     setLoading(true);
     const isAuthor = () => {
-      const author_id = typeof data?.user?.userInfo?.id === "string" ? data.user.userInfo.id.trim() : "";
-      const document_author_id = typeof article?.document.userId === "string" ? article.document.userId.trim() : "";
+      const author_id = typeof data?.user?.userInfo?.id === 'string' ? data.user.userInfo.id.trim() : '';
+      const document_author_id = typeof article?.document.userId === 'string' ? article.document.userId.trim() : '';
 
       if (isEqual(author_id, document_author_id)) {
         setIsAuthor(true);
@@ -260,7 +260,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
         <Dialog.Content className="py-14 px-16 max-w-[600px]">
           {dialog.reasoning && (
             <Reasoning
-              message={state.comment_to_edit?.reason || ""}
+              message={state.comment_to_edit?.reason || ''}
               documentAuthor={article?.document.user?.name}
               onClose={() => setDialog({ ...dialog, reasoning: false })}
               onConfirm={() => setDialog({ ...dialog, reasoning: false })}
@@ -273,7 +273,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                 handleEditComment(state.comment_to_edit?.id!, value);
 
                 setDialog({ ...dialog, edit_comment: false });
-                dispatch({ type: "comment_to_edit", payload: null });
+                dispatch({ type: 'comment_to_edit', payload: null });
               }}
               onClose={() => setDialog({ ...dialog, edit_comment: false })}
             />
@@ -309,7 +309,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                           role={
                             article?.document.reviewersOnDocuments?.find(
                               (item) => item.reviewerEmail === data?.user?.email
-                            )?.role as "editor" | "reviewer"
+                            )?.role as 'editor' | 'reviewer'
                           }
                         />
                       ) : null}
@@ -364,15 +364,15 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 loading="lazy"
-                src={article?.document.cover || "/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg"}
+                src={article?.document.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
                 alt="cover-preview"
                 className="absolute w-full h-full object-cover"
               />
             </div>
             {article?.document.updatedAt && (
               <p className="text-sm font-regular">
-                Last updated on{" "}
-                {format(new Date(article?.document.updatedAt as unknown as string), "dd/MM/yyyy - HH:mm")}
+                Last updated on{' '}
+                {format(new Date(article?.document.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
               </p>
             )}
           </div>
@@ -387,12 +387,12 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                     article?.document.documentVersions?.map((file) => (
                       <File
                         key={file.id}
-                        file_name={file.fileName || "file.docx"}
+                        file_name={file.fileName || 'file.docx'}
                         onDownload={() => {
                           handleDownloadDocument(file.id, file.fileName!);
                         }}
-                        uploaded_at={new Date(file.createdAt).toLocaleDateString("pt-BR")}
-                        uploaded_by={article.document.user?.name || ""}
+                        uploaded_at={new Date(file.createdAt).toLocaleDateString('pt-BR')}
+                        uploaded_by={article.document.user?.name || ''}
                       />
                     ))
                   ) : (
@@ -413,7 +413,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
           <div className="grid gap-6">
             <div className="border rounded-md p-4">
               <ScrollArea
-                className={twMerge("h-[342px]", `${state.comments && state.comments.length == 0 && "h-full"}`)}
+                className={twMerge('h-[342px]', `${state.comments && state.comments.length == 0 && 'h-full'}`)}
               >
                 <div className="grid gap-4">
                   {state.comments && state.comments.length > 0 ? (
@@ -422,17 +422,17 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                         <CommentItem
                           comment_author={comment.comment_author}
                           comment_content={comment.comment_content}
-                          status={comment.status as "PENDING" | "APPROVED" | "REJECTED"}
+                          status={comment.status as 'PENDING' | 'APPROVED' | 'REJECTED'}
                           user_id={comment.user_id}
                           onSeeReasoning={() => {
                             dispatch({
-                              type: "comment_to_edit",
+                              type: 'comment_to_edit',
                               payload: {
                                 id: comment.id,
                                 comment_author: comment.comment_author,
                                 comment_content: comment.comment_content,
                                 reason: comment.reason,
-                                status: "REJECTED",
+                                status: 'REJECTED',
                               },
                             } as ActionComments);
                             setDialog({ ...dialog, reasoning: true });
@@ -522,7 +522,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
           <div className="grid gap-2">
             <h3 className="text-xl text-status-green font-semibold lg:text-lg 2xl:text-xl">Authorship</h3>
             <p className="text-sm">
-              Decide if the project is <span className="text-[#53AA22] font-semibold">Open Access</span> or{" "}
+              Decide if the project is <span className="text-[#53AA22] font-semibold">Open Access</span> or{' '}
               <span className="text-[#AE66E6] font-semibold">Paid Access</span>
             </p>
           </div>
@@ -531,16 +531,16 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
               <Input.Label>Type of access</Input.Label>
               <Input.Input
                 disabled
-                defaultValue={article?.document?.accessType === "FREE" ? "Open access" : "Paid access"}
+                defaultValue={article?.document?.accessType === 'FREE' ? 'Open access' : 'Paid access'}
               />
             </Input.Root>
-            {access_type == "open-access" && (
+            {access_type == 'open-access' && (
               <Input.Root>
                 <Input.Label className="text-neutral-gray text-sm font-semibold pl-2">Price</Input.Label>
                 <Input.Input disabled placeholder="R$" />
               </Input.Root>
             )}
-            {access_type == "paid-access" && (
+            {access_type == 'paid-access' && (
               <React.Fragment>
                 <Input.Root>
                   <Input.Label>Price</Input.Label>
@@ -556,7 +556,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
               </React.Fragment>
             )}
           </div>
-          {access_type == "paid-access" && (
+          {access_type == 'paid-access' && (
             <React.Fragment>
               <div className="grid gap-2">
                 <p className="text-sm font-semibold">Authorship settings</p>
@@ -587,7 +587,7 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
                             )}
                           </div>
                           <div className="w-fit">
-                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || "-"}</p>
+                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || '-'}</p>
                           </div>
                         </div>
                         <hr className="divider-h" />
@@ -600,19 +600,19 @@ export default function AsAuhtorPageDetails({ params }: { params: { slug: string
           )}
         </Box>
         <Box className="grid gap-4 h-fit py-6 px-8">
-          {getReviewStatus() === "PENDING" && (
+          {getReviewStatus() === 'PENDING' && (
             <h3 className="text-lg font-semibold text-status-pending flex justify-center">
               Your approval is still pending
             </h3>
           )}
-          {getReviewStatus() === "REJECTED" && (
+          {getReviewStatus() === 'REJECTED' && (
             <h3 className="text-lg font-semibold text-status-error flex justify-center">Your rejected the document</h3>
           )}
-          {getReviewStatus() === "APPROVED" && (
+          {getReviewStatus() === 'APPROVED' && (
             <h3 className="text-lg font-semibold text-status-green flex justify-center">Your approved the document</h3>
           )}
           <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
-          {getReviewStatus() !== "APPROVED" && (
+          {getReviewStatus() !== 'APPROVED' && (
             <>
               <Button.Button
                 variant="primary"

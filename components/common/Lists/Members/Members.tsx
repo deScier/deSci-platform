@@ -1,11 +1,11 @@
-import { MembersListDragabbleProps } from "@components/common/Lists/Members/Typing";
-import { TruncateWithHoverCard } from "@components/common/Truncate/TruncateWithHoverCard";
-import { Reorder, useDragControls } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { Pencil, Trash } from "react-bootstrap-icons";
+import { MembersListDragabbleProps } from '@components/common/Lists/Members/Typing';
+import { TruncateWithHoverCard } from '@components/common/Truncate/TruncateWithHoverCard';
+import { Reorder, useDragControls } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { Pencil, Trash } from 'react-bootstrap-icons';
 
-import CircleIcon from "public/svgs/modules/new-document/circles.svg";
-import React from "react";
+import CircleIcon from 'public/svgs/modules/new-document/circles.svg';
+import React from 'react';
 
 const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({
   members,
@@ -128,9 +128,9 @@ const MembersListDragabble: React.FC<MembersListDragabbleProps> = ({
 };
 
 const role_mapping = {
-  EDITOR_IN_CHIEF: "Editor-in-Chief",
-  MEMBER: "Member",
-  EDITORIAL_BOARD_MEMBER: "Editorial Board Member",
+  EDITOR_IN_CHIEF: 'Editor-in-Chief',
+  MEMBER: 'Member',
+  EDITORIAL_BOARD_MEMBER: 'Editorial Board Member',
 };
 
 export { MembersListDragabble };

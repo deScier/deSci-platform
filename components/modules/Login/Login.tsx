@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import "@styles/login.css";
+import '@styles/login.css';
 
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
 
-import { LoginModalProps } from "@/components/modules/Login/Typing";
-import { Separator } from "@/components/ui/separator";
-import { useMetamaskAuth } from "@/hooks/useMetamaskAuth";
-import { home_routes } from "@/routes/home";
-import { LoginProps, LoginSchema } from "@/schemas/login";
-import { COOKIE_KEYS } from "@/utils/cookies_keys";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { setCookie } from "cookies-next";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { X } from "react-bootstrap-icons";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { LoginModalProps } from '@/components/modules/Login/Typing';
+import { Separator } from '@/components/ui/separator';
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth';
+import { home_routes } from '@/routes/home';
+import { LoginProps, LoginSchema } from '@/schemas/login';
+import { COOKIE_KEYS } from '@/utils/cookies_keys';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { setCookie } from 'cookies-next';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { X } from 'react-bootstrap-icons';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import LoginAnimation from "@/components/modules/Login/Animation/Animation";
-import GoogleIcon from "public/svgs/modules/login/google_icon.svg";
-import MetamaskLogo from "public/svgs/modules/login/metamask.svg";
-import React from "react";
+import LoginAnimation from '@/components/modules/Login/Animation/Animation';
+import GoogleIcon from 'public/svgs/modules/login/google_icon.svg';
+import MetamaskLogo from 'public/svgs/modules/login/metamask.svg';
+import React from 'react';
 
 /** @title LoginModal Component
  *  @notice This component provides a modal interface for user login, with optional registration, password recovery, and third-party login via Google.
@@ -49,7 +49,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
     formState: { errors },
   } = useForm<LoginProps>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: '', password: '' },
   });
 
   /**
@@ -58,7 +58,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
    */
   const onSubmit: SubmitHandler<LoginProps> = async (data) => {
     setLoading(true);
-    const authResult = await signIn("credentials", {
+    const authResult = await signIn('credentials', {
       redirect: false,
       email: data.email,
       password: data.password,
@@ -67,11 +67,11 @@ const LoginModal: React.FC<LoginModalProps> = ({
     setLoading(false);
 
     if (authResult?.error) {
-      toast.error("Login error. Check your credentials.");
+      toast.error('Login error. Check your credentials.');
       return;
     }
 
-    toast.success("Successful login. Redirecting...");
+    toast.success('Successful login. Redirecting...');
     if (noRedirect) {
       onClose();
       return;
@@ -86,14 +86,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
     e.preventDefault();
 
     try {
-      await signIn("google", {
-        callbackUrl: "/summary",
+      await signIn('google', {
+        callbackUrl: '/summary',
         redirect: true,
-        prompt: "select_account",
+        prompt: 'select_account',
       });
     } catch (error) {
-      console.error("Google SignIn Error:", error);
-      toast.error("Error signing in with Google");
+      console.error('Google SignIn Error:', error);
+      toast.error('Error signing in with Google');
     }
   };
 
@@ -125,12 +125,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
             <div className="grid gap-6">
               <Input.Root>
                 <Input.Label>E-mail</Input.Label>
-                <Input.Input type="email" placeholder="Type your best email" {...register("email")} />
+                <Input.Input type="email" placeholder="Type your best email" {...register('email')} />
                 <Input.Error>{errors.email?.message}</Input.Error>
               </Input.Root>
               <Input.Root>
                 <Input.Label>Password</Input.Label>
-                <Input.Password placeholder="Type your password" {...register("password")} />
+                <Input.Password placeholder="Type your password" {...register('password')} />
                 <Input.Error>{errors.password?.message}</Input.Error>
               </Input.Root>
             </div>
@@ -138,7 +138,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               Login
             </Button.Button>
             <p className="text-secundary_blue-main text-sm text-center">
-              Forgot your password?{" "}
+              Forgot your password?{' '}
               <span
                 className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
                 onClick={onForgotPassword}
@@ -173,7 +173,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               <span className="text-base font-semibold">Continue with Google</span>
             </Button.Button>
             <p className="text-secundary_blue-main text-sm text-center">
-              Don&apos;t have an account yet?{" "}
+              Don&apos;t have an account yet?{' '}
               <span
                 className="underline hover:text-primary-hover duration-200 cursor-pointer transition-all hover:underline"
                 onClick={onRegister}

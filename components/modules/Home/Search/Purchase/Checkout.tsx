@@ -1,14 +1,14 @@
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useIconRenderer } from "@/hooks/useIconRenderer";
-import { payment_options } from "@/mock/payment_options";
-import formatPriceInUSD from "@/utils/format_price_in_usd";
-import * as Button from "@components/common/Button/Button";
-import CreditCardIcon from "public/svgs/modules/home/checkout/credit-card.svg";
-import MetamaskIcon from "public/svgs/modules/home/checkout/metamask.svg";
-import React from "react";
-import { X } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useIconRenderer } from '@/hooks/useIconRenderer';
+import { payment_options } from '@/mock/payment_options';
+import formatPriceInUSD from '@/utils/format_price_in_usd';
+import * as Button from '@components/common/Button/Button';
+import CreditCardIcon from 'public/svgs/modules/home/checkout/credit-card.svg';
+import MetamaskIcon from 'public/svgs/modules/home/checkout/metamask.svg';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * @title Checkout Component
@@ -94,9 +94,9 @@ const Resume: React.FC<ResumeProps> = ({ article, onPurchase, onSetPaymentOption
           <React.Fragment key={option.id}>
             <div
               className={twMerge(
-                "flex items-center gap-8 py-2 px-4 border border-neutral-stroke_light rounded-md w-full",
-                option.label !== null && "cursor-pointer",
-                option.label == null && "bg-[#E7E7E7]"
+                'flex items-center gap-8 py-2 px-4 border border-neutral-stroke_light rounded-md w-full',
+                option.label !== null && 'cursor-pointer',
+                option.label == null && 'bg-[#E7E7E7]'
               )}
             >
               {option.label !== null && (
@@ -150,7 +150,7 @@ interface CheckoutProps {
 }
 
 interface ItemProps {
-  article: CheckoutProps["article"];
+  article: CheckoutProps['article'];
 }
 
 interface ResumeProps extends CheckoutProps {}

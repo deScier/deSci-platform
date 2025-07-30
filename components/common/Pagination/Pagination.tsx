@@ -1,7 +1,7 @@
-import { PaginationProps } from "@components/common/Pagination/Typing";
-import { CaretLeft, CaretLeftSquare, CaretRight, CaretRightSquare } from "react-bootstrap-icons";
+import { PaginationProps } from '@components/common/Pagination/Typing';
+import { CaretLeft, CaretLeftSquare, CaretRight, CaretRightSquare } from 'react-bootstrap-icons';
 
-import React from "react";
+import React from 'react';
 /**
  * @title Pagination Component
  * @notice Handles the display and interaction of a pagination system in a React application
@@ -61,8 +61,8 @@ export default function PaginationComponent({
           size={24}
           className="transition-all duration-200 hover:scale-110"
           style={{
-            cursor: "pointer",
-            pointerEvents: currentPage === 1 ? "none" : "auto",
+            cursor: 'pointer',
+            pointerEvents: currentPage === 1 ? 'none' : 'auto',
             opacity: currentPage === 1 ? 0.5 : 1,
           }}
           onClick={() => handlePreviousPage?.()}
@@ -76,8 +76,8 @@ export default function PaginationComponent({
         <CaretRight
           className="w-5 h-5 transition-all duration-200 hover:scale-110 rounded-xs fill-[#5E6992] cursor-pointer"
           style={{
-            cursor: "pointer",
-            pointerEvents: currentPage === totalPages() ? "none" : "auto",
+            cursor: 'pointer',
+            pointerEvents: currentPage === totalPages() ? 'none' : 'auto',
             opacity: currentPage === totalPages() ? 0.5 : 1,
           }}
           onClick={() => handleNextPage?.()}

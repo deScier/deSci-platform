@@ -1,13 +1,13 @@
-import "@styles/dialog.css";
+import '@styles/dialog.css';
 
-import * as Dialog from "@radix-ui/react-dialog";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+import * as Dialog from '@radix-ui/react-dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
-import { TitleProps } from "@/components/common/Dialog/Typing";
-import { cn } from "@/lib/utils";
-import { X } from "react-bootstrap-icons";
+import { TitleProps } from '@/components/common/Dialog/Typing';
+import { cn } from '@/lib/utils';
+import { X } from 'react-bootstrap-icons';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Dialog Root Component
@@ -34,7 +34,7 @@ const Overlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 dark:bg-slate-950/80",
+      'fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 dark:bg-slate-950/80',
       className
     )}
     {...props}
@@ -54,11 +54,11 @@ const Content = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed top-auto left-auto right-0 bottom-0 translate-x-0 translate-y-0 z-50 grid w-full gap-4 bg-white p-6 shadow-lg duration-200 rounded-t-2xl rounded-bl-none rounded-br-none max-h-[85vh] overflow-y-auto",
-        "md:left-[50%] md:top-[50%] md:bottom-auto md:right-auto md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-5xl md:rounded-2xl pb-12 md:pb-0",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-        "md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%]",
-        "dark:border-neutral-800 dark:bg-neutral-950",
+        'fixed top-auto left-auto right-0 bottom-0 translate-x-0 translate-y-0 z-50 grid w-full gap-4 bg-white p-6 shadow-lg duration-200 rounded-t-2xl rounded-bl-none rounded-br-none max-h-[85vh] overflow-y-auto',
+        'md:left-[50%] md:top-[50%] md:bottom-auto md:right-auto md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-5xl md:rounded-2xl pb-12 md:pb-0',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+        'md:data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[48%] md:data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[48%]',
+        'dark:border-neutral-800 dark:bg-neutral-950',
         className
       )}
       {...props}
@@ -80,7 +80,7 @@ Content.displayName = DialogPrimitive.Content.displayName;
 const Title: React.FC<TitleProps> = ({ onClear, onClose, title }: TitleProps) => {
   return (
     <div className="flex justify-between items-center">
-      <h2 className="text-1xl font-semibold mb-1">{title || "Filtros"}</h2>
+      <h2 className="text-1xl font-semibold mb-1">{title || 'Filtros'}</h2>
       <div className="flex items-center gap-4">
         {onClear && (
           <p className="text-lg text-status-blue font-semibold select-none cursor-pointer" onClick={onClear}>

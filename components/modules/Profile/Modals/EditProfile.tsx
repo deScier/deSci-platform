@@ -1,19 +1,19 @@
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
 
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { UpdateUserProps } from "@/schemas/update_user";
-import { uploadAvatarService } from "@/services/file/file.service";
-import { updateUserService } from "@/services/user/update.service";
-import { useSession } from "next-auth/react";
-import { X } from "react-bootstrap-icons";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { UpdateUserProps } from '@/schemas/update_user';
+import { uploadAvatarService } from '@/services/file/file.service';
+import { updateUserService } from '@/services/user/update.service';
+import { useSession } from 'next-auth/react';
+import { X } from 'react-bootstrap-icons';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import Dropzone from "@/components/common/Dropzone/Dropzone";
-import Image from "next/image";
-import React from "react";
-import GenericSuccess from "./Success";
+import Dropzone from '@/components/common/Dropzone/Dropzone';
+import Image from 'next/image';
+import React from 'react';
+import GenericSuccess from './Success';
 
 /**
  *  @title UpdateProfile Component
@@ -51,11 +51,11 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
 
     /** @dev If the profile update is not successful, show an error message */
     if (!response.success) {
-      toast.error("Error in edit profile.");
+      toast.error('Error in edit profile.');
       return;
     }
     /** @dev If a new avatar is uploaded, upload the avatar and get the URL */
-    let fileUrl = "";
+    let fileUrl = '';
     if (file) {
       fileUrl = await uploadAvatarService({
         fileLocalUrl: file.preview!,
@@ -113,7 +113,7 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
                 width={160}
                 height={160}
                 alt="profile-image"
-                src={avatarPreview || "/images/profile_dk08wk.png"}
+                src={avatarPreview || '/images/profile_dk08wk.png'}
                 className="flex-shrink-0 w-40 h-40 rounded-full mx-auto my-0 lg:w-28 lg:h-28 2xl:w-36 2xl:h-36 object-cover"
               />
             ) : (
@@ -125,7 +125,7 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
                 quality={50}
                 height={144}
                 alt="profile-image"
-                src={"/images/profile_dk08wk.png"}
+                src={'/images/profile_dk08wk.png'}
                 className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover"
               />
             )}
@@ -143,11 +143,11 @@ const UpdateProfile: React.FC<UpdateProfileProps> = ({
           <div className="flex flex-col md:flex-row items-center gap-4">
             <Input.Root>
               <Input.Label>Name</Input.Label>
-              <Input.Input defaultValue={name} placeholder="Your name" {...register("name")} />
+              <Input.Input defaultValue={name} placeholder="Your name" {...register('name')} />
             </Input.Root>
             <Input.Root>
               <Input.Label optional>Expertise</Input.Label>
-              <Input.Input defaultValue={title} placeholder="Ex: Biologist, Chemist" {...register("title")} />
+              <Input.Input defaultValue={title} placeholder="Ex: Biologist, Chemist" {...register('title')} />
             </Input.Root>
           </div>
           <div className="grid gap-4">

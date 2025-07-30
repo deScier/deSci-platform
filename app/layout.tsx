@@ -1,28 +1,37 @@
-import "keen-slider/keen-slider.min.css";
-import "react-toastify/dist/ReactToastify.min.css";
+import 'keen-slider/keen-slider.min.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 
-import "@styles/globals.css";
-import "@styles/toast.css";
-import "@styles/utils.css";
+import '@styles/globals.css';
+import '@styles/toast.css';
+import '@styles/utils.css';
 
-import { TooltipProvider } from "@/lib/tooltip";
-import type { Metadata } from "next";
-import { Slide, ToastContainer } from "react-toastify";
-import { AuthProvider } from "./auth-provider";
+import { TooltipProvider } from '@/lib/tooltip';
+import type { Metadata } from 'next';
+import { Slide, ToastContainer } from 'react-toastify';
+import { AuthProvider } from './auth-provider';
 
-import ProgressBar from "@/lib/nprogress";
+import ProgressBar from '@/lib/nprogress';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://desci.reviews'),
   title: {
-    default: "deSci Publications - Decentralized Science",
-    template: "%s | deSci Publications"
+    default: 'deSci Publications - Decentralized Science',
+    template: '%s | deSci Publications',
   },
-  description: "A decentralized science-DeSci publishing platform uses blockchain technology and smart contracts to enable the publication and distribution of academic papers.",
-  keywords: ["DeSci", "blockchain", "scientific publishing", "academic papers", "decentralized science", "research", "peer review"],
-  authors: [{ name: "deSci Platform Team" }],
-  creator: "deSci Platform",
-  publisher: "deSci Publications",
+  description:
+    'A decentralized science-DeSci publishing platform uses blockchain technology and smart contracts to enable the publication and distribution of academic papers.',
+  keywords: [
+    'DeSci',
+    'blockchain',
+    'scientific publishing',
+    'academic papers',
+    'decentralized science',
+    'research',
+    'peer review',
+  ],
+  authors: [{ name: 'deSci Platform Team' }],
+  creator: 'deSci Platform',
+  publisher: 'deSci Publications',
   formatDetection: {
     email: false,
     address: false,
@@ -43,13 +52,16 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'deSci Publications',
     title: 'deSci Publications - Decentralized Science',
-    description: 'A decentralized science-DeSci publishing platform uses blockchain technology and smart contracts to enable the publication and distribution of academic papers.',
-    images: [{
-      url: '/images/de-scier-plataform.png',
-      width: 1200,
-      height: 630,
-      alt: 'deSci Publications Platform'
-    }],
+    description:
+      'A decentralized science-DeSci publishing platform uses blockchain technology and smart contracts to enable the publication and distribution of academic papers.',
+    images: [
+      {
+        url: '/images/de-scier-plataform.png',
+        width: 1200,
+        height: 630,
+        alt: 'deSci Publications Platform',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -57,7 +69,7 @@ export const metadata: Metadata = {
     description: 'Decentralized Science Publishing Platform',
     images: ['/images/de-scier-plataform.png'],
     creator: '@desciers',
-    site: '@desciers'
+    site: '@desciers',
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,

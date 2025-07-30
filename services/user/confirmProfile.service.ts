@@ -1,8 +1,8 @@
 export const confirmProfileService = async (data: ConfirmProfileRequestProps) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/confirm-profile`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify(data),
   });
@@ -12,13 +12,13 @@ export const confirmProfileService = async (data: ConfirmProfileRequestProps) =>
   if (response.status === 201) {
     return {
       success: true,
-      message: "Register user successfully",
+      message: 'Register user successfully',
     };
   }
 
   return {
     success: false,
-    message: "Error in register user",
+    message: 'Error in register user',
   };
 };
 

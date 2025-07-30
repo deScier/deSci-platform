@@ -1,10 +1,10 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Eye, HandThumbsUpFill } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import useDimension from "@/hooks/useWindowDimension";
-import Image from "next/image";
-import React from "react";
+import useDimension from '@/hooks/useWindowDimension';
+import Image from 'next/image';
+import React from 'react';
 
 /**
  * @title PublicationItem Component
@@ -26,14 +26,14 @@ export const PublicationItem: React.FC<PublicationItemProps> = ({
   const isSmallDesktop = windowDimension && windowDimension < 1440 && windowDimension >= 1024;
   return (
     <React.Fragment>
-      <div className={twMerge("flex flex-col lg:flex-row lg:items-center lg:gap-4 gap-2", className)}>
+      <div className={twMerge('flex flex-col lg:flex-row lg:items-center lg:gap-4 gap-2', className)}>
         <Image
           quality={50}
           src={image}
           width={420}
           height={420}
           alt={title}
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
           className="rounded-md w-full h-20 lg:w-20 xxl:w-16 xxl:h-16 2xl:w-20 2xl:h-20 object-cover"
         />
         <div className="grid gap-2">

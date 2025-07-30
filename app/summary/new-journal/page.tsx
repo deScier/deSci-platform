@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { MembersListDragabble } from "@/components/common/Lists/Members/Members";
-import { WarningOnChangePage } from "@/components/common/Warning/WarningOnChangePage";
-import { AddNewMember } from "@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember";
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import { cn } from "@/lib/utils";
-import { home_routes } from "@/routes/home";
-import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from "@/schemas/create_new_journal";
-import { uploadJournalCoverService } from "@/services/file/file.service";
-import { submitNewJournalService } from "@/services/journal/submit.service";
-import { ErrorMessage } from "@/utils/error_message";
-import { journal_originate_from } from "@/utils/journal_originate_from";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { uniqueId } from "lodash";
-import { useRouter } from "next/navigation";
-import { Clipboard, PlusCircle, X } from "react-bootstrap-icons";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { MembersListDragabble } from '@/components/common/Lists/Members/Members';
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage';
+import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember';
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import { cn } from '@/lib/utils';
+import { home_routes } from '@/routes/home';
+import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal';
+import { uploadJournalCoverService } from '@/services/file/file.service';
+import { submitNewJournalService } from '@/services/journal/submit.service';
+import { ErrorMessage } from '@/utils/error_message';
+import { journal_originate_from } from '@/utils/journal_originate_from';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { uniqueId } from 'lodash';
+import { useRouter } from 'next/navigation';
+import { Clipboard, PlusCircle, X } from 'react-bootstrap-icons';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import Box from "@/components/common/Box/Box";
-import Dropzone from "@/components/common/Dropzone/Dropzone";
-import NProgress from "nprogress";
-import React from "react";
+import Box from '@/components/common/Box/Box';
+import Dropzone from '@/components/common/Dropzone/Dropzone';
+import NProgress from 'nprogress';
+import React from 'react';
 
 export default function NewJournalPage() {
   const router = useRouter();
@@ -57,29 +57,29 @@ export default function NewJournalPage() {
   } = useForm<CreateJournalDTO>({
     resolver: zodResolver(CreateJournalSchema),
     defaultValues: {
-      name: "",
-      field: "",
-      rationale: "",
-      originatesFrom: "",
+      name: '',
+      field: '',
+      rationale: '',
+      originatesFrom: '',
       cover: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
-        preview: "",
+        name: '',
+        path: '',
+        preview: '',
         size: 0,
-        type: "",
+        type: '',
       },
       keywords: [],
       members: members,
     },
   });
 
-  const { append: append_member } = useFieldArray({ control, name: "members" });
+  const { append: append_member } = useFieldArray({ control, name: 'members' });
 
   const onReorder = (newMembers: MembersDTO[]) => {
     setMembers(newMembers);
-    setValue("members", newMembers);
+    setValue('members', newMembers);
   };
 
   const {
@@ -88,7 +88,7 @@ export default function NewJournalPage() {
     remove: remove_keyword,
   } = useFieldArray({
     control,
-    name: "keywords",
+    name: 'keywords',
   });
 
   const onSubmit: SubmitHandler<CreateJournalDTO> = async (data) => {
@@ -127,35 +127,35 @@ export default function NewJournalPage() {
     setLoading(false);
   };
 
-  const [targetUrl, setTargetUrl] = React.useState("");
+  const [targetUrl, setTargetUrl] = React.useState('');
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
+    if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       addKeywords();
     }
   };
 
   const addKeywords = () => {
-    if (keywords_temp && keywords_temp.trim() !== "") {
+    if (keywords_temp && keywords_temp.trim() !== '') {
       const newKeywords = keywords_temp
-        .split(",")
+        .split(',')
         .map((keyword) => keyword.trim())
-        .filter((keyword) => keyword !== "");
+        .filter((keyword) => keyword !== '');
       newKeywords.forEach((keyword) => {
-        append_keyword({ id: uniqueId("key"), name: keyword });
+        append_keyword({ id: uniqueId('key'), name: keyword });
       });
-      setKeywordsTemp("");
+      setKeywordsTemp('');
     } else {
-      setError("keywords", {
-        type: "manual",
-        message: "Keyword is required.",
+      setError('keywords', {
+        type: 'manual',
+        message: 'Keyword is required.',
       });
     }
   };
 
   React.useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return;
     }
 
@@ -172,8 +172,8 @@ export default function NewJournalPage() {
     };
 
     const handleMutation: MutationCallback = (mutationsList, observer) => {
-      const anchorElements = document.querySelectorAll("a");
-      anchorElements.forEach((anchor) => anchor.addEventListener("click", handleAnchorClick));
+      const anchorElements = document.querySelectorAll('a');
+      anchorElements.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick));
     };
 
     const mutationObserver = new MutationObserver(handleMutation);
@@ -206,7 +206,7 @@ export default function NewJournalPage() {
         open={dialog.add_new_member || dialog.edit_member || dialog.members || dialog.warning_on_change_page}
       >
         <Dialog.Content
-          className={cn("md:px-16 md:py-14 pb-20 max-w-[1024px]", `${dialog.warning_on_change_page && "!w-[564px]"}`)}
+          className={cn('md:px-16 md:py-14 pb-20 max-w-[1024px]', `${dialog.warning_on_change_page && '!w-[564px]'}`)}
         >
           {dialog.add_new_member && (
             <AddNewMember
@@ -246,14 +246,14 @@ export default function NewJournalPage() {
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the Journal"
-                  {...register("name")}
+                  {...register('name')}
                   onInput={(e) => {
                     titleLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("name", value.currentTarget.value);
-                        trigger("name");
+                        setValue('name', value.currentTarget.value);
+                        trigger('name');
                       },
                     });
                   }}
@@ -267,14 +267,14 @@ export default function NewJournalPage() {
                 </Input.Label>
                 <Input.Input
                   placeholder="Area of knowledge"
-                  {...register("field")}
+                  {...register('field')}
                   onInput={(e) => {
                     fieldLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("field", value.currentTarget.value);
-                        trigger("field");
+                        setValue('field', value.currentTarget.value);
+                        trigger('field');
                       },
                     });
                   }}
@@ -335,10 +335,10 @@ export default function NewJournalPage() {
                   placeholder="Select the origin of the journal"
                   onValueChange={(value) => {
                     const value_access = value as string;
-                    setValue("originatesFrom", value_access);
-                    trigger("originatesFrom");
+                    setValue('originatesFrom', value_access);
+                    trigger('originatesFrom');
                   }}
-                  value={watch("originatesFrom")}
+                  value={watch('originatesFrom')}
                 />
                 <Input.Error>{errors.field?.message}</Input.Error>
               </Input.Root>
@@ -352,7 +352,7 @@ export default function NewJournalPage() {
               <Tooltip.Information content="Give a brief reason for create a new Journal." />
             </Input.Label>
             <Input.TextArea
-              {...register("rationale")}
+              {...register('rationale')}
               rows={4}
               placeholder="Provide a brief reason for creating a new journal"
               onInput={(e) => {
@@ -360,8 +360,8 @@ export default function NewJournalPage() {
                   e: e,
                   limit: 1000,
                   onInput: (value) => {
-                    setValue("rationale", value.currentTarget.value);
-                    trigger("rationale");
+                    setValue('rationale', value.currentTarget.value);
+                    trigger('rationale');
                   },
                 });
               }}
@@ -370,7 +370,7 @@ export default function NewJournalPage() {
           </Input.Root>
           <div className="grid gap-4">
             <p className="text-sm font-semibold">
-              Journal cover{" "}
+              Journal cover{' '}
               <span className="text-sm text-neutral-light_gray font-normal">
                 (Recommended dimensions: 375px width x 500px height)
               </span>
@@ -379,16 +379,16 @@ export default function NewJournalPage() {
               accept="images"
               placeholder="Upload cover picture (.png, .jpg)"
               setSelectedFile={(file) => {
-                setValue("cover", file as StoredFile);
-                trigger("cover");
-                clearErrors("cover");
+                setValue('cover', file as StoredFile);
+                trigger('cover');
+                clearErrors('cover');
               }}
             />
             <div className="flex justify-center w-full">
               <Input.Error>
                 {ErrorMessage({
                   error: errors.cover?.type,
-                  message: "Cover is required.",
+                  message: 'Cover is required.',
                 })}
               </Input.Error>
             </div>
@@ -426,7 +426,7 @@ export default function NewJournalPage() {
                   onDelete={(member) => {
                     const newMembers = members.filter((item) => item.id !== member.id);
                     setMembers(newMembers);
-                    setValue("members", newMembers);
+                    setValue('members', newMembers);
                   }}
                   onEdit={(member) => {
                     setMembersTemp(member);
@@ -449,14 +449,14 @@ export default function NewJournalPage() {
 const editors_in_chief = [
   {
     id: 1,
-    label: "Name",
+    label: 'Name',
   },
   {
     id: 1,
-    label: "Role",
+    label: 'Role',
   },
   {
     id: 1,
-    label: "E-mail",
+    label: 'E-mail',
   },
 ];

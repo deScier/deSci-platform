@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import "@styles/home.css";
+import '@styles/home.css';
 
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
 
-import { Dropdown } from "@/components/common/Dropdown/Dropdown";
-import { BannerStartPublishing } from "@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing";
-import { ArticleItem } from "@/components/modules/Home/Search/ArticleItem/ArticleItem";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { articles_types_filter } from "@/mock/articles_types";
-import { filter_access, filter_by_year, filter_field } from "@/mock/dropdow_filter_options";
-import { useArticles } from "@/services/document/fetchPublic.service";
-import { slugfy } from "@/utils/slugfy";
-import { useSearchParams } from "next/navigation";
-import { Person, Search } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { Dropdown } from '@/components/common/Dropdown/Dropdown';
+import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing';
+import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { articles_types_filter } from '@/mock/articles_types';
+import { filter_access, filter_by_year, filter_field } from '@/mock/dropdow_filter_options';
+import { useArticles } from '@/services/document/fetchPublic.service';
+import { slugfy } from '@/utils/slugfy';
+import { useSearchParams } from 'next/navigation';
+import { Person, Search } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import ForgotPasswordModal from "@/components/modules/ForgotPassword/ForgotPassword";
-import LoginModal from "@/components/modules/Login/Login";
-import RegisterModal from "@/components/modules/Register/Register";
-import useDebounce from "@/hooks/useDebounce";
-import React from "react";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword';
+import LoginModal from '@/components/modules/Login/Login';
+import RegisterModal from '@/components/modules/Register/Register';
+import useDebounce from '@/hooks/useDebounce';
+import React from 'react';
 
 export function SearchArticlesComponent() {
   const { articles } = useArticles();
@@ -35,10 +35,10 @@ export function SearchArticlesComponent() {
   const [page, setPage] = React.useState(1);
   const [results, setResults] = React.useState(articles);
   const [totalPages, setTotalPages] = React.useState(1);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [searchAuthor, setSearchAuthor] = React.useState("");
-  const [searchType, setSearchType] = React.useState("");
-  const [accessType, setAccessType] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchAuthor, setSearchAuthor] = React.useState('');
+  const [searchType, setSearchType] = React.useState('');
+  const [accessType, setAccessType] = React.useState('');
   const [documentType, setDocumentType] = React.useState<string | null>(null);
   const [publicationYear, setPublicationYear] = React.useState<number | null>(null);
   const [field, setField] = React.useState<string | null>(null);
@@ -54,12 +54,12 @@ export function SearchArticlesComponent() {
 
   React.useEffect(() => {
     if (searchQueries) {
-      const term = searchQueries.get("term") || "";
-      const author = searchQueries.get("author") || "";
-      const type = searchQueries.get("type") || "";
+      const term = searchQueries.get('term') || '';
+      const author = searchQueries.get('author') || '';
+      const type = searchQueries.get('type') || '';
 
-      if (type === "author") {
-        setSearchTerm("");
+      if (type === 'author') {
+        setSearchTerm('');
         setSearchAuthor(term);
       } else {
         setSearchTerm(term);
@@ -74,9 +74,9 @@ export function SearchArticlesComponent() {
     setPage(1);
     setResults(articles);
     setTotalPages(1);
-    setSearchTerm("");
-    setSearchAuthor("");
-    setAccessType("");
+    setSearchTerm('');
+    setSearchAuthor('');
+    setAccessType('');
     setDocumentType(null);
     setPublicationYear(null);
     setField(null);
@@ -85,9 +85,9 @@ export function SearchArticlesComponent() {
   const withoutFilters = !documentType && !accessType && !field && !publicationYear && !searchTerm && !searchAuthor;
 
   /** @dev Component states for various authentication and navigation modals */
-  const login_component = "login";
-  const register_component = "register";
-  const forgot_password_component = "forgot_password";
+  const login_component = 'login';
+  const register_component = 'register';
+  const forgot_password_component = 'forgot_password';
 
   /** @dev State to manage the open/closed state of modals */
   const [open, setOpen] = React.useState(false);
@@ -100,10 +100,10 @@ export function SearchArticlesComponent() {
       <Dialog.Root open={open}>
         <Dialog.Content
           className={twMerge(
-            "w-[80%] max-w-[1200px] p-0",
-            component === forgot_password_component && "max-w-[554px]",
-            `${component === login_component && "w-full !max-w-[1200px] p-0"}`,
-            `${component === register_component && "w-full !max-w-[1200px] p-0"}`
+            'w-[80%] max-w-[1200px] p-0',
+            component === forgot_password_component && 'max-w-[554px]',
+            `${component === login_component && 'w-full !max-w-[1200px] p-0'}`,
+            `${component === register_component && 'w-full !max-w-[1200px] p-0'}`
           )}
         >
           {component === login_component && (
@@ -183,12 +183,12 @@ export function SearchArticlesComponent() {
             items={filter_field}
             onSelect={(value) => setField(value)}
           />
-          <Select value={documentType || "all"} onValueChange={(value) => setDocumentType(value)}>
+          <Select value={documentType || 'all'} onValueChange={(value) => setDocumentType(value)}>
             <SelectTrigger className="flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold w-fit min-w-[229px]">
               <SelectValue asChild>
                 <p>
-                  Article type:{" "}
-                  {articles_types_filter.find((item) => item.value === documentType)?.label || "All articles"}
+                  Article type:{' '}
+                  {articles_types_filter.find((item) => item.value === documentType)?.label || 'All articles'}
                 </p>
               </SelectValue>
             </SelectTrigger>
@@ -196,13 +196,13 @@ export function SearchArticlesComponent() {
               <React.Fragment>
                 {articles_types_filter.map((item, index) => (
                   <React.Fragment key={item.id}>
-                    {item.type === "label" && (
+                    {item.type === 'label' && (
                       <React.Fragment>
                         <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
                         <Separator />
                       </React.Fragment>
                     )}
-                    {item.type === "item" && (
+                    {item.type === 'item' && (
                       <SelectItem
                         value={item.value as string}
                         className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -239,11 +239,11 @@ export function SearchArticlesComponent() {
               ?.filter((article) => {
                 if (!searchType) return true;
                 switch (searchType) {
-                  case "author":
+                  case 'author':
                     return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)));
-                  case "journal":
-                    return slugfy(article.journal?.name || "").includes(slugfy(searchTerm));
-                  case "paper":
+                  case 'journal':
+                    return slugfy(article.journal?.name || '').includes(slugfy(searchTerm));
+                  case 'paper':
                     return slugfy(article.title).includes(slugfy(searchTerm));
                   default:
                     return true;
@@ -254,7 +254,7 @@ export function SearchArticlesComponent() {
                   slugfy(article.title).includes(slugfy(searchTerm)) ||
                   slugfy(article.journal.name).includes(slugfy(searchTerm))
               )
-              .filter((article) => !documentType || documentType === "all" || article.documentType === documentType)
+              .filter((article) => !documentType || documentType === 'all' || article.documentType === documentType)
               .filter((article) => !accessType || article.accessType === accessType)
               .filter((article) => !field || article.field === field)
               .filter((article) => !publicationYear || article.publishedAt?.getFullYear() === publicationYear)
@@ -268,7 +268,7 @@ export function SearchArticlesComponent() {
                     id={article.id}
                     image={article.image}
                     likes={article.likes || 0}
-                    published_date={article.publishedAt!.toLocaleDateString("pt-BR")}
+                    published_date={article.publishedAt!.toLocaleDateString('pt-BR')}
                     journal={article.journal}
                     tags={article.tags || []}
                     views={article.views || 0}
@@ -281,11 +281,11 @@ export function SearchArticlesComponent() {
             ?.filter((article) => {
               if (!searchType) return true;
               switch (searchType) {
-                case "author":
+                case 'author':
                   return article.authors.some((author) => slugfy(author.name).includes(slugfy(searchTerm)));
-                case "journal":
-                  return slugfy(article.journal?.name || "").includes(slugfy(searchTerm));
-                case "paper":
+                case 'journal':
+                  return slugfy(article.journal?.name || '').includes(slugfy(searchTerm));
+                case 'paper':
                   return slugfy(article.title).includes(slugfy(searchTerm));
                 default:
                   return true;

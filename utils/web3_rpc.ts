@@ -1,5 +1,5 @@
-import type { IProvider } from "@web3auth/base";
-import Web3 from "web3";
+import type { IProvider } from '@web3auth/base';
+import Web3 from 'web3';
 
 export default class EthereumRpc {
   private provider: IProvider;
@@ -44,7 +44,7 @@ export default class EthereumRpc {
       // Get user's balance in ether
       const balance = web3.utils.fromWei(
         await web3.eth.getBalance(address),
-        "ether" // Balance is in wei
+        'ether' // Balance is in wei
       );
 
       return balance;
@@ -62,11 +62,11 @@ export default class EthereumRpc {
 
       const destination = fromAddress;
 
-      const amount = web3.utils.toWei("0.001", "ether"); // Convert 1 ether to wei
+      const amount = web3.utils.toWei('0.001', 'ether'); // Convert 1 ether to wei
       let transaction = {
         from: fromAddress,
         to: destination,
-        data: "0x",
+        data: '0x',
         value: amount,
       };
 
@@ -89,13 +89,13 @@ export default class EthereumRpc {
       // Get user's Ethereum public address
       const fromAddress = (await web3.eth.getAccounts())[0];
 
-      const originalMessage = "YOUR_MESSAGE";
+      const originalMessage = 'YOUR_MESSAGE';
 
       // Sign the message
       const signedMessage = await web3.eth.personal.sign(
         originalMessage,
         fromAddress,
-        "test password!" // configure your own password here.
+        'test password!' // configure your own password here.
       );
 
       return signedMessage;
@@ -107,7 +107,7 @@ export default class EthereumRpc {
   async getPrivateKey(): Promise<any> {
     try {
       const privateKey = await this.provider.request({
-        method: "eth_private_key",
+        method: 'eth_private_key',
       });
 
       return privateKey;
@@ -121,7 +121,7 @@ export default class EthereumRpc {
     return JSON.parse(
       JSON.stringify(
         data,
-        (key, value) => (typeof value === "bigint" ? value.toString() : value) // return everything else unchanged
+        (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
       )
     );
   };

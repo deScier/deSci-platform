@@ -1,7 +1,7 @@
-import { SidesProps } from "@/components/common/Sidebar/Typing";
+import { SidesProps } from '@/components/common/Sidebar/Typing';
 
-import Profile from "@/components/common/Sidebar/Profile/Profile";
-import React from "react";
+import Profile from '@/components/common/Sidebar/Profile/Profile';
+import React from 'react';
 
 /**
  * @title Mobile Profile Component

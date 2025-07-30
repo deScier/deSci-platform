@@ -1,14 +1,14 @@
-import { Session } from "next-auth";
+import { Session } from 'next-auth';
 
 export const fetcher = async (url: string, token?: string, method?: string, body?: any) => {
   let status_code = 0;
-  let message = "";
+  let message = '';
 
   try {
     const request = await fetch(url, {
-      method: method || "GET",
+      method: method || 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -23,7 +23,7 @@ export const fetcher = async (url: string, token?: string, method?: string, body
 
     if (!request.ok) {
       if (status_code === 403) {
-        return { error: "Você não possui permissão para acessar este recurso.", status: status_code };
+        return { error: 'Você não possui permissão para acessar este recurso.', status: status_code };
       } else {
         const errorMessage = data.message || message;
         throw new Error(errorMessage);
@@ -37,7 +37,7 @@ export const fetcher = async (url: string, token?: string, method?: string, body
 };
 
 export const fetcher_authenticated = (session: Session | null) => (url: string) => {
-  if (!session?.user?.token) throw new Error("No token available");
+  if (!session?.user?.token) throw new Error('No token available');
   return fetcher(url, session.user.token);
 };
 

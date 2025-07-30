@@ -1,8 +1,8 @@
-import { ArticleCardProps } from "@/components/modules/Home/Index/ArticleCard/Typing";
-import { uniqueId } from "lodash";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { DocumentPaginationProps, DocumentProps, GetDocumentPublicProps } from "./getArticles";
+import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing';
+import { uniqueId } from 'lodash';
+import { getSession, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { DocumentPaginationProps, DocumentProps, GetDocumentPublicProps } from './getArticles';
 
 /**
  * @title useArticles
@@ -33,9 +33,9 @@ export const useArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -44,19 +44,19 @@ export const useArticles = () => {
       const formatted_response: ArticleCardProps[] = response?.documents?.map((article) => {
         return {
           id: article.id,
-          image: article.cover || "",
+          image: article.cover || '',
           title: article.title,
           authors:
             article.authorsOnDocuments?.map((item) => ({
-              id: item.id || uniqueId("author"),
-              name: item.author?.name || "",
+              id: item.id || uniqueId('author'),
+              name: item.author?.name || '',
             })) || [],
           likes: article.likes,
           views: article.views,
-          tags: article.keywords.split(";")?.map((item) => ({ id: uniqueId("keyword"), name: item })) || [],
+          tags: article.keywords.split(';')?.map((item) => ({ id: uniqueId('keyword'), name: item })) || [],
           publishedAt: new Date(article.publishedAt!),
           documentType: article.documentType,
-          accessType: article.accessType === "FREE" ? "open" : "paid",
+          accessType: article.accessType === 'FREE' ? 'open' : 'paid',
           field: article.field,
           journal: article.journal,
         };
@@ -76,9 +76,9 @@ export const useArticles = () => {
     const session = await getSession();
     if (!article) {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/${documentId}`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           authorization: `Bearer ${session?.user?.token}`,
         },
       });

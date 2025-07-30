@@ -1,16 +1,16 @@
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
 
-import { UpdateUserProps } from "@/schemas/update_user";
-import { checkPasswordService } from "@/services/user/checkPassword.service";
-import { updateUserService } from "@/services/user/update.service";
-import { useSession } from "next-auth/react";
-import { X } from "react-bootstrap-icons";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { UpdateUserProps } from '@/schemas/update_user';
+import { checkPasswordService } from '@/services/user/checkPassword.service';
+import { updateUserService } from '@/services/user/update.service';
+import { useSession } from 'next-auth/react';
+import { X } from 'react-bootstrap-icons';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import React from "react";
-import GenericSuccess from "./Success";
+import React from 'react';
+import GenericSuccess from './Success';
 
 /**
  * @title UpdateEmail Component
@@ -90,7 +90,7 @@ const UpdateEmail: React.FC<UpdateEmailProps> = ({
           </div>
           <Input.Root>
             <Input.Label>New e-mail</Input.Label>
-            <Input.Input placeholder="Type your new e-mail" {...register("email")} />
+            <Input.Input placeholder="Type your new e-mail" {...register('email')} />
           </Input.Root>
           <Button.Button className="py-3 px-4" type="submit" loading={loading}>
             Continue
@@ -104,7 +104,7 @@ const UpdateEmail: React.FC<UpdateEmailProps> = ({
           </div>
           <Input.Root>
             <Input.Label>Password</Input.Label>
-            <Input.Password placeholder="Type your password" {...register("currentPassword")} />
+            <Input.Password placeholder="Type your password" {...register('currentPassword')} />
           </Input.Root>
           <div className="grid gap-6">
             <Button.Button className="py-3 px-8" type="submit" loading={loading}>

@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import { MembersListDragabble } from "@/components/common/Lists/Members/Members";
-import { WarningOnChangePage } from "@/components/common/Warning/WarningOnChangePage";
-import { ArticleItem } from "@/components/modules/Home/Search/ArticleItem/ArticleItem";
-import { AddNewMember } from "@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import { cn } from "@/lib/utils";
-import { home_routes } from "@/routes/home";
-import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from "@/schemas/create_new_journal";
-import { approveJournalByAdminService } from "@/services/admin/approveJournal.service";
-import { JournalProps } from "@/services/journal/getJournals.service";
-import { journal_originate_from } from "@/utils/journal_originate_from";
-import { keywordsArray } from "@/utils/keywords_format";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { uniqueId } from "lodash";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Check, PlusCircle, X } from "react-bootstrap-icons";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { MembersListDragabble } from '@/components/common/Lists/Members/Members';
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage';
+import { ArticleItem } from '@/components/modules/Home/Search/ArticleItem/ArticleItem';
+import { AddNewMember } from '@/components/modules/Summary/NewJournal/AddNewMember/AddNewMember';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import { cn } from '@/lib/utils';
+import { home_routes } from '@/routes/home';
+import { CreateJournalDTO, CreateJournalSchema, MembersDTO } from '@/schemas/create_new_journal';
+import { approveJournalByAdminService } from '@/services/admin/approveJournal.service';
+import { JournalProps } from '@/services/journal/getJournals.service';
+import { journal_originate_from } from '@/utils/journal_originate_from';
+import { keywordsArray } from '@/utils/keywords_format';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Check, PlusCircle, X } from 'react-bootstrap-icons';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import Box from "@/components/common/Box/Box";
-import NProgress from "nprogress";
-import React from "react";
+import Box from '@/components/common/Box/Box';
+import NProgress from 'nprogress';
+import React from 'react';
 
 export default function JournalDetails({ params }: { params: { journal: JournalProps } }) {
   const journal = params.journal;
@@ -73,50 +73,50 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
       cover: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
+        name: '',
+        path: '',
         preview: journal.cover,
         size: 0,
-        type: "",
+        type: '',
       },
-      keywords: keywordsArray(journal.keywords).map((keyword) => ({ id: uniqueId("key"), name: keyword })),
+      keywords: keywordsArray(journal.keywords).map((keyword) => ({ id: uniqueId('key'), name: keyword })),
       members: journal.journalOnMembers,
     },
   });
 
-  const { append: append_member } = useFieldArray({ control, name: "members" });
+  const { append: append_member } = useFieldArray({ control, name: 'members' });
 
   const onReorder = (newMembers: MembersDTO[]) => {
     setMembers(newMembers);
-    setValue("members", newMembers);
+    setValue('members', newMembers);
   };
 
   const { append: append_keyword, fields: keywords } = useFieldArray({
     control,
-    name: "keywords",
+    name: 'keywords',
   });
 
-  const [targetUrl, setTargetUrl] = React.useState("");
+  const [targetUrl, setTargetUrl] = React.useState('');
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      if (keywords_temp && keywords_temp.trim() !== "") {
+      if (keywords_temp && keywords_temp.trim() !== '') {
         e.preventDefault();
-        append_keyword({ id: uniqueId("key"), name: keywords_temp as string });
-        setKeywordsTemp("");
+        append_keyword({ id: uniqueId('key'), name: keywords_temp as string });
+        setKeywordsTemp('');
       } else {
-        setError("keywords", {
-          type: "manual",
-          message: "Keyword is required.",
+        setError('keywords', {
+          type: 'manual',
+          message: 'Keyword is required.',
         });
       }
     }
   };
 
-  const handleApproveJournal = async (status: "APPROVED" | "REJECTED") => {
+  const handleApproveJournal = async (status: 'APPROVED' | 'REJECTED') => {
     setLoading({
-      approve_journal: status === "APPROVED",
-      reject_journal: status === "REJECTED",
+      approve_journal: status === 'APPROVED',
+      reject_journal: status === 'REJECTED',
     });
     const response = await approveJournalByAdminService({
       journalId: journal.id,
@@ -139,7 +139,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
   };
 
   React.useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return;
     }
 
@@ -156,8 +156,8 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
     };
 
     const handleMutation: MutationCallback = (mutationsList, observer) => {
-      const anchorElements = document.querySelectorAll("a");
-      anchorElements.forEach((anchor) => anchor.addEventListener("click", handleAnchorClick));
+      const anchorElements = document.querySelectorAll('a');
+      anchorElements.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick));
     };
 
     const mutationObserver = new MutationObserver(handleMutation);
@@ -188,7 +188,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
         open={dialog.add_new_member || dialog.edit_member || dialog.members || dialog.warning_on_change_page}
       >
         <Dialog.Content
-          className={cn("md:px-16 md:py-14 pb-20", `${dialog.warning_on_change_page && "max-w-[564px] w-[564px]"}`)}
+          className={cn('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px] w-[564px]'}`)}
         >
           {dialog.add_new_member && (
             <AddNewMember
@@ -229,14 +229,14 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                 <Input.Input
                   placeholder="Title of the Journal"
                   className="pointer-events-none"
-                  {...register("name")}
+                  {...register('name')}
                   onInput={(e) => {
                     titleLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("name", value.currentTarget.value);
-                        trigger("name");
+                        setValue('name', value.currentTarget.value);
+                        trigger('name');
                       },
                     });
                   }}
@@ -251,14 +251,14 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                 <Input.Input
                   placeholder="Area of knowledge"
                   className="pointer-events-none"
-                  {...register("field")}
+                  {...register('field')}
                   onInput={(e) => {
                     fieldLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("field", value.currentTarget.value);
-                        trigger("field");
+                        setValue('field', value.currentTarget.value);
+                        trigger('field');
                       },
                     });
                   }}
@@ -321,10 +321,10 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                     placeholder="Select the origin of the journal"
                     onValueChange={(value) => {
                       const value_access = value as string;
-                      setValue("originatesFrom", value_access);
-                      trigger("originatesFrom");
+                      setValue('originatesFrom', value_access);
+                      trigger('originatesFrom');
                     }}
-                    value={watch("originatesFrom")}
+                    value={watch('originatesFrom')}
                   />
                 </div>
                 <Input.Error>{errors.field?.message}</Input.Error>
@@ -340,7 +340,7 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
             </Input.Label>
             <Input.TextArea
               disabled
-              {...register("rationale")}
+              {...register('rationale')}
               rows={4}
               placeholder="Provide a brief reason for creating a new journal"
               onInput={(e) => {
@@ -348,8 +348,8 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                   e: e,
                   limit: 1000,
                   onInput: (value) => {
-                    setValue("rationale", value.currentTarget.value);
-                    trigger("rationale");
+                    setValue('rationale', value.currentTarget.value);
+                    trigger('rationale');
                   },
                 });
               }}
@@ -360,13 +360,13 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
             <p className="text-sm font-semibold">Journal cover</p>
             <div
               className={cn(
-                "grid rounded-lg p-4 transition duration-300 ease-in-out items-center bg-[#F1FFFF] py-6 min-h-[140px]",
-                "h-44 w-full p-0"
+                'grid rounded-lg p-4 transition duration-300 ease-in-out items-center bg-[#F1FFFF] py-6 min-h-[140px]',
+                'h-44 w-full p-0'
               )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={getValues("cover")?.preview}
+                src={getValues('cover')?.preview}
                 alt="cover"
                 className="w-full h-44 object-cover rounded-md brightness-50"
                 loading="lazy"
@@ -375,30 +375,30 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
           </div>
           <div className="space-y-4">
             <h4 className="text-sm font-medium leading-none">
-              Articles in this Journal{" "}
+              Articles in this Journal{' '}
               <span className="text-xs text-neutral-light_gray">({journal.documents?.length || 0})</span>
             </h4>
-            <ScrollArea className={cn("h-72 w-full rounded-md border")}>
-              <div className={cn("p-4 space-y-4", journal.documents && journal.documents.length == 0 ? "h-72" : "")}>
+            <ScrollArea className={cn('h-72 w-full rounded-md border')}>
+              <div className={cn('p-4 space-y-4', journal.documents && journal.documents.length == 0 ? 'h-72' : '')}>
                 {journal.documents && journal.documents.length > 0 ? (
                   journal.documents.map((document) => (
                     <React.Fragment key={document.id}>
                       <ArticleItem
                         title={document.title}
-                        access_type={document.accessType === "PAID" ? "paid" : "open"}
+                        access_type={document.accessType === 'PAID' ? 'paid' : 'open'}
                         authors={
                           document.authorsOnDocuments?.map((item) => ({
-                            id: item.id || uniqueId("author"),
-                            name: item.author?.name || "",
+                            id: item.id || uniqueId('author'),
+                            name: item.author?.name || '',
                           })) || []
                         }
                         id={document.id}
                         className="border rounded-md"
-                        image={document.cover || ""}
+                        image={document.cover || ''}
                         likes={document.likes || 0}
                         published_date={document.createdAt as unknown as string}
                         tags={
-                          document.keywords.split(";")?.map((item) => ({ id: uniqueId("keyword"), name: item })) || []
+                          document.keywords.split(';')?.map((item) => ({ id: uniqueId('keyword'), name: item })) || []
                         }
                         views={document.views || 0}
                         document_type={document.documentType}
@@ -446,14 +446,14 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
           </div>
         </Box>
         <Box className="grid gap-4 h-fit py-6 px-8">
-          {session?.user?.userInfo.role === "ADMIN" && journalStatus !== "APPROVED" ? (
+          {session?.user?.userInfo.role === 'ADMIN' && journalStatus !== 'APPROVED' ? (
             <React.Fragment>
               <Button.Button
                 variant="primary"
                 className="flex items-center"
                 loading={loading.approve_journal}
                 disabled={loading.reject_journal}
-                onClick={() => handleApproveJournal("APPROVED")}
+                onClick={() => handleApproveJournal('APPROVED')}
               >
                 <Check className="w-5 h-5" />
                 Approve journal
@@ -463,21 +463,21 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
                 className="flex items-center"
                 loading={loading.reject_journal}
                 disabled={loading.approve_journal}
-                onClick={() => handleApproveJournal("REJECTED")}
+                onClick={() => handleApproveJournal('REJECTED')}
               >
                 <X className="w-5 h-5" />
                 Reject journal
               </Button.Button>
             </React.Fragment>
           ) : (
-            journalStatus === "PENDING" && (
+            journalStatus === 'PENDING' && (
               <h3 className="text-lg font-semibold text-status-pending flex justify-center">Awaiting admin approval</h3>
             )
           )}
-          {journalStatus === "REJECTED" && (
+          {journalStatus === 'REJECTED' && (
             <p className="text-lg text-center text-status-error font-semibold select-none">Journal rejected</p>
           )}
-          {journalStatus === "APPROVED" && (
+          {journalStatus === 'APPROVED' && (
             <p className="text-lg text-center text-status-green font-semibold select-none">Journal approved</p>
           )}
         </Box>
@@ -489,14 +489,14 @@ export default function JournalDetails({ params }: { params: { journal: JournalP
 const editors_in_chief = [
   {
     id: 1,
-    label: "Name",
+    label: 'Name',
   },
   {
     id: 1,
-    label: "Role",
+    label: 'Role',
   },
   {
     id: 1,
-    label: "E-mail",
+    label: 'E-mail',
   },
 ];

@@ -1,4 +1,4 @@
-import { UserProps } from "./user";
+import { UserProps } from './user';
 
 export type UserSession = {
   name?: string;
@@ -11,7 +11,7 @@ export type UserSession = {
   picture: string | null;
 };
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     user?: UserSession;
   }

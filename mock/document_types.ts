@@ -7,32 +7,32 @@ export type DocumentTypes = {
 export const document_types: DocumentTypes[] = [
   {
     id: 1,
-    label: "Manuscript",
-    value: "manuscript",
+    label: 'Manuscript',
+    value: 'manuscript',
   },
   {
     id: 2,
-    label: "Paper",
-    value: "paper",
+    label: 'Paper',
+    value: 'paper',
   },
   {
     id: 3,
-    label: "Report",
-    value: "report",
+    label: 'Report',
+    value: 'report',
   },
   {
     id: 4,
-    label: "Review",
-    value: "review",
+    label: 'Review',
+    value: 'review',
   },
   {
     id: 5,
-    label: "Conference abstract",
-    value: "conference_abstract",
+    label: 'Conference abstract',
+    value: 'conference_abstract',
   },
   {
     id: 6,
-    label: "Other",
-    value: "other",
+    label: 'Other',
+    value: 'other',
   },
 ];

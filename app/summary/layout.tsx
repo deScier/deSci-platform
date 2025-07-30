@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import "@styles/layout.css";
+import '@styles/layout.css';
 
-import { SidebarMobile } from "@/components/common/Sidebar/Mobile/Sidebar";
+import { SidebarMobile } from '@/components/common/Sidebar/Mobile/Sidebar';
 
-import Footer from "@/components/common/Footer/Footer";
-import Profile from "@/components/common/Sidebar/Profile/Profile";
-import Sidebar from "@/components/common/Sidebar/Sidebar";
-import React from "react";
+import Footer from '@/components/common/Footer/Footer';
+import Profile from '@/components/common/Sidebar/Profile/Profile';
+import Sidebar from '@/components/common/Sidebar/Sidebar';
+import React from 'react';
 
 export default function SummaryLayout({ children }: { children: React.ReactNode }) {
   return (

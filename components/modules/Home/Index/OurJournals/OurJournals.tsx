@@ -1,20 +1,20 @@
-import "@styles/home.css";
+import '@styles/home.css';
 
-import { home_routes } from "@/routes/home";
-import { PublicJournalsProps } from "@/services/journal/getJournals.service";
-import { formatName } from "@/utils/format_texts";
-import { keywordsArray } from "@/utils/keywords_format";
-import { EmblaOptionsType } from "embla-carousel";
-import { motion } from "framer-motion";
-import { uniqueId } from "lodash";
-import { useRouter } from "next/navigation";
-import { ChevronRight } from "react-bootstrap-icons";
-import { DotButton, useDotButton } from "./EmblaDotsButton";
+import { home_routes } from '@/routes/home';
+import { PublicJournalsProps } from '@/services/journal/getJournals.service';
+import { formatName } from '@/utils/format_texts';
+import { keywordsArray } from '@/utils/keywords_format';
+import { EmblaOptionsType } from 'embla-carousel';
+import { motion } from 'framer-motion';
+import { uniqueId } from 'lodash';
+import { useRouter } from 'next/navigation';
+import { ChevronRight } from 'react-bootstrap-icons';
+import { DotButton, useDotButton } from './EmblaDotsButton';
 
-import useDimension from "@/hooks/useWindowDimension";
-import useEmblaCarousel from "embla-carousel-react";
-import Image from "next/image";
-import React from "react";
+import useDimension from '@/hooks/useWindowDimension';
+import useEmblaCarousel from 'embla-carousel-react';
+import Image from 'next/image';
+import React from 'react';
 
 const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps) => {
   const { windowDimension } = useDimension();
@@ -26,7 +26,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
 
   const OPTIONS: EmblaOptionsType = {
     loop: true,
-    containScroll: "trimSnaps",
+    containScroll: 'trimSnaps',
   };
 
   const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
@@ -239,7 +239,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                       <motion.div
                         className="absolute bottom-0 left-0 z-10 h-1/2 w-full rounded-[25px] bg-[linear-gradient(180deg,_rgba(112,_70,_140,_0.00)_1.65%,_#1E1326_101.65%)] lg:max-w-[316px]"
                         initial={{ height: 0 }}
-                        animate={{ height: hovered_curator_id === journal.id_carroussel ? "120%" : 0 }}
+                        animate={{ height: hovered_curator_id === journal.id_carroussel ? '120%' : 0 }}
                         transition={{ duration: 0.25 }}
                       />
                       <Image
@@ -260,7 +260,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
             <DotButton
               key={index}
               onClick={() => onDotButtonClick(index)}
-              className={`dot-button ${selectedIndex === index ? "active" : ""}`}
+              className={`dot-button ${selectedIndex === index ? 'active' : ''}`}
             />
           ))}
         </div>
@@ -276,9 +276,9 @@ type AutoScrollPlugin = {
 };
 
 type OurJournalsProps = {
-  journals: PublicJournalsProps["journals"] | undefined;
+  journals: PublicJournalsProps['journals'] | undefined;
 };
 
-type JournalForCarousel = PublicJournalsProps["journals"][0] & { id_carroussel: string };
+type JournalForCarousel = PublicJournalsProps['journals'][0] & { id_carroussel: string };
 
 export { OurJournals };

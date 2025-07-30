@@ -1,7 +1,7 @@
-declare module "embla-carousel/react" {
+declare module 'embla-carousel/react' {
   interface EmblaEventType {
-    "autoScroll:play": () => void;
-    "autoScroll:stop": () => void;
+    'autoScroll:play': () => void;
+    'autoScroll:stop': () => void;
     reInit: () => void;
   }
 }

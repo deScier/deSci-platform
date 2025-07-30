@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
-import DocumentIllustration from "public/svgs/modules/under-review/under-review-illustration.svg";
-import React from "react";
-import { X } from "react-bootstrap-icons";
+import * as Button from '@components/common/Button/Button';
+import DocumentIllustration from 'public/svgs/modules/under-review/under-review-illustration.svg';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
 
 /**
  * @title DocumentFormatModal Component

@@ -10,7 +10,7 @@ interface ArticleCardProps {
   responsive?: boolean;
   publishedAt?: Date;
   documentType?: string;
-  accessType?: "open" | "paid";
+  accessType?: 'open' | 'paid';
   field?: string;
   with_dot?: boolean;
   link?: string;

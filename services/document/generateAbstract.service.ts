@@ -1,5 +1,5 @@
-import { getSession } from "next-auth/react";
-import { localUrlToFile } from "../file/file.service";
+import { getSession } from 'next-auth/react';
+import { localUrlToFile } from '../file/file.service';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,14 +17,14 @@ export const generateAbstractService = async (body: GenerateAbstractProps) => {
 
   const file = await localUrlToFile(body.fileLocalUrl, body.filename);
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append('file', file);
 
   const request = await fetch(`${API_URL}/documents/generate-abstract`, {
-    method: "POST",
+    method: 'POST',
     body: formData,
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
   });
 
@@ -35,13 +35,13 @@ export const generateAbstractService = async (body: GenerateAbstractProps) => {
   if (!responseStatus) {
     return {
       success: false,
-      message: responseData.message ?? "Error in generate abstract, try again.",
+      message: responseData.message ?? 'Error in generate abstract, try again.',
     };
   }
 
   return {
     success: true,
-    message: "Abstract generated successfully.",
+    message: 'Abstract generated successfully.',
     abstract: responseData.abstract,
   };
 };
@@ -50,12 +50,12 @@ export const generateChartAbstractService = async (data: GenerateChartProps) => 
   const session = await getSession();
 
   const request = await fetch(`${API_URL}/documents/generate-chart`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
-      "Access-Control-Allow-Origin": "*",
-      "content-type": "application/json",
+      'Access-Control-Allow-Origin': '*',
+      'content-type': 'application/json',
     },
   });
 
@@ -66,13 +66,13 @@ export const generateChartAbstractService = async (data: GenerateChartProps) => 
   if (!responseStatus) {
     return {
       success: false,
-      message: responseData.message ?? "Error in generate chart, try again.",
+      message: responseData.message ?? 'Error in generate chart, try again.',
     };
   }
 
   return {
     success: true,
-    message: "Chart generated successfully.",
+    message: 'Chart generated successfully.',
     chart: responseData.chart,
   };
 };

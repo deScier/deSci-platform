@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * @title useDimension Hook
@@ -13,7 +13,7 @@ const useDimension = () => {
 
   useEffect(() => {
     /** @dev Check if window object is available to avoid errors during server-side rendering */
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       /** @dev Set initial window dimension */
       setWindowDimension(window.innerWidth);
 
@@ -26,10 +26,10 @@ const useDimension = () => {
       };
 
       /** @dev Add resize event listener to window */
-      window.addEventListener("resize", handleResize);
+      window.addEventListener('resize', handleResize);
 
       /** @dev Clean up the event listener on component unmount */
-      return () => window.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 

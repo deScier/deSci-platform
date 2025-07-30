@@ -1,4 +1,4 @@
-import { DocumentBasicProps } from "@/services/document/getStatistics.service";
+import { DocumentBasicProps } from '@/services/document/getStatistics.service';
 
 type PublicationsProps = {
   publishedDocuments: DocumentBasicProps[];

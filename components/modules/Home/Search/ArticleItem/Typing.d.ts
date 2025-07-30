@@ -2,7 +2,7 @@ interface ArticleItemProps {
   className?: string;
   id: string;
   published_date: string;
-  access_type: "open" | "paid" | null;
+  access_type: 'open' | 'paid' | null;
   likes: number | null;
   views: number | null;
   image: string;

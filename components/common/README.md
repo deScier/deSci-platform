@@ -87,7 +87,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ icon, start = ic
 To use the `Input` component, import it as follows:
 
 ```jsx
-import * as Input from "@components/common/Input/Input";
+import * as Input from '@components/common/Input/Input';
 ```
 
 ### Usage
@@ -95,7 +95,7 @@ import * as Input from "@components/common/Input/Input";
 ```jsx
 <Input.Root>
   <Input.Label className="flex gap-2 items-center">Title</Input.Label>
-  <Input.Input placeholder="Title of the article" {...register("title")} />
+  <Input.Input placeholder="Title of the article" {...register('title')} />
   <Input.Error>{errors.title?.message}</Input.Error>
 </Input.Root>
 ```

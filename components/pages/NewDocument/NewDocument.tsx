@@ -1,47 +1,47 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import { Combobox } from "@/components/common/Combobox/Combobox";
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { AuthorsListDragabble } from "@/components/common/Lists/Authors/Authors";
-import { WarningOnChangePage } from "@/components/common/Warning/WarningOnChangePage";
-import { AddNewAuthor } from "@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import { cn } from "@/lib/utils";
-import { access_type_options } from "@/mock/access_type";
-import { article_types_submit_article } from "@/mock/articles_types";
-import { Author, authors_headers, authorship_headers } from "@/mock/submit_new_document";
-import { home_routes } from "@/routes/home";
-import { AuthorProps, CreateDocumentProps, CreateDocumentSchema } from "@/schemas/create_document";
-import { submitNewDocumentService } from "@/services/document/submit.service";
-import { uploadDocumentFileService } from "@/services/file/file.service";
-import { PublicJournalProps } from "@/services/journal/getJournals.service";
-import { ErrorMessage } from "@/utils/error_message";
-import { truncate } from "@/utils/truncate";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { uniqueId } from "lodash";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Clipboard, Pencil, PlusCircle, PlusCircleDotted, Trash, X } from "react-bootstrap-icons";
-import { CurrencyInput } from "react-currency-mask";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { twMerge } from "tailwind-merge";
+import { Combobox } from '@/components/common/Combobox/Combobox';
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
+import { WarningOnChangePage } from '@/components/common/Warning/WarningOnChangePage';
+import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import { cn } from '@/lib/utils';
+import { access_type_options } from '@/mock/access_type';
+import { article_types_submit_article } from '@/mock/articles_types';
+import { Author, authors_headers, authorship_headers } from '@/mock/submit_new_document';
+import { home_routes } from '@/routes/home';
+import { AuthorProps, CreateDocumentProps, CreateDocumentSchema } from '@/schemas/create_document';
+import { submitNewDocumentService } from '@/services/document/submit.service';
+import { uploadDocumentFileService } from '@/services/file/file.service';
+import { PublicJournalProps } from '@/services/journal/getJournals.service';
+import { ErrorMessage } from '@/utils/error_message';
+import { truncate } from '@/utils/truncate';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Clipboard, Pencil, PlusCircle, PlusCircleDotted, Trash, X } from 'react-bootstrap-icons';
+import { CurrencyInput } from 'react-currency-mask';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
-import Box from "@/components/common/Box/Box";
-import dynamic from "next/dynamic";
-import NProgress from "nprogress";
-import React from "react";
-import slug from "slug";
+import Box from '@/components/common/Box/Box';
+import dynamic from 'next/dynamic';
+import NProgress from 'nprogress';
+import React from 'react';
+import slug from 'slug';
 
-const Dropzone = dynamic(() => import("@/components/common/Dropzone/Dropzone"), { ssr: false });
+const Dropzone = dynamic(() => import('@/components/common/Dropzone/Dropzone'), { ssr: false });
 
 type SubmitNewPaperProps = {
   journals: PublicJournalProps[] | undefined;
@@ -61,15 +61,15 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
     edit_share_split: false,
     warning_on_change_page: false,
   });
-  const [access_type, setAccessType] = React.useState("open-access");
-  const [share, setShare] = React.useState("");
-  const [wallet, setWallet] = React.useState("");
+  const [access_type, setAccessType] = React.useState('open-access');
+  const [share, setShare] = React.useState('');
+  const [wallet, setWallet] = React.useState('');
   const [authors, setAuthors] = React.useState<Author[]>([]);
   const [edit_share_split, setEditShare] = React.useState<Author | null>();
   const [authorship_settings, setAuthorshipSettings] = React.useState<Author>();
   const [author_to_edit, setAuthorToEdit] = React.useState<Author | undefined>(undefined);
   const [keywords_temp, setKeywordsTemp] = React.useState<string | undefined>();
-  const [abstractChart, setAbstractChart] = React.useState<string>("");
+  const [abstractChart, setAbstractChart] = React.useState<string>('');
   const [documentType, setDocumentType] = React.useState<string | null>(null);
 
   /**
@@ -93,40 +93,40 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
   } = useForm<CreateDocumentProps>({
     resolver: zodResolver(CreateDocumentSchema),
     defaultValues: {
-      abstract: "",
-      abstractChart: "",
-      accessType: "FREE",
-      documentType: "",
-      field: "",
-      price: "",
-      journalId: "",
-      title: "",
+      abstract: '',
+      abstractChart: '',
+      accessType: 'FREE',
+      documentType: '',
+      field: '',
+      price: '',
+      journalId: '',
+      title: '',
       file: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
-        preview: "",
+        name: '',
+        path: '',
+        preview: '',
         size: 0,
-        type: "",
+        type: '',
       },
       cover: {
         lastModified: 0,
         lastModifiedDate: new Date(),
-        name: "",
-        path: "",
-        preview: "",
+        name: '',
+        path: '',
+        preview: '',
         size: 0,
-        type: "",
+        type: '',
       },
-      category: "",
+      category: '',
       authors: [],
       keywords: [],
     },
   });
 
   /** @dev Using `useFieldArray` to manage dynamic keyword fields */
-  const { append, remove, fields: keywords } = useFieldArray({ name: "keywords", control: control });
+  const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control });
 
   /**
    * @dev Function to handle reordering of authors
@@ -134,7 +134,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    */
   const onReorder = (newOrder: typeof authors) => {
     setAuthors(newOrder);
-    setValue("authors", newOrder);
+    setValue('authors', newOrder);
   };
 
   /**
@@ -145,11 +145,11 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
     setLoading(true);
     const requestData = {
       abstract: data.abstract,
-      accessType: access_type === "open-access" ? "FREE" : "PAID",
+      accessType: access_type === 'open-access' ? 'FREE' : 'PAID',
       documentType: data.documentType,
       field: data.field,
       journalId: data.journalId,
-      price: access_type === "open-access" ? 0 : Number(data.price),
+      price: access_type === 'open-access' ? 0 : Number(data.price),
       title: data.title,
       abstractChart: abstractChart,
       keywords: data.keywords.map((item) => item.name),
@@ -160,14 +160,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
       email: item.email,
       name: item.name,
       position: index + 1,
-      revenuePercent: access_type === "open-access" ? 0 : Number(item.share?.substring(0, item.share.length - 1)) || 0,
+      revenuePercent: access_type === 'open-access' ? 0 : Number(item.share?.substring(0, item.share.length - 1)) || 0,
       title: item.title,
-      walletAddress: item.wallet || "",
+      walletAddress: item.wallet || '',
     }));
 
     const response = await submitNewDocumentService({
       ...requestData,
-      abstract: data.abstract || "",
+      abstract: data.abstract || '',
       authors: documentAuthors,
     });
 
@@ -179,24 +179,24 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
 
     const uploadDocumentSuccess = await uploadDocumentFileService({
       documentId: response.documentId,
-      fileLocalUrl: watch("file").preview,
-      filename: watch("file").name,
-      mimetype: watch("file").type,
+      fileLocalUrl: watch('file').preview,
+      filename: watch('file').name,
+      mimetype: watch('file').type,
     });
 
     if (!uploadDocumentSuccess) {
-      toast.warning("There was an error uploading your file. But you can upload later.");
+      toast.warning('There was an error uploading your file. But you can upload later.');
     }
 
     const uploadCoverSuccess = await uploadDocumentFileService({
       documentId: response.documentId,
-      fileLocalUrl: watch("cover").preview,
-      filename: watch("cover").name,
-      mimetype: watch("cover").type,
+      fileLocalUrl: watch('cover').preview,
+      filename: watch('cover').name,
+      mimetype: watch('cover').type,
     });
 
     if (!uploadCoverSuccess) {
-      toast.warning("There was an error uploading your cover file. But you can upload later.");
+      toast.warning('There was an error uploading your cover file. But you can upload later.');
     }
 
     if (response.success) {
@@ -212,14 +212,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
    */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      if (keywords_temp && keywords_temp.trim() !== "") {
+      if (keywords_temp && keywords_temp.trim() !== '') {
         e.preventDefault();
-        append({ id: uniqueId("key"), name: keywords_temp as string });
-        setKeywordsTemp("");
+        append({ id: uniqueId('key'), name: keywords_temp as string });
+        setKeywordsTemp('');
       } else {
-        setError("keywords", {
-          type: "manual",
-          message: "Keyword is required.",
+        setError('keywords', {
+          type: 'manual',
+          message: 'Keyword is required.',
         });
       }
     }
@@ -234,15 +234,15 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
         id: session.user.userInfo.id,
         email: session?.user?.email,
         name: session?.user?.userInfo.name,
-        revenuePercent: "0",
-        title: session?.user?.userInfo.title || "",
-        walletAddress: session?.user?.userInfo.walletAddress || "",
+        revenuePercent: '0',
+        title: session?.user?.userInfo.title || '',
+        walletAddress: session?.user?.userInfo.walletAddress || '',
       };
       if (!authors.length) {
         setAuthors([author]);
       }
-      if (!getValues("authors").length) {
-        setValue("authors", [author]);
+      if (!getValues('authors').length) {
+        setValue('authors', [author]);
       }
     }
   }, [session?.user, authors, setValue, getValues]);
@@ -260,7 +260,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
       /**
        * @dev Convert the 'share' value from a string to a float and remove the '%' character.
        */
-      let shareValue = parseFloat(share.replace("%", ""));
+      let shareValue = parseFloat(share.replace('%', ''));
 
       /**
        * @dev Calculate the total share percentage of authors excluding the current one being edited.
@@ -270,7 +270,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
          * @dev Accumulate the share of each author, excluding the author being edited.
          */
         return author.id !== edit_share_split.id && author.share
-          ? acc + parseFloat(author.share.replace("%", ""))
+          ? acc + parseFloat(author.share.replace('%', ''))
           : acc;
       }, 0);
 
@@ -307,7 +307,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
       /**
        * @dev Log an error if the function is called without valid 'edit_share_split' and 'share' values.
        */
-      console.error("Share value cannot be more than 100%");
+      console.error('Share value cannot be more than 100%');
     }
 
     /**
@@ -321,10 +321,10 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
   const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters();
   const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters();
 
-  const [targetUrl, setTargetUrl] = React.useState("");
+  const [targetUrl, setTargetUrl] = React.useState('');
 
   React.useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return;
     }
 
@@ -341,8 +341,8 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
     };
 
     const handleMutation: MutationCallback = (mutationsList, observer) => {
-      const anchorElements = document.querySelectorAll("a");
-      anchorElements.forEach((anchor) => anchor.addEventListener("click", handleAnchorClick));
+      const anchorElements = document.querySelectorAll('a');
+      anchorElements.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick));
     };
 
     const mutationObserver = new MutationObserver(handleMutation);
@@ -366,21 +366,21 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
   };
 
   const addKeywords = () => {
-    if (keywords_temp && keywords_temp.trim() !== "") {
+    if (keywords_temp && keywords_temp.trim() !== '') {
       const newKeywords = keywords_temp
-        .split(",")
+        .split(',')
         .map((keyword) => keyword.trim())
-        .filter((keyword) => keyword !== "");
+        .filter((keyword) => keyword !== '');
       newKeywords.forEach((keyword) => {
         if (keywords.length < 5) {
-          append({ id: uniqueId("key"), name: keyword });
+          append({ id: uniqueId('key'), name: keyword });
         }
       });
-      setKeywordsTemp("");
+      setKeywordsTemp('');
     } else {
-      setError("keywords", {
-        type: "manual",
-        message: "Keyword is required.",
+      setError('keywords', {
+        type: 'manual',
+        message: 'Keyword is required.',
       });
     }
   };
@@ -401,14 +401,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the article"
-                  {...register("title")}
+                  {...register('title')}
                   onInput={(e) => {
                     titleLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("title", value.currentTarget.value);
-                        trigger("title");
+                        setValue('title', value.currentTarget.value);
+                        trigger('title');
                       },
                     });
                   }}
@@ -426,7 +426,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                   placeholder="Type keywords"
                   value={keywords_temp}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === ",") {
+                    if (e.key === 'Enter' || e.key === ',') {
                       e.preventDefault();
                       addKeywords();
                     }
@@ -472,14 +472,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the field"
-                  {...register("field")}
+                  {...register('field')}
                   onInput={(e) => {
                     fieldLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 300,
                       onInput: (value) => {
-                        setValue("field", value.currentTarget.value);
-                        trigger("field");
+                        setValue('field', value.currentTarget.value);
+                        trigger('field');
                       },
                     });
                   }}
@@ -496,24 +496,24 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                     setDocumentType(value);
 
                     const findLabelItem = article_types_submit_article.find(
-                      (item) => item.type === "label" && item.related?.includes(value)
+                      (item) => item.type === 'label' && item.related?.includes(value)
                     );
 
                     if (findLabelItem) {
                       const labelName = findLabelItem.label;
-                      setValue("category", slug(labelName, { lower: true, replacement: "-" }));
-                      trigger("category");
+                      setValue('category', slug(labelName, { lower: true, replacement: '-' }));
+                      trigger('category');
                     }
 
-                    setValue("documentType", value);
-                    trigger("documentType");
+                    setValue('documentType', value);
+                    trigger('documentType');
                   }}
                 >
                   <SelectTrigger
                     className={cn(
-                      "justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray",
+                      'justify-between border disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:placeholder:text-slate-400 outline-none false flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main border-t-0 border-l-0 border-r-0 h-[34px] text-base text-neutral-light_gray',
                       {
-                        "text-black": documentType,
+                        'text-black': documentType,
                       }
                     )}
                   >
@@ -527,13 +527,13 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                     <React.Fragment>
                       {article_types_submit_article.map((item, index) => (
                         <React.Fragment key={item.id}>
-                          {item.type === "label" && (
+                          {item.type === 'label' && (
                             <React.Fragment>
                               <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
                               <Separator />
                             </React.Fragment>
                           )}
-                          {item.type === "item" && (
+                          {item.type === 'item' && (
                             <SelectItem
                               value={item.value as string}
                               className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -555,7 +555,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                 not_found_message="No journals found"
                 placeholder="Select the journal for your submission"
                 search_placeholder="Search for a journal"
-                onValueChange={(value) => setValue("journalId", value.id as string)}
+                onValueChange={(value) => setValue('journalId', value.id as string)}
                 options={journals?.map((journal) => ({ label: journal.name, value: journal.id, id: journal.id })) || []}
               />
             </div>
@@ -566,16 +566,16 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
               placeholder="Upload document file (.docx)"
               thumbnail={false}
               setSelectedFile={(file) => {
-                setValue("file", file as StoredFile);
-                trigger("file");
-                clearErrors("file");
+                setValue('file', file as StoredFile);
+                trigger('file');
+                clearErrors('file');
               }}
             />
             <div className="flex w-full justify-center">
               <Input.Error>
                 {ErrorMessage({
                   error: errors.file?.name?.type,
-                  message: "File is required.",
+                  message: 'File is required.',
                 })}
               </Input.Error>
             </div>
@@ -588,7 +588,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
               <Tooltip.Information content="Abstract might change after revision, so don't worry too much." />
             </Input.Label>
             <Input.TextArea
-              {...register("abstract")}
+              {...register('abstract')}
               rows={4}
               placeholder="Type your abstract"
               onInput={(e) => {
@@ -596,8 +596,8 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                   e: e,
                   limit: 1000,
                   onInput: (value) => {
-                    setValue("abstract", value.currentTarget.value);
-                    trigger("abstract");
+                    setValue('abstract', value.currentTarget.value);
+                    trigger('abstract');
                   },
                 });
               }}
@@ -610,16 +610,16 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
               accept="images"
               placeholder="Upload cover picture (.png, .jpg)"
               setSelectedFile={(file) => {
-                setValue("cover", file as StoredFile);
-                trigger("cover");
-                clearErrors("cover");
+                setValue('cover', file as StoredFile);
+                trigger('cover');
+                clearErrors('cover');
               }}
             />
             <div className="flex justify-center w-full">
               <Input.Error>
                 {ErrorMessage({
                   error: errors.cover?.type,
-                  message: "Cover is required.",
+                  message: 'Cover is required.',
                 })}
               </Input.Error>
             </div>
@@ -658,7 +658,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                   onDelete={(item) => {
                     const new_list = authors.filter((author) => author.id !== item.id);
                     setAuthors(new_list);
-                    setValue("authors", new_list);
+                    setValue('authors', new_list);
                   }}
                   onEdit={(item) => {
                     setAuthorToEdit(item as AuthorProps);
@@ -690,47 +690,47 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
           <div className="grid gap-2">
             <h3 className="text-lg md:text-xl text-status-green font-semibold">Access type</h3>
             <p className="text-sm">
-              Decide if <span className="text-[#53AA22] font-semibold">Open Access</span> or{" "}
+              Decide if <span className="text-[#53AA22] font-semibold">Open Access</span> or{' '}
               <span className="text-[#AE66E6] font-semibold">Paid Access</span>.
             </p>
           </div>
           <div className="grid md:grid-cols-2 items-start gap-6">
             <Input.Root>
               <Input.Select
-                label={"Type of access"}
+                label={'Type of access'}
                 placeholder="Select if Open or Paid Acess"
                 onValueChange={(value) => {
-                  const value_access = value as unknown as CreateDocumentProps["accessType"];
+                  const value_access = value as unknown as CreateDocumentProps['accessType'];
 
-                  if (value_access === "FREE") {
+                  if (value_access === 'FREE') {
                     setAccessType(value);
                     setAuthorshipSettings(undefined);
-                    setAuthors(authors.map((author) => ({ ...author, share: "0%" })));
-                    setValue("price", "0");
+                    setAuthors(authors.map((author) => ({ ...author, share: '0%' })));
+                    setValue('price', '0');
                   } else {
                     setAccessType(value);
-                    setValue("price", "");
+                    setValue('price', '');
                   }
                 }}
                 value={access_type}
                 options={access_type_options}
               />
             </Input.Root>
-            {access_type == "open-access" && (
+            {access_type == 'open-access' && (
               <Input.Root>
                 <Input.Label className="text-neutral-gray text-sm font-semibold pl-2">Total value</Input.Label>
                 <Input.Input disabled placeholder="R$" />
               </Input.Root>
             )}
-            {access_type == "paid-access" && (
+            {access_type == 'paid-access' && (
               <React.Fragment>
                 <Input.Root>
                   <Input.Label className="text-sm font-semibold">Price</Input.Label>
                   <CurrencyInput
                     currency="USD"
                     onChangeValue={(event, originalValue, maskedValue) => {
-                      setValue("price", originalValue.toString());
-                      trigger("price");
+                      setValue('price', originalValue.toString());
+                      trigger('price');
                     }}
                     InputElement={<Input.Input placeholder="$10" />}
                   />
@@ -739,7 +739,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
               </React.Fragment>
             )}
           </div>
-          {access_type == "paid-access" && (
+          {access_type == 'paid-access' && (
             <React.Fragment>
               <div className="grid gap-2">
                 <p className="text-sm font-semibold">Authorship settings</p>
@@ -789,7 +789,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                             <div className="flex items-center gap-1">
                               <p className="text-sm md:hidden text-center text-black font-semibold">Wallet:</p>
                               <p className="text-sm md:text-base text-center text-black w-8">
-                                {truncate(author.wallet as string, 24, false) || "-"}
+                                {truncate(author.wallet as string, 24, false) || '-'}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
@@ -805,8 +805,8 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                                       id: author.id,
                                       name: author.name,
                                       title: author.title,
-                                      revenuePercent: "0",
-                                      walletAddress: author.wallet || "",
+                                      revenuePercent: '0',
+                                      walletAddress: author.wallet || '',
                                     };
 
                                     setAuthors(() => [...author_whitout_share, author_updated]);
@@ -835,7 +835,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                       <React.Fragment>
                         {(() => {
                           const totalShare = authors.reduce((acc, author) => {
-                            return acc + (author.share ? parseFloat(author.share.replace("%", "")) : 0);
+                            return acc + (author.share ? parseFloat(author.share.replace('%', '')) : 0);
                           }, 0);
 
                           return (
@@ -872,7 +872,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
         }
       >
         <Dialog.Content
-          className={twMerge("md:px-16 md:py-14 pb-20", `${dialog.warning_on_change_page && "max-w-[564px]"}`)}
+          className={twMerge('md:px-16 md:py-14 pb-20', `${dialog.warning_on_change_page && 'max-w-[564px]'}`)}
         >
           {dialog.author && (
             <AddNewAuthor
@@ -885,7 +885,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                   revenuePercent: value.revenuePercent,
                 };
                 setAuthors((prevItems) => [...prevItems, newAuthor]);
-                setValue("authors", [...authors, newAuthor]);
+                setValue('authors', [...authors, newAuthor]);
               }}
               onClose={() => setDialog({ ...dialog, author: false })}
             />
@@ -919,7 +919,7 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                     <Input.Root>
                       <Input.Label>Share</Input.Label>
                       <Input.Percentage
-                        defaultValue={edit_share_split?.share?.replace("%", "") || undefined}
+                        defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
                         placeholder="% of the revenue"
                         onValueChange={(value) => {
                           setShare(value as string);
@@ -939,14 +939,14 @@ export function NewDocument({ journals }: SubmitNewPaperProps) {
                     variant="primary"
                     onClick={() => {
                       if (!authorship_settings!.id) {
-                        console.error("Authorship settings does not have an ID!");
+                        console.error('Authorship settings does not have an ID!');
                         return;
                       }
 
                       const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id);
 
                       const updatedAuthors = [...authors];
-                      updatedAuthors[authorIndex].share = share.includes("%") ? share : share + "%";
+                      updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%';
                       updatedAuthors[authorIndex].wallet = wallet;
                       setAuthors(updatedAuthors);
 

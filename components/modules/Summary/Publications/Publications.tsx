@@ -1,10 +1,10 @@
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import { InReviewItem } from "@/components/common/Publication/Item/InReview";
-import { PublicationItem } from "@/components/common/Publication/Item/Published";
-import { DocumentBasicProps } from "@/services/document/getStatistics.service";
-import { addNumberSuffix } from "@/utils/format_number";
-import React from "react";
-import { PublicationsProps } from "./Typing";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import { InReviewItem } from '@/components/common/Publication/Item/InReview';
+import { PublicationItem } from '@/components/common/Publication/Item/Published';
+import { DocumentBasicProps } from '@/services/document/getStatistics.service';
+import { addNumberSuffix } from '@/utils/format_number';
+import React from 'react';
+import { PublicationsProps } from './Typing';
 
 /**
  * @title Publications Component
@@ -74,12 +74,12 @@ const Publications: React.FC<PublicationsProps> = ({ pendingDocuments, published
                     <React.Fragment key={item.id}>
                       <PublicationItem
                         key={item.id}
-                        date={new Date(item.createdAt).toLocaleDateString("pt-BR")}
-                        link={""}
+                        date={new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                        link={''}
                         likes={addNumberSuffix(item.likes)}
                         title={item.title}
                         views={addNumberSuffix(item.views)}
-                        image={item.cover || ""}
+                        image={item.cover || ''}
                       />
                       <hr className="divider-h" />
                     </React.Fragment>
@@ -114,12 +114,12 @@ const Publications: React.FC<PublicationsProps> = ({ pendingDocuments, published
                     <React.Fragment key={item.id}>
                       <InReviewItem
                         key={item.id}
-                        date={new Date(item.createdAt).toLocaleDateString("pt-BR")}
-                        link={""}
+                        date={new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                        link={''}
                         title={item.title}
-                        image={item.cover || ""}
-                        status_editor={item.editorsApprovals >= 1 ? "approved" : "pending"}
-                        status_reviewer={item.reviewerApprovals >= 1 ? "approved" : "pending"}
+                        image={item.cover || ''}
+                        status_editor={item.editorsApprovals >= 1 ? 'approved' : 'pending'}
+                        status_reviewer={item.reviewerApprovals >= 1 ? 'approved' : 'pending'}
                         ready_to_publish={item.editorsApprovals >= 1 && item.reviewerApprovals >= 1 ? true : false}
                       />
                       <hr className="divider-h" />

@@ -1,59 +1,59 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
-import * as Tooltip from "@components/common/Tooltip/Tooltip";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
+import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { File } from "@/components/common/File/File";
-import { SelectArticleType } from "@/components/common/Filters/SelectArticleType/SelectArticleType";
-import { YouAre, YouAreAuthor } from "@/components/common/Flags/Author/AuthorFlags";
-import { InviteLink } from "@/components/common/InviteLink/InviteLink";
-import { AuthorsListDragabble } from "@/components/common/Lists/Authors/Authors";
-import { EditorReviewList } from "@/components/common/Lists/EditorReview/EditorReview";
-import { AddNewAuthor } from "@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useGetApprovals } from "@/hooks/useGetApprovals";
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import { access_type_options } from "@/mock/access_type";
-import { header_editor_reviewer } from "@/mock/article_under_review";
-import { article_types_submit_article } from "@/mock/articles_types";
-import { Author, authors_headers, authors_mock, authorship_headers } from "@/mock/submit_new_document";
-import { home_routes } from "@/routes/home";
-import { AddCommentProps, addCommentSchema } from "@/schemas/comments";
-import { UpdateDocumentProps, UpdateDocumentSchema } from "@/schemas/update_document";
-import { downloadDocumentVersionService } from "@/services/document/download.service";
-import { finalSubmitDocumentService } from "@/services/document/finalSubmit.service";
-import { DocumentGetProps } from "@/services/document/getArticles";
-import { useArticles } from "@/services/document/getArticles.service";
-import { UpdateAuthor, updateDocumentService } from "@/services/document/update.service";
-import { uploadDocumentFileService } from "@/services/file/file.service";
-import { addCommentService } from "@/services/reviewer/addComment.service";
-import { ApproveStatus, approveCommentService } from "@/services/reviewer/approveComment.service";
-import { updateCommentService } from "@/services/reviewer/updateComment.service";
-import { ActionComments, comments_initial_state, reducer_comments } from "@/states/reducer_comments";
-import { extractFileName } from "@/utils/extract_file_name";
-import { keywordsArray } from "@/utils/keywords_format";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isEqual, uniqueId } from "lodash";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, FileEarmarkText, Pencil, PlusCircle, PlusCircleDotted, Trash, X } from "react-bootstrap-icons";
-import { CurrencyInput } from "react-currency-mask";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { twMerge } from "tailwind-merge";
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { File } from '@/components/common/File/File';
+import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType';
+import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFlags';
+import { InviteLink } from '@/components/common/InviteLink/InviteLink';
+import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
+import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview';
+import { AddNewAuthor } from '@/components/modules/Summary/NewArticle/AddNewAuthor/AddNewAuthor';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetApprovals } from '@/hooks/useGetApprovals';
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import { access_type_options } from '@/mock/access_type';
+import { header_editor_reviewer } from '@/mock/article_under_review';
+import { article_types_submit_article } from '@/mock/articles_types';
+import { Author, authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document';
+import { home_routes } from '@/routes/home';
+import { AddCommentProps, addCommentSchema } from '@/schemas/comments';
+import { UpdateDocumentProps, UpdateDocumentSchema } from '@/schemas/update_document';
+import { downloadDocumentVersionService } from '@/services/document/download.service';
+import { finalSubmitDocumentService } from '@/services/document/finalSubmit.service';
+import { DocumentGetProps } from '@/services/document/getArticles';
+import { useArticles } from '@/services/document/getArticles.service';
+import { UpdateAuthor, updateDocumentService } from '@/services/document/update.service';
+import { uploadDocumentFileService } from '@/services/file/file.service';
+import { addCommentService } from '@/services/reviewer/addComment.service';
+import { ApproveStatus, approveCommentService } from '@/services/reviewer/approveComment.service';
+import { updateCommentService } from '@/services/reviewer/updateComment.service';
+import { ActionComments, comments_initial_state, reducer_comments } from '@/states/reducer_comments';
+import { extractFileName } from '@/utils/extract_file_name';
+import { keywordsArray } from '@/utils/keywords_format';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { isEqual, uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, FileEarmarkText, Pencil, PlusCircle, PlusCircleDotted, Trash, X } from 'react-bootstrap-icons';
+import { CurrencyInput } from 'react-currency-mask';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
-import Box from "@/components/common/Box/Box";
-import CommentItem from "@/components/common/Comment/Comment";
-import DocumentApprovals from "@/components/common/DocumentApprovals/DocumentApprovals";
-import Dropzone from "@/components/common/Dropzone/Dropzone";
-import EditComment from "@/components/modules/deScier/Article/EditComment";
-import Reasoning from "@/components/modules/deScier/Article/Reasoning";
-import Link from "next/link";
-import React from "react";
+import Box from '@/components/common/Box/Box';
+import CommentItem from '@/components/common/Comment/Comment';
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
+import Dropzone from '@/components/common/Dropzone/Dropzone';
+import EditComment from '@/components/modules/deScier/Article/EditComment';
+import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import Link from 'next/link';
+import React from 'react';
 
 export default function ArticleInReviewPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -65,9 +65,9 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
   const [article, setArticle] = React.useState<DocumentGetProps | null>(null);
   const [items, setItems] = React.useState(authors_mock);
   const [authors, setAuthors] = React.useState<Author[]>([]);
-  const [access_type, setAccessType] = React.useState("open-access");
+  const [access_type, setAccessType] = React.useState('open-access');
   const [authorship_settings, setAuthorshipSettings] = React.useState<Author>();
-  const [mermaid_error, setMermaidError] = React.useState("" as string | null);
+  const [mermaid_error, setMermaidError] = React.useState('' as string | null);
   const [popover, setPopover] = React.useState({ copy_link: false });
   const [dialog, setDialog] = React.useState({
     author: false,
@@ -87,8 +87,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
   const [updateAuthors, setUpdateAuthors] = React.useState<UpdateAuthor[]>([]);
   const [removeAuthors, setRemoveAuthors] = React.useState<string[]>([]);
   const [edit_share_split, setEditShare] = React.useState<Author | null>();
-  const [share, setShare] = React.useState("");
-  const [wallet, setWallet] = React.useState("");
+  const [share, setShare] = React.useState('');
+  const [wallet, setWallet] = React.useState('');
 
   const {
     register,
@@ -102,17 +102,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
   } = useForm<UpdateDocumentProps>({
     resolver: zodResolver(UpdateDocumentSchema),
     defaultValues: {
-      abstract: "",
-      abstractChart: "",
-      accessType: "FREE",
-      documentType: "",
-      field: "",
-      price: "",
-      title: "",
+      abstract: '',
+      abstractChart: '',
+      accessType: 'FREE',
+      documentType: '',
+      field: '',
+      price: '',
+      title: '',
       file: [],
       authors: [],
       keywords: [],
-      category: "",
+      category: '',
       cover: {},
     },
   });
@@ -124,41 +124,41 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
   } = useForm<AddCommentProps>({
     resolver: zodResolver(addCommentSchema),
     values: {
-      comment: "",
-      documentId: article?.document?.id || "",
+      comment: '',
+      documentId: article?.document?.id || '',
     },
   });
 
   const { getApprovals, editorApprovals, reviewerApprovals } = useGetApprovals();
 
-  const { append, remove, fields: keywords } = useFieldArray({ name: "keywords", control: control });
+  const { append, remove, fields: keywords } = useFieldArray({ name: 'keywords', control: control });
 
   const fetchSingleArticle = async (documentId: string) => {
     await fetch_article(documentId).then((res) => {
       setArticle(res as DocumentGetProps);
-      const access = res?.document.accessType === "FREE" ? "open-access" : "paid-access";
+      const access = res?.document.accessType === 'FREE' ? 'open-access' : 'paid-access';
       setAccessType(access);
-      const keywords = res?.document.keywords?.split(";");
+      const keywords = res?.document.keywords?.split(';');
       if (keywords) {
         setValue(
-          "keywords",
-          keywords.map((item) => ({ id: uniqueId("keywords"), name: item }))
+          'keywords',
+          keywords.map((item) => ({ id: uniqueId('keywords'), name: item }))
         );
-        trigger("keywords");
+        trigger('keywords');
       }
 
       if (article?.document.documentVersions) {
         const documentFiles: StoredFile[] = article.document.documentVersions?.map((item) => ({
           lastModified: 0,
           lastModifiedDate: new Date(item.createdAt),
-          name: item.fileName || "",
+          name: item.fileName || '',
           path: item.link,
-          preview: "",
+          preview: '',
           size: 0,
-          type: item.fileName?.split(".")[1] || "",
+          type: item.fileName?.split('.')[1] || '',
         }));
-        setValue("file", documentFiles);
-        trigger("file");
+        setValue('file', documentFiles);
+        trigger('file');
       }
 
       getApprovals(res?.document.reviewersOnDocuments || []);
@@ -168,12 +168,12 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
           id: comment.id,
           comment_author: comment.user.name,
           comment_content: comment.comment,
-          reason: comment.authorComment || "",
-          status: comment.approvedByAuthor as "PENDING" | "APPROVED" | "REJECTED",
+          reason: comment.authorComment || '',
+          status: comment.approvedByAuthor as 'PENDING' | 'APPROVED' | 'REJECTED',
           user_id: comment.userId,
         }));
         dispatch({
-          type: "store_comments_from_api",
+          type: 'store_comments_from_api',
           payload: commentsPayload,
         } as ActionComments);
       }
@@ -185,7 +185,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
             id: item.id,
             name: item.author?.name!,
             title: item.author?.title!,
-            share: item.revenuePercent ? String(item.revenuePercent) : "",
+            share: item.revenuePercent ? String(item.revenuePercent) : '',
             wallet: item.author?.walletAddress,
           };
         });
@@ -204,14 +204,14 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
   React.useEffect(() => {
     if (article) {
-      setValue("title", article.document.title);
-      setValue("field", article.document.field);
-      setValue("abstract", article.document.abstract);
-      setValue("abstractChart", article.document.abstractChart ? article.document.abstractChart : undefined);
-      setValue("documentType", article.document.documentType);
-      setValue("price", String(article.document.price));
+      setValue('title', article.document.title);
+      setValue('field', article.document.field);
+      setValue('abstract', article.document.abstract);
+      setValue('abstractChart', article.document.abstractChart ? article.document.abstractChart : undefined);
+      setValue('documentType', article.document.documentType);
+      setValue('price', String(article.document.price));
       setValue(
-        "authors",
+        'authors',
         article?.document.authorsOnDocuments?.map((item) => ({
           email: item.authorEmail as string,
           id: item.id as string,
@@ -222,12 +222,12 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
         })) || []
       );
       setValue(
-        "keywords",
-        keywordsArray(article.document.keywords || "").map((item) => ({ id: uniqueId("keywords"), name: item }))
+        'keywords',
+        keywordsArray(article.document.keywords || '').map((item) => ({ id: uniqueId('keywords'), name: item }))
       );
-      setValue("accessType", article.document.accessType as "FREE" | "PAID");
+      setValue('accessType', article.document.accessType as 'FREE' | 'PAID');
       setValue(
-        "file",
+        'file',
         article?.document.documentVersions?.map((item) => ({
           name: item.fileName as string,
           lastModified: 0,
@@ -235,25 +235,25 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
           path: item.link,
           preview: item.link,
           size: 0,
-          type: item.fileName?.split(".")[1] || "",
+          type: item.fileName?.split('.')[1] || '',
         })) || []
       );
-      setValue("cover", {
-        name: extractFileName(article.document.cover as string) || "",
+      setValue('cover', {
+        name: extractFileName(article.document.cover as string) || '',
         lastModified: 0,
         lastModifiedDate: new Date(),
         path: article.document.cover as string,
         preview: article.document.cover as string,
         size: 0,
-        type: extractFileName(article.document.cover as string)?.split(".")[1] || "",
+        type: extractFileName(article.document.cover as string)?.split('.')[1] || '',
       });
-      setValue("category", article.document.category);
+      setValue('category', article.document.category);
     }
   }, [article, setValue]);
 
   const onReorder = (newOrder: typeof items) => {
     setAuthors(newOrder);
-    setValue("authors", newOrder);
+    setValue('authors', newOrder);
     const updateNewOrder: UpdateAuthor[] = newOrder.map((item, index) => ({
       id: item.id,
       name: item.name,
@@ -261,26 +261,26 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       position: index + 1,
       revenuePercent: item.share ? Number(item.share) : 0,
       title: item.title,
-      walletAddress: item.wallet || "",
+      walletAddress: item.wallet || '',
     }));
 
-    const removeNewAuthors = updateNewOrder.filter((item) => !item.id.includes("author"));
+    const removeNewAuthors = updateNewOrder.filter((item) => !item.id.includes('author'));
 
     setUpdateAuthors(removeNewAuthors);
   };
 
   const handleSubmitDocument = async () => {
     if (!article || !article.document) {
-      toast.error("Article not found.");
+      toast.error('Article not found.');
       return;
     }
 
     const documentFiles = article.document?.documentVersions || [];
     const lastDocumentVersion = documentFiles[0];
-    const isPdfFile = lastDocumentVersion?.fileName?.includes("pdf");
+    const isPdfFile = lastDocumentVersion?.fileName?.includes('pdf');
 
-    if ((!file || !file.name.includes("pdf")) && !isPdfFile) {
-      toast.error("Upload a pdf file to final submit.");
+    if ((!file || !file.name.includes('pdf')) && !isPdfFile) {
+      toast.error('Upload a pdf file to final submit.');
       return;
     }
 
@@ -294,7 +294,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       });
       if (!uploadFileResponse) {
         setSaveLoading(false);
-        toast.error("Error in upload file.");
+        toast.error('Error in upload file.');
         return;
       }
     }
@@ -315,7 +315,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
   const createNewAuthors = () => {
     const documentAuthors = article?.document.authorsOnDocuments || [];
-    const newAuthors = getValues("authors")
+    const newAuthors = getValues('authors')
       ?.map((item, index) => ({ ...item, position: index + 1, revenuePercent: Number(item.revenuePercent) || 0 }))
       .filter((item) => !documentAuthors.some((author) => author.authorEmail === item.email));
 
@@ -329,16 +329,16 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
     const updateResponse = await updateDocumentService({
       documentId: article.document.id!,
       document: {
-        abstract: getValues("abstract"),
-        title: getValues("title"),
-        abstractChart: getValues("abstractChart"),
-        accessType: access_type === "open-access" ? "FREE" : "PAID",
+        abstract: getValues('abstract'),
+        title: getValues('title'),
+        abstractChart: getValues('abstractChart'),
+        accessType: access_type === 'open-access' ? 'FREE' : 'PAID',
         authors: createNewAuthors(),
-        category: getValues("category"),
-        documentType: getValues("documentType"),
-        field: getValues("field"),
-        keywords: getValues("keywords")?.map((item) => item.name),
-        price: Number(getValues("price")) || 0,
+        category: getValues('category'),
+        documentType: getValues('documentType'),
+        field: getValues('field'),
+        keywords: getValues('keywords')?.map((item) => item.name),
+        price: Number(getValues('price')) || 0,
       },
       authorsToRemove: removeAuthors,
       updateAuthors: updateAuthors,
@@ -360,24 +360,24 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
       if (!response) {
         setSaveLoading(false);
-        toast.error("Error in upload file.");
+        toast.error('Error in upload file.');
         return;
       }
     }
-    if (getValues("cover")?.preview && getValues("cover")?.preview !== article?.document.cover) {
+    if (getValues('cover')?.preview && getValues('cover')?.preview !== article?.document.cover) {
       const uploadCoverSuccess = await uploadDocumentFileService({
         documentId: article?.document.id!,
-        fileLocalUrl: getValues("cover")?.preview!,
-        filename: getValues("cover")?.name!,
-        mimetype: getValues("cover")?.type!,
+        fileLocalUrl: getValues('cover')?.preview!,
+        filename: getValues('cover')?.name!,
+        mimetype: getValues('cover')?.type!,
       });
 
       if (!uploadCoverSuccess) {
-        toast.warning("There was an error uploading your cover file. But you can upload later.");
+        toast.warning('There was an error uploading your cover file. But you can upload later.');
       }
     }
 
-    toast.success("Document updated successfully");
+    toast.success('Document updated successfully');
     setDocumentSaved(true);
 
     setSaveLoading(false);
@@ -390,7 +390,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
     const response = await approveCommentService({
       approvedStatus: status,
       commentId: commentId,
-      answer: answer || "",
+      answer: answer || '',
     });
 
     if (!response.success) {
@@ -412,20 +412,20 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
     }
 
     const url = URL.createObjectURL(response.file!);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
 
-    toast.success("Download will start...");
+    toast.success('Download will start...');
   };
 
   React.useEffect(() => {
     setLoading(true);
     const isAuthor = () => {
-      const author_id = typeof data?.user?.userInfo?.id === "string" ? data.user.userInfo.id.trim() : "";
-      const document_author_id = typeof article?.document.userId === "string" ? article.document.userId.trim() : "";
+      const author_id = typeof data?.user?.userInfo?.id === 'string' ? data.user.userInfo.id.trim() : '';
+      const document_author_id = typeof article?.document.userId === 'string' ? article.document.userId.trim() : '';
 
       if (isEqual(author_id, document_author_id)) {
         setIsAuthor(true);
@@ -442,14 +442,14 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      if (keywords_temp && keywords_temp.trim() !== "") {
+      if (keywords_temp && keywords_temp.trim() !== '') {
         e.preventDefault();
-        append({ id: uniqueId("key"), name: keywords_temp as string });
-        setKeywordsTemp("");
+        append({ id: uniqueId('key'), name: keywords_temp as string });
+        setKeywordsTemp('');
       } else {
-        setError("keywords", {
-          type: "manual",
-          message: "Keyword is required.",
+        setError('keywords', {
+          type: 'manual',
+          message: 'Keyword is required.',
         });
       }
     }
@@ -462,7 +462,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
     const response = await addCommentService({
       documentId: article?.document.id as string,
-      comment: getValues_comment("comment"),
+      comment: getValues_comment('comment'),
     });
 
     setButtonLoading({
@@ -475,16 +475,16 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
     }
 
     dispatch({
-      type: "add_new_comment",
+      type: 'add_new_comment',
       payload: {
-        id: uniqueId(watch_comment("comment") + "_"),
+        id: uniqueId(watch_comment('comment') + '_'),
         comment_author: data?.user?.name,
-        comment_content: watch_comment("comment"),
-        status: "PENDING",
+        comment_content: watch_comment('comment'),
+        status: 'PENDING',
       },
     } as ActionComments);
 
-    setValue_comment("comment", "");
+    setValue_comment('comment', '');
 
     fetchSingleArticle(params.slug);
     router.refresh();
@@ -509,16 +509,16 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
     }
 
     dispatch({
-      type: "update_comment",
+      type: 'update_comment',
       payload: {
         id: commentId as string,
         comment_author: data?.user?.userInfo.name as string,
-        status: "PENDING" as "PENDING" | "APPROVED" | "REJECTED",
+        status: 'PENDING' as 'PENDING' | 'APPROVED' | 'REJECTED',
         comment_content: newComment,
       },
     } as ActionComments);
 
-    setValue_comment("comment", "");
+    setValue_comment('comment', '');
     router.refresh();
   };
 
@@ -526,15 +526,15 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
 
   const onSaveShareSettings = () => {
     if (edit_share_split && share) {
-      const shareValue = parseInt(share.replace("%", ""));
+      const shareValue = parseInt(share.replace('%', ''));
       setDialog({ ...dialog, share_split: false, edit_author: false });
       setEditShare(null);
     }
   };
 
-  const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch("field") || "");
-  const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch("title") || "");
-  const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch("abstract") || "");
+  const { characterLimit: fieldLimit, length: fieldLength } = useLimitCharacters(watch('field') || '');
+  const { characterLimit: titleLimit, length: titleLenght } = useLimitCharacters(watch('title') || '');
+  const { characterLimit: abstractLimit, length: abstractLenght } = useLimitCharacters(watch('abstract') || '');
 
   const [open_status, setOpenStatus] = React.useState(false);
 
@@ -543,7 +543,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       .writeText(textToCopy)
       .then(() => setOpenStatus(true))
       .catch((err) => {
-        console.error("Error copying text: ", err);
+        console.error('Error copying text: ', err);
       });
   };
   return (
@@ -577,7 +577,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                           role={
                             article?.document.reviewersOnDocuments?.find(
                               (item) => item.reviewerEmail === data?.user?.email
-                            )?.role as "editor" | "reviewer"
+                            )?.role as 'editor' | 'reviewer'
                           }
                         />
                       ) : null}
@@ -596,14 +596,14 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the article"
-                  {...register("title")}
+                  {...register('title')}
                   onInput={(e) => {
                     titleLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 100,
                       onInput: (value) => {
-                        setValue("title", value.currentTarget.value);
-                        trigger("title");
+                        setValue('title', value.currentTarget.value);
+                        trigger('title');
                       },
                     });
                   }}
@@ -630,8 +630,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         variant="outline"
                         className="px-2 py-0 border-neutral-light_gray hover:bg-neutral-light_gray hover:bg-opacity-10 flex items-center gap-1 rounded-sm"
                         onClick={() => {
-                          append({ id: uniqueId("key"), name: keywords_temp as string });
-                          setKeywordsTemp("");
+                          append({ id: uniqueId('key'), name: keywords_temp as string });
+                          setKeywordsTemp('');
                         }}
                       >
                         <PlusCircle className="w-3 fill-neutral-light_gray" />
@@ -665,14 +665,14 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                 </Input.Label>
                 <Input.Input
                   placeholder="Title of the field"
-                  {...register("field")}
+                  {...register('field')}
                   onInput={(e) => {
                     fieldLimit({
                       e: e as React.ChangeEvent<HTMLInputElement>,
                       limit: 300,
                       onInput: (value) => {
-                        setValue("field", value.currentTarget.value);
-                        trigger("field");
+                        setValue('field', value.currentTarget.value);
+                        trigger('field');
                       },
                     });
                   }}
@@ -686,11 +686,11 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                 <SelectArticleType
                   variant="input"
                   placeholder="Select the article type"
-                  selected={watch("documentType") as string}
+                  selected={watch('documentType') as string}
                   items={article_types_submit_article}
                   onValueChange={(value, name) => {
-                    (setValue("documentType", value), trigger("documentType"));
-                    (setValue("category", name as string), trigger("category"));
+                    (setValue('documentType', value), trigger('documentType'));
+                    (setValue('category', name as string), trigger('category'));
                   }}
                 />
               </Input.Root>
@@ -704,7 +704,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
               <Tooltip.Information content="Abstract might change after revision, so don't worry too much." />
             </Input.Label>
             <Input.TextArea
-              {...register("abstract")}
+              {...register('abstract')}
               rows={4}
               defaultValue={article?.document.abstract}
               placeholder="Type your abstract"
@@ -713,8 +713,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   e: e,
                   limit: 1000,
                   onInput: (value) => {
-                    setValue("abstract", value.currentTarget.value);
-                    trigger("abstract");
+                    setValue('abstract', value.currentTarget.value);
+                    trigger('abstract');
                   },
                 });
               }}
@@ -728,17 +728,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
               accept="images"
               placeholder="Upload cover picture (.png, .jpg)"
               setSelectedFile={(file) => {
-                setValue("cover", file as StoredFile);
-                trigger("cover");
+                setValue('cover', file as StoredFile);
+                trigger('cover');
               }}
               defaultCover={{
-                lastModified: getValues("cover")?.lastModified || 0,
-                lastModifiedDate: getValues("cover")?.lastModifiedDate || new Date(),
-                name: getValues("cover")?.name || "",
-                path: getValues("cover")?.path || "",
-                preview: getValues("cover")?.preview || "",
-                size: getValues("cover")?.size || 0,
-                type: getValues("cover")?.type || "",
+                lastModified: getValues('cover')?.lastModified || 0,
+                lastModifiedDate: getValues('cover')?.lastModifiedDate || new Date(),
+                name: getValues('cover')?.name || '',
+                path: getValues('cover')?.path || '',
+                preview: getValues('cover')?.preview || '',
+                size: getValues('cover')?.size || 0,
+                type: getValues('cover')?.type || '',
               }}
             />
           </div>
@@ -759,12 +759,12 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     article?.document?.documentVersions?.map((file) => (
                       <File
                         key={file.id}
-                        file_name={file.fileName || "file.docx"}
+                        file_name={file.fileName || 'file.docx'}
                         onDownload={() => {
                           handleDownloadDocument(file.id, file.fileName!);
                         }}
-                        uploaded_at={new Date(file.createdAt)?.toLocaleDateString("pt-BR")}
-                        uploaded_by={data?.user?.userInfo.name || ""}
+                        uploaded_at={new Date(file.createdAt)?.toLocaleDateString('pt-BR')}
+                        uploaded_by={data?.user?.userInfo.name || ''}
                       />
                     ))
                   ) : (
@@ -790,7 +790,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   onClick={() => {
                     if (article.document.nftHash) {
                       handleCopy(article?.document.nftHash);
-                      toast.success("NFT hash copied to clipboard!");
+                      toast.success('NFT hash copied to clipboard!');
                     }
                   }}
                 >
@@ -827,7 +827,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
           <div className="grid gap-6">
             <div className="border rounded-md p-4">
               <ScrollArea
-                className={twMerge("h-[342px]", `${state.comments && state.comments.length == 0 && "h-full"}`)}
+                className={twMerge('h-[342px]', `${state.comments && state.comments.length == 0 && 'h-full'}`)}
               >
                 <div className="grid gap-4 h-full">
                   {state.comments && state.comments.length > 0 ? (
@@ -836,28 +836,28 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         <CommentItem
                           comment_author={comment.comment_author}
                           comment_content={comment.comment_content}
-                          status={comment.status as "PENDING" | "APPROVED" | "REJECTED"}
+                          status={comment.status as 'PENDING' | 'APPROVED' | 'REJECTED'}
                           onApprove={() => {
-                            handleApproveDocument("APPROVED", comment.id as string);
+                            handleApproveDocument('APPROVED', comment.id as string);
                             dispatch({
-                              type: "approve_comment",
+                              type: 'approve_comment',
                               payload: {
                                 id: comment.id,
                                 comment_content: comment.comment_content,
                                 comment_author: comment.comment_author,
-                                status: "APPROVED",
+                                status: 'APPROVED',
                               },
                             } as ActionComments);
                           }}
                           onReject={() => {
                             dispatch({
-                              type: "comment_to_edit",
+                              type: 'comment_to_edit',
                               payload: {
                                 id: comment.id,
                                 comment_author: comment.comment_author,
                                 comment_content: comment.comment_content,
                                 reason: comment.reason,
-                                status: "PENDING",
+                                status: 'PENDING',
                               },
                             } as ActionComments);
                             setDialog({
@@ -868,13 +868,13 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                           user_id={comment.user_id}
                           onSeeReasoning={() => {
                             dispatch({
-                              type: "comment_to_edit",
+                              type: 'comment_to_edit',
                               payload: {
                                 id: comment.id,
                                 comment_author: comment.comment_author,
                                 comment_content: comment.comment_content,
                                 reason: comment.reason,
-                                status: "REJECTED",
+                                status: 'REJECTED',
                               },
                             } as ActionComments);
                             setDialog({ ...dialog, reasoning: true });
@@ -938,9 +938,9 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   onDelete={(item) => {
                     const new_list = authors.filter((author) => author.id !== item.id);
                     setAuthors(new_list);
-                    setValue("authors", new_list);
+                    setValue('authors', new_list);
                     const authorToRemove = authors.find((author) => author.id === item.id);
-                    if (!authorToRemove?.id.includes("author") && authorToRemove) {
+                    if (!authorToRemove?.id.includes('author') && authorToRemove) {
                       setRemoveAuthors((prev) => [...prev, authorToRemove.id]);
                     }
                   }}
@@ -988,27 +988,27 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
           <div className="grid gap-2">
             <h3 className="text-lg md:text-xl text-status-green font-semibold">Authorship</h3>
             <p className="text-sm">
-              Decide if the project is <span className="text-[#53AA22] font-semibold">Open Access</span> or{" "}
+              Decide if the project is <span className="text-[#53AA22] font-semibold">Open Access</span> or{' '}
               <span className="text-[#AE66E6] font-semibold">Paid Access</span>
             </p>
           </div>
           <div className="grid md:grid-cols-2 items-start gap-6">
             <Input.Root>
               <Input.Select
-                label={"Type of access"}
+                label={'Type of access'}
                 placeholder="Select the type of access"
                 onValueChange={(value) => setAccessType(value)}
                 value={access_type}
                 options={access_type_options}
               />
             </Input.Root>
-            {access_type == "open-access" && (
+            {access_type == 'open-access' && (
               <Input.Root>
                 <Input.Label className="text-neutral-gray text-sm font-semibold pl-2">Price</Input.Label>
                 <Input.Input disabled placeholder="R$" />
               </Input.Root>
             )}
-            {access_type == "paid-access" && (
+            {access_type == 'paid-access' && (
               <React.Fragment>
                 <Input.Root>
                   <Input.Label>Price</Input.Label>
@@ -1016,8 +1016,8 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     currency="USD"
                     defaultValue={article?.document.price}
                     onChangeValue={(event, originalValue, maskedValue) => {
-                      setValue("price", originalValue.toString());
-                      trigger("price");
+                      setValue('price', originalValue.toString());
+                      trigger('price');
                     }}
                     InputElement={<Input.Input placeholder="USD" />}
                   />
@@ -1025,7 +1025,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
               </React.Fragment>
             )}
           </div>
-          {access_type == "paid-access" && (
+          {access_type == 'paid-access' && (
             <React.Fragment>
               <div className="grid gap-2">
                 <p className="text-sm font-semibold">Authorship settings</p>
@@ -1051,7 +1051,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                             {author.share ? (
                               <div className="flex gap-2 px-4 py-1 border rounded-md border-terciary-main w-fit">
                                 <p className="text-sm text-center text-terciary-main w-8">
-                                  {author.share.includes("%") ? author.share : author.share + "%"}
+                                  {author.share.includes('%') ? author.share : author.share + '%'}
                                 </p>
                                 <p className="text-sm text-terciary-main">Authorship</p>
                               </div>
@@ -1072,7 +1072,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                             )}
                           </div>
                           <div className="w-full flex items-center justify-between">
-                            <p className="text-base text-center text-black w-8">{author.wallet || "-"}</p>
+                            <p className="text-base text-center text-black w-8">{author.wallet || '-'}</p>
                             <div className="flex items-center gap-2">
                               <Trash
                                 size={20}
@@ -1084,19 +1084,19 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                                     email: author.email,
                                     name: author.name,
                                     title: author.title,
-                                    share: "0",
-                                    wallet: author.wallet || "",
+                                    share: '0',
+                                    wallet: author.wallet || '',
                                   };
 
                                   setAuthors((prevItems) => [...author_whitout_share, author_updated]);
-                                  if (!author.id.includes("author")) {
+                                  if (!author.id.includes('author')) {
                                     const author_updated: UpdateAuthor = {
                                       id: author.id,
                                       email: author.email,
                                       name: author.name,
                                       title: author.title,
                                       revenuePercent: 0,
-                                      walletAddress: author.wallet || "",
+                                      walletAddress: author.wallet || '',
                                     };
                                     const authorIndex = updateAuthors.findIndex(
                                       (item) => item.id === author_updated.id
@@ -1131,7 +1131,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         <React.Fragment>
                           {(() => {
                             const totalShare = authors.reduce((acc, author) => {
-                              return acc + (author.share ? parseFloat(author.share.replace("%", "")) : 0);
+                              return acc + (author.share ? parseFloat(author.share.replace('%', '')) : 0);
                             }, 0);
 
                             return (
@@ -1161,7 +1161,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
             reviewers and editors.
           </p>
           <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
-          {["PENDING", "APPROVED"].includes(article?.document.status!) && (
+          {['PENDING', 'APPROVED'].includes(article?.document.status!) && (
             <React.Fragment>
               <Button.Button
                 variant="primary"
@@ -1182,7 +1182,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
               </Button.Button>
             </React.Fragment>
           )}
-          {article?.document.status === "ADMIN_APPROVE" && (
+          {article?.document.status === 'ADMIN_APPROVE' && (
             <Button.Button
               variant="disabled"
               className="flex items-center bg-status-disable_bg text-status-disable_text"
@@ -1194,7 +1194,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
             </Button.Button>
           )}
 
-          {article?.document.status === "SUBMITTED" && (
+          {article?.document.status === 'SUBMITTED' && (
             <Button.Button
               variant="disabled"
               className="flex items-center bg-status-disable_bg text-status-disable_text"
@@ -1206,7 +1206,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
             </Button.Button>
           )}
 
-          {article?.document.status === "REJECTED" && (
+          {article?.document.status === 'REJECTED' && (
             <Button.Button
               variant="disabled"
               className="flex items-center bg-status-disable_bg text-status-disable_text"
@@ -1226,23 +1226,23 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
       <Dialog.Root
         open={dialog.reasoning || dialog.edit_comment || dialog.author || dialog.edit_author || dialog.share_split}
       >
-        <Dialog.Content className={twMerge("md:px-16 md:py-14 pb-20")}>
+        <Dialog.Content className={twMerge('md:px-16 md:py-14 pb-20')}>
           {dialog.reasoning && (
             <Reasoning
-              message={state.comment_to_edit?.reason || ""}
+              message={state.comment_to_edit?.reason || ''}
               documentAuthor={data?.user?.userInfo.name}
               onClose={() => setDialog({ ...dialog, reasoning: false })}
               onConfirm={(value) => {
-                handleApproveDocument("REJECTED", state.comment_to_edit?.id!, value);
+                handleApproveDocument('REJECTED', state.comment_to_edit?.id!, value);
                 dispatch({
-                  type: "reject_comment",
+                  type: 'reject_comment',
                   payload: {
                     id: state.comment_to_edit?.id,
                     commentId: state.comment_to_edit?.id,
                     comment_content: state.comment_to_edit?.comment_content,
                     comment_author: state.comment_to_edit?.comment_author,
                     reason: value,
-                    status: "REJECTED",
+                    status: 'REJECTED',
                     user_id: state.comment_to_edit?.user_id,
                   },
                 } as ActionComments);
@@ -1257,7 +1257,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                 handleEditComment(state.comment_to_edit?.id!, value);
 
                 setDialog({ ...dialog, edit_comment: false });
-                dispatch({ type: "comment_to_edit", payload: null });
+                dispatch({ type: 'comment_to_edit', payload: null });
               }}
               onClose={() => setDialog({ ...dialog, edit_comment: false })}
             />
@@ -1271,7 +1271,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item
                   );
                 });
-                if (!updatedAuthor.id.includes("author")) {
+                if (!updatedAuthor.id.includes('author')) {
                   const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id);
                   if (authorIndex > 0) {
                     updateAuthors[authorIndex].revenuePercent = Number(share) || 0;
@@ -1283,7 +1283,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                       {
                         ...updatedAuthor,
                         position: authorIndex + 1,
-                        revenuePercent: Number(updatedAuthor.revenuePercent || "0"),
+                        revenuePercent: Number(updatedAuthor.revenuePercent || '0'),
                       },
                     ]);
                   }
@@ -1303,7 +1303,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   revenuePercent: value.revenuePercent,
                 };
                 setAuthors((prevItems) => [...prevItems, newAuthor]);
-                setValue("authors", [...authors, newAuthor]);
+                setValue('authors', [...authors, newAuthor]);
                 /// Update authorsOnDocuments
                 /// fetchSingleArticle(parms.slug)
               }}
@@ -1319,7 +1319,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     item.id === author_to_edit?.id ? { ...item, ...updatedAuthor } : item
                   );
                 });
-                if (!updatedAuthor.id.includes("author")) {
+                if (!updatedAuthor.id.includes('author')) {
                   const authorIndex = updateAuthors.findIndex((item) => item.id === updatedAuthor.id);
                   if (authorIndex > 0) {
                     updateAuthors[authorIndex].revenuePercent = Number(share) || 0;
@@ -1327,7 +1327,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                   } else {
                     setUpdateAuthors((prev) => [
                       ...prev,
-                      { ...updatedAuthor, revenuePercent: Number(updatedAuthor.revenuePercent || "0") },
+                      { ...updatedAuthor, revenuePercent: Number(updatedAuthor.revenuePercent || '0') },
                     ]);
                   }
                 }
@@ -1344,7 +1344,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     <Input.Root>
                       <Input.Label>Share</Input.Label>
                       <Input.Percentage
-                        defaultValue={edit_share_split?.share?.replace("%", "") || undefined}
+                        defaultValue={edit_share_split?.share?.replace('%', '') || undefined}
                         placeholder="% of the revenue"
                         onValueChange={(value) => {
                           setShare(value as string);
@@ -1364,7 +1364,7 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                     variant="primary"
                     onClick={() => {
                       if (!authorship_settings?.id) {
-                        console.error("Authorship settings does not have an ID!");
+                        console.error('Authorship settings does not have an ID!');
                         return;
                       }
 
@@ -1375,17 +1375,17 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                         title: authorship_settings!.title,
                         email: authorship_settings!.email,
                         wallet: authorship_settings!.wallet,
-                        share: share.includes("%") ? share : share + "%",
+                        share: share.includes('%') ? share : share + '%',
                       };
 
                       const authorIndex = authors.findIndex((author) => author.id === authorship_settings!.id);
 
                       const updatedAuthors = [...authors];
-                      updatedAuthors[authorIndex].share = share.includes("%") ? share : share + "%";
+                      updatedAuthors[authorIndex].share = share.includes('%') ? share : share + '%';
                       updatedAuthors[authorIndex].wallet = wallet;
                       setAuthors(updatedAuthors);
 
-                      if (!updatedAuthor.id.includes("author")) {
+                      if (!updatedAuthor.id.includes('author')) {
                         const authorIndex = updateAuthors.findIndex((item) => item.email === updatedAuthor.email);
 
                         if (authorIndex >= 0) {
@@ -1409,11 +1409,11 @@ export default function ArticleInReviewPage({ params }: { params: { slug: string
                           name: item.name,
                           title: item.title,
                           revenuePercent: share,
-                          walletAddress: item.wallet || "",
+                          walletAddress: item.wallet || '',
                         }));
 
-                        setValue("authors", newAuthorsUpdate);
-                        trigger("authors");
+                        setValue('authors', newAuthorsUpdate);
+                        trigger('authors');
                       }
 
                       onSaveShareSettings();

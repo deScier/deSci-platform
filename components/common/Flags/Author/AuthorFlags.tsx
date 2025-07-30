@@ -1,7 +1,7 @@
-import { YouAreProps } from "@components/common/Flags/Author/Typing";
-import { CardText, Person } from "react-bootstrap-icons";
+import { YouAreProps } from '@components/common/Flags/Author/Typing';
+import { CardText, Person } from 'react-bootstrap-icons';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title YouAreAuthor Component

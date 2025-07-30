@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const approveByAdminService = async (data: DocumentApproveStatusProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/approve-document`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -13,7 +13,7 @@ export const approveByAdminService = async (data: DocumentApproveStatusProps) =>
 
   const responseData = await response.json();
 
-  const status = data.approve ? "approved" : "rejected";
+  const status = data.approve ? 'approved' : 'rejected';
 
   if (response.status === 200) {
     return {

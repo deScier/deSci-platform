@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const recoveryPasswordRequestService = async (email: string) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/recovery-password`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       email,
@@ -14,12 +14,12 @@ export const recoveryPasswordRequestService = async (email: string) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "Recovery request successfully",
+      message: 'Recovery request successfully',
     };
   }
 
   const responseData = await response.json();
-  const message = responseData.message ?? "Error in recovery password.";
+  const message = responseData.message ?? 'Error in recovery password.';
 
   return {
     success: false,
@@ -32,9 +32,9 @@ export const validateRecoveryPasswordRequesService = async ({
   confirmationCode,
 }: ValidateRecoveryPasswordProps) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/validate-code`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       email,
@@ -45,12 +45,12 @@ export const validateRecoveryPasswordRequesService = async ({
   if (response.status === 200) {
     return {
       success: true,
-      message: "Recovery request successfully",
+      message: 'Recovery request successfully',
     };
   }
 
   const responseData = await response.json();
-  const message = responseData.message ?? "Error in recovery password.";
+  const message = responseData.message ?? 'Error in recovery password.';
 
   return {
     success: false,
@@ -66,9 +66,9 @@ export const confirmRecoveryPasswordRequestService = async (data: ConfirmRecover
     };
   }
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/reset-password`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify(data),
   });
@@ -76,12 +76,12 @@ export const confirmRecoveryPasswordRequestService = async (data: ConfirmRecover
   if (response.status === 200) {
     return {
       success: true,
-      message: "Password reset successful",
+      message: 'Password reset successful',
     };
   }
 
   const responseData = await response.json();
-  const message = responseData.message ?? "Password reset failed.";
+  const message = responseData.message ?? 'Password reset failed.';
 
   return {
     success: false,
@@ -106,12 +106,12 @@ export const ConfirmRecoveryPasswordSchema = z
     newPassword: z.string(),
     email: z
       .string()
-      .email("Invalid email.")
-      .min(5, "If this e-mail is already registered, you will recieve a message in your inbox."),
-    confirmationCode: z.string().min(7, "Confirmation code must be at least 5 characters."),
-    confirmPassword: z.string().min(8, "Password must be at lea st 8 characters."),
+      .email('Invalid email.')
+      .min(5, 'If this e-mail is already registered, you will recieve a message in your inbox.'),
+    confirmationCode: z.string().min(7, 'Confirmation code must be at least 5 characters.'),
+    confirmPassword: z.string().min(8, 'Password must be at lea st 8 characters.'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match.",
-    path: ["confirmPassword"],
+    path: ['confirmPassword'],
   });

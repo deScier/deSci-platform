@@ -4,23 +4,23 @@ import {
   confirmRecoveryPasswordRequestService,
   recoveryPasswordRequestService,
   validateRecoveryPasswordRequesService,
-} from "@/services/user/forgotPassword.service";
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import "@styles/login.css";
-import React from "react";
-import { ArrowLeft, X } from "react-bootstrap-icons";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import GenericSuccess from "../Profile/Modals/Success";
+} from '@/services/user/forgotPassword.service';
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import '@styles/login.css';
+import React from 'react';
+import { ArrowLeft, X } from 'react-bootstrap-icons';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import GenericSuccess from '../Profile/Modals/Success';
 import {
   ForgotPasswordModalProps,
   HeaderProps,
   InsertCodeProps,
   InsertEmailProps,
   InsertNewPasswordProps,
-} from "./Typing";
+} from './Typing';
 
 /**
  * @title ForgotPasswordModal Component
@@ -42,10 +42,10 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ onBack, onClo
   } = useForm<ConfirmRecoveryPasswordProps>({
     resolver: zodResolver(ConfirmRecoveryPasswordSchema),
     defaultValues: {
-      confirmationCode: "",
-      email: "",
-      newPassword: "",
-      confirmPassword: "",
+      confirmationCode: '',
+      email: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   });
 
@@ -59,11 +59,11 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ onBack, onClo
 
   /** @dev Handles email submission and requests a recovery password code */
   const handleInsertEmailContinue = async () => {
-    await trigger("email");
+    await trigger('email');
 
     if (!errors.email && isDirty === true) {
-      const toastId = toast.loading("Requesting recovery password code...");
-      const response = await recoveryPasswordRequestService(getValues("email"));
+      const toastId = toast.loading('Requesting recovery password code...');
+      const response = await recoveryPasswordRequestService(getValues('email'));
       toast.dismiss(toastId);
       if (!response.success) {
         toast.error(response.message);
@@ -80,13 +80,13 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ onBack, onClo
 
   /** @dev Handles the confirmation code submission and validates it */
   const handleInsertCodeContinue = async () => {
-    await trigger("confirmationCode");
+    await trigger('confirmationCode');
 
     if (!errors.confirmationCode && isDirty === true) {
-      const toastId = toast.loading("Validating code...");
+      const toastId = toast.loading('Validating code...');
       const response = await validateRecoveryPasswordRequesService({
-        email: getValues("email"),
-        confirmationCode: getValues("confirmationCode"),
+        email: getValues('email'),
+        confirmationCode: getValues('confirmationCode'),
       });
       toast.dismiss(toastId);
       if (!response.success) {
@@ -114,16 +114,16 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ onBack, onClo
 
   /** @dev Handles the new password submission and completes the recovery process */
   const handleInsertNewPasswordContinue = async () => {
-    await trigger("newPassword");
-    await trigger("confirmPassword");
+    await trigger('newPassword');
+    await trigger('confirmPassword');
 
     if (!errors.newPassword && !errors.confirmPassword && isDirty === true) {
-      const toastId = toast.loading("Resetting password...");
+      const toastId = toast.loading('Resetting password...');
       const response = await confirmRecoveryPasswordRequestService({
-        email: getValues("email"),
-        confirmationCode: getValues("confirmationCode"),
-        newPassword: getValues("newPassword"),
-        confirmPassword: getValues("confirmPassword"),
+        email: getValues('email'),
+        confirmationCode: getValues('confirmationCode'),
+        newPassword: getValues('newPassword'),
+        confirmPassword: getValues('confirmPassword'),
       });
       toast.dismiss(toastId);
       if (!response.success) {
@@ -214,7 +214,7 @@ const InserEmail: React.FC<InsertEmailProps> = ({
           <div className="grid gap-6">
             <Input.Root>
               <Input.Label>E-mail</Input.Label>
-              <Input.Input type="email" placeholder="Type your best email" {...register("email")} />
+              <Input.Input type="email" placeholder="Type your best email" {...register('email')} />
               <Input.Error>{errors.email?.message}</Input.Error>
             </Input.Root>
           </div>
@@ -239,7 +239,7 @@ const InsertCode: React.FC<InsertCodeProps> = ({
         <Header onBack={onBack} onClose={onClose} />
         <div className="grid gap-6">
           <p className="text-base">
-            We’ve sent you a confirmation code in your email. Didn’t receive the e-mail?{" "}
+            We’ve sent you a confirmation code in your email. Didn’t receive the e-mail?{' '}
             <span
               className="font-semibold text-terciary-main hover:cursor-pointer hover:underline"
               onClick={resendCode}
@@ -250,7 +250,7 @@ const InsertCode: React.FC<InsertCodeProps> = ({
           <div className="grid gap-6">
             <Input.Root>
               <Input.Label>Code</Input.Label>
-              <Input.Input placeholder="Insert the confirmation code" {...register("confirmationCode")} />
+              <Input.Input placeholder="Insert the confirmation code" {...register('confirmationCode')} />
               <Input.Error>{errors.confirmationCode?.message}</Input.Error>
             </Input.Root>
           </div>
@@ -276,12 +276,12 @@ const InsertNewPassword: React.FC<InsertNewPasswordProps> = ({
           <div className="grid gap-6">
             <Input.Root>
               <Input.Label>Password</Input.Label>
-              <Input.Password placeholder="Type your password" {...register("newPassword")} />
+              <Input.Password placeholder="Type your password" {...register('newPassword')} />
               <Input.Error>{errors.newPassword?.message}</Input.Error>
             </Input.Root>
             <Input.Root>
               <Input.Label>Password confirmation</Input.Label>
-              <Input.Password placeholder="Type your password again" {...register("confirmPassword")} />
+              <Input.Password placeholder="Type your password again" {...register('confirmPassword')} />
               <Input.Error>{errors.confirmPassword?.message}</Input.Error>
             </Input.Root>
           </div>

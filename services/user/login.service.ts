@@ -1,4 +1,4 @@
-import { UserProps } from "@/types/user";
+import { UserProps } from '@/types/user';
 
 export const loginUserService = () => {
   const getNounce = async (): Promise<GetNounceResponse> => {
@@ -9,8 +9,8 @@ export const loginUserService = () => {
 
   const web3GoogleAuthenticate = async (data: Web3AuthenticateDTO): Promise<Web3AuthenticateResponse> => {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/web3-auth`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
 
@@ -18,7 +18,7 @@ export const loginUserService = () => {
 
     return {
       status: request.status,
-      message: request.ok ? "Authentication successful" : "Authentication failed",
+      message: request.ok ? 'Authentication successful' : 'Authentication failed',
       reason: response.message ?? null,
       user: response.user ?? null,
       token: response.token ?? null,
@@ -27,8 +27,8 @@ export const loginUserService = () => {
 
   const addWalletAddress = async (data: AddWalletDTO, token: string) => {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/add-wallet`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     });
     const response = await request.json();

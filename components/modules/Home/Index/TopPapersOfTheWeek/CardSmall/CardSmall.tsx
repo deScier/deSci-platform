@@ -1,18 +1,18 @@
-import { formatAuthors } from "@/utils/format_authors";
-import { getArticleTypeLabel } from "@/utils/generate_labels";
-import { Eye, HandThumbsUpFill } from "react-bootstrap-icons";
+import { formatAuthors } from '@/utils/format_authors';
+import { getArticleTypeLabel } from '@/utils/generate_labels';
+import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons';
 
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import slug from "slug";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import slug from 'slug';
 
 const CardSmall: React.FC<TopPapersProps> = (data: TopPapersProps) => {
   return (
     <div className="p-4 sm:p-6 rounded-md min-h-[300px] h-full relative">
       <div className="relative flex justify-between z-10">
         <div className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold">
-          {data.publishedAt.toLocaleDateString("pt-Br")}
+          {data.publishedAt.toLocaleDateString('pt-Br')}
         </div>
         <div className="bg-white px-3 py-1 rounded-md w-fit h-fit text-sm font-semibold flex gap-4 items-center">
           <div className="flex items-center gap-1">

@@ -1,8 +1,8 @@
-import { useLimitCharacters } from "@/hooks/useLimitCharacters";
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
-import React from "react";
-import { X } from "react-bootstrap-icons";
+import { useLimitCharacters } from '@/hooks/useLimitCharacters';
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
+import React from 'react';
+import { X } from 'react-bootstrap-icons';
 
 /**
  * @title Reasoning Component
@@ -20,10 +20,10 @@ const Reasoning: React.FC<ArticleUnderReviewProps> = ({
   documentAuthor,
 }: ArticleUnderReviewProps) => {
   /** @dev Initialize characterLimit and length using useLimitCharacters hook */
-  const { characterLimit, length } = useLimitCharacters(message || "");
+  const { characterLimit, length } = useLimitCharacters(message || '');
 
   /** @dev Initialize state for reason */
-  const [reason, setReason] = React.useState(message || "");
+  const [reason, setReason] = React.useState(message || '');
 
   return (
     <React.Fragment>
@@ -34,7 +34,7 @@ const Reasoning: React.FC<ArticleUnderReviewProps> = ({
       <div className="grid gap-6">
         <div className="grid gap-2">
           <h3 className="text-xl font-semibold">Response to Reviewer</h3>
-          {message === "" && (
+          {message === '' && (
             <p className="text-sm">
               Please provide a detailed explanation for why you disagree with the reviewer{"'"}s comments
             </p>

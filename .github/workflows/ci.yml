@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "23"
+          node-version: '23'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -44,7 +44,7 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-modules-

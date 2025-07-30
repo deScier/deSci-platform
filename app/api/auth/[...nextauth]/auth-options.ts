@@ -1,85 +1,85 @@
-import { loginUserService } from "@/services/user/login.service";
-import { UserProps } from "@/types/user";
-import { NextAuthOptions, Session, User } from "next-auth";
+import { loginUserService } from '@/services/user/login.service';
+import { UserProps } from '@/types/user';
+import { NextAuthOptions, Session, User } from 'next-auth';
 
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
+  session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
   cookies: {
     sessionToken: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
       },
     },
     callbackUrl: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.callback-url`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
       },
     },
     csrfToken: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.csrf-token`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
       },
     },
     pkceCodeVerifier: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.pkce.code_verifier`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.pkce.code_verifier`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 900,
       },
     },
     state: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.state`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.state`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 900,
       },
     },
     nonce: {
-      name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.nonce`,
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.nonce`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
       },
     },
   },
   providers: [
     CredentialsProvider({
-      id: "credentials",
-      name: "Login with credentials",
+      id: 'credentials',
+      name: 'Login with credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-        wallet_address: { label: "Wallet Address", type: "text" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+        wallet_address: { label: 'Wallet Address', type: 'text' },
       },
       async authorize(credentials): Promise<User | null> {
         try {
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: credentials?.email,
               password: credentials?.password,
@@ -97,18 +97,18 @@ export const authOptions: NextAuthOptions = {
 
           return user;
         } catch (error) {
-          console.error("Auth error on id: credentials", error);
+          console.error('Auth error on id: credentials', error);
           return null;
         }
       },
     }),
     CredentialsProvider({
-      id: "wallet",
-      name: "Login with wallet (MetaMask)",
+      id: 'wallet',
+      name: 'Login with wallet (MetaMask)',
       credentials: {
-        walletAddress: { label: "Wallet Address", type: "text" },
-        signature: { label: "Signature", type: "text" },
-        nonce: { label: "Nonce", type: "text" },
+        walletAddress: { label: 'Wallet Address', type: 'text' },
+        signature: { label: 'Signature', type: 'text' },
+        nonce: { label: 'Nonce', type: 'text' },
       },
       async authorize(credentials): Promise<User | null> {
         if (!credentials) return null;
@@ -120,7 +120,7 @@ export const authOptions: NextAuthOptions = {
             walletAddress: credentials.walletAddress,
             signature: credentials.signature,
             nonce: credentials.nonce,
-            provider: "wallet",
+            provider: 'wallet',
           };
 
           const response: { user: UserProps; token: string } = await web3GoogleAuthenticate(data);
@@ -134,7 +134,7 @@ export const authOptions: NextAuthOptions = {
 
           return user;
         } catch (error) {
-          console.error("Auth error on id: wallet", error);
+          console.error('Auth error on id: wallet', error);
           return null;
         }
       },
@@ -144,10 +144,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET as string,
       authorization: {
         params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-          scope: "openid profile email",
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code',
+          scope: 'openid profile email',
         },
       },
       httpOptions: {
@@ -156,16 +156,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/home",
-    error: "/error",
+    signIn: '/home',
+    error: '/error',
   },
   callbacks: {
     async jwt({ token, account, session, trigger, profile, user }) {
-      if (trigger === "update" && session) {
+      if (trigger === 'update' && session) {
         return { ...token, ...session?.user };
       }
 
-      if (account?.type === "credentials") {
+      if (account?.type === 'credentials') {
         const obj = {
           ...token,
           ...user,
@@ -175,10 +175,10 @@ export const authOptions: NextAuthOptions = {
         return obj;
       }
 
-      if (account?.type === "oauth") {
+      if (account?.type === 'oauth') {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/google`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: profile?.email,
             name: profile?.name,
@@ -198,7 +198,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (response.status !== 200) {
-          throw new Error("To perform this function please log in first.");
+          throw new Error('To perform this function please log in first.');
         }
 
         token.token = data.token;

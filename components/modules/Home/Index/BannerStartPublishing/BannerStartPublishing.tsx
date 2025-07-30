@@ -1,10 +1,10 @@
-import { home_routes } from "@/routes/home";
-import * as Button from "@components/common/Button/Button";
-import "@styles/home.css";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import IllustrationBannerFooter from "public/svgs/modules/home/banner-footer/illustrations-banner.svg";
-import React from "react";
+import { home_routes } from '@/routes/home';
+import * as Button from '@components/common/Button/Button';
+import '@styles/home.css';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import IllustrationBannerFooter from 'public/svgs/modules/home/banner-footer/illustrations-banner.svg';
+import React from 'react';
 
 /** @title BannerStartPublishing Component
  *  @notice This component displays a banner with options to start publishing. It includes modals for login, registration, and password recovery.
@@ -36,7 +36,7 @@ export const BannerStartPublishing: React.FC<BannerStartPublishingModalProps> = 
               <Button.Button
                 className="py-3 lg:min-w-[300px] px-10 lg:w-fit w-full text-sm lg:text-base"
                 onClick={() => {
-                  if (status === "unauthenticated") {
+                  if (status === 'unauthenticated') {
                     onPublishNow();
                   } else {
                     router.push(home_routes.summary_routes.new_document);
@@ -49,7 +49,7 @@ export const BannerStartPublishing: React.FC<BannerStartPublishingModalProps> = 
                 variant="outline"
                 className="py-3 px-10 lg:w-fit w-full text-sm lg:text-base lg:min-w-[300px] bg-secundary-hover"
                 onClick={() => {
-                  if (status === "unauthenticated") {
+                  if (status === 'unauthenticated') {
                     onPublishNow();
                   } else {
                     router.push(home_routes.summary_routes.new_journal);

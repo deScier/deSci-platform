@@ -1,13 +1,13 @@
-import { addNumberSuffix } from "@/utils/format_number";
-import "keen-slider/keen-slider.min.css";
-import { useKeenSlider } from "keen-slider/react";
-import LikesIllustration from "public/svgs/modules/statistics/likes.svg";
-import StatisticsIllustration from "public/svgs/modules/statistics/statistics.svg";
-import ViewsIllustration from "public/svgs/modules/statistics/views.svg";
-import React from "react";
-import { CaretLeft, CaretRight } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
-import { StatisticsProps } from "./Typing";
+import { addNumberSuffix } from '@/utils/format_number';
+import 'keen-slider/keen-slider.min.css';
+import { useKeenSlider } from 'keen-slider/react';
+import LikesIllustration from 'public/svgs/modules/statistics/likes.svg';
+import StatisticsIllustration from 'public/svgs/modules/statistics/statistics.svg';
+import ViewsIllustration from 'public/svgs/modules/statistics/views.svg';
+import React from 'react';
+import { CaretLeft, CaretRight } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
+import { StatisticsProps } from './Typing';
 
 /**
  * @title Statistics Component
@@ -21,9 +21,9 @@ const Statistics: React.FC<StatisticsProps> = (data: StatisticsProps) => {
   const [sliderRef, instanceRef] = useKeenSlider({
     slides: { perView: 1, spacing: 0 },
     loop: true,
-    mode: "snap",
+    mode: 'snap',
     breakpoints: {
-      "(max-width: 728px)": {},
+      '(max-width: 728px)': {},
     },
     slideChanged(s) {
       /** @dev Updates current slide based on slider change */
@@ -71,7 +71,7 @@ const Statistics: React.FC<StatisticsProps> = (data: StatisticsProps) => {
           />
           <div ref={sliderRef} className="keen-slider h-full">
             {carrousel.map((c) => (
-              <div key={c.id} className={twMerge(`keen-slider__slide slider-${c.id}`, "grid gap-4")}>
+              <div key={c.id} className={twMerge(`keen-slider__slide slider-${c.id}`, 'grid gap-4')}>
                 {c.component}
               </div>
             ))}
@@ -86,7 +86,7 @@ const Statistics: React.FC<StatisticsProps> = (data: StatisticsProps) => {
             <div
               key={index}
               className={`w-2 h-2 md:w-3 md:h-3 mx-auto ${
-                index === currentSlide ? "bg-primary-main" : "bg-[#D9D9D9]"
+                index === currentSlide ? 'bg-primary-main' : 'bg-[#D9D9D9]'
               } rounded-sm transition-all duration-200`}
             />
           ))}

@@ -1,9 +1,9 @@
-import * as Button from "@components/common/Button/Button";
+import * as Button from '@components/common/Button/Button';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { InviteLinkProps } from "@components/common/InviteLink/Typing";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { InviteLinkProps } from '@components/common/InviteLink/Typing';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title InviteLink Component
@@ -29,13 +29,13 @@ export const InviteLink: React.FC<InviteLinkProps> = ({ article, onClick, open_s
                 variant="outline"
                 className="px-4 py-1 text-sm w-fit"
                 onClick={() => {
-                  const textToCopy = document.getElementById("link-to-copy")!.innerText;
+                  const textToCopy = document.getElementById('link-to-copy')!.innerText;
 
                   navigator.clipboard
                     .writeText(textToCopy)
                     .then(() => onClick())
                     .catch((err) => {
-                      console.error("Erro ao copiar texto: ", err);
+                      console.error('Erro ao copiar texto: ', err);
                     });
                 }}
               >

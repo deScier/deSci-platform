@@ -1,7 +1,7 @@
-import * as Select from "@radix-ui/react-select";
+import * as Select from '@radix-ui/react-select';
 
 interface TriggerProps extends Select.SelectTriggerProps {
-  variant?: "small" | "input";
+  variant?: 'small' | 'input';
 }
 
 export { TriggerProps };

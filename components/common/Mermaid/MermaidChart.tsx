@@ -1,7 +1,7 @@
-import { RenderMermaidChartProps } from "@components/common/Mermaid/Typing";
-import { twMerge } from "tailwind-merge";
+import { RenderMermaidChartProps } from '@components/common/Mermaid/Typing';
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 /**
  * @title RenderMermaidChart Component
  * @notice This component is used for rendering mermaid charts in a flexible and error-handling way
@@ -15,8 +15,8 @@ export const RenderMermaidChart: React.FC<RenderMermaidChartProps> = ({
     <React.Fragment>
       <div
         className={twMerge(
-          "flex items-center gap-4 w-full h-36 relative overflow-hidden py-2",
-          `${chartError === true && "h-fit"}`
+          'flex items-center gap-4 w-full h-36 relative overflow-hidden py-2',
+          `${chartError === true && 'h-fit'}`
         )}
       >
         {chartError === false ? (

@@ -1,6 +1,6 @@
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
-import { UserSession } from "./types/next-auth";
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
+import { UserSession } from './types/next-auth';
 /**
  * @title Authentication Middleware
  * @notice This middleware ensures that a user is authenticated by
@@ -14,14 +14,14 @@ import { UserSession } from "./types/next-auth";
  */
 
 const publicRoutes = [
-  "/",
-  "/home",
-  "/paper/*",
-  "/journals/*",
-  "/home/search/*",
-  "/articles-for-approval",
-  "/sitemap.xml",
-  "/robots.txt",
+  '/',
+  '/home',
+  '/paper/*',
+  '/journals/*',
+  '/home/search/*',
+  '/articles-for-approval',
+  '/sitemap.xml',
+  '/robots.txt',
 ];
 
 /**
@@ -35,14 +35,14 @@ const isPublicRoute = (path: string) => {
   return publicRoutes.some(
     (route) =>
       path === route ||
-      (route.endsWith("/*") && (path === route.slice(0, -2) || path.startsWith(route.slice(0, -2) + "/")))
+      (route.endsWith('/*') && (path === route.slice(0, -2) || path.startsWith(route.slice(0, -2) + '/')))
   );
 };
 
 export async function middleware(request: NextRequest) {
   /** @dev Extract the 'next-auth.session-token' cookie from the request. */
-  const standard = request.cookies.getAll().some((cookie) => cookie.name.includes("next-auth.session-token"));
-  const secure = request.cookies.getAll().some((cookie) => cookie.name.includes("Secure-next-auth.session-token"));
+  const standard = request.cookies.getAll().some((cookie) => cookie.name.includes('next-auth.session-token'));
+  const secure = request.cookies.getAll().some((cookie) => cookie.name.includes('Secure-next-auth.session-token'));
 
   const session = (await getToken({
     req: request,
@@ -58,26 +58,26 @@ export async function middleware(request: NextRequest) {
    */
   if (!isAuthenticated && !isPublicRoute(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/home";
+    url.pathname = '/home';
 
     return NextResponse.redirect(url);
   }
 
-  if (session && session.userInfo.role !== "ADMIN" && request.nextUrl.pathname === "/descier/articles-for-approval") {
+  if (session && session.userInfo.role !== 'ADMIN' && request.nextUrl.pathname === '/descier/articles-for-approval') {
     const url = request.nextUrl.clone();
-    url.pathname = "/summary";
+    url.pathname = '/summary';
 
     return NextResponse.redirect(url);
   }
 
-  if (isAuthenticated && request.nextUrl.pathname === "/login") {
+  if (isAuthenticated && request.nextUrl.pathname === '/login') {
     /**
      * @notice Check for the presence of the authentication cookie.
      * @dev If the user is authenticated and is on the `/login` page,
      * redirect them to the home page.
      */
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
@@ -101,6 +101,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - /public/* (public files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)',
   ],
 };

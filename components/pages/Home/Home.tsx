@@ -1,35 +1,35 @@
-"use client";
-import * as Dialog from "@components/common/Dialog/Digalog";
+'use client';
+import * as Dialog from '@components/common/Dialog/Digalog';
 
-import { ArticleUnderReviewSkeleton } from "@/components/common/Publication/Item/ArticlesUnderReview";
-import ForgotPasswordModal from "@/components/modules/ForgotPassword/ForgotPassword";
-import { ArticleCard } from "@/components/modules/Home/Index/ArticleCard/ArticleCard";
-import { ArticleCardProps } from "@/components/modules/Home/Index/ArticleCard/Typing";
-import { BannerStartPublishing } from "@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing";
-import { SearchInputs } from "@/components/modules/Home/Index/SearchInputs/SearchInputs";
-import { CardBig } from "@/components/modules/Home/Index/TopPapersOfTheWeek/CardBig/CardBig";
-import { CardSmall } from "@/components/modules/Home/Index/TopPapersOfTheWeek/CardSmall/CardSmall";
-import { home_routes } from "@/routes/home";
-import { useArticles } from "@/services/document/fetchPublic.service";
-import { PublicJournalsProps } from "@/services/journal/getJournals.service";
-import { capitalizeWord } from "@/utils/format_texts";
-import "@styles/home.css";
-import { useRouter } from "next/navigation";
-import { CaretRightFill } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview';
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword';
+import { ArticleCard } from '@/components/modules/Home/Index/ArticleCard/ArticleCard';
+import { ArticleCardProps } from '@/components/modules/Home/Index/ArticleCard/Typing';
+import { BannerStartPublishing } from '@/components/modules/Home/Index/BannerStartPublishing/BannerStartPublishing';
+import { SearchInputs } from '@/components/modules/Home/Index/SearchInputs/SearchInputs';
+import { CardBig } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardBig/CardBig';
+import { CardSmall } from '@/components/modules/Home/Index/TopPapersOfTheWeek/CardSmall/CardSmall';
+import { home_routes } from '@/routes/home';
+import { useArticles } from '@/services/document/fetchPublic.service';
+import { PublicJournalsProps } from '@/services/journal/getJournals.service';
+import { capitalizeWord } from '@/utils/format_texts';
+import '@styles/home.css';
+import { useRouter } from 'next/navigation';
+import { CaretRightFill } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import LoginModal from "@/components/modules/Login/Login";
-import RegisterModal from "@/components/modules/Register/Register";
-import useWindowDimension from "@/hooks/useWindowDimension";
-import dynamic from "next/dynamic";
-import IllustrationHero from "public/svgs/modules/home/illustration-home.svg";
-import ShapeMobile from "public/svgs/modules/home/shape-mobile.svg";
-import ShapeHero from "public/svgs/modules/home/shapes/shape1.svg";
-import ShapeTertiary from "public/svgs/modules/home/shapes/shape3.svg";
-import React from "react";
+import LoginModal from '@/components/modules/Login/Login';
+import RegisterModal from '@/components/modules/Register/Register';
+import useWindowDimension from '@/hooks/useWindowDimension';
+import dynamic from 'next/dynamic';
+import IllustrationHero from 'public/svgs/modules/home/illustration-home.svg';
+import ShapeMobile from 'public/svgs/modules/home/shape-mobile.svg';
+import ShapeHero from 'public/svgs/modules/home/shapes/shape1.svg';
+import ShapeTertiary from 'public/svgs/modules/home/shapes/shape3.svg';
+import React from 'react';
 
 const OurJournalsDynamic = dynamic(
-  () => import("@/components/modules/Home/Index/OurJournals/OurJournals").then((mod) => mod.OurJournals),
+  () => import('@/components/modules/Home/Index/OurJournals/OurJournals').then((mod) => mod.OurJournals),
   {
     loading: () => (
       <div className="grid grid-flow-col gap-4 space-x-4 px-4 lg:px-0">
@@ -50,7 +50,7 @@ const OurJournalsDynamic = dynamic(
   }
 );
 
-type HomeProps = { journals: PublicJournalsProps["journals"] | undefined };
+type HomeProps = { journals: PublicJournalsProps['journals'] | undefined };
 
 export function HomeComponent({ journals }: HomeProps) {
   const router = useRouter();
@@ -61,24 +61,24 @@ export function HomeComponent({ journals }: HomeProps) {
   const [topPapers, setTopPapers] = React.useState<ArticleCardProps[]>([]);
   const [isProfileConfirmed, setIsProfileConfirmed] = React.useState(false);
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [searchAuthor, setSearchAuthor] = React.useState("");
-  const [searchType, setSearchType] = React.useState("paper");
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchAuthor, setSearchAuthor] = React.useState('');
+  const [searchType, setSearchType] = React.useState('paper');
 
-  const [inviteAuthorName, setInviteAuthorName] = React.useState("");
+  const [inviteAuthorName, setInviteAuthorName] = React.useState('');
 
   React.useEffect(() => {
     if (articles) {
-      console.log("articles", articles);
+      console.log('articles', articles);
       const papers = articles.sort((a, b) => b.likes! - a.likes!).slice(0, 3);
       setTopPapers(papers);
     }
   }, [articles]);
 
   /** @dev Component states for various authentication and navigation modals */
-  const login_component = "login";
-  const register_component = "register";
-  const forgot_password_component = "forgot_password";
+  const login_component = 'login';
+  const register_component = 'register';
+  const forgot_password_component = 'forgot_password';
 
   /** @dev State to manage the open/closed state of modals */
   const [open, setOpen] = React.useState(false);
@@ -90,10 +90,10 @@ export function HomeComponent({ journals }: HomeProps) {
       <Dialog.Root open={open}>
         <Dialog.Content
           className={twMerge(
-            "w-[80%] max-w-[1200px] p-0",
-            `${component === forgot_password_component && "max-w-[554px]"}`,
-            `${component === login_component && "w-full !max-w-[1200px] p-0"}`,
-            `${component === register_component && "w-full !max-w-[1200px] p-0"}`
+            'w-[80%] max-w-[1200px] p-0',
+            `${component === forgot_password_component && 'max-w-[554px]'}`,
+            `${component === login_component && 'w-full !max-w-[1200px] p-0'}`,
+            `${component === register_component && 'w-full !max-w-[1200px] p-0'}`
           )}
         >
           {component === login_component && (

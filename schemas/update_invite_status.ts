@@ -1,13 +1,13 @@
-import * as zod from "zod";
+import * as zod from 'zod';
 /**
  * @title Update Invite Status Zod Schema
  * @dev This schema is used to validate the Update Invite Status form and infer the type of the form data.
  */
 export const UpdateInviteStatusSchema = zod.object({
-  inviteCode: zod.string({ required_error: "Invite code is required" }),
-  inviteStatus: zod.enum(["ACCEPTED", "REJECTED"]),
+  inviteCode: zod.string({ required_error: 'Invite code is required' }),
+  inviteStatus: zod.enum(['ACCEPTED', 'REJECTED']),
   role: zod.string(),
-  title: zod.string({ required_error: "Title is required" }),
+  title: zod.string({ required_error: 'Title is required' }),
 });
 
 /**

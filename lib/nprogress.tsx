@@ -1,17 +1,17 @@
-"use client";
+'use client';
 /**
  * @title ProgressBar Component
  * @notice A component to show a global progress bar on top of the page. It displays progress on navigation events and finishes when the navigation event is done.
  * @dev This component uses NProgress for the progress bar and listens for click events on anchor tags and state changes in the history. It also cleans up the MutationObserver and restores the original pushState when the component is unmounted.
  */
-import NProgress from "nprogress";
-import React, { useEffect } from "react";
+import NProgress from 'nprogress';
+import React, { useEffect } from 'react';
 
 NProgress.configure({ showSpinner: false });
 
 const ProgressBar: React.FC = () => {
-  const height = "2px";
-  const color = "#70468C";
+  const height = '2px';
+  const color = '#70468C';
 
   const progressBarStyles = `
     #nprogress {
@@ -24,7 +24,7 @@ const ProgressBar: React.FC = () => {
       top: 0;
       left: 0;
       width: 100%;
-      height: ${typeof height === "string" ? height : `${height}px`};
+      height: ${typeof height === 'string' ? height : `${height}px`};
     }
     #nprogress .peg {
       display: block;
@@ -50,8 +50,8 @@ const ProgressBar: React.FC = () => {
     };
 
     const handleMutation: MutationCallback = (mutationsList, observer) => {
-      const anchorElements = document.querySelectorAll("a");
-      anchorElements.forEach((anchor) => anchor.addEventListener("click", handleAnchorClick));
+      const anchorElements = document.querySelectorAll('a');
+      anchorElements.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick));
     };
 
     const mutationObserver = new MutationObserver(handleMutation);

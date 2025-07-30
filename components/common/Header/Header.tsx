@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
 
-import { PurchasedArticles } from "@/components/modules/Home/Search/Purchase/PurchasedArticles";
+import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-import { dashboard_key, links } from "@/mock/sidebar_home_items";
-import { home_routes } from "@/routes/home";
-import { formatName } from "@/utils/format_texts";
-import { handleLogout } from "@/utils/logout";
-import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { twMerge } from "tailwind-merge";
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import { dashboard_key, links } from '@/mock/sidebar_home_items';
+import { home_routes } from '@/routes/home';
+import { formatName } from '@/utils/format_texts';
+import { handleLogout } from '@/utils/logout';
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
-import ForgotPasswordModal from "@/components/modules/ForgotPassword/ForgotPassword";
-import LoginModal from "@/components/modules/Login/Login";
-import RegisterModal from "@/components/modules/Register/Register";
-import Image from "next/image";
-import Link from "next/link";
-import DeScierLogo from "public/svgs/common/logo/deScier - Logo.svg";
-import ArrowDown from "public/svgs/modules/home/arrow-down.svg";
-import React from "react";
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword';
+import LoginModal from '@/components/modules/Login/Login';
+import RegisterModal from '@/components/modules/Register/Register';
+import Image from 'next/image';
+import Link from 'next/link';
+import DeScierLogo from 'public/svgs/common/logo/deScier - Logo.svg';
+import ArrowDown from 'public/svgs/modules/home/arrow-down.svg';
+import React from 'react';
 
 /**
  * @title Header Component
@@ -44,8 +44,8 @@ const Header: React.FC = () => {
    * for determining active navigation links
    */
   const currentPath = usePathname();
-  const url_splited = currentPath.split("/");
-  const array_path = url_splited.filter((item) => item !== "home" && item !== "");
+  const url_splited = currentPath.split('/');
+  const array_path = url_splited.filter((item) => item !== 'home' && item !== '');
 
   /**
    * @dev Function to verify the current path for navigation highlight
@@ -53,20 +53,20 @@ const Header: React.FC = () => {
    * @return Returns true if the current path matches the specified path, false otherwise
    */
   function verifyPath(path: string): boolean {
-    if (path === "home") {
+    if (path === 'home') {
       return array_path.length === 0;
-    } else if (path === "search") {
-      return array_path.includes("search");
+    } else if (path === 'search') {
+      return array_path.includes('search');
     } else {
       return false;
     }
   }
 
   /** @dev Component states for various authentication and navigation modals */
-  const login_component = "login";
-  const register_component = "register";
-  const forgot_password_component = "forgot_password";
-  const purchased = "purchased";
+  const login_component = 'login';
+  const register_component = 'register';
+  const forgot_password_component = 'forgot_password';
+  const purchased = 'purchased';
 
   /** @dev State to manage the open/closed state of modals */
   const [open, setOpen] = React.useState(false);
@@ -79,10 +79,10 @@ const Header: React.FC = () => {
       <Dialog.Root open={open}>
         <Dialog.Content
           className={twMerge(
-            `${component !== purchased && "md:w-[85%] max-w-[1200px] p-0 transition-all duration-300"}`,
-            `${component === forgot_password_component && "max-w-[554px]"}`,
-            `${component === login_component && "w-full !max-w-[1200px] p-0"}`,
-            `${component === register_component && "w-full !max-w-[1200px] p-0"}`
+            `${component !== purchased && 'md:w-[85%] max-w-[1200px] p-0 transition-all duration-300'}`,
+            `${component === forgot_password_component && 'max-w-[554px]'}`,
+            `${component === login_component && 'w-full !max-w-[1200px] p-0'}`,
+            `${component === register_component && 'w-full !max-w-[1200px] p-0'}`
           )}
         >
           {component === login_component && (
@@ -114,7 +114,7 @@ const Header: React.FC = () => {
             <PurchasedArticles
               onClose={() => {
                 setOpen(false);
-                setComponent("");
+                setComponent('');
               }}
             />
           )}
@@ -127,7 +127,7 @@ const Header: React.FC = () => {
             {links.map((link) => (
               <React.Fragment key={link.id}>
                 {link.id === dashboard_key ? (
-                  status !== "authenticated" ? (
+                  status !== 'authenticated' ? (
                     <div className="flex justify-center py-2 px-4">
                       <div
                         onClick={() => {
@@ -135,8 +135,8 @@ const Header: React.FC = () => {
                           setComponent(login_component);
                         }}
                         className={twMerge(
-                          "flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200 select-none cursor-pointer",
-                          `${verifyPath(link.label.toLowerCase()) && "font-semibold text-secundary_blue-main"}`
+                          'flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200 select-none cursor-pointer',
+                          `${verifyPath(link.label.toLowerCase()) && 'font-semibold text-secundary_blue-main'}`
                         )}
                       >
                         {link.label} {link.icon !== null && link.icon}
@@ -147,8 +147,8 @@ const Header: React.FC = () => {
                       <Link
                         href={link.link}
                         className={twMerge(
-                          "flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200",
-                          `${verifyPath(link.label.toLowerCase()) && "font-semibold text-secundary_blue-main"}`
+                          'flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200',
+                          `${verifyPath(link.label.toLowerCase()) && 'font-semibold text-secundary_blue-main'}`
                         )}
                       >
                         {link.label} {link.icon !== null && link.icon}
@@ -160,8 +160,8 @@ const Header: React.FC = () => {
                     <Link
                       href={link.link}
                       className={twMerge(
-                        "flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200",
-                        `${verifyPath(link.label.toLowerCase()) && "font-semibold text-secundary_blue-main"}`
+                        'flex items-center gap-2 text-base text-terciary-main hover:text-secundary_blue-main transition-all duration-200',
+                        `${verifyPath(link.label.toLowerCase()) && 'font-semibold text-secundary_blue-main'}`
                       )}
                     >
                       {link.label}
@@ -173,7 +173,7 @@ const Header: React.FC = () => {
             ))}
           </div>
         </div>
-        {status == "loading" && (
+        {status == 'loading' && (
           <React.Fragment>
             <div className="grid grid-cols-2 gap-4 min-w-[242px]">
               <Skeleton className="flex gap-2 items-center justify-center w-full hover:scale-[1.01] rounded-full py-2 px-8 min-h-[39px]" />
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
             </div>
           </React.Fragment>
         )}
-        {status === "unauthenticated" && (
+        {status === 'unauthenticated' && (
           <div className="flex items-center gap-4">
             <Button.Button
               variant="outline"
@@ -205,7 +205,7 @@ const Header: React.FC = () => {
             </Button.Button>
           </div>
         )}
-        {status === "authenticated" && (
+        {status === 'authenticated' && (
           <React.Fragment>
             <div className="grid grid-flow-col items-center justify-start gap-4">
               <div className="relative w-10 h-10 overflow-hidden rounded-full">
@@ -214,8 +214,8 @@ const Header: React.FC = () => {
                   height={200}
                   alt="avatar"
                   priority={true}
-                  src={data?.user?.userInfo.avatar || "/images/profile_dk08wk.png"}
-                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                  src={data?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                   className="hover:scale-110 transition-all duration-300"
                 />
               </div>

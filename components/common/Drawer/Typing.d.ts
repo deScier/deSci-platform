@@ -1,7 +1,7 @@
 interface DrawerContentProps {
   className?: string;
   children?: React.ReactNode;
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 }
 
 interface DrawerRootProps {

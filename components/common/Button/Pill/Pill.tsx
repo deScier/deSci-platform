@@ -1,7 +1,7 @@
-import { DocumentTypes } from "@/mock/document_types";
-import { twMerge } from "tailwind-merge";
+import { DocumentTypes } from '@/mock/document_types';
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Pills Component
@@ -25,11 +25,11 @@ export const Pills: React.FC<PillsProps> = ({ items, onSelect, selected }: Pills
             type="button"
             data-active={active === index}
             className={twMerge(
-              "text-sm text-neutral-gray px-4 py-2 border border-neutral-gray hover:text-status-green hover:border-status-green transition-all duration-200 ease-out",
-              `${index === 0 && "rounded-l-full"}`,
-              `${index === items.length - 1 && "rounded-r-full"}`,
-              `${selected === item.value && "text-status-green border-status-green"}`,
-              `${active === index && "text-status-green border-status-green"}`
+              'text-sm text-neutral-gray px-4 py-2 border border-neutral-gray hover:text-status-green hover:border-status-green transition-all duration-200 ease-out',
+              `${index === 0 && 'rounded-l-full'}`,
+              `${index === items.length - 1 && 'rounded-r-full'}`,
+              `${selected === item.value && 'text-status-green border-status-green'}`,
+              `${active === index && 'text-status-green border-status-green'}`
             )}
             onClick={() => {
               setActive(index);

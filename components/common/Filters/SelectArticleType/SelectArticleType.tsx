@@ -1,12 +1,12 @@
-import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from "@/components/ui/select";
-import { article_types_submit_article, articles_types_filter } from "@/mock/articles_types";
-import { twMerge } from "tailwind-merge";
-import { tv } from "tailwind-variants";
-import { SelectArticleTypeProps } from "./Typing";
+import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
+import { article_types_submit_article, articles_types_filter } from '@/mock/articles_types';
+import { twMerge } from 'tailwind-merge';
+import { tv } from 'tailwind-variants';
+import { SelectArticleTypeProps } from './Typing';
 
-import React from "react";
-import slug from "slug";
+import React from 'react';
+import slug from 'slug';
 
 /**
  * @title SelectArticleType Component
@@ -14,7 +14,7 @@ import slug from "slug";
  * @dev Component for selecting an article type from a predefined list of options.
  */
 export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
-  variant = "filter",
+  variant = 'filter',
   onValueChange,
   selected: selected_value,
   no_selected,
@@ -45,13 +45,13 @@ export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
           setSelected(value);
 
           const findLabelItem = article_types_submit_article.find(
-            (item) => item.type === "label" && item.related?.includes(value)
+            (item) => item.type === 'label' && item.related?.includes(value)
           );
 
           if (findLabelItem) {
             const labelName = findLabelItem.label;
             setLabel(labelName);
-            onValueChange(value, slug(labelName, { lower: true, replacement: "-" }));
+            onValueChange(value, slug(labelName, { lower: true, replacement: '-' }));
           } else {
             onValueChange(value);
           }
@@ -60,22 +60,22 @@ export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
         <SelectTrigger
           className={twMerge(
             `${
-              variant === "filter" &&
-              "flex items-center gap-1 justify-center py-2 px-4 text-sm rounded-full min-w-[200px] w-fit border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration- bg-transparent font-semibold"
+              variant === 'filter' &&
+              'flex items-center gap-1 justify-center py-2 px-4 text-sm rounded-full min-w-[200px] w-fit border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration- bg-transparent font-semibold'
             }`,
-            `${variant === "input" && input()}`,
-            `${variant === "input" && "border-t-0 border-l-0 border-r-0 h-[34px]"}`,
-            `${variant === "input" && selected === null ? "text-neutral-light_gray text-base" : "text-black text-base"}`,
+            `${variant === 'input' && input()}`,
+            `${variant === 'input' && 'border-t-0 border-l-0 border-r-0 h-[34px]'}`,
+            `${variant === 'input' && selected === null ? 'text-neutral-light_gray text-base' : 'text-black text-base'}`,
             className
           )}
         >
           {items && selected === null ? (
-            <span className={twMerge(`${variant === "filter" && "text-sm font-semibold text-primary-main"}`)}>
+            <span className={twMerge(`${variant === 'filter' && 'text-sm font-semibold text-primary-main'}`)}>
               {placeholder}
             </span>
           ) : (
-            <span className={twMerge(`${variant === "filter" && "text-sm font-semibold text-primary-main"}`)}>
-              {articles_types_filter.find((item) => item.type === "item" && item.value === selected)?.label}
+            <span className={twMerge(`${variant === 'filter' && 'text-sm font-semibold text-primary-main'}`)}>
+              {articles_types_filter.find((item) => item.type === 'item' && item.value === selected)?.label}
             </span>
           )}
         </SelectTrigger>
@@ -85,13 +85,13 @@ export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
               <React.Fragment>
                 {items.map((item, index) => (
                   <React.Fragment key={item.id}>
-                    {item.type === "label" && (
+                    {item.type === 'label' && (
                       <React.Fragment>
                         {index !== 0 && <DropdownMenuSeparator />}
                         <SelectLabel className="px-4">{item.label}</SelectLabel>
                       </React.Fragment>
                     )}
-                    {item.type === "item" && (
+                    {item.type === 'item' && (
                       <SelectItem
                         value={item.value as string}
                         className="px-4 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -107,13 +107,13 @@ export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
               <React.Fragment>
                 {articles_types_filter.map((item, index) => (
                   <React.Fragment key={item.id}>
-                    {item.type === "label" && (
+                    {item.type === 'label' && (
                       <React.Fragment>
                         {index !== 0 && <DropdownMenuSeparator />}
                         <SelectLabel className="px-4">{item.label}</SelectLabel>
                       </React.Fragment>
                     )}
-                    {item.type === "item" && (
+                    {item.type === 'item' && (
                       <SelectItem
                         value={item.value as string}
                         className="px-4 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -134,16 +134,16 @@ export const SelectArticleType: React.FC<SelectArticleTypeProps> = ({
 };
 
 const input = tv({
-  base: "flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main",
+  base: 'flex items-center rounded-none border-b-[1px] border-neutral-light_gray p-2 pt-0 placeholder:text-gray-light placeholder:text-base focus:outline-none focus:text-neutral-black w-full placeholder-shown:text-neutral-black bg-transparent focus:border-b-primary-main',
   variants: {
     hasIcon: {
-      start: "data-[start=true]:px-11",
-      end: "data-[end=true]:px-11",
-      none: "",
+      start: 'data-[start=true]:px-11',
+      end: 'data-[end=true]:px-11',
+      none: '',
     },
     disabled: {
-      true: "bg-[#FEFEFE] text-[#6c6c6c] cursor-not-allowed",
-      false: "",
+      true: 'bg-[#FEFEFE] text-[#6c6c6c] cursor-not-allowed',
+      false: '',
     },
   },
 });

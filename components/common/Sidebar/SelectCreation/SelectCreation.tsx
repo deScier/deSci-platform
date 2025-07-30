@@ -1,10 +1,10 @@
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { home_routes } from "@/routes/home";
-import { uniqueId } from "lodash";
-import { usePathname, useRouter } from "next/navigation";
-import { Clipboard, FileText, PlusCircle } from "react-bootstrap-icons";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { home_routes } from '@/routes/home';
+import { uniqueId } from 'lodash';
+import { usePathname, useRouter } from 'next/navigation';
+import { Clipboard, FileText, PlusCircle } from 'react-bootstrap-icons';
 
-import React from "react";
+import React from 'react';
 
 const SelectCreation: React.FC<SelectCreationProps> = ({ onValueChange }: SelectCreationProps) => {
   const router = useRouter();
@@ -13,13 +13,13 @@ const SelectCreation: React.FC<SelectCreationProps> = ({ onValueChange }: Select
   const sidebar_items = [
     {
       id: uniqueId(),
-      label: "New Article",
+      label: 'New Article',
       icon: <Clipboard size={16} className="group-hover:text-primary-hover" />,
       route: home_routes.summary_routes.new_document,
     },
     {
       id: uniqueId(),
-      label: "New Journal",
+      label: 'New Journal',
       icon: <FileText size={17} className="group-hover:text-primary-hover" />,
       route: home_routes.summary_routes.new_journal,
     },

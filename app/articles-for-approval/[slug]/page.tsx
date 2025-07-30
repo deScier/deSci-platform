@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Input from "@components/common/Input/Input";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Input from '@components/common/Input/Input';
 
-import { StoredFile } from "@/components/common/Dropzone/Typing";
-import { EditorsAndReviewers } from "@/components/common/EditorsAndReviwers/EditorAndReviwer";
-import { File } from "@/components/common/File/File";
-import { AuthorsListDragabble } from "@/components/common/Lists/Authors/Authors";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetApprovals } from "@/hooks/useGetApprovals";
-import { header_editor_reviewer } from "@/mock/article_under_review";
-import { authors_headers, authors_mock, authorship_headers } from "@/mock/submit_new_document";
-import { home_routes } from "@/routes/home";
-import { useFetchAdminArticles } from "@/services/admin/fetchDocuments.service";
-import { downloadDocumentVersionService } from "@/services/document/download.service";
-import { DocumentComment, DocumentGetProps } from "@/services/document/getArticles";
-import { ApproveArticleForJournal } from "@/services/journal/approveArticle.service";
-import { formatFileName } from "@/utils/format_file_name";
-import { getArticleTypeLabel } from "@/utils/generate_labels";
-import { keywordsArray } from "@/utils/keywords_format";
-import { format } from "date-fns";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Check } from "react-bootstrap-icons";
-import { CurrencyInput } from "react-currency-mask";
-import { toast } from "react-toastify";
-import { twMerge } from "tailwind-merge";
+import { StoredFile } from '@/components/common/Dropzone/Typing';
+import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer';
+import { File } from '@/components/common/File/File';
+import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useGetApprovals } from '@/hooks/useGetApprovals';
+import { header_editor_reviewer } from '@/mock/article_under_review';
+import { authors_headers, authors_mock, authorship_headers } from '@/mock/submit_new_document';
+import { home_routes } from '@/routes/home';
+import { useFetchAdminArticles } from '@/services/admin/fetchDocuments.service';
+import { downloadDocumentVersionService } from '@/services/document/download.service';
+import { DocumentComment, DocumentGetProps } from '@/services/document/getArticles';
+import { ApproveArticleForJournal } from '@/services/journal/approveArticle.service';
+import { formatFileName } from '@/utils/format_file_name';
+import { getArticleTypeLabel } from '@/utils/generate_labels';
+import { keywordsArray } from '@/utils/keywords_format';
+import { format } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Check } from 'react-bootstrap-icons';
+import { CurrencyInput } from 'react-currency-mask';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
-import Box from "@/components/common/Box/Box";
-import CommentItem from "@/components/common/Comment/Comment";
-import DocumentApprovals from "@/components/common/DocumentApprovals/DocumentApprovals";
-import Reasoning from "@/components/modules/deScier/Article/Reasoning";
-import React from "react";
+import Box from '@/components/common/Box/Box';
+import CommentItem from '@/components/common/Comment/Comment';
+import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
+import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import React from 'react';
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
 
   const [article, setArticle] = React.useState<DocumentGetProps | null>(null);
   const [items, setItems] = React.useState(authors_mock);
-  const [access_type, setAccessType] = React.useState("open-access");
+  const [access_type, setAccessType] = React.useState('open-access');
   const [dialog, setDialog] = React.useState({
     author: false,
     share_split: false,
@@ -51,7 +51,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
     reasoning: false,
   });
   const [loading, setLoading] = React.useState({ approve: false, reject: false });
-  const [nftData, setNftData] = React.useState({ nftLink: "", nftHash: "" });
+  const [nftData, setNftData] = React.useState({ nftLink: '', nftHash: '' });
   const [updateNftDataLoading, setUpdateNftLoading] = React.useState<boolean>(false);
   const [uploadFileLoading, setUploadFileLoading] = React.useState<boolean>(false);
   const [file, setFile] = React.useState<StoredFile>();
@@ -62,10 +62,10 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
     await fetch_article(documentId).then((res) => {
       setArticle(res as DocumentGetProps);
       setNftData({
-        nftHash: res?.document?.nftHash || "",
-        nftLink: res?.document?.nftLink || "",
+        nftHash: res?.document?.nftHash || '',
+        nftLink: res?.document?.nftLink || '',
       });
-      const access = res?.document?.accessType === "FREE" ? "open-access" : "paid-access";
+      const access = res?.document?.accessType === 'FREE' ? 'open-access' : 'paid-access';
       setAccessType(access);
       getApprovals(res?.document?.reviewersOnDocuments || []);
     });
@@ -85,7 +85,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       return;
     }
 
-    const status = approve ? "approved" : "rejected";
+    const status = approve ? 'approved' : 'rejected';
     toast.success(`Document ${status} successfully!`);
 
     router.push(home_routes.articles_for_approval);
@@ -104,13 +104,13 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
     }
 
     const url = URL.createObjectURL(response.file!);
-    const link = document?.createElement("a");
+    const link = document?.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
 
-    toast.success("Download will start...");
+    toast.success('Download will start...');
   };
 
   React.useEffect(() => {
@@ -135,7 +135,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
           <div className="grid md:grid-cols-2 gap-6">
             <div className="grid grid-cols-1">
               <span className="text-sm font-semibold">Title</span>
-              <span className="text-sm">{article?.document?.title || "-"}</span>
+              <span className="text-sm">{article?.document?.title || '-'}</span>
             </div>
             <div className="grid gap-2">
               <p className="text-sm font-semibold">Add keywords</p>
@@ -147,7 +147,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                         className="border rounded-md border-neutral-stroke_light flex items-center px-1 sm:px-2 py-[2px] bg-white"
                         key={index}
                       >
-                        <span className="text-xxs sm:text-xs text-primary-main">{tag || "-"}</span>
+                        <span className="text-xxs sm:text-xs text-primary-main">{tag || '-'}</span>
                       </div>
                     ))}
                   </React.Fragment>
@@ -160,18 +160,18 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
           <div className="grid md:grid-cols-2 gap-6">
             <div className="grid grid-cols-1">
               <span className="text-sm font-semibold">Area of knowledge</span>
-              <span className="text-sm">{article?.document?.field || "-"}</span>
+              <span className="text-sm">{article?.document?.field || '-'}</span>
             </div>
           </div>
           <div className="grid gap-2">
             <h3 className="text-sm font-semibold">Document type</h3>
             <p className="text-sm font-regular first-letter:uppercase lowercase">
-              {getArticleTypeLabel(article?.document?.documentType as string) || "-"}
+              {getArticleTypeLabel(article?.document?.documentType as string) || '-'}
             </p>
           </div>
           <div className="grid gap-2">
             <h3 className="text-sm font-semibold">Abstract</h3>
-            <p className="text-sm font-regular">{article?.document?.abstract || "-"}</p>
+            <p className="text-sm font-regular">{article?.document?.abstract || '-'}</p>
           </div>
           {article?.document?.cover && (
             <div className="grid gap-4">
@@ -180,15 +180,15 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   loading="lazy"
-                  src={article?.document?.cover || "/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg"}
+                  src={article?.document?.cover || '/images/4fa38f086cfa1a2289fabfdd7337c09d.jpeg'}
                   alt="cover-preview"
                   className="absolute w-full h-full object-cover"
                 />
               </div>
               {article?.document?.updatedAt && (
                 <p className="text-sm font-regular">
-                  Last updated on{" "}
-                  {format(new Date(article?.document?.updatedAt as unknown as string), "dd/MM/yyyy - HH:mm")}
+                  Last updated on{' '}
+                  {format(new Date(article?.document?.updatedAt as unknown as string), 'dd/MM/yyyy - HH:mm')}
                 </p>
               )}
             </div>
@@ -204,12 +204,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                     article?.document?.documentVersions?.map((file) => (
                       <File
                         key={file.id}
-                        file_name={formatFileName(file.fileName as string) || "file.docx"}
+                        file_name={formatFileName(file.fileName as string) || 'file.docx'}
                         onDownload={() => {
                           handleDownloadDocument(file.id, file.fileName!);
                         }}
-                        uploaded_at={new Date(file.createdAt).toLocaleDateString("pt-BR")}
-                        uploaded_by={article.document?.user?.name || ""}
+                        uploaded_at={new Date(file.createdAt).toLocaleDateString('pt-BR')}
+                        uploaded_by={article.document?.user?.name || ''}
                       />
                     ))
                   ) : (
@@ -259,8 +259,8 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
           <div className="border rounded-md p-4">
             <ScrollArea
               className={twMerge(
-                "h-[342px]",
-                `${article?.document?.documentComments && article?.document?.documentComments?.length == 0 && "h-full"}`
+                'h-[342px]',
+                `${article?.document?.documentComments && article?.document?.documentComments?.length == 0 && 'h-full'}`
               )}
             >
               <div className="grid gap-4">
@@ -270,7 +270,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                       <CommentItem
                         comment_author={comment.user.name}
                         comment_content={comment.comment}
-                        status={comment.approvedByAuthor as "APPROVED" | "REJECTED" | "PENDING"}
+                        status={comment.approvedByAuthor as 'APPROVED' | 'REJECTED' | 'PENDING'}
                         user_id={comment.userId}
                       />
                     </React.Fragment>
@@ -327,22 +327,22 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
           <div className="grid gap-2">
             <h3 className="text-lg md:text-xl text-status-green font-semibold">Authorship</h3>
             <p className="text-sm">
-              Decide if the project is <span className="text-terciary-main font-semibold">Open Access</span>,{" "}
+              Decide if the project is <span className="text-terciary-main font-semibold">Open Access</span>,{' '}
               <span className="text-[#EFB521] font-semibold">Paid Access</span>
             </p>
           </div>
           <div className="grid md:grid-cols-2 items-start gap-6">
             <Input.Root>
               <Input.Label>Type of access</Input.Label>
-              <Input.Input disabled defaultValue={access_type === "open-access" ? "Open access" : "Paid access"} />
+              <Input.Input disabled defaultValue={access_type === 'open-access' ? 'Open access' : 'Paid access'} />
             </Input.Root>
-            {access_type == "open-access" && (
+            {access_type == 'open-access' && (
               <Input.Root>
                 <Input.Label className="text-neutral-gray text-sm font-semibold pl-2">Price</Input.Label>
                 <Input.Input disabled placeholder="R$" />
               </Input.Root>
             )}
-            {access_type == "paid-access" && (
+            {access_type == 'paid-access' && (
               <React.Fragment>
                 <Input.Root>
                   <Input.Label>Price</Input.Label>
@@ -358,7 +358,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
               </React.Fragment>
             )}
           </div>
-          {access_type == "paid-access" && (
+          {access_type == 'paid-access' && (
             <React.Fragment>
               <div className="grid md:gap-2">
                 <p className="text-sm font-semibold">Authorship settings</p>
@@ -389,7 +389,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
                             )}
                           </div>
                           <div className="w-fit">
-                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || "-"}</p>
+                            <p className="text-sm text-center text-black w-8">{author.author?.walletAddress || '-'}</p>
                           </div>
                         </div>
                         <hr className="divider-h" />
@@ -405,12 +405,12 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
           {article?.document?.reviewersOnDocuments && article?.document?.reviewersOnDocuments?.length > 0 && (
             <DocumentApprovals editorApprovals={editorApprovals} reviewerApprovals={reviewerApprovals} />
           )}
-          {article?.document?.status === "PENDING" && (
+          {article?.document?.status === 'PENDING' && (
             <p className="text-lg text-center text-status-pending font-semibold select-none">
               This article is awaiting approval from editors and reviewers before it can be approved or rejected
             </p>
           )}
-          {article?.document?.status === "ADMIN_APPROVE" && (
+          {article?.document?.status === 'ADMIN_APPROVE' && (
             <React.Fragment>
               <Button.Button
                 variant="primary"
@@ -431,11 +431,11 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
               </Button.Button>
             </React.Fragment>
           )}
-          {article?.document?.status === "REJECTED" && (
+          {article?.document?.status === 'REJECTED' && (
             <p className="text-lg text-center text-status-error font-semibold select-none">Article rejected</p>
           )}
-          {article?.document?.status === "APPROVED" ||
-            (article?.document?.status === "SUBMITTED" && (
+          {article?.document?.status === 'APPROVED' ||
+            (article?.document?.status === 'SUBMITTED' && (
               <p className="text-lg text-center text-status-green font-semibold select-none">Article approved</p>
             ))}
         </Box>
@@ -443,7 +443,7 @@ export default function ArticleForApprovalPage({ params }: { params: { slug: str
       <Dialog.Root open={dialog.reasoning}>
         <Dialog.Content className="py-14 px-16 max-w-[600px]">
           <Reasoning
-            message={""}
+            message={''}
             documentAuthor={article?.document?.user?.name!}
             onClose={() => setDialog({ ...dialog, reasoning: false })}
             onConfirm={(value) => {
@@ -461,12 +461,12 @@ const ArticleStatus: React.FC<{ status: string }> = ({ status }: { status: strin
   return (
     <React.Fragment>
       <div className="flex items-center gap-2 border border-neutral-stroke_light w-fit py-1 px-4 rounded-md">
-        {status === "ADMIN_APPROVE" && (
+        {status === 'ADMIN_APPROVE' && (
           <p className="text-sm text-status-pending font-semibold select-none">Final approve pending</p>
         )}
-        {status === "REJECTED" && <p className="text-sm text-status-pending font-semibold select-none">Rejected</p>}
-        {status === "APPROVED" && <p className="text-sm text-status-pending font-semibold select-none">Approved</p>}
-        {status === "SUBMITTED" && <p className="text-sm text-status-pending font-semibold select-none">Published</p>}
+        {status === 'REJECTED' && <p className="text-sm text-status-pending font-semibold select-none">Rejected</p>}
+        {status === 'APPROVED' && <p className="text-sm text-status-pending font-semibold select-none">Approved</p>}
+        {status === 'SUBMITTED' && <p className="text-sm text-status-pending font-semibold select-none">Published</p>}
       </div>
     </React.Fragment>
   );

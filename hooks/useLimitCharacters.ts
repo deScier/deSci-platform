@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * @dev Initializes the useLimitCharacters hook with an optional initial value.
  * @param initialValue The initial value of the input or textarea.
  * @return An object containing the current length of the input and the characterLimit function.
  */
-export const useLimitCharacters = (initialValue: string = "") => {
+export const useLimitCharacters = (initialValue: string = '') => {
   /** @dev State to track the length of the input. */
-  const [length, setLength] = React.useState(initialValue.replace(/\s/g, "").length);
+  const [length, setLength] = React.useState(initialValue.replace(/\s/g, '').length);
 
   /** @dev Effect to update length state when initialValue changes. */
   useEffect(() => {
-    setLength(initialValue.replace(/\s/g, "").length);
+    setLength(initialValue.replace(/\s/g, '').length);
   }, [initialValue]);
 
   /**

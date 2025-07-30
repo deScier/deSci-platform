@@ -1,4 +1,4 @@
-import { MembersDTO } from "@/schemas/create_new_journal";
+import { MembersDTO } from '@/schemas/create_new_journal';
 
 interface AddNewMemberProps {
   onClose: () => void;

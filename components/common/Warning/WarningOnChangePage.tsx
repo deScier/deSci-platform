@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
-import * as Dialog from "@components/common/Dialog/Digalog";
+import * as Button from '@components/common/Button/Button';
+import * as Dialog from '@components/common/Dialog/Digalog';
 
-import React from "react";
+import React from 'react';
 
 const WarningOnChangePage: React.FC<WarningOnChangePageProps> = ({
   handleClose,

@@ -1,5 +1,5 @@
-import React from "react";
-import { TriggerProps } from "../Select/Typing";
+import React from 'react';
+import { TriggerProps } from '../Select/Typing';
 
 interface WrapperInputProps {
   children: React.ReactNode;
@@ -40,7 +40,7 @@ interface SelectInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: strings;
   value?: string;
   defaultValue?: string;
-  variant?: TriggerProps["variant"];
+  variant?: TriggerProps['variant'];
   onValueChange?: (value: string) => void;
 }
 

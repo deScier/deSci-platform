@@ -1,10 +1,10 @@
 interface ReviewerItemProps {
   id?: string;
-  status: "PENDING" | "APPROVED" | "REJECTED";
-  added_as: "reviewer" | "editor";
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  added_as: 'reviewer' | 'editor';
   published?: boolean;
   published_date?: string | null;
-  access_type?: "open" | "paid" | null;
+  access_type?: 'open' | 'paid' | null;
   likes?: number | null;
   views?: number | null;
   image: string;

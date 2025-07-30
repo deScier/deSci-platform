@@ -1,30 +1,30 @@
-import "@styles/login.css";
+import '@styles/login.css';
 
-import * as Step from "@/components/common/Steps/Steps";
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
+import * as Step from '@/components/common/Steps/Steps';
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
 
-import { Separator } from "@/components/ui/separator";
-import { useLoading } from "@/hooks/useLoading";
-import { useMetamaskAuth } from "@/hooks/useMetamaskAuth";
-import { home_routes } from "@/routes/home";
-import { RegisterProps, RegisterSchema } from "@/schemas/register";
-import { addWalletService } from "@/services/user/addWallet.service";
-import { RegisterRequestProps, registerUserService } from "@/services/user/register.service";
-import { verifyEmailService } from "@/services/user/verifyEmail.service";
-import { COOKIE_KEYS } from "@/utils/cookies_keys";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getCookie } from "cookies-next";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, X } from "react-bootstrap-icons";
-import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
-import { toast } from "react-toastify";
-import { RegisterModalProps } from "./Typing";
+import { Separator } from '@/components/ui/separator';
+import { useLoading } from '@/hooks/useLoading';
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth';
+import { home_routes } from '@/routes/home';
+import { RegisterProps, RegisterSchema } from '@/schemas/register';
+import { addWalletService } from '@/services/user/addWallet.service';
+import { RegisterRequestProps, registerUserService } from '@/services/user/register.service';
+import { verifyEmailService } from '@/services/user/verifyEmail.service';
+import { COOKIE_KEYS } from '@/utils/cookies_keys';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getCookie } from 'cookies-next';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, X } from 'react-bootstrap-icons';
+import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { RegisterModalProps } from './Typing';
 
-import LoginAnimation from "@/components/modules/Login/Animation/Animation";
-import MetamaskLogo from "public/svgs/modules/login/metamask.svg";
-import React from "react";
+import LoginAnimation from '@/components/modules/Login/Animation/Animation';
+import MetamaskLogo from 'public/svgs/modules/login/metamask.svg';
+import React from 'react';
 
 /**
  * @title RegisterModal Component
@@ -44,11 +44,11 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
     trigger,
   } = useForm<RegisterProps>({
     resolver: zodResolver(RegisterSchema),
-    defaultValues: { name: "", email: "", password: "", wallet_address: getCookie(COOKIE_KEYS.WALLET) || null },
-    reValidateMode: "onChange",
+    defaultValues: { name: '', email: '', password: '', wallet_address: getCookie(COOKIE_KEYS.WALLET) || null },
+    reValidateMode: 'onChange',
   });
 
-  console.log("watch", watch());
+  console.log('watch', watch());
 
   const { loading, start, stop } = useLoading();
 
@@ -56,25 +56,25 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
     start();
 
     if (!data.email || !data.name || !data.password) {
-      toast.error("Please fill in all fields.");
+      toast.error('Please fill in all fields.');
       stop();
       return;
     }
 
     if (!data.email) {
-      toast.error("Please enter a valid email.");
+      toast.error('Please enter a valid email.');
       stop();
       return;
     }
 
     if (!data.name) {
-      toast.error("Please enter your name.");
+      toast.error('Please enter your name.');
       stop();
       return;
     }
 
     if (!data.password || data.password.length < 8) {
-      toast.error("Please enter a password with at least 8 characters.");
+      toast.error('Please enter a password with at least 8 characters.');
       stop();
       return;
     }
@@ -86,34 +86,34 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
         password: data.password,
       };
 
-      if (data.wallet_address && data.wallet_address !== "") {
+      if (data.wallet_address && data.wallet_address !== '') {
         payload.walletAddress = data.wallet_address;
       }
 
       const res = await registerUserService(payload);
 
       if (!res.success) {
-        toast.error("An error occurred during registration. Please try again.");
+        toast.error('An error occurred during registration. Please try again.');
         stop();
         return;
       }
 
-      const signInRes = await signIn("credentials", {
+      const signInRes = await signIn('credentials', {
         redirect: false,
         email: data.email,
         password: data.password,
       });
 
       if (signInRes?.error) {
-        toast.error("Login error. Check your credentials.");
+        toast.error('Login error. Check your credentials.');
         return;
       }
 
       updateProgress(currentStep + 1);
-      toast.success("Register user successfully.");
+      toast.success('Register user successfully.');
     } catch (error) {
-      toast.error("An error occurred during registration. Please try again.");
-      console.error("Registration error:", error);
+      toast.error('An error occurred during registration. Please try again.');
+      console.error('Registration error:', error);
     } finally {
       stop();
     }
@@ -214,16 +214,16 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
               <Input.Root>
                 <Input.Label>E-mail</Input.Label>
                 <Input.Input
-                  {...register("email")}
+                  {...register('email')}
                   type="email"
                   placeholder="Type your best email"
                   onChange={(e) => {
-                    if (e.currentTarget.value === "") {
-                      trigger("email");
+                    if (e.currentTarget.value === '') {
+                      trigger('email');
                     }
-                    if (e.currentTarget.value !== "") {
-                      setValue("email", e.currentTarget.value);
-                      trigger("email");
+                    if (e.currentTarget.value !== '') {
+                      setValue('email', e.currentTarget.value);
+                      trigger('email');
                     }
                   }}
                 />
@@ -237,20 +237,20 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
               variant="primary"
               className="px-4 py-2"
               onClick={async () => {
-                trigger("email");
-                if (watch("email") && !errors.email) {
+                trigger('email');
+                if (watch('email') && !errors.email) {
                   start();
-                  await verifyEmailService({ email: watch("email") }).then((res) => {
+                  await verifyEmailService({ email: watch('email') }).then((res) => {
                     if (res) {
                       nextStep();
                       stop();
                     } else {
-                      toast.error("Email already in use.");
+                      toast.error('Email already in use.');
                       stop();
                     }
                   });
                 } else {
-                  toast.error("Please enter a valid email.");
+                  toast.error('Please enter a valid email.');
                   stop();
                 }
               }}
@@ -268,7 +268,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                 <Input.Label htmlFor="name">Name</Input.Label>
                 <Input.Input
                   placeholder="Type your full name"
-                  {...register("name")}
+                  {...register('name')}
                   id="name"
                   name="name"
                   type="text"
@@ -281,7 +281,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                 <Input.Label htmlFor="password">Password</Input.Label>
                 <Input.Password
                   placeholder="Type your password"
-                  {...register("password")}
+                  {...register('password')}
                   id="password"
                   name="password"
                   autoComplete="new-password"
@@ -302,12 +302,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                 <Button.Button
                   variant="outline"
                   className="px-4 py-2"
-                  disabled={watch("wallet_address") !== null && watch("wallet_address") !== ""}
+                  disabled={watch('wallet_address') !== null && watch('wallet_address') !== ''}
                   onClick={async () => {
                     const account = await handleGetMetamaskAccount();
 
                     if (account) {
-                      setValue("wallet_address", account.walletAddress);
+                      setValue('wallet_address', account.walletAddress);
 
                       await addWalletService({
                         walletAddress: account.walletAddress,
@@ -315,7 +315,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onLogin, onClose, onBack 
                         nonce: account.nonce,
                       }).then(async (res) => {
                         if (res.success) {
-                          toast.success("Connected wallet successfully.");
+                          toast.success('Connected wallet successfully.');
 
                           let data = {
                             user: {
@@ -380,7 +380,7 @@ const RegisterStepOne: React.FC<RegisterStepProps> = ({ register, errors }: Regi
       </div>
       <Input.Root>
         <Input.Label>E-mail</Input.Label>
-        <Input.Input type="email" placeholder="Type your best email" {...register("email")} />
+        <Input.Input type="email" placeholder="Type your best email" {...register('email')} />
         <Input.Error>{errors.email?.message}</Input.Error>
       </Input.Root>
     </React.Fragment>
@@ -398,7 +398,7 @@ const RegisterStepTwo: React.FC<RegisterStepProps> = ({ register, errors }: Regi
         <Input.Label htmlFor="name">Name</Input.Label>
         <Input.Input
           placeholder="Type your full name"
-          {...register("name")}
+          {...register('name')}
           id="name"
           name="name"
           type="text"
@@ -411,7 +411,7 @@ const RegisterStepTwo: React.FC<RegisterStepProps> = ({ register, errors }: Regi
         <Input.Label htmlFor="password">Password</Input.Label>
         <Input.Password
           placeholder="Type your password"
-          {...register("password")}
+          {...register('password')}
           id="password"
           name="password"
           autoComplete="new-password"

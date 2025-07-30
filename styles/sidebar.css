@@ -8,7 +8,7 @@
   fill: #fff;
 }
 
-.item[data-active="true"] svg {
+.item[data-active='true'] svg {
   fill: #70468c;
 }
 
@@ -20,6 +20,6 @@
   fill: #70468c;
 }
 
-.item-p[data-active="true"] p {
+.item-p[data-active='true'] p {
   color: #70468c;
 }

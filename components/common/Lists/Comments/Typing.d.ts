@@ -1,5 +1,5 @@
-import { DocumentGetProps } from "@/services/document/getArticles";
-import { CommentItemProps } from "../../Comment/Typing";
+import { DocumentGetProps } from '@/services/document/getArticles';
+import { CommentItemProps } from '../../Comment/Typing';
 
 interface EditorReviewListProps {
   article: DocumentGetProps | null;

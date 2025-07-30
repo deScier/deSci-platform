@@ -1,4 +1,4 @@
-import { DocumentGetProps } from "@/services/document/getArticles";
+import { DocumentGetProps } from '@/services/document/getArticles';
 
 interface InviteLinkProps {
   article: DocumentGetProps | null;

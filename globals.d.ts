@@ -1,4 +1,4 @@
-import { EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from "viem";
+import { EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from 'viem';
 
 interface EIP6963ProviderInfo {
   rdns: string;

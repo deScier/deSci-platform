@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import * as Button from "@components/common/Button/Button";
+import * as Button from '@components/common/Button/Button';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { useMetamaskAuth } from "@/hooks/useMetamaskAuth";
-import { home_routes } from "@/routes/home";
-import { useArticles } from "@/services/document/getArticles.service";
-import { addWalletService } from "@/services/user/addWallet.service";
-import { formatAddress } from "@/utils/format_wallet";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { CaretRight, PlusCircle, X } from "react-bootstrap-icons";
-import { toast } from "react-toastify";
-import { twMerge } from "tailwind-merge";
-import { ProfileProps } from "./Typing";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { useMetamaskAuth } from '@/hooks/useMetamaskAuth';
+import { home_routes } from '@/routes/home';
+import { useArticles } from '@/services/document/getArticles.service';
+import { addWalletService } from '@/services/user/addWallet.service';
+import { formatAddress } from '@/utils/format_wallet';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { CaretRight, PlusCircle, X } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
+import { ProfileProps } from './Typing';
 
-import Image from "next/image";
-import Link from "next/link";
-import CopyIcon from "public/svgs/common/copy.svg";
-import ShapeDeScierHandBookBottom from "public/svgs/modules/sidebar/Ellipse 46.svg";
-import ShapeDeScierHandBookTop from "public/svgs/modules/sidebar/Ellipse 48.svg";
-import IllustrationHandBook from "public/svgs/modules/sidebar/emojione-v1_document.svg";
-import React from "react";
-import SubmitedItem from "./SubmitedItem/SubmitedItem";
+import Image from 'next/image';
+import Link from 'next/link';
+import CopyIcon from 'public/svgs/common/copy.svg';
+import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.svg';
+import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg';
+import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg';
+import React from 'react';
+import SubmitedItem from './SubmitedItem/SubmitedItem';
 
 /**
  * @title Profile Component
@@ -52,7 +52,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
 
   return (
     <React.Fragment>
-      <aside className={twMerge("hidden md:relative md:block", className)}>
+      <aside className={twMerge('hidden md:relative md:block', className)}>
         <div className="flex flex-col gap-8 xxl:min-h-full 2xl:h-screen 2xl:min-h-screen right-0 md:py-14 md:px-6 justify-between bg-[#FEFEFE]">
           <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
@@ -70,7 +70,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
             </div>
             <div className="grid gap-4">
               <Image
-                src={session?.user?.userInfo.avatar || "/images/profile_dk08wk.png"}
+                src={session?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
                 quality={50}
                 width={144}
                 height={144}
@@ -99,7 +99,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                             nonce: account.nonce,
                           }).then(async (res) => {
                             if (res.success) {
-                              toast.success("MetaMask wallet connected successfully.");
+                              toast.success('MetaMask wallet connected successfully.');
 
                               let data = {
                                 user: {
@@ -184,10 +184,10 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                 ) : (
                   <div className="flex items-center gap-2 mx-auto my-0">
                     <p className="text-sm text-neutral-gray select-none">
-                      {formatAddress(session?.user?.userInfo.walletAddress || "N/A")}
+                      {formatAddress(session?.user?.userInfo.walletAddress || 'N/A')}
                     </p>
                     <HoverCard closeDelay={1000} open={isCopied}>
-                      <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || "N/A")}>
+                      <HoverCardTrigger onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}>
                         <CopyIcon className="bi bi-copy text-neutral-gray hover:text-primary-main cursor-pointer mb-0.5" />
                       </HoverCardTrigger>
                       <HoverCardContent className="p-2 py-1" side="bottom">
@@ -206,7 +206,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                 <IllustrationHandBook />
                 <div className="grid items-center">
                   <Link
-                    href={"https://descier-1.gitbook.io/the-desci-journal-handbook/"}
+                    href={'https://descier-1.gitbook.io/the-desci-journal-handbook/'}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -217,7 +217,7 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                   <div className="flex justify-between items-center w-full">
                     <p className="text-[13px] select-none text-[#F4F4F4]">Must-read for researchers!</p>
                     <Link
-                      href={"https://descier-1.gitbook.io/the-desci-journal-handbook/"}
+                      href={'https://descier-1.gitbook.io/the-desci-journal-handbook/'}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -241,13 +241,13 @@ const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) =
                       <SubmitedItem
                         key={item.id}
                         date={item.since}
-                        status={item.status as "published" | "in_review"}
+                        status={item.status as 'published' | 'in_review'}
                         title={item.title}
                         onClick={() => {
-                          if (item.status === "SUBMITTED") {
+                          if (item.status === 'SUBMITTED') {
                             router.push(`/home/search/${item.id}`);
-                          } else if (item.status === "PENDING") {
-                            router.push(home_routes.articles.in_review + "/" + item.id);
+                          } else if (item.status === 'PENDING') {
+                            router.push(home_routes.articles.in_review + '/' + item.id);
                           }
                         }}
                       />

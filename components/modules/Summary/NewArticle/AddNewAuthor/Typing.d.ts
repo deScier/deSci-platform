@@ -1,4 +1,4 @@
-import { AuthorProps } from "@/schemas/create_document";
+import { AuthorProps } from '@/schemas/create_document';
 
 interface NewAuthorProps {
   onClose: () => void;

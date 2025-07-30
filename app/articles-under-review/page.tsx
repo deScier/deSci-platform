@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
 
 import {
   ArticleUnderReview,
   ArticleUnderReviewProps,
   ArticleUnderReviewSkeleton,
-} from "@/components/common/Publication/Item/ArticlesUnderReview";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { articles_types_filter } from "@/mock/articles_types";
-import { filter_status } from "@/mock/dropdow_filter_options";
-import { home_routes } from "@/routes/home";
-import { AuthorsOnDocuments } from "@/services/document/getArticles";
-import { useArticles } from "@/services/document/getArticles.service";
-import { useSession } from "next-auth/react";
+} from '@/components/common/Publication/Item/ArticlesUnderReview';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import { articles_types_filter } from '@/mock/articles_types';
+import { filter_status } from '@/mock/dropdow_filter_options';
+import { home_routes } from '@/routes/home';
+import { AuthorsOnDocuments } from '@/services/document/getArticles';
+import { useArticles } from '@/services/document/getArticles.service';
+import { useSession } from 'next-auth/react';
 
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import useDebounce from "@/hooks/useDebounce";
-import React from "react";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import useDebounce from '@/hooks/useDebounce';
+import React from 'react';
 
 export default function ArticlesUnderReviewPage() {
   const { data: session } = useSession();
@@ -29,7 +29,7 @@ export default function ArticlesUnderReviewPage() {
   const per_page = 8;
   const [page, setPage] = React.useState(1);
   const [documentType, setDocumentType] = React.useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [status, setStatus] = React.useState<string | null>(null);
   const [results, setResults] = React.useState<ArticleUnderReviewProps[]>([]);
@@ -56,7 +56,7 @@ export default function ArticlesUnderReviewPage() {
 
     let filteredArticles = [...articles];
 
-    if (documentType && documentType !== "all") {
+    if (documentType && documentType !== 'all') {
       filteredArticles = filteredArticles.filter(
         (article) => article.document_type?.toLowerCase() === documentType.toLowerCase()
       );
@@ -76,7 +76,7 @@ export default function ArticlesUnderReviewPage() {
     setTotalPages(Math.ceil(filteredArticles.length / per_page));
   }, [articles, documentType, status, debouncedSearchTerm]);
 
-  const withoutFilters = !documentType && !status && debouncedSearchTerm === "";
+  const withoutFilters = !documentType && !status && debouncedSearchTerm === '';
 
   return (
     <React.Fragment>
@@ -94,14 +94,14 @@ export default function ArticlesUnderReviewPage() {
           </div>
           <div className="flex flex-wrap md:flex-row md:items-center gap-2">
             <Select
-              value={documentType || "all"}
-              onValueChange={(value) => setDocumentType(value === "all" ? null : value)}
+              value={documentType || 'all'}
+              onValueChange={(value) => setDocumentType(value === 'all' ? null : value)}
             >
               <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                 <SelectValue asChild>
                   <p>
-                    Article type:{" "}
-                    {articles_types_filter.find((item) => item.value === documentType)?.label || "All articles"}
+                    Article type:{' '}
+                    {articles_types_filter.find((item) => item.value === documentType)?.label || 'All articles'}
                   </p>
                 </SelectValue>
               </SelectTrigger>
@@ -109,13 +109,13 @@ export default function ArticlesUnderReviewPage() {
                 <React.Fragment>
                   {articles_types_filter.map((item, index) => (
                     <React.Fragment key={item.id}>
-                      {item.type === "label" && (
+                      {item.type === 'label' && (
                         <React.Fragment>
                           <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
                           <Separator />
                         </React.Fragment>
                       )}
-                      {item.type === "item" && (
+                      {item.type === 'item' && (
                         <SelectItem
                           value={item.value as string}
                           className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -128,7 +128,7 @@ export default function ArticlesUnderReviewPage() {
                 </React.Fragment>
               </SelectContent>
             </Select>
-            <Select value={status || "all"} onValueChange={(value) => setStatus(value === "all" ? null : value)}>
+            <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? null : value)}>
               <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                 <SelectValue placeholder="All statuses" />
               </SelectTrigger>
@@ -149,7 +149,7 @@ export default function ArticlesUnderReviewPage() {
                 onClick={() => {
                   setDocumentType(null);
                   setStatus(null);
-                  setSearchTerm("");
+                  setSearchTerm('');
                 }}
               >
                 Clear Filters
@@ -158,9 +158,9 @@ export default function ArticlesUnderReviewPage() {
           </div>
         </div>
         <div
-          className={cn("flex flex-col gap-6", {
+          className={cn('flex flex-col gap-6', {
             results: results.length > 1,
-            "min-h-[calc(50vh)]": results.length > 1,
+            'min-h-[calc(50vh)]': results.length > 1,
           })}
         >
           <div className="grid gap-8">
@@ -186,9 +186,9 @@ export default function ArticlesUnderReviewPage() {
                           since={article.since}
                           image={article.image}
                           link={redirectToArticle(article.authors!, article.userId!, article.id!)}
-                          status_editor={article.status_editor as "pending" | "approved"}
-                          status_reviewer={article.status_reviewer as "pending" | "approved"}
-                          status_admin={article.status_admin as "pending" | "approved"}
+                          status_editor={article.status_editor as 'pending' | 'approved'}
+                          status_reviewer={article.status_reviewer as 'pending' | 'approved'}
+                          status_admin={article.status_admin as 'pending' | 'approved'}
                         />
                       </React.Fragment>
                     ))

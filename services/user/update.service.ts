@@ -1,11 +1,11 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 export const updateUserService = async (data: UpdateUserRequestProps) => {
   const session = await getSession();
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
       authorization: `Bearer ${session?.user?.token}`,
     },
     body: JSON.stringify(data),
@@ -14,12 +14,12 @@ export const updateUserService = async (data: UpdateUserRequestProps) => {
   if (response.status === 200) {
     return {
       success: true,
-      message: "Updated user successfully",
+      message: 'Updated user successfully',
     };
   }
 
   const responseData = await response.json();
-  const message = responseData.message ?? "Error in update user.";
+  const message = responseData.message ?? 'Error in update user.';
 
   return {
     success: false,

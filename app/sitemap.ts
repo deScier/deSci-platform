@@ -1,6 +1,6 @@
-import type { MetadataRoute } from "next";
-import type { DocumentProps } from "@/services/document/getArticles";
-import type { PublicJournalProps } from "@/services/journal/getJournals.service";
+import type { MetadataRoute } from 'next';
+import type { DocumentProps } from '@/services/document/getArticles';
+import type { PublicJournalProps } from '@/services/journal/getJournals.service';
 
 /**
  * @title Dynamic Sitemap Generator for deSci Platform
@@ -14,7 +14,7 @@ import type { PublicJournalProps } from "@/services/journal/getJournals.service"
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_URL environment variable is required for sitemap generation");
+    throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for sitemap generation');
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -25,36 +25,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/journals`,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/articles-for-approval`,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: 'daily',
       priority: 0.7,
     },
   ];
 
   const journalRoutes: MetadataRoute.Sitemap = journals
-    .filter((journal: PublicJournalProps) => journal.status === "APPROVED")
+    .filter((journal: PublicJournalProps) => journal.status === 'APPROVED')
     .map((journal: PublicJournalProps) => ({
       url: `${baseUrl}/journals/${journal.id}`,
       lastModified: new Date(journal.updatedAt),
-      changeFrequency: "weekly" as const,
+      changeFrequency: 'weekly' as const,
       priority: 0.9,
     }));
 
   const documentRoutes: MetadataRoute.Sitemap = documents.map((document: DocumentProps) => ({
     url: `${baseUrl}/paper/${document.id}`,
     lastModified: new Date(document.updatedAt),
-    changeFrequency: "monthly" as const,
+    changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
 
@@ -71,13 +71,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 async function fetchPublicJournalsServer(): Promise<PublicJournalProps[]> {
   try {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
       next: { revalidate: 3600 },
     });
 
     if (!request.ok) {
-      console.error("Failed to fetch public journals for sitemap, status:", request.status);
+      console.error('Failed to fetch public journals for sitemap, status:', request.status);
       return [];
     }
 
@@ -85,7 +85,7 @@ async function fetchPublicJournalsServer(): Promise<PublicJournalProps[]> {
     const journalsArray = response.journals || response;
     return Array.isArray(journalsArray) ? journalsArray : [];
   } catch (error) {
-    console.error("Error fetching public journals for sitemap:", error);
+    console.error('Error fetching public journals for sitemap:', error);
     return [];
   }
 }
@@ -101,20 +101,20 @@ async function fetchPublicJournalsServer(): Promise<PublicJournalProps[]> {
 async function fetchPublicDocumentsServer(): Promise<DocumentProps[]> {
   try {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
       next: { revalidate: 3600 },
     });
 
     if (!request.ok) {
-      console.error("Failed to fetch public documents for sitemap, status:", request.status);
+      console.error('Failed to fetch public documents for sitemap, status:', request.status);
       return [];
     }
 
     const response = await request.json();
     return response?.documents || [];
   } catch (error) {
-    console.error("Error fetching public documents for sitemap:", error);
+    console.error('Error fetching public documents for sitemap:', error);
     return [];
   }
 }

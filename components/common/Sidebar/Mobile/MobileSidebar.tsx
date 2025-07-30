@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { items } from "@/mock/sidebar_items";
-import { home_routes } from "@/routes/home";
-import { SelectCreation } from "@components/common/Sidebar/SelectCreation/SelectCreation";
-import { SidesProps } from "@components/common/Sidebar/Typing";
-import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { X } from "react-bootstrap-icons";
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { items } from '@/mock/sidebar_items';
+import { home_routes } from '@/routes/home';
+import { SelectCreation } from '@components/common/Sidebar/SelectCreation/SelectCreation';
+import { SidesProps } from '@components/common/Sidebar/Typing';
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { X } from 'react-bootstrap-icons';
 
-import Item from "@components/common/Sidebar/Item/Item";
-import Logout from "@components/common/Sidebar/Logout/Logout";
-import LogoDeScier from "public/svgs/common/logo/deScier - Logo copy.svg";
-import React from "react";
+import Item from '@components/common/Sidebar/Item/Item';
+import Logout from '@components/common/Sidebar/Logout/Logout';
+import LogoDeScier from 'public/svgs/common/logo/deScier - Logo copy.svg';
+import React from 'react';
 
 /**
  * @title Mobile Sidebar Component
@@ -55,7 +55,7 @@ export const MobileSidebarComponent: React.FC<SidesProps> = ({ onClose }: SidesP
             />
             <div>
               {items.map((item) =>
-                session?.user?.userInfo.role !== "ADMIN" && item.text === "Admin" ? null : (
+                session?.user?.userInfo.role !== 'ADMIN' && item.text === 'Admin' ? null : (
                   <div className="grid" key={item.id}>
                     <Item
                       key={item.id}

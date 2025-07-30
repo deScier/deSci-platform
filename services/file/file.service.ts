@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -12,7 +12,7 @@ type UploadFileProps = {
 
 export const localUrlToFile = async (localUrl: string, filename: string): Promise<File> => {
   const request = await fetch(localUrl, {
-    method: "GET",
+    method: 'GET',
   });
   const blob = await request.blob();
   const file = new File([blob], filename);
@@ -25,15 +25,15 @@ export const uploadAvatarService = async (body: UploadFileProps): Promise<string
 
   const file = await localUrlToFile(body.fileLocalUrl, body.filename);
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("mimetype", body.mimetype);
+  formData.append('file', file);
+  formData.append('mimetype', body.mimetype);
 
   const request = await fetch(`${API_URL}/users/avatar`, {
-    method: "PATCH",
+    method: 'PATCH',
     body: formData,
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
   });
 
@@ -49,15 +49,15 @@ export const uploadJournalCoverService = async (body: UploadFileProps): Promise<
 
   const file = await localUrlToFile(body.fileLocalUrl, body.filename);
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("mimetype", body.mimetype);
+  formData.append('file', file);
+  formData.append('mimetype', body.mimetype);
 
   const request = await fetch(`${API_URL}/journals/upload/${body.journalId}`, {
-    method: "POST",
+    method: 'POST',
     body: formData,
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
   });
 
@@ -71,15 +71,15 @@ export const uploadDocumentFileService = async (body: UploadFileProps) => {
 
   const file = await localUrlToFile(body.fileLocalUrl, body.filename);
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("type", body.mimetype);
+  formData.append('file', file);
+  formData.append('type', body.mimetype);
 
   const request = await fetch(`${API_URL}/documents/upload/${body.documentId}`, {
-    method: "POST",
+    method: 'POST',
     body: formData,
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
   });
 

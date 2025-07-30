@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
 
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import { ArticleUnderReviewSkeleton } from "@/components/common/Publication/Item/ArticlesUnderReview";
-import { ReviewerItemProps } from "@/components/modules/AsReviewer/ReviewerItem/Typing";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useDebounce from "@/hooks/useDebounce";
-import { articles_types_filter } from "@/mock/articles_types";
-import { reviewer_filter_status } from "@/mock/dropdow_filter_options";
-import { useArticleToReview } from "@/services/reviewer/fetchDocuments.service";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import { ArticleUnderReviewSkeleton } from '@/components/common/Publication/Item/ArticlesUnderReview';
+import { ReviewerItemProps } from '@/components/modules/AsReviewer/ReviewerItem/Typing';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import useDebounce from '@/hooks/useDebounce';
+import { articles_types_filter } from '@/mock/articles_types';
+import { reviewer_filter_status } from '@/mock/dropdow_filter_options';
+import { useArticleToReview } from '@/services/reviewer/fetchDocuments.service';
 
-import ReviewerItem from "@/components/modules/AsReviewer/ReviewerItem/ReviewerItem";
-import React from "react";
+import ReviewerItem from '@/components/modules/AsReviewer/ReviewerItem/ReviewerItem';
+import React from 'react';
 
 export default function AsReviewerPage() {
   const { articles, loading } = useArticleToReview();
@@ -23,16 +23,16 @@ export default function AsReviewerPage() {
   /** @dev Number of articles displayed per page. */
   const per_page = 8;
 
-  const [current, setCurrent] = React.useState<string>("under-review");
+  const [current, setCurrent] = React.useState<string>('under-review');
 
   /** @notice Current page number state.*/
   const [page, setPage] = React.useState(1);
 
   /** @notice State for the selected document type filter. */
-  const [documentType, setDocumentType] = React.useState<string | null>("all");
+  const [documentType, setDocumentType] = React.useState<string | null>('all');
 
   /** @notice State for the search term. */
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   /** @notice Debounces the search term. */
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -62,7 +62,7 @@ export default function AsReviewerPage() {
 
     let filteredArticles = [...articles];
 
-    if (documentType && documentType !== "all") {
+    if (documentType && documentType !== 'all') {
       filteredArticles = filteredArticles.filter(
         (article) => article.document_type?.toLowerCase() == documentType?.toLowerCase()
       );
@@ -83,7 +83,7 @@ export default function AsReviewerPage() {
     setResults(filteredArticles);
   }, [articles, documentType, status, debouncedSearchTerm, current]);
 
-  const withoutFilters = documentType === "all" && status === null && debouncedSearchTerm === "";
+  const withoutFilters = documentType === 'all' && status === null && debouncedSearchTerm === '';
 
   return (
     <React.Fragment>
@@ -99,7 +99,7 @@ export default function AsReviewerPage() {
                   className="bg-primary-main text-neutral-white py-2 px-8 text-sm md:text-lg font-semibold rounded-md border data-[state=inactive]:bg-transparent data-[state=inactive]:text-neutral-gray data-[state=inactive]:font-regular data-[state=active]:bg-primary-main data-[state=active]:text-white data-[state=inactive]:border-neutral-gray"
                   value="under-review"
                   onClick={() => {
-                    setCurrent("under-review");
+                    setCurrent('under-review');
                   }}
                 >
                   Ongoing reviews
@@ -108,7 +108,7 @@ export default function AsReviewerPage() {
                   className="bg-primary-main text-neutral-white py-2 px-8 text-sm md:text-lg font-semibold rounded-md border data-[state=inactive]:bg-transparent data-[state=inactive]:text-neutral-gray data-[state=inactive]:font-regular data-[state=active]:bg-primary-main data-[state=active]:text-white data-[state=inactive]:border-neutral-gray"
                   value="published"
                   onClick={() => {
-                    setCurrent("published");
+                    setCurrent('published');
                   }}
                 >
                   Completed reviews
@@ -127,7 +127,7 @@ export default function AsReviewerPage() {
                 <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                   <SelectValue asChild>
                     <p>
-                      Article type:{" "}
+                      Article type:{' '}
                       {articles_types_filter.find((item) => item.value === documentType)?.label || undefined}
                     </p>
                   </SelectValue>
@@ -136,13 +136,13 @@ export default function AsReviewerPage() {
                   <React.Fragment>
                     {articles_types_filter.map((item, index) => (
                       <React.Fragment key={item.id}>
-                        {item.type === "label" && (
+                        {item.type === 'label' && (
                           <React.Fragment>
                             <p className="px-8 py-1.5 pl-8 pr-2 text-sm font-semibold pt-2">{item.label}</p>
                             <Separator />
                           </React.Fragment>
                         )}
-                        {item.type === "item" && (
+                        {item.type === 'item' && (
                           <SelectItem
                             value={item.value as string}
                             className="px-8 text-sm font-semibold text-primary-main hover:text-primary-hover cursor-pointer"
@@ -156,9 +156,9 @@ export default function AsReviewerPage() {
                   </React.Fragment>
                 </SelectContent>
               </Select>
-              {current !== "published" && (
+              {current !== 'published' && (
                 <React.Fragment>
-                  <Select value={status || "all"} onValueChange={(value) => setStatus(value === "all" ? null : value)}>
+                  <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? null : value)}>
                     <SelectTrigger className="w-full sm:w-fit flex items-center justify-center py-2 px-4 text-sm rounded-full border-[1px] border-primary-main text-primary-main hover:scale-105 transition-all duration-200 bg-transparent font-semibold min-w-[229px]">
                       <SelectValue placeholder="All statuses" />
                     </SelectTrigger>
@@ -174,9 +174,9 @@ export default function AsReviewerPage() {
                     <p
                       className="text-base font-semibold text-terciary-main cursor-pointer hover:underline select-none"
                       onClick={() => {
-                        setDocumentType("all");
+                        setDocumentType('all');
                         setStatus(null);
-                        setSearchTerm("");
+                        setSearchTerm('');
                       }}
                     >
                       Clear Filters
@@ -186,7 +186,7 @@ export default function AsReviewerPage() {
               )}
             </div>
           </div>
-          {current === "under-review" && (
+          {current === 'under-review' && (
             <React.Fragment>
               <div className="grid gap-8">
                 <div className="grid md:grid-cols-2 3xl:grid-cols-3 gap-4">
@@ -228,7 +228,7 @@ export default function AsReviewerPage() {
               </div>
             </React.Fragment>
           )}
-          {current === "published" && (
+          {current === 'published' && (
             <React.Fragment>
               <div className="grid gap-8">
                 <div className="grid md:grid-cols-2 gap-4">

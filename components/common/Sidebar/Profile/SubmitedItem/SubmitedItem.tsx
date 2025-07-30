@@ -1,6 +1,6 @@
-import { BadgeProps, SubmitedItemProps } from "@components/common/Sidebar/Profile/Typing";
+import { BadgeProps, SubmitedItemProps } from '@components/common/Sidebar/Profile/Typing';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title SubmitedItem Functional Component
@@ -37,12 +37,12 @@ const Badge: React.FC<BadgeProps> = ({ status }: BadgeProps) => {
 
   return (
     <React.Fragment>
-      {status === "SUBMITTED" && (
+      {status === 'SUBMITTED' && (
         <div className="bg-[#ECF8E5] py-1 px-2 rounded-xs">
           <p className="font-[500] text-sm text-status-green select-none">Published</p>
         </div>
       )}
-      {["PENDING", "APPROVED", "ADMIN_APPROVE"].includes(status) && (
+      {['PENDING', 'APPROVED', 'ADMIN_APPROVE'].includes(status) && (
         <div className="bg-[#FFF7E7] py-1 px-2 rounded-xs">
           <p className="font-[500] text-sm text-status-pending select-none">In review</p>
         </div>

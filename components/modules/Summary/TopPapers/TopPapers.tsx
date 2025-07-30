@@ -1,8 +1,8 @@
-import { PublicationItem } from "@/components/common/Publication/Item/Published";
-import { addNumberSuffix } from "@/utils/format_number";
-import React from "react";
-import { twMerge } from "tailwind-merge";
-import { TopPapersProps } from "./Typing";
+import { PublicationItem } from '@/components/common/Publication/Item/Published';
+import { addNumberSuffix } from '@/utils/format_number';
+import React from 'react';
+import { twMerge } from 'tailwind-merge';
+import { TopPapersProps } from './Typing';
 
 /**
  * @title TopPapers Component
@@ -15,8 +15,8 @@ const TopPapers: React.FC<TopPapersProps> = ({ publishedDocuments }: TopPapersPr
         <h3 className="text-xl font-[500] lg:text-lg 2xl:text-xl">My top papers</h3>
         <div
           className={twMerge(
-            "grid gap-4 max-h-[13rem] overflow-y-scroll min-h-[188px]",
-            `${publishedDocuments.length > 1 && "content-start"}`
+            'grid gap-4 max-h-[13rem] overflow-y-scroll min-h-[188px]',
+            `${publishedDocuments.length > 1 && 'content-start'}`
           )}
         >
           {publishedDocuments.length === 0 ? (
@@ -29,12 +29,12 @@ const TopPapers: React.FC<TopPapersProps> = ({ publishedDocuments }: TopPapersPr
                   <div className="grid gap-4">
                     <PublicationItem
                       key={item.id}
-                      date={new Date(item.createdAt).toLocaleDateString("pt-BR")}
-                      link={""}
+                      date={new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                      link={''}
                       likes={addNumberSuffix(item.likes)}
                       title={item.title}
                       views={addNumberSuffix(item.views)}
-                      image={item.cover || ""}
+                      image={item.cover || ''}
                     />
                     {index !== publishedDocuments.length - 1 && <hr className="divider-h" />}
                   </div>

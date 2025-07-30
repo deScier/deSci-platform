@@ -1,7 +1,7 @@
-import * as zod from "zod";
+import * as zod from 'zod';
 
 const envVariables = zod.object({
-  NODE_ENV: zod.enum(["dev", "prod", "test"]).default("dev"),
+  NODE_ENV: zod.enum(['dev', 'prod', 'test']).default('dev'),
 });
 envVariables.parse(process.env);
 

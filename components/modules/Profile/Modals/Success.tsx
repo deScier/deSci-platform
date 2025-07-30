@@ -1,7 +1,7 @@
-import * as Button from "@components/common/Button/Button";
+import * as Button from '@components/common/Button/Button';
 
-import Success from "public/svgs/common/profile/update-email.svg";
-import React from "react";
+import Success from 'public/svgs/common/profile/update-email.svg';
+import React from 'react';
 
 /**
  * @title GenericSuccess Component

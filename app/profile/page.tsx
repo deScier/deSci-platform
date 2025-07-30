@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import * as Dialog from "@components/common/Dialog/Digalog";
-import * as Title from "@components/common/Title/Page";
+import * as Dialog from '@components/common/Dialog/Digalog';
+import * as Title from '@components/common/Title/Page';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Separator } from "@/components/ui/separator";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { home_routes } from "@/routes/home";
-import { UserSession as User } from "@/types/next-auth";
-import { formatAddress } from "@/utils/format_wallet";
-import { handleLogout } from "@/utils/logout";
-import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { BoxArrowRight, Envelope, Lock, Pencil } from "react-bootstrap-icons";
-import { twMerge } from "tailwind-merge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Separator } from '@/components/ui/separator';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { home_routes } from '@/routes/home';
+import { UserSession as User } from '@/types/next-auth';
+import { formatAddress } from '@/utils/format_wallet';
+import { handleLogout } from '@/utils/logout';
+import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { BoxArrowRight, Envelope, Lock, Pencil } from 'react-bootstrap-icons';
+import { twMerge } from 'tailwind-merge';
 
-import Box from "@/components/common/Box/Box";
-import ForgotPasswordModal from "@/components/modules/ForgotPassword/ForgotPassword";
-import UpdatePassword from "@/components/modules/Profile/Modals/ChangePassword";
-import UpdateProfile from "@/components/modules/Profile/Modals/EditProfile";
-import UpdateEmail from "@/components/modules/Profile/Modals/UpdateEmail";
-import Image from "next/image";
-import React from "react";
+import Box from '@/components/common/Box/Box';
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword';
+import UpdatePassword from '@/components/modules/Profile/Modals/ChangePassword';
+import UpdateProfile from '@/components/modules/Profile/Modals/EditProfile';
+import UpdateEmail from '@/components/modules/Profile/Modals/UpdateEmail';
+import Image from 'next/image';
+import React from 'react';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -69,7 +69,7 @@ export default function ProfilePage() {
                 quality={50}
                 height={144}
                 alt="profile-image"
-                src={session?.user?.userInfo.avatar || "/images/profile_dk08wk.png"}
+                src={session?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
                 className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover object-center"
               />
             ) : (
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                 quality={50}
                 height={144}
                 alt="profile-image"
-                src={"/images/profile_dk08wk.png"}
+                src={'/images/profile_dk08wk.png'}
                 className="w-36 h-36 rounded-full mx-auto my-0 lg:w-24 lg:h-24 2xl:w-36 2xl:h-36 object-cover object-center"
               />
             )}
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                 )}
                 <div className="flex items-center gap-2">
                   <Envelope className="w-4 h-5 fill-neutral-gray" />
-                  <p className="text-sm text-neutral-gray select-none">{session?.user?.email || "-"}</p>
+                  <p className="text-sm text-neutral-gray select-none">{session?.user?.email || '-'}</p>
                 </div>
                 {session?.user?.userInfo.walletAddress && (
                   <React.Fragment>
@@ -110,7 +110,7 @@ export default function ProfilePage() {
                       </p>
                       <HoverCard closeDelay={1000} open={isCopied}>
                         <HoverCardTrigger
-                          onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || "N/A")}
+                          onClick={() => copyToClipboard(session?.user?.userInfo.walletAddress || 'N/A')}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -183,15 +183,15 @@ export default function ProfilePage() {
       <Dialog.Root open={profile.edit_profile || profile.edit_profile_sucess}>
         <Dialog.Content
           className={twMerge(
-            "pt-6 px-6 pb-14 md:py-14 md:px-16",
-            `${profile.edit_profile && "md:max-w-[808px]"}`,
-            `${profile.edit_profile_sucess && "md:max-w-[480px]"}`
+            'pt-6 px-6 pb-14 md:py-14 md:px-16',
+            `${profile.edit_profile && 'md:max-w-[808px]'}`,
+            `${profile.edit_profile_sucess && 'md:max-w-[480px]'}`
           )}
         >
           <UpdateProfile
-            name={session?.user?.name ?? ""}
-            title={session?.user?.userInfo.title ?? ""}
-            image={session?.user?.userInfo?.avatar ?? ""}
+            name={session?.user?.name ?? ''}
+            title={session?.user?.userInfo.title ?? ''}
+            image={session?.user?.userInfo?.avatar ?? ''}
             success={profile.edit_profile_sucess}
             edit_profile={profile.edit_profile}
             onClose={() => setProfile({ ...profile, edit_profile: false, edit_profile_sucess: false })}
@@ -200,7 +200,7 @@ export default function ProfilePage() {
         </Dialog.Content>
       </Dialog.Root>
       <Dialog.Root open={email.insert_password_to_edit_email || email.new_email || email.new_email_sucess}>
-        <Dialog.Content className={twMerge("pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]")}>
+        <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]')}>
           <UpdateEmail
             insert_password={email.insert_password_to_edit_email}
             new_email={email.new_email}
@@ -224,7 +224,7 @@ export default function ProfilePage() {
       <Dialog.Root
         open={password.insert_password_to_edit_password || password.new_password || password.new_password_sucess}
       >
-        <Dialog.Content className={twMerge("pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]")}>
+        <Dialog.Content className={twMerge('pt-6 px-6 pb-14 md:py-14 md:px-16 md:max-w-[480px]')}>
           <UpdatePassword
             new_password={password.new_password}
             insert_current_password={password.insert_password_to_edit_password}
@@ -263,7 +263,7 @@ export default function ProfilePage() {
           passwordRecovery.recover_password_sucess
         }
       >
-        <Dialog.Content className={twMerge("py-0 px-0 md:max-w-[480px]")}>
+        <Dialog.Content className={twMerge('py-0 px-0 md:max-w-[480px]')}>
           <ForgotPasswordModal
             onBack={() => {}}
             onClose={() => {

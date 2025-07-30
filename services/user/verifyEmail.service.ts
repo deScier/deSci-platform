@@ -1,7 +1,7 @@
 export const verifyEmailService = async (data: VerifyEmailRequestProps): Promise<boolean> => {
   const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/check-email`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify(data),
   });
 

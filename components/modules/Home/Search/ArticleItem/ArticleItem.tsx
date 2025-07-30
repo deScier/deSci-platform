@@ -1,15 +1,15 @@
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { cn } from "@/lib/utils";
-import { formatDate } from "@/utils/date_format";
-import { formatName } from "@/utils/format_texts";
-import { truncate } from "lodash";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { Eye, HandThumbsUpFill } from "react-bootstrap-icons";
-import slug from "slug";
-import "./ArticleItem.css";
-import { ArticleItemProps } from "./Typing";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { cn } from '@/lib/utils';
+import { formatDate } from '@/utils/date_format';
+import { formatName } from '@/utils/format_texts';
+import { truncate } from 'lodash';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons';
+import slug from 'slug';
+import './ArticleItem.css';
+import { ArticleItemProps } from './Typing';
 
 /**
  * @title ArticleItem Component
@@ -31,14 +31,14 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
   journal,
 }: ArticleItemProps) => {
   return (
-    <div className={cn("grid gap-2 bg-[#fff] py-3 px-4 rounded-lg", className)}>
+    <div className={cn('grid gap-2 bg-[#fff] py-3 px-4 rounded-lg', className)}>
       <div className="grid lg:grid-cols-max-1px-auto lg:justify-start items-center gap-2 md:gap-4">
         <Image
           src={image}
           width={80}
           height={80}
           alt={title}
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
           className="rounded-md h-28 w-full lg:w-20 lg:h-20 2xl:w-20 2xl:h-20"
         />
         <hr className="hidden lg:block h-full w-[1px] bg-neutral-stroke_light" />
@@ -48,7 +48,7 @@ export const ArticleItem: React.FC<ArticleItemProps> = ({
               <Link
                 href="/home/search/[slug]"
                 as={`/home/search/${slug(id)}`}
-                className={cn(`${journal?.name && "grid justify-start lg:grid-flow-col items-center gap-1"}`)}
+                className={cn(`${journal?.name && 'grid justify-start lg:grid-flow-col items-center gap-1'}`)}
               >
                 {journal && (
                   <React.Fragment>
@@ -135,7 +135,7 @@ export const PublishedStatus: React.FC<PublishedStatusProps> = ({
     <React.Fragment>
       <div className="grid gap-1">
         <div className="grid gap-2">
-          {access_type == "open" ? (
+          {access_type == 'open' ? (
             <React.Fragment>
               <div className="flex flex-wrap gap-2 items-center">
                 <div className="w-3 h-3 bg-status-green rounded-full" />
@@ -178,7 +178,7 @@ export const PublishedStatus: React.FC<PublishedStatusProps> = ({
 
 interface PublishedStatusProps {
   published_date: string;
-  access_type?: "open" | "paid" | null;
+  access_type?: 'open' | 'paid' | null;
   likes?: number | null;
   views?: number | null;
 }

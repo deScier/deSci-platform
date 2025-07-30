@@ -1,13 +1,13 @@
-import "./Item.css";
+import './Item.css';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AuthorsOnDocuments } from "@/services/document/getArticles";
-import { truncate } from "lodash";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AuthorsOnDocuments } from '@/services/document/getArticles';
+import { truncate } from 'lodash';
 
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 /**
  * @title Article Under Review Component
@@ -29,10 +29,10 @@ export const ArticleUnderReview: React.FC<ArticleUnderReviewProps> = ({
         <div className="relative w-full md:w-20 h-20">
           <Image
             fill
-            src={image || "https://random.imagecdn.app/150/150"}
+            src={image || 'https://random.imagecdn.app/150/150'}
             alt={title}
             quality={50}
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             className="rounded-md object-cover"
           />
         </div>
@@ -64,7 +64,7 @@ export const ArticleUnderReview: React.FC<ArticleUnderReviewProps> = ({
               </Link>
             )}
             <div className="flex items-center gap-2">
-              {status_editor === "approved" && status_reviewer === "approved" ? (
+              {status_editor === 'approved' && status_reviewer === 'approved' ? (
                 <React.Fragment>
                   <p className="text-sm text-neutral-gray lg:text-sm">Published in</p>
                   <p className="text-base font-semibold lg:text-sm 2xl:text-base">{since}</p>
@@ -82,27 +82,27 @@ export const ArticleUnderReview: React.FC<ArticleUnderReviewProps> = ({
           <div className="border-[1px] rounded-md px-2 border-neutral-stroke_light md:w-fit">
             <div className="grid grid-flow-col items-center justify-center md:justify-start">
               <div className="grid grid-flow-col gap-2 md:gap-1 items-center">
-                {status_admin === "approved" ? (
+                {status_admin === 'approved' ? (
                   <p className="text-sm 2xl:text-base font-semibold text-status-green">Published</p>
                 ) : (
                   <React.Fragment>
-                    {status_editor === "approved" && (
+                    {status_editor === 'approved' && (
                       <p className="text-xs sm:text-base font-semibold text-status-green truncate xl:text-sm flex-shrink-0">
                         Approved by editor
                       </p>
                     )}
-                    {status_editor === "pending" && (
+                    {status_editor === 'pending' && (
                       <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0">
                         Editor pending
                       </p>
                     )}
                     <span className="text-sm md:text-base font-semibold text-neutral-light_gray">/</span>
-                    {status_reviewer === "approved" && (
+                    {status_reviewer === 'approved' && (
                       <p className="text-xs sm:text-base font-semibold text-status-green truncate xl:text-sm flex-shrink-0">
                         Reviewer approval
                       </p>
                     )}
-                    {status_reviewer === "pending" && (
+                    {status_reviewer === 'pending' && (
                       <p className="text-xs sm:text-base font-semibold text-status-pending truncate xl:text-sm flex-shrink-0">
                         Reviewer pending
                       </p>
@@ -151,9 +151,9 @@ export const ArticleUnderReviewSkeleton: React.FC = () => {
 
 export interface ArticleUnderReviewProps {
   id?: string;
-  status_editor?: "pending" | "approved";
-  status_reviewer?: "pending" | "approved";
-  status_admin?: "pending" | "approved";
+  status_editor?: 'pending' | 'approved';
+  status_reviewer?: 'pending' | 'approved';
+  status_admin?: 'pending' | 'approved';
   status?: string;
   image: string;
   since: string;

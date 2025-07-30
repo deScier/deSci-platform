@@ -1,6 +1,6 @@
-import type { IProvider } from "@web3auth/base";
-import { createPublicClient, createWalletClient, custom, formatEther, parseEther } from "viem";
-import { mainnet, polygonAmoy, sepolia } from "viem/chains";
+import type { IProvider } from '@web3auth/base';
+import { createPublicClient, createWalletClient, custom, formatEther, parseEther } from 'viem';
+import { mainnet, polygonAmoy, sepolia } from 'viem/chains';
 
 export default class EthereumRpc {
   private provider: IProvider;
@@ -8,29 +8,29 @@ export default class EthereumRpc {
   private contractABI = [
     {
       inputs: [],
-      name: "retrieve",
+      name: 'retrieve',
       outputs: [
         {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256',
         },
       ],
-      stateMutability: "view",
-      type: "function",
+      stateMutability: 'view',
+      type: 'function',
     },
     {
       inputs: [
         {
-          internalType: "uint256",
-          name: "num",
-          type: "uint256",
+          internalType: 'uint256',
+          name: 'num',
+          type: 'uint256',
         },
       ],
-      name: "store",
+      name: 'store',
       outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
+      stateMutability: 'nonpayable',
+      type: 'function',
     },
   ];
 
@@ -40,11 +40,11 @@ export default class EthereumRpc {
 
   getViewChain() {
     switch (this.provider.chainId) {
-      case "1":
+      case '1':
         return mainnet;
-      case "0x13882":
+      case '0x13882':
         return polygonAmoy;
-      case "0xaa36a7":
+      case '0xaa36a7':
         return sepolia;
       default:
         return mainnet;
@@ -92,7 +92,7 @@ export default class EthereumRpc {
   async getPrivateKey(): Promise<any> {
     try {
       const privateKey = await this.provider.request({
-        method: "eth_private_key",
+        method: 'eth_private_key',
       });
 
       return privateKey;
@@ -130,8 +130,8 @@ export default class EthereumRpc {
       });
 
       // data for the transaction
-      const destination = "0x40e1c367Eca34250cAF1bc8330E9EddfD403fC56";
-      const amount = parseEther("0.0001");
+      const destination = '0x40e1c367Eca34250cAF1bc8330E9EddfD403fC56';
+      const amount = parseEther('0.0001');
       const address = await this.getAccounts();
 
       // Submit transaction to the blockchain
@@ -158,7 +158,7 @@ export default class EthereumRpc {
 
       // data for signing
       const address = await this.getAccounts();
-      const originalMessage = "YOUR_MESSAGE";
+      const originalMessage = 'YOUR_MESSAGE';
 
       // Sign the message
       const hash = await walletClient.signMessage({
@@ -180,9 +180,9 @@ export default class EthereumRpc {
       });
 
       const number = await publicClient.readContract({
-        address: "0x9554a5CC8F600F265A89511e5802945f2e8A5F5D",
+        address: '0x9554a5CC8F600F265A89511e5802945f2e8A5F5D',
         abi: this.contractABI,
-        functionName: "retrieve",
+        functionName: 'retrieve',
       });
 
       return this.toObject(number);
@@ -210,9 +210,9 @@ export default class EthereumRpc {
       // Submit transaction to the blockchain
       const hash = await walletClient.writeContract({
         account: address[0],
-        address: "0x9554a5CC8F600F265A89511e5802945f2e8A5F5D",
+        address: '0x9554a5CC8F600F265A89511e5802945f2e8A5F5D',
         abi: this.contractABI,
-        functionName: "store",
+        functionName: 'store',
         args: [randomNumber],
       });
 
@@ -229,7 +229,7 @@ export default class EthereumRpc {
     return JSON.parse(
       JSON.stringify(
         data,
-        (key, value) => (typeof value === "bigint" ? value.toString() : value) // return everything else unchanged
+        (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
       )
     );
   }

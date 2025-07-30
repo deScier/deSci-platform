@@ -1,6 +1,6 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import React from "react";
+import React from 'react';
 
 /**
  * @title Root Component
@@ -13,7 +13,7 @@ const Root: React.FC<{
 }> = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
     <React.Fragment>
-      <div className={twMerge("grid gap-4 grid-flow-col justify-start items-center mb-4 md:mb-8", className)}>
+      <div className={twMerge('grid gap-4 grid-flow-col justify-start items-center mb-4 md:mb-8', className)}>
         {children}
       </div>
     </React.Fragment>
@@ -34,7 +34,7 @@ const Title: React.FC<{ children: React.ReactNode; className?: string }> = ({
 }) => {
   return (
     <React.Fragment>
-      <h1 className={twMerge("text-1xl lg:text-2xl font-semibold", className)}>{children}</h1>
+      <h1 className={twMerge('text-1xl lg:text-2xl font-semibold', className)}>{children}</h1>
     </React.Fragment>
   );
 };

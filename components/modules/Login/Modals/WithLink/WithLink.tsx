@@ -1,12 +1,12 @@
-import { home_routes } from "@/routes/home";
-import { UpdateInviteStatusProps } from "@/schemas/update_invite_status";
-import { updateInviteStatusService } from "@/services/reviewer/updateInvite.service";
-import * as Button from "@components/common/Button/Button";
-import * as Input from "@components/common/Input/Input";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { home_routes } from '@/routes/home';
+import { UpdateInviteStatusProps } from '@/schemas/update_invite_status';
+import { updateInviteStatusService } from '@/services/reviewer/updateInvite.service';
+import * as Button from '@components/common/Button/Button';
+import * as Input from '@components/common/Input/Input';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 /**
  * @title WithLink Component
@@ -19,9 +19,9 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
   const { register, handleSubmit, setValue, trigger } = useForm<UpdateInviteStatusProps>({
     defaultValues: {
       inviteCode: inviteCode,
-      inviteStatus: "ACCEPTED",
-      role: "reviewer",
-      title: "",
+      inviteStatus: 'ACCEPTED',
+      role: 'reviewer',
+      title: '',
     },
   });
 
@@ -40,9 +40,9 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
     const response = await updateInviteStatusService(data);
     setLoading(false);
 
-    const hasInviteOnLocalStorage = localStorage.getItem("invite");
+    const hasInviteOnLocalStorage = localStorage.getItem('invite');
     if (hasInviteOnLocalStorage) {
-      localStorage.removeItem("invite");
+      localStorage.removeItem('invite');
     }
 
     if (response.success) {
@@ -60,9 +60,9 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
    * @dev Handles the action when the user declines the invitation
    */
   const handleDecline = () => {
-    const hasInviteOnLocalStorage = localStorage.getItem("invite");
+    const hasInviteOnLocalStorage = localStorage.getItem('invite');
     if (hasInviteOnLocalStorage) {
-      localStorage.removeItem("invite");
+      localStorage.removeItem('invite');
     }
     onClose();
   };
@@ -74,7 +74,7 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
           <h3 className="text-xl font-semibold">You were invited to be a Reviewer/ Editor for an article</h3>
           <p className="text-sm">
             <p className="text-sm first-letter:uppercase">{invited_by}</p> has extended a kind invitation for you to
-            serve as Reviewer/ Editor for the article entitled{" "}
+            serve as Reviewer/ Editor for the article entitled{' '}
             <span className="text-sm font-semibold">{article_name}</span> Would this invitation align with your skills
             and expertise?
           </p>
@@ -82,7 +82,7 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
         <div className="grid grid-cols-2 gap-6">
           <Input.Root>
             <Input.Label>Your expertise</Input.Label>
-            <Input.Input placeholder="Ex: Biologist" {...register("title")} />
+            <Input.Input placeholder="Ex: Biologist" {...register('title')} />
           </Input.Root>
           <Input.Root>
             <Input.Label>Role</Input.Label>
@@ -90,7 +90,7 @@ const WithLink: React.FC<WithLinkProps> = ({ article_name, invited_by, inviteCod
               options={roles}
               placeholder="Select reviewing role"
               onValueChange={(value) => {
-                (setValue("role", value), trigger("role"));
+                (setValue('role', value), trigger('role'));
               }}
             />
           </Input.Root>
@@ -126,13 +126,13 @@ interface WithLinkProps {
 const roles = [
   {
     id: 1,
-    value: "reviewer",
-    label: "Reviewer",
+    value: 'reviewer',
+    label: 'Reviewer',
   },
   {
     id: 2,
-    value: "editor",
-    label: "Editor",
+    value: 'editor',
+    label: 'Editor',
   },
 ];
 

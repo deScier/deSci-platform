@@ -5,7 +5,7 @@
 }
 
 .dot-button {
-  background-color: theme("colors.gray.300");
+  background-color: theme('colors.gray.300');
   border: none;
   padding: 0.5rem;
   margin: 0 0.25rem;
@@ -17,5 +17,5 @@
 }
 
 .dot-button.active {
-  background-color: theme("colors.primary.main");
+  background-color: theme('colors.primary.main');
 }

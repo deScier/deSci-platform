@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
-import * as Input from "@components/common/Input/Input";
-import * as Title from "@components/common/Title/Page";
+import * as Input from '@components/common/Input/Input';
+import * as Title from '@components/common/Title/Page';
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import useDebounce from "@/hooks/useDebounce";
-import { cn } from "@/lib/utils";
-import { JournalProps, JournalStatus, useJournals } from "@/services/journal/getJournals.service";
-import "components/common/Publication/Item/Item.css";
-import { format, isValid, parseISO } from "date-fns";
-import { truncate } from "lodash";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Skeleton } from '@/components/ui/skeleton';
+import useDebounce from '@/hooks/useDebounce';
+import { cn } from '@/lib/utils';
+import { JournalProps, JournalStatus, useJournals } from '@/services/journal/getJournals.service';
+import 'components/common/Publication/Item/Item.css';
+import { format, isValid, parseISO } from 'date-fns';
+import { truncate } from 'lodash';
 
-import PaginationComponent from "@/components/common/Pagination/Pagination";
-import Image from "next/image";
-import Link from "next/link";
+import PaginationComponent from '@/components/common/Pagination/Pagination';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function JournalsPage() {
   const { admin_journals: journals, journal_loading } = useJournals();
@@ -24,11 +24,11 @@ export default function JournalsPage() {
   const per_page = 8;
   const [page, setPage] = React.useState(1);
 
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const [status, setStatus] = React.useState<string | null>("");
-  const [originatesFrom, setOriginatesFrom] = React.useState<string | null>("");
+  const [status, setStatus] = React.useState<string | null>('');
+  const [originatesFrom, setOriginatesFrom] = React.useState<string | null>('');
   const [results, setResults] = React.useState<JournalProps[]>([]);
   const [totalPages, setTotalPages] = React.useState(Math.ceil(results.length / per_page));
 
@@ -82,9 +82,9 @@ export default function JournalsPage() {
           </div>
         </div>
         <div
-          className={cn("flex flex-col gap-6", {
+          className={cn('flex flex-col gap-6', {
             results: results.length > 1,
-            "min-h-[calc(50vh)]": results.length > 1,
+            'min-h-[calc(50vh)]': results.length > 1,
           })}
         >
           <div className="grid gap-8">
@@ -145,7 +145,7 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({
   title,
 }: JournalUnderReviewProps) => {
   const date = parseISO(since);
-  const formated_since = isValid(date) ? format(date, "dd/MM/yyyy") : "Invalid date";
+  const formated_since = isValid(date) ? format(date, 'dd/MM/yyyy') : 'Invalid date';
 
   return (
     <React.Fragment>
@@ -153,10 +153,10 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({
         <div className="relative w-full md:w-20 h-20">
           <Image
             fill
-            src={image || "https://random.imagecdn.app/150/150"}
+            src={image || 'https://random.imagecdn.app/150/150'}
             alt={title}
             quality={50}
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             className="rounded-md object-cover"
           />
         </div>
@@ -188,7 +188,7 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({
               </Link>
             )}
             <div className="flex items-center gap-2">
-              {status === "APPROVED" ? (
+              {status === 'APPROVED' ? (
                 <React.Fragment>
                   <p className="text-sm text-neutral-gray lg:text-sm">Published in</p>
                   <p className="text-base font-semibold lg:text-sm 2xl:text-base">{formated_since}</p>
@@ -206,7 +206,7 @@ const JournalUnderReview: React.FC<JournalUnderReviewProps> = ({
           <div className="border-[1px] rounded-md px-2 border-neutral-stroke_light md:w-fit">
             <div className="grid grid-flow-col items-center justify-center md:justify-start">
               <div className="grid grid-flow-col gap-2 md:gap-1 items-center">
-                {status === "APPROVED" ? (
+                {status === 'APPROVED' ? (
                   <p className="text-sm 2xl:text-base font-semibold text-status-green">Published</p>
                 ) : (
                   <p className="text-xs lg:text-sm font-semibold text-status-pending truncate flex-shrink-0">Pending</p>

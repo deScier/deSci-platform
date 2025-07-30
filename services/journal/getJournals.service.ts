@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Session } from "next-auth";
-import { getSession, useSession } from "next-auth/react";
-import { DocumentProps } from "../document/getArticles";
-import { MembersRoles } from "./submit.service";
+import { Session } from 'next-auth';
+import { getSession, useSession } from 'next-auth/react';
+import { DocumentProps } from '../document/getArticles';
+import { MembersRoles } from './submit.service';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
 export const useJournals = () => {
   const { data } = useSession();
@@ -16,9 +16,9 @@ export const useJournals = () => {
 
       if (session?.user?.token) {
         const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/${journalId}`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             authorization: `Bearer ${session.user.token}`,
           },
         });
@@ -33,9 +33,9 @@ export const useJournals = () => {
   const fetchJournals = async () => {
     if (data?.user?.token) {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           authorization: `Bearer ${data.user.token}`,
         },
       });
@@ -46,13 +46,13 @@ export const useJournals = () => {
     }
   };
 
-  const { data: journals, isLoading: journal_loading } = useSWR("fetchJournals", () => fetchJournals());
+  const { data: journals, isLoading: journal_loading } = useSWR('fetchJournals', () => fetchJournals());
 
   const fetchPublicJournals = async () => {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/journals/public`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -61,14 +61,14 @@ export const useJournals = () => {
     return response;
   };
 
-  const { data: public_journals, isLoading: publicJournalsLoading } = useSWR("publicJournals", fetchPublicJournals);
+  const { data: public_journals, isLoading: publicJournalsLoading } = useSWR('publicJournals', fetchPublicJournals);
 
   const fetchAdminJournals = async () => {
     if (data?.user?.token) {
       const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/journals`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           authorization: `Bearer ${data.user.token}`,
         },
       });
@@ -79,7 +79,7 @@ export const useJournals = () => {
     }
   };
 
-  const { data: admin_journals, isLoading: adminJournalsLoading } = useSWR("adminJournals", fetchAdminJournals);
+  const { data: admin_journals, isLoading: adminJournalsLoading } = useSWR('adminJournals', fetchAdminJournals);
 
   return { journals, public_journals, admin_journals, journal_loading, fetchJournal };
 };
@@ -131,7 +131,7 @@ export type JournalMemberProps = {
   updatedAt: Date;
 };
 
-export type JournalStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type JournalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export type PublicJournalProps = {
   id: string;

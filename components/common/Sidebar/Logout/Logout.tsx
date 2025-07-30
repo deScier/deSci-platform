@@ -1,13 +1,13 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { home_routes } from "@/routes/home";
-import { formatName } from "@/utils/format_texts";
-import { handleLogout } from "@/utils/logout";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { Skeleton } from '@/components/ui/skeleton';
+import { home_routes } from '@/routes/home';
+import { formatName } from '@/utils/format_texts';
+import { handleLogout } from '@/utils/logout';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-import Image from "next/image";
-import LogoutIcon from "public/svgs/common/sidebar/Icons/logout.svg";
-import React from "react";
+import Image from 'next/image';
+import LogoutIcon from 'public/svgs/common/sidebar/Icons/logout.svg';
+import React from 'react';
 
 /**
  * @title Logout Component
@@ -35,17 +35,17 @@ const Logout: React.FC<{ onLogout: () => void }> = ({ onLogout }: { onLogout: ()
             height={200}
             alt="avatar"
             priority={true}
-            src={data?.user?.userInfo.avatar || "/images/profile_dk08wk.png"}
+            src={data?.user?.userInfo.avatar || '/images/profile_dk08wk.png'}
             style={{
-              objectFit: "cover",
-              width: "100%",
-              height: "100%",
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
             }}
           />
         </div>
         <div className="grid grid-flow-col items-center gap-4">
-          {status === "loading" && <Skeleton className="w-28 h-6" />}
-          {status === "authenticated" && (
+          {status === 'loading' && <Skeleton className="w-28 h-6" />}
+          {status === 'authenticated' && (
             <React.Fragment>
               <p className="font-semibold text-base text-primary-main select-none">
                 {formatName(data?.user?.userInfo.name as string)}

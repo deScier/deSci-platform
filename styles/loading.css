@@ -14,7 +14,7 @@
 }
 
 .spinner::before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   inset: -3px;
