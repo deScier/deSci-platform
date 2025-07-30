@@ -157,5 +157,19 @@ jobs:
             exit 1
           fi
 
-      - name: Cleanup Old Images
-        run: docker image prune -f 2>/dev/null || true
+      - name: Comprehensive Cleanup
+        run: |
+          # Remove old containers first
+          docker container prune -f
+          
+          # Remove old images (including tagged ones) that aren't being used
+          docker image prune -a -f --filter "until=24h"
+          
+          # Remove any unused networks
+          docker network prune -f
+          
+          # Clean up build cache
+          docker builder prune -f --keep-storage 10GB
+          
+          # Final system-wide cleanup (except volumes)
+          docker system prune -f
