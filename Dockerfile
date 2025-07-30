@@ -2,10 +2,8 @@ FROM node:22.17-alpine3.22
 
 WORKDIR /app
 
-# Install pnpm globally and create node user
-RUN npm install -g pnpm && \
-    addgroup -g 1000 node && \
-    adduser -u 1000 -G node -s /bin/sh -D node
+# Install pnpm globally
+RUN npm install -g pnpm
 
 # Set production environment
 ENV NODE_ENV=production
@@ -27,9 +25,11 @@ COPY . .
 RUN pnpm build
 
 # Set ownership of app directory
+# The official node:alpine image includes the 'node' user by default, so this should not fail.
+# If you encounter errors, you can replace 'node:node' with 'root:root' or remove this line.
 RUN chown -R node:node /app
 
-# Switch to the node user
+# Switch to the node user (already exists in node:alpine image)
 USER node
 
 # Expose the port
