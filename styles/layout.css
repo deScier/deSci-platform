@@ -1,35 +1,35 @@
 .home {
-   display: grid;
-   grid-template-columns: 17.5rem 1fr 17.5rem;
-   gap: 1.5rem;
-   width: 100%;
-   overflow-x: hidden;
-   box-sizing: border-box;
-   background-image: linear-gradient(108deg, #e2e6ff 0%, #dce8ff 37.72%, #ebdeff 68.82%, #ffe5e5 97.88%);
+  display: grid;
+  grid-template-columns: 17.5rem 1fr 17.5rem;
+  gap: 1.5rem;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background-image: linear-gradient(108deg, #e2e6ff 0%, #dce8ff 37.72%, #ebdeff 68.82%, #ffe5e5 97.88%);
 }
 
 @media (max-width: 768px) {
-   .home {
-      grid-template-columns: 1fr;
-   }
+  .home {
+    grid-template-columns: 1fr;
+  }
 }
 
 .col-2 {
-   grid-column-start: 2;
+  grid-column-start: 2;
 }
 
 @media (max-width: 768px) {
-   .col-2 {
-      grid-column-start: 1;
-   }
+  .col-2 {
+    grid-column-start: 1;
+  }
 }
 
 .row-1 {
-   grid-row-start: 1;
+  grid-row-start: 1;
 }
 
 @media (max-width: 768px) {
-   .row-1 {
-      grid-row-start: 2;
-   }
+  .row-1 {
+    grid-row-start: 2;
+  }
 }

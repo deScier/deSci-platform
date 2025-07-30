@@ -1,156 +1,172 @@
-'use client'
+'use client';
 
-import * as Dialog from '@components/common/Dialog/Digalog'
+import * as Dialog from '@components/common/Dialog/Digalog';
 
-import { TruncateWithHoverCard } from '@/components/common/Truncate/TruncateWithHoverCard'
-import { ArticleAcess, Badge } from '@/components/modules/Home/Search/ArticleAccess/ArticleAcess'
-import { Checkout } from '@/components/modules/Home/Search/Purchase/Checkout'
-import { PurchaseError } from '@/components/modules/Home/Search/Purchase/Error'
-import { PurchaseProcessing } from '@/components/modules/Home/Search/Purchase/Processing'
-import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles'
-import { PurchaseSuccess } from '@/components/modules/Home/Search/Purchase/Success'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { addLikeService } from '@/services/document/addLike.service'
-import { downloadDocument } from '@/services/document/download.service'
-import { GetDocumentPublicProps } from '@/services/document/getArticles'
-import { createCheckoutService } from '@/services/payment/checkout.service'
-import { capitalizeWord } from '@/utils/format_texts'
-import { getArticleTypeLabel } from '@/utils/generate_labels'
-import { uniqueId } from 'lodash'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { ArrowLeft, Eye, HandThumbsUp, HandThumbsUpFill } from 'react-bootstrap-icons'
-import { toast } from 'react-toastify'
-import { twMerge } from 'tailwind-merge'
+import { TruncateWithHoverCard } from '@/components/common/Truncate/TruncateWithHoverCard';
+import { ArticleAcess, Badge } from '@/components/modules/Home/Search/ArticleAccess/ArticleAcess';
+import { Checkout } from '@/components/modules/Home/Search/Purchase/Checkout';
+import { PurchaseError } from '@/components/modules/Home/Search/Purchase/Error';
+import { PurchaseProcessing } from '@/components/modules/Home/Search/Purchase/Processing';
+import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles';
+import { PurchaseSuccess } from '@/components/modules/Home/Search/Purchase/Success';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { addLikeService } from '@/services/document/addLike.service';
+import { downloadDocument } from '@/services/document/download.service';
+import { GetDocumentPublicProps } from '@/services/document/getArticles';
+import { createCheckoutService } from '@/services/payment/checkout.service';
+import { capitalizeWord } from '@/utils/format_texts';
+import { getArticleTypeLabel } from '@/utils/generate_labels';
+import { uniqueId } from 'lodash';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Eye, HandThumbsUp, HandThumbsUpFill } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
 
-import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword'
-import LoginModal from '@/components/modules/Login/Login'
-import RegisterModal from '@/components/modules/Register/Register'
-import Image from 'next/image'
-import Link from 'next/link'
-import LikedIcon from 'public/svgs/common/likes/Icons/liked.svg'
-import UnlikedIcon from 'public/svgs/common/likes/Icons/unliked.svg'
-import FacebookIcon from 'public/svgs/modules/home/article-details/facebook.svg'
-import LinkIcon from 'public/svgs/modules/home/article-details/link.svg'
-import TelegramIcon from 'public/svgs/modules/home/article-details/telegram.svg'
-import TwitterIcon from 'public/svgs/modules/home/article-details/twitter.svg'
-import WhatsAppIcon from 'public/svgs/modules/home/article-details/whatsapp.svg'
-import React from 'react'
+import ForgotPasswordModal from '@/components/modules/ForgotPassword/ForgotPassword';
+import LoginModal from '@/components/modules/Login/Login';
+import RegisterModal from '@/components/modules/Register/Register';
+import Image from 'next/image';
+import Link from 'next/link';
+import LikedIcon from 'public/svgs/common/likes/Icons/liked.svg';
+import UnlikedIcon from 'public/svgs/common/likes/Icons/unliked.svg';
+import FacebookIcon from 'public/svgs/modules/home/article-details/facebook.svg';
+import LinkIcon from 'public/svgs/modules/home/article-details/link.svg';
+import TelegramIcon from 'public/svgs/modules/home/article-details/telegram.svg';
+import TwitterIcon from 'public/svgs/modules/home/article-details/twitter.svg';
+import WhatsAppIcon from 'public/svgs/modules/home/article-details/whatsapp.svg';
+import React from 'react';
 
-const login_component = 'login'
-const register_component = 'register'
-const forgot_password_component = 'forgot_password'
+const login_component = 'login';
+const register_component = 'register';
+const forgot_password_component = 'forgot_password';
 
 export default function ArticleDetails({ data }: { data: GetDocumentPublicProps }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
-  const [liked, setLiked] = React.useState(false)
-  const [purchase, setPurchase] = React.useState({ checkout: false, processing: false, success: false, error: false, my_articles: false, login: false })
-  const [likesAmount, setLikesAmount] = React.useState(data?.document.likes || 0)
-  const [component, setComponent] = React.useState(login_component)
+  const [liked, setLiked] = React.useState(false);
+  const [purchase, setPurchase] = React.useState({
+    checkout: false,
+    processing: false,
+    success: false,
+    error: false,
+    my_articles: false,
+    login: false,
+  });
+  const [likesAmount, setLikesAmount] = React.useState(data?.document.likes || 0);
+  const [component, setComponent] = React.useState(login_component);
 
   const handleAddLike = async () => {
-    const response = await addLikeService(data?.document.id!)
+    const response = await addLikeService(data?.document.id!);
     if (!response.success) {
-      toast.error('Error in add like.')
-      return
+      toast.error('Error in add like.');
+      return;
     }
 
-    setLiked(true)
+    setLiked(true);
     setLikesAmount((state) => {
-      return state + 1
-    })
-  }
+      return state + 1;
+    });
+  };
 
   const handlePurchase = async () => {
     if (!session) {
       setPurchase({
         ...purchase,
         processing: false,
-        login: true
-      })
-      return
+        login: true,
+      });
+      return;
     }
-    setPurchase({ ...purchase, checkout: false, processing: true })
+    setPurchase({ ...purchase, checkout: false, processing: true });
 
-    const response = await createCheckoutService(data?.document.id!)
+    const response = await createCheckoutService(data?.document.id!);
     if (!response.success) {
       setPurchase({
         ...purchase,
         checkout: false,
         error: true,
-        processing: false
-      })
+        processing: false,
+      });
     }
     setPurchase({
       ...purchase,
       checkout: false,
-      processing: false
-    })
+      processing: false,
+    });
 
     if (typeof window !== 'undefined') {
-      window.open(response.checkoutUrl)
+      window.open(response.checkoutUrl);
     }
-  }
+  };
 
   const handleDownloadDocument = async () => {
-    const response = await downloadDocument(data?.document.id!)
+    const response = await downloadDocument(data?.document.id!);
 
     if (!response.success) {
-      toast.error(response.message)
-      return
+      toast.error(response.message);
+      return;
     }
 
-    const url = URL.createObjectURL(response.file!)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = data?.document.title.replace(' ', '_') + '.pdf'!
-    link.click()
-    URL.revokeObjectURL(url)
+    const url = URL.createObjectURL(response.file!);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = data?.document.title.replace(' ', '_') + '.pdf'!;
+    link.click();
+    URL.revokeObjectURL(url);
 
-    toast.success('Download will start...')
-  }
+    toast.success('Download will start...');
+  };
 
   const formatAccessType = () => {
     switch (data?.document?.accessStatus) {
       case 'PAID':
-        return 'paid'
+        return 'paid';
       case 'FREE':
-        return 'open'
+        return 'open';
       case 'PURCHASED':
-        return 'purchased'
+        return 'purchased';
       case 'OWNER':
-        return 'author'
+        return 'author';
       default:
-        return 'paid'
+        return 'paid';
     }
-  }
+  };
 
-  const [popoverOpen, setPopoverOpen] = React.useState(false)
-  const [textToCopy, setTextToCopy] = React.useState('')
+  const [popoverOpen, setPopoverOpen] = React.useState(false);
+  const [textToCopy, setTextToCopy] = React.useState('');
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      setTextToCopy(window.location.href)
+      setTextToCopy(window.location.href);
     }
-  }, [])
+  }, []);
 
   return (
     <React.Fragment>
       <div className="grid gap-8 lg:px-20 2xl:px-52 px-4 sm:px-6">
         <div className="flex items-center gap-4 pt-8 md:pt-12">
-          <ArrowLeft size={32} className="hover:scale-110 transition-all cursor-pointer" onClick={() => router.back()} />
+          <ArrowLeft
+            size={32}
+            className="hover:scale-110 transition-all cursor-pointer"
+            onClick={() => router.back()}
+          />
           <h1 className="text-1xl font-semibold">Back</h1>
         </div>
         <div className="bg-white rounded-xl h-fit p-6 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <div className="hidden md:flex items-center gap-2">
-              <Badge className="w-fit flex-shrink flex-grow-0" access_type={data?.document?.accessType as 'PAID' | 'FREE'} />
+              <Badge
+                className="w-fit flex-shrink flex-grow-0"
+                access_type={data?.document?.accessType as 'PAID' | 'FREE'}
+              />
               <span className="text-black font-semibold">•</span>
-              <p className="text-lg font-semibold">{capitalizeWord(getArticleTypeLabel(data?.document?.documentType as string) || 'paper')}</p>
+              <p className="text-lg font-semibold">
+                {capitalizeWord(getArticleTypeLabel(data?.document?.documentType as string) || 'paper')}
+              </p>
               {/* <span className="text-black font-semibold">•</span>
                      <p className="text-lg font-semibold text-primary-main">{article?.document?.field}</p> */}
             </div>
@@ -177,7 +193,10 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
             <h3 className="text-2xl md:text-3xl text-black font-bold">{data?.document?.title}</h3>
             <div className="flex flex-wrap gap-2">
               {data?.document?.keywords.split(';')?.map((tag) => (
-                <div className="border rounded-md border-neutral-stroke_light flex items-center px-2 py-[2px]" key={uniqueId('tag')}>
+                <div
+                  className="border rounded-md border-neutral-stroke_light flex items-center px-2 py-[2px]"
+                  key={uniqueId('tag')}
+                >
                   <span className="text-xs md:text-sm text-primary-main">{tag}</span>
                 </div>
               ))}
@@ -224,7 +243,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
             <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
               <div className="flex gap-6 items-center">
                 <div className="flex items-center gap-1">
-                  {liked ? <HandThumbsUpFill className="text-terciary-main w-5 h-5" /> : <HandThumbsUp className="text-terciary-main w-5 h-5" />}
+                  {liked ? (
+                    <HandThumbsUpFill className="text-terciary-main w-5 h-5" />
+                  ) : (
+                    <HandThumbsUp className="text-terciary-main w-5 h-5" />
+                  )}
 
                   <p className="text-lg text-neutral-gray">{likesAmount} likes</p>
                 </div>
@@ -238,11 +261,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                 <HoverCard open={popoverOpen}>
                   <HoverCardTrigger
                     onClick={() => {
-                      setPopoverOpen(true)
+                      setPopoverOpen(true);
 
                       setTimeout(() => {
-                        setPopoverOpen(false)
-                      }, 3000)
+                        setPopoverOpen(false);
+                      }, 3000);
                     }}
                   >
                     <LinkIcon
@@ -250,10 +273,10 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                       onClick={() => {
                         navigator.clipboard
                           .writeText(textToCopy)
-                          .then(() => { })
+                          .then(() => {})
                           .catch((err) => {
-                            console.error('Erro ao copiar texto: ', err)
-                          })
+                            console.error('Erro ao copiar texto: ', err);
+                          });
                       }}
                     >
                       Copy Link
@@ -268,11 +291,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                     navigator.clipboard
                       .writeText(textToCopy)
                       .then(() => {
-                        window.open('https://twitter.com/compose/tweet')
+                        window.open('https://twitter.com/compose/tweet');
                       })
                       .catch((err) => {
-                        console.error('Erro ao copiar texto: ', err)
-                      })
+                        console.error('Erro ao copiar texto: ', err);
+                      });
                   }}
                 >
                   <TwitterIcon className="w-6 h-6 flex shrink-0 cursor-pointer transition-all duration-200 hover:scale-110" />
@@ -282,11 +305,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                     navigator.clipboard
                       .writeText(textToCopy)
                       .then(() => {
-                        window.open('https://www.facebook.com')
+                        window.open('https://www.facebook.com');
                       })
                       .catch((err) => {
-                        console.error('Erro ao copiar texto:', err)
-                      })
+                        console.error('Erro ao copiar texto:', err);
+                      });
                   }}
                 >
                   <FacebookIcon className="w-6 h-6 flex shrink-0 cursor-pointer transition-all duration-200 hover:scale-110" />
@@ -296,11 +319,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                     navigator.clipboard
                       .writeText(textToCopy)
                       .then(() => {
-                        window.open('https://web.whatsapp.com')
+                        window.open('https://web.whatsapp.com');
                       })
                       .catch((err) => {
-                        console.error('Erro ao copiar texto:', err)
-                      })
+                        console.error('Erro ao copiar texto:', err);
+                      });
                   }}
                 >
                   <WhatsAppIcon className="w-6 h-6 flex shrink-0 cursor-pointer transition-all duration-200 hover:scale-110" />
@@ -310,11 +333,11 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                     navigator.clipboard
                       .writeText(textToCopy)
                       .then(() => {
-                        window.open('https://web.telegram.org/a/')
+                        window.open('https://web.telegram.org/a/');
                       })
                       .catch((err) => {
-                        console.error('Erro ao copiar texto:', err)
-                      })
+                        console.error('Erro ao copiar texto:', err);
+                      });
                   }}
                 >
                   <TelegramIcon className="w-6 h-6 flex shrink-0 cursor-pointer transition-all duration-200 hover:scale-110" />
@@ -373,7 +396,7 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                         navigator.clipboard
                           .writeText(data?.document.nftHash)
                           .then(() => toast.success('NFT hash copied to clipboard!'))
-                          .catch((err) => console.error('Error copying text: ', err))
+                          .catch((err) => console.error('Error copying text: ', err));
                       }
                     }}
                   >
@@ -441,13 +464,26 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
             )}
 
             <div className="flex items-center gap-2" onClick={handleAddLike}>
-              {liked ? <LikedIcon className="ml-1 w-6 h-6 cursor-pointer" /> : <UnlikedIcon className="ml-1 w-6 h-6 cursor-pointer" />}
+              {liked ? (
+                <LikedIcon className="ml-1 w-6 h-6 cursor-pointer" />
+              ) : (
+                <UnlikedIcon className="ml-1 w-6 h-6 cursor-pointer" />
+              )}
               <p className="text-lg cursor-pointer select-none">Like the article</p>
             </div>
           </div>
         </div>
       </div>
-      <Dialog.Root open={purchase.checkout || purchase.processing || purchase.success || purchase.error || purchase.my_articles || purchase.login}>
+      <Dialog.Root
+        open={
+          purchase.checkout ||
+          purchase.processing ||
+          purchase.success ||
+          purchase.error ||
+          purchase.my_articles ||
+          purchase.login
+        }
+      >
         <Dialog.Content
           className={twMerge(
             'max-w-[1024px] w-full h-fit',
@@ -466,13 +502,13 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
                 date: new Date(data?.document.publishedAt!).toLocaleDateString() || '',
                 id: data?.document.id || '',
                 price: data?.document.price || 0,
-                title: data?.document.title || ''
+                title: data?.document.title || '',
               }}
               onPurchase={() => {
-                handlePurchase()
+                handlePurchase();
               }}
               onClose={() => setPurchase({ ...purchase, checkout: false })}
-              onSetPaymentOption={(value) => { }}
+              onSetPaymentOption={(value) => {}}
             />
           )}
           {purchase.login && component === login_component && (
@@ -480,7 +516,7 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
               onClose={() =>
                 setPurchase({
                   ...purchase,
-                  login: false
+                  login: false,
                 })
               }
               noRedirect
@@ -495,9 +531,9 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
               onClose={() => {
                 setPurchase({
                   ...purchase,
-                  login: false
-                })
-                setComponent(login_component)
+                  login: false,
+                });
+                setComponent(login_component);
               }}
               onLogin={() => setComponent(login_component)}
               onRegister={() => setComponent(register_component)}
@@ -505,29 +541,34 @@ export default function ArticleDetails({ data }: { data: GetDocumentPublicProps 
             />
           )}
           {component === forgot_password_component && (
-            <ForgotPasswordModal onBack={() => setComponent(login_component)} onClose={() => setComponent(login_component)} />
+            <ForgotPasswordModal
+              onBack={() => setComponent(login_component)}
+              onClose={() => setComponent(login_component)}
+            />
           )}
           {purchase.success && (
             <PurchaseSuccess
               onClose={() => {
-                setPurchase({ ...purchase, success: false })
+                setPurchase({ ...purchase, success: false });
               }}
               onReturn={() => {
-                setPurchase({ ...purchase, success: false, error: true })
+                setPurchase({ ...purchase, success: false, error: true });
               }}
             />
           )}
           {purchase.error && (
             <PurchaseError
               onClose={() => {
-                setPurchase({ ...purchase, error: false })
+                setPurchase({ ...purchase, error: false });
               }}
             />
           )}
           {purchase.processing && <PurchaseProcessing />}
-          {purchase.my_articles && <PurchasedArticles onClose={() => setPurchase({ ...purchase, my_articles: false })} />}
+          {purchase.my_articles && (
+            <PurchasedArticles onClose={() => setPurchase({ ...purchase, my_articles: false })} />
+          )}
         </Dialog.Content>
       </Dialog.Root>
     </React.Fragment>
-  )
+  );
 }

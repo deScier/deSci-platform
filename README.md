@@ -23,15 +23,15 @@ We believe in the power of collaborative work and co-creation, accessible to eve
 
 ## Features
 
--  **Scientific document submission system:** An intuitive platform for scientists to submit their work, simplifying the publication process.
+- **Scientific document submission system:** An intuitive platform for scientists to submit their work, simplifying the publication process.
 
--  **Collaborative review and approval:** A collaborative system where reviewers, editors, and administrators can effectively evaluate and approve scientific documents, ensuring quality and integrity.
+- **Collaborative review and approval:** A collaborative system where reviewers, editors, and administrators can effectively evaluate and approve scientific documents, ensuring quality and integrity.
 
--  **Differentiated roles:** Customized interfaces for authors, reviewers, editors, and administrators, providing each user with an optimized experience and specific functionalities for their role.
+- **Differentiated roles:** Customized interfaces for authors, reviewers, editors, and administrators, providing each user with an optimized experience and specific functionalities for their role.
 
--  **Library of published articles:** Access to a vast library of articles, including both paid and open access content, enriching the knowledge available to the scientific community.
+- **Library of published articles:** Access to a vast library of articles, including both paid and open access content, enriching the knowledge available to the scientific community.
 
--  **Purchase system for paid articles:** A secure and user-friendly solution for purchasing paid scientific articles, allowing immediate access to cutting-edge research.
+- **Purchase system for paid articles:** A secure and user-friendly solution for purchasing paid scientific articles, allowing immediate access to cutting-edge research.
 
 ## Cloning the repository and runing locally
 

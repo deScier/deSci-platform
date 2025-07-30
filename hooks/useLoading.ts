@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import React from 'react'
+import React from 'react';
 
 export function useLoading() {
-   const [loading, setLoading] = React.useState({ loading: false })
+  const [loading, setLoading] = React.useState({ loading: false });
 
-   const start = () => {
-      setLoading((prevState) => ({ ...prevState, loading: true }))
-   }
+  const start = () => {
+    setLoading((prevState) => ({ ...prevState, loading: true }));
+  };
 
-   const stop = () => {
-      setLoading((prevState) => ({ ...prevState, loading: false }))
-   }
+  const stop = () => {
+    setLoading((prevState) => ({ ...prevState, loading: false }));
+  };
 
-   return {
-      loading,
-      start,
-      stop
-   }
+  return {
+    loading,
+    start,
+    stop,
+  };
 }

@@ -1,7 +1,7 @@
-import * as Button from '@components/common/Button/Button'
+import * as Button from '@components/common/Button/Button';
 
-import Success from 'public/svgs/common/profile/update-email.svg'
-import React from 'react'
+import Success from 'public/svgs/common/profile/update-email.svg';
+import React from 'react';
 
 /**
  * @title GenericSuccess Component
@@ -9,21 +9,21 @@ import React from 'react'
  * @dev The component is a simple presentational component in React, displaying text and a button.
  */
 const GenericSuccess: React.FC<SuccessProps> = ({ text, message, button_text, onClose }: SuccessProps) => {
-   return (
-      <React.Fragment>
-         <div className="grid gap-6">
-            <div className="grid gap-2">
-               <h3 className="text-xl font-semibold">{text}</h3>
-            </div>
-            <Success className="w-36 flex mx-auto my-0" />
-            <p className="text-sm font-regular text-center">{message}</p>
-            <Button.Button className="py-3 px-4" onClick={onClose}>
-               {button_text}
-            </Button.Button>
-         </div>
-      </React.Fragment>
-   )
-}
+  return (
+    <React.Fragment>
+      <div className="grid gap-6">
+        <div className="grid gap-2">
+          <h3 className="text-xl font-semibold">{text}</h3>
+        </div>
+        <Success className="w-36 flex mx-auto my-0" />
+        <p className="text-sm font-regular text-center">{message}</p>
+        <Button.Button className="py-3 px-4" onClick={onClose}>
+          {button_text}
+        </Button.Button>
+      </div>
+    </React.Fragment>
+  );
+};
 
 /**
  * @dev Props definition for the GenericSuccess component
@@ -33,10 +33,10 @@ const GenericSuccess: React.FC<SuccessProps> = ({ text, message, button_text, on
  * @param onClose Function to be called when the button is clicked
  */
 interface SuccessProps {
-   text: string
-   message: string
-   button_text: string
-   onClose: () => void
+  text: string;
+  message: string;
+  button_text: string;
+  onClose: () => void;
 }
 
-export default GenericSuccess
+export default GenericSuccess;

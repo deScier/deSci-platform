@@ -1,7 +1,7 @@
 type StatisticsProps = {
-   totalArticlesPublished: number
-   totalLikes: number
-   totalViews: number
-}
+  totalArticlesPublished: number;
+  totalLikes: number;
+  totalViews: number;
+};
 
-export { StatisticsProps }
+export { StatisticsProps };

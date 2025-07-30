@@ -1,61 +1,61 @@
 .login-animation-container {
-   background: linear-gradient(338.76deg, #231269 1.24%, #20509a 99.44%);
+  background: linear-gradient(338.76deg, #231269 1.24%, #20509a 99.44%);
 }
 
 .login-animation {
-   position: absolute;
-   top: 0%;
-   right: 15%;
-   transform: translate(42%, -25%) rotate(4deg);
-   width: 600px;
-   height: 600px;
-   image-rendering: optimizeQuality;
-   image-rendering: -moz-crisp-edges;
-   image-rendering: -webkit-optimize-contrast;
-   image-rendering: -o-crisp-edges;
+  position: absolute;
+  top: 0%;
+  right: 15%;
+  transform: translate(42%, -25%) rotate(4deg);
+  width: 600px;
+  height: 600px;
+  image-rendering: optimizeQuality;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
 }
 
 .login-blob-shape {
-   max-width: 354px;
-   position: absolute;
-   bottom: -0rem;
+  max-width: 354px;
+  position: absolute;
+  bottom: -0rem;
 }
 
 .login-stamp {
-   position: absolute;
-   bottom: 2.25rem;
-   left: calc(7rem - 2.5rem);
+  position: absolute;
+  bottom: 2.25rem;
+  left: calc(7rem - 2.5rem);
 }
 
 .login-text {
-   display: grid;
-   gap: 2rem;
-   position: absolute;
-   width: 100%;
-   top: 35%;
-   left: 2rem;
-   transform: translate(-0, -35%);
-   z-index: 1000;
+  display: grid;
+  gap: 2rem;
+  position: absolute;
+  width: 100%;
+  top: 35%;
+  left: 2rem;
+  transform: translate(-0, -35%);
+  z-index: 1000;
 }
 
 @media (max-width: 768px) {
-   .login-animation {
-      width: 400px;
-      height: 400px;
-      transform: translate(50%, -25%) rotate(4deg);
-   }
-   .login-blob-shape {
-      max-width: 200px;
-   }
-   .login-stamp {
-      width: 96px;
-      bottom: 1.25rem;
-      left: calc(4rem - 2.5rem);
-   }
-   .login-text {
-      top: 40%;
-      left: 2rem;
-      transform: translate(-0, -52%);
-      gap: 1rem;
-   }
+  .login-animation {
+    width: 400px;
+    height: 400px;
+    transform: translate(50%, -25%) rotate(4deg);
+  }
+  .login-blob-shape {
+    max-width: 200px;
+  }
+  .login-stamp {
+    width: 96px;
+    bottom: 1.25rem;
+    left: calc(4rem - 2.5rem);
+  }
+  .login-text {
+    top: 40%;
+    left: 2rem;
+    transform: translate(-0, -52%);
+    gap: 1rem;
+  }
 }

@@ -1,6 +1,6 @@
 type DocumentApprovalsProps = {
-   reviewerApprovals: string[]
-   editorApprovals: string[]
-}
+  reviewerApprovals: string[];
+  editorApprovals: string[];
+};
 
-export { DocumentApprovalsProps }
+export { DocumentApprovalsProps };

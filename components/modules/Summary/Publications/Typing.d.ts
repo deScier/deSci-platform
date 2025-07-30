@@ -1,8 +1,8 @@
-import { DocumentBasicProps } from '@/services/document/getStatistics.service'
+import { DocumentBasicProps } from '@/services/document/getStatistics.service';
 
 type PublicationsProps = {
-   publishedDocuments: DocumentBasicProps[]
-   pendingDocuments: DocumentBasicProps[]
-}
+  publishedDocuments: DocumentBasicProps[];
+  pendingDocuments: DocumentBasicProps[];
+};
 
-export { PublicationsProps }
+export { PublicationsProps };

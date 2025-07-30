@@ -1,11 +1,11 @@
-import { SearchArticlesComponent } from '@/components/pages/Search/Search'
+import { SearchArticlesComponent } from '@/components/pages/Search/Search';
 
-import React from 'react'
+import React from 'react';
 
 export default function SearchArticlesPage() {
-   return (
-      <React.Suspense>
-         <SearchArticlesComponent />
-      </React.Suspense>
-   )
+  return (
+    <React.Suspense>
+      <SearchArticlesComponent />
+    </React.Suspense>
+  );
 }

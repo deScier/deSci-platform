@@ -1,69 +1,69 @@
 .hero {
-   position: relative;
-   height: calc(100vh - 14rem);
+  position: relative;
+  height: calc(100vh - 14rem);
 }
 
 .remove-paddings {
-   padding-left: 0 !important;
-   padding-right: 0 !important;
-   margin-left: -13rem;
-   margin-right: -13rem;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: -13rem;
+  margin-right: -13rem;
 }
 
 .articles-background {
-   background: linear-gradient(180deg, rgb(255 255 255 / 24%) 98.5%, rgb(255 255 255 / 40%) 127.32%);
-   filter: drop-shadow(0px 4px 8px rgba(39, 0, 90, 0.07));
-   backdrop-filter: blur(16px);
-   width: 100%;
-   height: 100%;
-   padding-left: 13rem;
-   padding-right: 13rem;
-   padding-top: 8.25rem;
-   padding-bottom: -100px;
-   position: absolute;
-   top: 0;
-   z-index: 0;
+  background: linear-gradient(180deg, rgb(255 255 255 / 24%) 98.5%, rgb(255 255 255 / 40%) 127.32%);
+  filter: drop-shadow(0px 4px 8px rgba(39, 0, 90, 0.07));
+  backdrop-filter: blur(16px);
+  width: 100%;
+  height: 100%;
+  padding-left: 13rem;
+  padding-right: 13rem;
+  padding-top: 8.25rem;
+  padding-bottom: -100px;
+  position: absolute;
+  top: 0;
+  z-index: 0;
 }
 
 @media (max-width: 768px) {
-   .articles-background {
-      width: 100vw;
-      margin-left: -24px;
-      margin-right: -24px;
-   }
+  .articles-background {
+    width: 100vw;
+    margin-left: -24px;
+    margin-right: -24px;
+  }
 }
 
 .latest-articles {
-   display: grid;
-   grid-template-columns: min-content min-content min-content min-content;
-   justify-content: center;
+  display: grid;
+  grid-template-columns: min-content min-content min-content min-content;
+  justify-content: center;
 }
 
 .divider-article-h {
-   border-top: 1px solid #dbdbdb;
-   grid-column: 1 / -1;
-   width: 100%;
+  border-top: 1px solid #dbdbdb;
+  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .divider-article-v {
-   border-left: 1px solid #dbdbdb;
-   height: 100%;
+  border-left: 1px solid #dbdbdb;
+  height: 100%;
 }
 
 .blockchain-text-height {
-   display: none;
+  display: none;
 }
 
 @media (max-height: 800px) {
-   .blockchain-text-height {
-      display: block;
-      min-height: clamp(54vh, 64vh, 80vh);
-   }
+  .blockchain-text-height {
+    display: block;
+    min-height: clamp(54vh, 64vh, 80vh);
+  }
 }
 
 @media (max-height: 768px) {
-   .blockchain-text-height {
-      display: block;
-      min-height: clamp(50vh, 50vh, 80vh);
-   }
+  .blockchain-text-height {
+    display: block;
+    min-height: clamp(50vh, 50vh, 80vh);
+  }
 }

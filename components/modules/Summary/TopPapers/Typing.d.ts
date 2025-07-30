@@ -1,5 +1,5 @@
 type TopPapersProps = {
-   publishedDocuments: DocumentBasicProps[]
-}
+  publishedDocuments: DocumentBasicProps[];
+};
 
-export { TopPapersProps }
+export { TopPapersProps };

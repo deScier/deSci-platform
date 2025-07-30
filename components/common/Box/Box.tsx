@@ -1,6 +1,6 @@
-import { twMerge } from 'tailwind-merge'
+import { twMerge } from 'tailwind-merge';
 
-import React from 'react'
+import React from 'react';
 
 /**
  * @title Box Component
@@ -13,12 +13,22 @@ import React from 'react'
  * box.
  * @param {string} [className] - Optional additional CSS classes to apply for custom styling.
  */
-const Box: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-   return (
-      <React.Fragment>
-         <div className={twMerge('inline-grid w-full box-border bg-[#FEFEFE] shadow-box py-4 px-6 rounded-lg ', className)}>{children}</div>
-      </React.Fragment>
-   )
-}
+const Box: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <React.Fragment>
+      <div
+        className={twMerge('inline-grid w-full box-border bg-[#FEFEFE] shadow-box py-4 px-6 rounded-lg ', className)}
+      >
+        {children}
+      </div>
+    </React.Fragment>
+  );
+};
 
-export default Box
+export default Box;

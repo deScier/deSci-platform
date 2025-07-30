@@ -1,4 +1,4 @@
 .grid-article-item {
-   display: grid;
-   grid-template-columns: max-content 1px auto;
+  display: grid;
+  grid-template-columns: max-content 1px auto;
 }

@@ -1,7 +1,7 @@
-import { DocumentGetProps } from '@/services/document/getArticles'
+import { DocumentGetProps } from '@/services/document/getArticles';
 
 interface EditorAndReviewerProps {
-   article: DocumentGetProps | null
+  article: DocumentGetProps | null;
 }
 
-export { EditorAndReviewerProps }
+export { EditorAndReviewerProps };

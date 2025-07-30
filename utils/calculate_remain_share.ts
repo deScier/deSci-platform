@@ -1,4 +1,4 @@
-import { Author } from '@/mock/submit_new_document'
+import { Author } from '@/mock/submit_new_document';
 /**
  * @title Calculate Remaining Share Function
  * @notice This function is used to distribute a share value evenly among authors, excluding the current author, and update their shares accordingly.
@@ -8,31 +8,36 @@ import { Author } from '@/mock/submit_new_document'
  * @param {Author[]} authors - An array of author objects.
  * @param {(authors: Author[]) => void} setAuthors - A setter function for updating the authors' array.
  */
-export const calculateRemainingShare = (currentAuthorId: string, newAuthorShare: string, authors: Author[], setAuthors: (authors: Author[]) => void) => {
-   const newShareValue = parseFloat(newAuthorShare.replace('%', ''))
+export const calculateRemainingShare = (
+  currentAuthorId: string,
+  newAuthorShare: string,
+  authors: Author[],
+  setAuthors: (authors: Author[]) => void
+) => {
+  const newShareValue = parseFloat(newAuthorShare.replace('%', ''));
 
-   const updatedAuthors = authors.map((author) => {
-      if (author.id === currentAuthorId) {
-         return { ...author, share: `${newShareValue}%` }
+  const updatedAuthors = authors.map((author) => {
+    if (author.id === currentAuthorId) {
+      return { ...author, share: `${newShareValue}%` };
+    }
+    return author;
+  });
+
+  const remainingShare = 100 - newShareValue;
+  const otherAuthorsCount = authors.length - 1;
+
+  if (otherAuthorsCount > 0) {
+    const sharePerAuthor = remainingShare / otherAuthorsCount;
+
+    updatedAuthors.forEach((author) => {
+      if (author.id !== currentAuthorId) {
+        author.share = `${sharePerAuthor}%`;
       }
-      return author
-   })
+    });
+  }
 
-   const remainingShare = 100 - newShareValue
-   const otherAuthorsCount = authors.length - 1
-
-   if (otherAuthorsCount > 0) {
-      const sharePerAuthor = remainingShare / otherAuthorsCount
-
-      updatedAuthors.forEach((author) => {
-         if (author.id !== currentAuthorId) {
-            author.share = `${sharePerAuthor}%`
-         }
-      })
-   }
-
-   setAuthors(updatedAuthors)
-}
+  setAuthors(updatedAuthors);
+};
 
 /**
  * @title Update Authors' Shares in Single Author Scenario
