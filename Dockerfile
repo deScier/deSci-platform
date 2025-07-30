@@ -2,8 +2,10 @@ FROM node:22.17-alpine3.22
 
 WORKDIR /app
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Install pnpm globally and create node user
+RUN npm install -g pnpm && \
+    addgroup -g 1000 node && \
+    adduser -u 1000 -G node -s /bin/sh -D node
 
 # Set production environment
 ENV NODE_ENV=production
