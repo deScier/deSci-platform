@@ -159,17 +159,35 @@ jobs:
 
       - name: Comprehensive Cleanup
         run: |
-          # Remove old containers first
+          # Get current version for protection
+          CURRENT_VERSION=${{ steps.version.outputs.version }}
+          
+          echo "Starting cleanup process..."
+          echo "Protecting current version: $CURRENT_VERSION"
+          
+          # Remove containers that are stopped and not the current one
+          echo "Cleaning up old containers..."
           docker container prune -f
           
-          # Remove old images (including tagged ones) that aren't being used
-          docker image prune -a -f --filter "until=24h"
+          # Clean old images but protect current version
+          echo "Cleaning up old images..."
+          for img in $(docker images 'descier-app-image' -q); do
+            # Skip current version and 'latest' tag
+            if ! docker images --format "{{.Tag}}" --no-trunc | grep -q "^$CURRENT_VERSION$\|^latest$"; then
+              docker rmi $img -f || true
+            fi
+          done
           
-          # Remove any unused networks
-          docker network prune -f
+          # Remove any dangling images
+          echo "Removing dangling images..."
+          docker image prune -f
           
-          # Clean up build cache
-          docker builder prune -f --keep-storage 10GB
+          # Clean up build cache but keep recent builds
+          echo "Cleaning up build cache..."
+          docker builder prune -f --keep-storage 5GB --filter 'until=72h'
           
-          # Final system-wide cleanup (except volumes)
-          docker system prune -f
+          # Remove unused networks except the one we're using
+          echo "Cleaning up unused networks..."
+          docker network prune -f --filter "until=24h" --filter "label!=descier-network"
+          
+          echo "Cleanup completed successfully"
