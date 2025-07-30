@@ -192,6 +192,6 @@ jobs:
           
           # Remove unused networks except the one we're using
           echo "Cleaning up unused networks..."
-          docker network prune -f --filter "until=24h" --filter "label!=descier-network"
+          docker network prune -f --filter "label!=descier-network"
           
           echo "Cleanup completed successfully"
