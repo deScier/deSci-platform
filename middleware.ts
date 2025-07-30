@@ -33,7 +33,9 @@ const publicRoutes = [
  */
 const isPublicRoute = (path: string) => {
    return publicRoutes.some(
-      (route) => path === route || (route.endsWith('/*') && path.startsWith(route.slice(0, -2)))
+      (route) => path === route 
+      || (route.endsWith('/*') && (path === route.slice(0, -2)
+      || path.startsWith(route.slice(0, -2) + '/')))
    )
 }
 
