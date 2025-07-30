@@ -2,21 +2,18 @@ name: Continuous Deployment
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ['Continuous Integration']
-    types:
-      - completed
+  push:
     branches:
       - main
 
-run-name: ${{ github.event.workflow_run.head_commit.message || github.event.head_commit.message || 'Manual deployment' }}
+run-name: ${{ github.event.head_commit.message || 'Manual deployment' }}
 
 jobs:
   deploy:
     name: Deploy to Server
     runs-on: self-hosted
     timeout-minutes: 30
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
