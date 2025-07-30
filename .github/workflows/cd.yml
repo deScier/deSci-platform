@@ -1,27 +1,23 @@
 name: Continuous Deployment
 
 on:
+   workflow_dispatch:
    workflow_run:
-      workflows: ["CI Pipeline"]
+      workflows: ["Continuous Integration"]
       types:
          - completed
       branches:
          - main
+
+run-name: ${{ github.event.workflow_run.head_commit.message || github.event.head_commit.message || 'Manual deployment' }}
 
 jobs:
    deploy:
       name: Deploy to Server
       runs-on: self-hosted
       timeout-minutes: 30
+      if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
       steps:
-         - name: Check CI Status
-           run: |
-              if [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
-                echo "CI Pipeline failed or was cancelled. Aborting deployment."
-                exit 1
-              fi
-              echo "CI Pipeline passed successfully. Proceeding with deployment."
-
          - name: Checkout Code
            uses: actions/checkout@v3
            with:

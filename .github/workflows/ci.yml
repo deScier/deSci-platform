@@ -5,6 +5,8 @@ on:
       branches:
          - main
 
+run-name: ${{ github.event.head_commit.message }}
+
 jobs:
    quality:
       name: Code Quality Check
@@ -46,6 +48,15 @@ jobs:
               key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
               restore-keys: |
                  ${{ runner.os }}-modules-
+
+         - name: Set .env from secrets
+           run: |
+              if [ -n "${{ secrets.ENV_PROD }}" ]; then
+                echo "${{ secrets.ENV_PROD }}" > .env
+              else
+                echo "Error: ENV_PROD secret is not configured"
+                exit 1
+              fi
 
          - name: Install dependencies
            run: pnpm install --no-frozen-lockfile
