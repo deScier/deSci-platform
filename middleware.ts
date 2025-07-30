@@ -13,7 +13,31 @@ import { UserSession } from './types/next-auth'
  * sensitive routes.
  */
 
-const publicRoutes = ['/home', '/paper']
+const publicRoutes = [
+  '/',
+  '/home',
+  '/paper/*',
+  '/journals/*',
+  '/home/search/*',
+  '/articles-for-approval',
+  '/sitemap.xml',
+  '/robots.txt'
+]
+
+/**
+ * @notice Determines if a given path is a public route that doesn't require authentication
+ * @dev Checks both exact matches and wildcard patterns (routes ending with /*).
+ * For wildcard routes, it checks if the path starts with the route minus the /* suffix
+ * @param path The URL pathname to check
+ * @return boolean True if the path matches any public route pattern
+ */
+const isPublicRoute = (path: string) => {
+   return publicRoutes.some(
+      (route) => path === route 
+      || (route.endsWith('/*') && (path === route.slice(0, -2)
+      || path.startsWith(route.slice(0, -2) + '/')))
+   )
+}
 
 export async function middleware(request: NextRequest) {
    /** @dev Extract the 'next-auth.session-token' cookie from the request. */
@@ -32,7 +56,7 @@ export async function middleware(request: NextRequest) {
     * @dev If the user isn't authenticated and isn't already on the
     * `/login` page, redirect them to the login page.
     */
-   if (!isAuthenticated && !publicRoutes.includes(request.nextUrl.pathname)) {
+   if (!isAuthenticated && !isPublicRoute(request.nextUrl.pathname)) {
       const url = request.nextUrl.clone()
       url.pathname = '/home'
 

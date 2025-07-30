@@ -8,8 +8,12 @@ import type { MetadataRoute } from 'next'
  * @custom:sitemap Points to dynamically generated XML sitemap for content discovery
  */
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci-platform.vercel.app'
-  
+  if (!process.env.NEXT_PUBLIC_BASE_URL) {
+    throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for robots.txt generation')
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+
   return {
     rules: {
       userAgent: '*',

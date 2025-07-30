@@ -13,11 +13,11 @@ import type { PublicJournalProps } from '@/services/journal/getJournals.service'
  * @return Promise<MetadataRoute.Sitemap> Array of sitemap entries with URLs, priorities, and metadata
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  
-  if (!baseUrl) {
+  if (!process.env.NEXT_PUBLIC_BASE_URL) {
     throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for sitemap generation')
   }
+  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
   const [journals, documents] = await Promise.all([
     fetchPublicJournalsServer(),
