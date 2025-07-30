@@ -141,11 +141,6 @@ jobs:
           fi
 
           docker stop descier-app-new
-          # Check if .env file exists before mounting
-          if [ ! -f "$(pwd)/.env" ]; then
-            echo "ERROR: .env file not found in $(pwd). Cannot start container."
-            exit 1
-          fi
 
           docker run -d \
             --name "descier-app-current" \
