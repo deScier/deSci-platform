@@ -169,4 +169,4 @@ jobs:
           fi
 
       - name: Cleanup Docker Images
-        run: docker image prune -af
+        run: docker image prune -f --filter "until=720h" # 30 days (24h * 30)
