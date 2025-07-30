@@ -20,9 +20,9 @@ React.js components are documented with detailed comments that explain their pur
 
 ### **Advantages of this approach:**
 
--  **Unified documentation standards**: We maintain consistency in our codebases, making it easier to transition between UI development and smart contracts.
--  **Improved readability and maintainability**: Clear and detailed comments promote better understanding of the code, useful for both new contributors and future reviews.
--  **Integration with development tools**: We leverage the ability of comments to be interpreted by development tools, for both Solidity and React.js, enhancing the development experience with interactive features.
+- **Unified documentation standards**: We maintain consistency in our codebases, making it easier to transition between UI development and smart contracts.
+- **Improved readability and maintainability**: Clear and detailed comments promote better understanding of the code, useful for both new contributors and future reviews.
+- **Integration with development tools**: We leverage the ability of comments to be interpreted by development tools, for both Solidity and React.js, enhancing the development experience with interactive features.
 
 ### **Example of documented React.js component**
 

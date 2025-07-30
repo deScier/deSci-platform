@@ -1,11 +1,11 @@
 type FileProps = {
-   lastModified: number
-   lastModifiedDate: Date
-   name: string
-   size: number
-   type: string
-   webkitRelativePath: string
-   url: string
-}
+  lastModified: number;
+  lastModifiedDate: Date;
+  name: string;
+  size: number;
+  type: string;
+  webkitRelativePath: string;
+  url: string;
+};
 
-export { FileProps }
+export { FileProps };

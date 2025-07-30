@@ -1,4 +1,4 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next";
 
 /**
  * @notice Generates robots.txt configuration for search engine crawlers
@@ -9,31 +9,17 @@ import type { MetadataRoute } from 'next'
  */
 export default function robots(): MetadataRoute.Robots {
   if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for robots.txt generation')
+    throw new Error("NEXT_PUBLIC_BASE_URL environment variable is required for robots.txt generation");
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   return {
     rules: {
-      userAgent: '*',
-      allow: [
-        '/',
-        '/journals/*',
-        '/home/search/*',
-        '/paper/*',
-        '/articles-for-approval'
-      ],
-      disallow: [
-        '/api/',
-        '/profile/',
-        '/my-ip/',
-        '/articles-under-review/',
-        '/as-reviewer/',
-        '/summary/',
-        '/descier/'
-      ],
+      userAgent: "*",
+      allow: ["/", "/journals/*", "/home/search/*", "/paper/*", "/articles-for-approval"],
+      disallow: ["/api/", "/profile/", "/my-ip/", "/articles-under-review/", "/as-reviewer/", "/summary/", "/descier/"],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
-  }
+  };
 }

@@ -1,4 +1,4 @@
-import { format, isValid, parseISO } from 'date-fns'
+import { format, isValid, parseISO } from "date-fns";
 /**
  * @title Date Format Utility
  * @notice This function takes an ISO formatted date string, converts it into a local date, and then formats it into a specific pattern.
@@ -7,13 +7,13 @@ import { format, isValid, parseISO } from 'date-fns'
  * @return A string representing the local date in the 'dd/MM/yyyy HH:mm' format.
  */
 export function formatDate(dataString: string): string {
-   const data = parseISO(dataString)
+  const data = parseISO(dataString);
 
-   if (!isValid(data)) {
-      return dataString
-   }
+  if (!isValid(data)) {
+    return dataString;
+  }
 
-   const dataLocal = new Date(data.getTime() - data.getTimezoneOffset() * 60 * 1000)
-   const dataFormatada = format(dataLocal, 'dd/MM/yyyy')
-   return dataFormatada
+  const dataLocal = new Date(data.getTime() - data.getTimezoneOffset() * 60 * 1000);
+  const dataFormatada = format(dataLocal, "dd/MM/yyyy");
+  return dataFormatada;
 }

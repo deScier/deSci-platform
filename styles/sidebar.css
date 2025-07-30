@@ -1,25 +1,25 @@
 .item {
-   transition:
-      background-color 0.3s ease,
-      border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .item:not(:disabled):hover svg {
-   fill: #fff;
+  fill: #fff;
 }
 
-.item[data-active='true'] svg {
-   fill: #70468c;
+.item[data-active="true"] svg {
+  fill: #70468c;
 }
 
 .item-p:not(:disabled):hover p {
-   color: #70468c;
+  color: #70468c;
 }
 
 .item-p:not(:disabled):hover svg {
-   fill: #70468c;
+  fill: #70468c;
 }
 
-.item-p[data-active='true'] p {
-   color: #70468c;
+.item-p[data-active="true"] p {
+  color: #70468c;
 }

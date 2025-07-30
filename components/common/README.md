@@ -10,7 +10,7 @@ The components in this folder follow the composition pattern in React.js, provid
 
 The `Input` component is an example of how we implement the composition pattern:
 
--  **`Root`**: Container for the Input elements.
+- **`Root`**: Container for the Input elements.
 
 ```jsx
 const Root: React.FC<WrapperInputProps> = ({ children }: WrapperInputProps) => {
@@ -18,7 +18,7 @@ const Root: React.FC<WrapperInputProps> = ({ children }: WrapperInputProps) => {
 }
 ```
 
--  **`Label`**: Functional component to render a label, which can include an optional icon.
+- **`Label`**: Functional component to render a label, which can include an optional icon.
 
 ```jsx
 const Label: React.FC<LabelProps> = ({ children, optional, icon, tooltip_message, ...props }: LabelProps) => {
@@ -38,7 +38,7 @@ const Label: React.FC<LabelProps> = ({ children, optional, icon, tooltip_message
 }
 ```
 
--  **`Error`**: Displays error messages.
+- **`Error`**: Displays error messages.
 
 ```jsx
 const Error: React.FC<ErrorProps> = ({ children }: ErrorProps) => {
@@ -46,7 +46,7 @@ const Error: React.FC<ErrorProps> = ({ children }: ErrorProps) => {
 }
 ```
 
--  **`Input`**: The main component of the input field, with support for icons at the start or end.
+- **`Input`**: The main component of the input field, with support for icons at the start or end.
 
 ```jsx
 const Input = React.forwardRef<HTMLInputElement, InputProps>(({ icon, start = icon ? true : false, end, disabled = false, className, ...props }, ref) => {
@@ -87,16 +87,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ icon, start = ic
 To use the `Input` component, import it as follows:
 
 ```jsx
-import * as Input from '@components/common/Input/Input'
+import * as Input from "@components/common/Input/Input";
 ```
 
 ### Usage
 
 ```jsx
 <Input.Root>
-   <Input.Label className="flex gap-2 items-center">Title</Input.Label>
-   <Input.Input placeholder="Title of the article" {...register('title')} />
-   <Input.Error>{errors.title?.message}</Input.Error>
+  <Input.Label className="flex gap-2 items-center">Title</Input.Label>
+  <Input.Input placeholder="Title of the article" {...register("title")} />
+  <Input.Error>{errors.title?.message}</Input.Error>
 </Input.Root>
 ```
 

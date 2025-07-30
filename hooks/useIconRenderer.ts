@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /**
  *@title useIconRenderer Hook
@@ -9,18 +9,18 @@ import React from 'react'
  *@returns object - Returns an object with a `renderIcon` method. This method takes a string key as a parameter and returns the corresponding icon from the provided icon mapping. If no icon is found for the key, it returns null.
  */
 
-type IconMapping = { [key: string]: React.ReactNode }
+type IconMapping = { [key: string]: React.ReactNode };
 
 export const useIconRenderer = (iconMapping: IconMapping) => {
-   const renderIcon = React.useCallback(
-      (key: string) => {
-         if (typeof iconMapping === 'object' && iconMapping !== null) {
-            return iconMapping[key] || null
-         }
-         return null
-      },
-      [iconMapping]
-   )
+  const renderIcon = React.useCallback(
+    (key: string) => {
+      if (typeof iconMapping === "object" && iconMapping !== null) {
+        return iconMapping[key] || null;
+      }
+      return null;
+    },
+    [iconMapping]
+  );
 
-   return { renderIcon }
-}
+  return { renderIcon };
+};

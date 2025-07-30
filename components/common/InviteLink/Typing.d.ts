@@ -1,9 +1,9 @@
-import { DocumentGetProps } from '@/services/document/getArticles'
+import { DocumentGetProps } from "@/services/document/getArticles";
 
 interface InviteLinkProps {
-   article: DocumentGetProps | null
-   open_status: boolean
-   onClick: () => void
+  article: DocumentGetProps | null;
+  open_status: boolean;
+  onClick: () => void;
 }
 
-export { InviteLinkProps }
+export { InviteLinkProps };

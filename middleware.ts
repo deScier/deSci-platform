@@ -1,6 +1,6 @@
-import { getToken } from 'next-auth/jwt'
-import { NextRequest, NextResponse } from 'next/server'
-import { UserSession } from './types/next-auth'
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
+import { UserSession } from "./types/next-auth";
 /**
  * @title Authentication Middleware
  * @notice This middleware ensures that a user is authenticated by
@@ -14,15 +14,15 @@ import { UserSession } from './types/next-auth'
  */
 
 const publicRoutes = [
-  '/',
-  '/home',
-  '/paper/*',
-  '/journals/*',
-  '/home/search/*',
-  '/articles-for-approval',
-  '/sitemap.xml',
-  '/robots.txt'
-]
+  "/",
+  "/home",
+  "/paper/*",
+  "/journals/*",
+  "/home/search/*",
+  "/articles-for-approval",
+  "/sitemap.xml",
+  "/robots.txt",
+];
 
 /**
  * @notice Determines if a given path is a public route that doesn't require authentication
@@ -32,57 +32,57 @@ const publicRoutes = [
  * @return boolean True if the path matches any public route pattern
  */
 const isPublicRoute = (path: string) => {
-   return publicRoutes.some(
-      (route) => path === route 
-      || (route.endsWith('/*') && (path === route.slice(0, -2)
-      || path.startsWith(route.slice(0, -2) + '/')))
-   )
-}
+  return publicRoutes.some(
+    (route) =>
+      path === route ||
+      (route.endsWith("/*") && (path === route.slice(0, -2) || path.startsWith(route.slice(0, -2) + "/")))
+  );
+};
 
 export async function middleware(request: NextRequest) {
-   /** @dev Extract the 'next-auth.session-token' cookie from the request. */
-   const standard = request.cookies.getAll().some((cookie) => cookie.name.includes('next-auth.session-token'))
-   const secure = request.cookies.getAll().some((cookie) => cookie.name.includes('Secure-next-auth.session-token'))
+  /** @dev Extract the 'next-auth.session-token' cookie from the request. */
+  const standard = request.cookies.getAll().some((cookie) => cookie.name.includes("next-auth.session-token"));
+  const secure = request.cookies.getAll().some((cookie) => cookie.name.includes("Secure-next-auth.session-token"));
 
-   const session = (await getToken({
-      req: request
-   })) as UserSession
+  const session = (await getToken({
+    req: request,
+  })) as UserSession;
 
-   /** @dev Determine if the user is authenticated. */
-   const isAuthenticated = standard || secure
+  /** @dev Determine if the user is authenticated. */
+  const isAuthenticated = standard || secure;
 
-   /**
-    * @notice Check for the absence of the authentication cookie.
-    * @dev If the user isn't authenticated and isn't already on the
-    * `/login` page, redirect them to the login page.
-    */
-   if (!isAuthenticated && !isPublicRoute(request.nextUrl.pathname)) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/home'
+  /**
+   * @notice Check for the absence of the authentication cookie.
+   * @dev If the user isn't authenticated and isn't already on the
+   * `/login` page, redirect them to the login page.
+   */
+  if (!isAuthenticated && !isPublicRoute(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/home";
 
-      return NextResponse.redirect(url)
-   }
+    return NextResponse.redirect(url);
+  }
 
-   if (session && session.userInfo.role !== 'ADMIN' && request.nextUrl.pathname === '/descier/articles-for-approval') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/summary'
+  if (session && session.userInfo.role !== "ADMIN" && request.nextUrl.pathname === "/descier/articles-for-approval") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/summary";
 
-      return NextResponse.redirect(url)
-   }
+    return NextResponse.redirect(url);
+  }
 
-   if (isAuthenticated && request.nextUrl.pathname === '/login') {
-      /**
-       * @notice Check for the presence of the authentication cookie.
-       * @dev If the user is authenticated and is on the `/login` page,
-       * redirect them to the home page.
-       */
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
-   }
+  if (isAuthenticated && request.nextUrl.pathname === "/login") {
+    /**
+     * @notice Check for the presence of the authentication cookie.
+     * @dev If the user is authenticated and is on the `/login` page,
+     * redirect them to the home page.
+     */
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
 
-   /** @dev If the above conditions aren't met, simply continue with the request. */
-   return NextResponse.next()
+  /** @dev If the above conditions aren't met, simply continue with the request. */
+  return NextResponse.next();
 }
 
 /**
@@ -92,15 +92,15 @@ export async function middleware(request: NextRequest) {
  * assets.
  */
 export const config = {
-   matcher: [
-      /*
-       * Match all request paths except for the ones starting with:
-       * - api (API routes)
-       * - _next/static (static files)
-       * - _next/image (image optimization files)
-       * - favicon.ico (favicon file)
-       * - /public/* (public files)
-       */
-      '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)'
-   ]
-}
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - /public/* (public files)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)",
+  ],
+};

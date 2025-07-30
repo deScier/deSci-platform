@@ -1,69 +1,69 @@
 @keyframes overlayShow {
-   from {
-      opacity: 0;
-   }
-   to {
-      opacity: 0.5;
-   }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
 }
 
 @keyframes contentShow {
-   from {
-      opacity: 0;
-      transform: translate(-50%, -48%) scale(0.96);
-   }
-   to {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-   }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 @keyframes contentShowMobile {
-   from {
-      opacity: 0;
-   }
-   to {
-      opacity: 1;
-   }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .overlay {
-   background-color: rgba(0, 0, 0, 0.5);
-   position: fixed;
-   inset: 0;
-   backdrop-filter: blur(2px);
-   -webkit-backdrop-filter: blur(2px);
-   animation: overlayShow 0.1s ease-in-out;
-   z-index: 998;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: overlayShow 0.1s ease-in-out;
+  z-index: 998;
 }
 
 .content {
-   display: grid;
-   gap: 1rem;
-   box-shadow: 0px -2px 16px rgba(3, 1, 1, 0.12);
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   border-radius: 16px;
-   overflow-y: scroll;
-   z-index: 999;
-   outline: none;
-   animation: contentShow 0.2s ease-in-out;
-   background: #fff;
+  display: grid;
+  gap: 1rem;
+  box-shadow: 0px -2px 16px rgba(3, 1, 1, 0.12);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 16px;
+  overflow-y: scroll;
+  z-index: 999;
+  outline: none;
+  animation: contentShow 0.2s ease-in-out;
+  background: #fff;
 }
 
 @media (max-width: 768px) {
-   .content {
-      top: auto;
-      left: auto;
-      right: 0;
-      bottom: 0;
-      transform: translate(0, 0);
-      animation: contentShowMobile 0.2s ease-out;
-      border-radius: 16px 16px 0 0;
-      width: 100%;
-      max-width: 100%;
-      min-width: 100%;
-   }
+  .content {
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    transform: translate(0, 0);
+    animation: contentShowMobile 0.2s ease-out;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
 }

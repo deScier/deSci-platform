@@ -1,68 +1,68 @@
 name: Continuous Integration
 
 on:
-   push:
-      branches:
-         - main
+  push:
+    branches:
+      - main
 
 run-name: ${{ github.event.head_commit.message }}
 
 jobs:
-   quality:
-      name: Code Quality Check
-      runs-on: ubuntu-latest
-      timeout-minutes: 10
-      steps:
-         - name: Checkout code
-           uses: actions/checkout@v3
+  quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-         - name: Setup Node.js
-           uses: actions/setup-node@v3
-           with:
-              node-version: '23'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "23"
 
-         - name: Setup pnpm
-           uses: pnpm/action-setup@v2
-           with:
-              version: 8
-              run_install: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
 
-         - name: Get pnpm store directory
-           id: pnpm-cache
-           shell: bash
-           run: |
-              echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-         - name: Setup pnpm cache
-           uses: actions/cache@v3
-           with:
-              path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-              restore-keys: |
-                 ${{ runner.os }}-pnpm-store-
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-         - name: Cache node_modules
-           uses: actions/cache@v3
-           with:
-              path: '**/node_modules'
-              key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-              restore-keys: |
-                 ${{ runner.os }}-modules-
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
 
-         - name: Set .env from secrets
-           run: |
-              if [ -n "${{ secrets.ENV_PROD }}" ]; then
-                echo "${{ secrets.ENV_PROD }}" > .env
-              else
-                echo "Error: ENV_PROD secret is not configured"
-                exit 1
-              fi
+      - name: Set .env from secrets
+        run: |
+          if [ -n "${{ secrets.ENV_PROD }}" ]; then
+            echo "${{ secrets.ENV_PROD }}" > .env
+          else
+            echo "Error: ENV_PROD secret is not configured"
+            exit 1
+          fi
 
-         - name: Install dependencies
-           run: pnpm install --no-frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
-         - name: Run lint checks
-           run: pnpm run lint
+      - name: Run lint checks
+        run: pnpm run lint
 
-         - name: Build check
-           run: pnpm run build
+      - name: Build check
+        run: pnpm run build

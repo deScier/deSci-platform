@@ -1,8 +1,8 @@
-import { ArticleUnderReviewProps } from '@/components/common/Publication/Item/ArticlesUnderReview'
-import { format } from 'date-fns'
-import { getSession, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from './getArticles'
+import { ArticleUnderReviewProps } from "@/components/common/Publication/Item/ArticlesUnderReview";
+import { format } from "date-fns";
+import { getSession, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from "./getArticles";
 
 /**
  * @title useArticles
@@ -23,79 +23,82 @@ import { DocumentGetProps, DocumentPaginationProps, DocumentProps } from './getA
  *   - fetch_article: A function to fetch a specific article by its document ID.
  */
 export const useArticles = () => {
-   const { data } = useSession()
+  const { data } = useSession();
 
-   const [raw, setRawArticles] = useState<DocumentProps | null>(null)
-   const [article, setArticle] = useState<DocumentProps | null>(null)
-   const [articles, setArticles] = useState<ArticleUnderReviewProps[] | null>(null)
-   const [loading, setLoading] = useState<boolean>(true)
+  const [raw, setRawArticles] = useState<DocumentProps | null>(null);
+  const [article, setArticle] = useState<DocumentProps | null>(null);
+  const [articles, setArticles] = useState<ArticleUnderReviewProps[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-   useEffect(() => {
-      const fetchArticles = async () => {
-         if (data?.user?.token) {
-            const session = await getSession()
-
-            if (session?.user?.token) {
-               const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/documents`, {
-                  method: 'GET',
-                  headers: {
-                     'Content-Type': 'application/json',
-                     authorization: `Bearer ${session.user.token}`
-                  }
-               })
-
-               const response: DocumentPaginationProps = await request.json()
-
-               const formatted_response: ArticleUnderReviewProps[] = response?.documents?.map((article) => {
-                  return {
-                     id: article.id,
-                     status_editor: article.editorsApprovals === 0 ? 'pending' : ('approved' as ArticleUnderReviewProps['status_editor']),
-                     status_reviewer: article.reviewerApprovals < 1 ? 'pending' : ('approved' as ArticleUnderReviewProps['status_reviewer']),
-                     status_admin: article.adminApproval < 1 ? 'pending' : ('approved' as ArticleUnderReviewProps['status_reviewer']),
-                     image: article.cover || '',
-                     since: format(new Date(article.createdAt), 'dd/MM/yyyy'),
-                     title: article.title,
-                     link: `/articles/${article.id}`,
-                     document_type: article.documentType,
-                     status: article.status,
-                     authors: article.authorsOnDocuments,
-                     userId: article.userId
-                  }
-               })
-
-               setArticles(formatted_response)
-               setLoading(false)
-            }
-         }
-      }
-      fetchArticles()
-   }, [data?.user?.token, article])
-
-   /**
-    * @param {string} documentId - The unique identifier of the article to fetch.
-    * @return {DocumentProps} The fetched article data.
-    */
-   const fetchArticle = async (documentId: string) => {
+  useEffect(() => {
+    const fetchArticles = async () => {
       if (data?.user?.token) {
-         const session = await getSession()
+        const session = await getSession();
 
-         if (session?.user?.token) {
-            const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/private/${documentId}`, {
-               method: 'GET',
-               headers: {
-                  'Content-Type': 'application/json',
-                  authorization: `Bearer ${session.user.token}`
-               }
-            })
+        if (session?.user?.token) {
+          const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/documents`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${session.user.token}`,
+            },
+          });
 
-            const response: DocumentGetProps = await request.json().then((res) => {
-               return res
-            })
+          const response: DocumentPaginationProps = await request.json();
 
-            return response
-         }
+          const formatted_response: ArticleUnderReviewProps[] = response?.documents?.map((article) => {
+            return {
+              id: article.id,
+              status_editor:
+                article.editorsApprovals === 0 ? "pending" : ("approved" as ArticleUnderReviewProps["status_editor"]),
+              status_reviewer:
+                article.reviewerApprovals < 1 ? "pending" : ("approved" as ArticleUnderReviewProps["status_reviewer"]),
+              status_admin:
+                article.adminApproval < 1 ? "pending" : ("approved" as ArticleUnderReviewProps["status_reviewer"]),
+              image: article.cover || "",
+              since: format(new Date(article.createdAt), "dd/MM/yyyy"),
+              title: article.title,
+              link: `/articles/${article.id}`,
+              document_type: article.documentType,
+              status: article.status,
+              authors: article.authorsOnDocuments,
+              userId: article.userId,
+            };
+          });
+
+          setArticles(formatted_response);
+          setLoading(false);
+        }
       }
-   }
+    };
+    fetchArticles();
+  }, [data?.user?.token, article]);
 
-   return { articles, loading, raw, fetch_article: fetchArticle }
-}
+  /**
+   * @param {string} documentId - The unique identifier of the article to fetch.
+   * @return {DocumentProps} The fetched article data.
+   */
+  const fetchArticle = async (documentId: string) => {
+    if (data?.user?.token) {
+      const session = await getSession();
+
+      if (session?.user?.token) {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/private/${documentId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${session.user.token}`,
+          },
+        });
+
+        const response: DocumentGetProps = await request.json().then((res) => {
+          return res;
+        });
+
+        return response;
+      }
+    }
+  };
+
+  return { articles, loading, raw, fetch_article: fetchArticle };
+};

@@ -1,11 +1,11 @@
 import {
-   TooltipArrowProps,
-   TooltipContentProps,
-   TooltipPortalProps,
-   TooltipProps,
-   TooltipProviderProps,
-   TooltipTriggerProps
-} from '@radix-ui/react-tooltip'
+  TooltipArrowProps,
+  TooltipContentProps,
+  TooltipPortalProps,
+  TooltipProps,
+  TooltipProviderProps,
+  TooltipTriggerProps,
+} from "@radix-ui/react-tooltip";
 
 interface ProviderProps extends TooltipProviderProps {}
 
@@ -20,7 +20,7 @@ interface ContentProps extends TooltipContentProps {}
 interface ArrowProps extends TooltipArrowProps {}
 
 interface TooltipInformationProps {
-   content: React.ReactNode
+  content: React.ReactNode;
 }
 
-export { ArrowProps, ContentProps, PortalProps, ProviderProps, RootProps, TooltipInformationProps, TriggerProps }
+export { ArrowProps, ContentProps, PortalProps, ProviderProps, RootProps, TooltipInformationProps, TriggerProps };

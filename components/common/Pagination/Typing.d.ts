@@ -1,11 +1,11 @@
 interface PaginationProps {
-   total: number
-   current: number
-   perPage: number
-   handleNextPage: () => void
-   handlePreviousPage: () => void
-   handleFirstPage: () => void
-   handleLastPage: () => void
+  total: number;
+  current: number;
+  perPage: number;
+  handleNextPage: () => void;
+  handlePreviousPage: () => void;
+  handleFirstPage: () => void;
+  handleLastPage: () => void;
 }
 
-export type { PaginationProps }
+export type { PaginationProps };

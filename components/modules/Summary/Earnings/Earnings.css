@@ -1,4 +1,4 @@
 .grid-earnings {
-   display: grid;
-   grid-template-columns: max-content auto;
+  display: grid;
+  grid-template-columns: max-content auto;
 }
