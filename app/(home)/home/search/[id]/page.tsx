@@ -1,12 +1,12 @@
 import * as React from 'react';
-import type { Metadata } from 'next';
 
-import { unstable_noStore } from 'next/cache';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { GetDocumentPublicProps } from '@/services/document/getArticles';
 
 import ArticleDetails from '@/components/pages/Article/Article';
 
-const fetchArticle = async (documentId: string): Promise<GetDocumentPublicProps> => {
+const fetchArticle = cache(async (documentId: string): Promise<GetDocumentPublicProps> => {
   try {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/${documentId}`, {
       method: 'GET',
@@ -23,6 +23,12 @@ const fetchArticle = async (documentId: string): Promise<GetDocumentPublicProps>
     console.error('Error fetching article:', error);
     throw error;
   }
+});
+
+const getValidImageUrl = (imageUrl: string, baseUrl: string) => {
+  if (!imageUrl) return `${baseUrl}/images/default-article.png`;
+  if (imageUrl.startsWith('http')) return imageUrl;
+  return `${baseUrl}${imageUrl}`;
 };
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -40,6 +46,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci.reviews';
     const keywordsArray = doc.keywords ? doc.keywords.split(',').map(k => k.trim()) : ['DeSci', 'scientific publishing', 'research'];
     
+    const ogImageUrl = getValidImageUrl(doc.cover, baseUrl);
+    const twitterImageUrl = getValidImageUrl(doc.cover, baseUrl);
+    
     return {
       title: `${doc.title} | deSci Publications`,
       description: doc.abstract || 'A scientific publication on the deSci platform.',
@@ -49,7 +58,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         title: doc.title,
         description: doc.abstract || 'A scientific publication on the deSci platform.',
         type: 'article',
-        url: `${baseUrl}/paper/${params.id}`,
+        url: `${baseUrl}/home/search/${params.id}`,
         siteName: 'deSci Publications',
         publishedTime: doc.publishedAt ? new Date(doc.publishedAt).toISOString() : (doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined),
         modifiedTime: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : (doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined),
@@ -58,7 +67,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         tags: keywordsArray,
         images: [
           {
-            url: doc.cover || `${baseUrl}/images/default-article.png`,
+            url: ogImageUrl,
             width: 1200,
             height: 630,
             alt: `${doc.title} - deSci Publication`,
@@ -71,10 +80,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         creator: '@desciers',
         title: doc.title,
         description: doc.abstract || 'A scientific publication on the deSci platform.',
-        images: [doc.cover || `${baseUrl}/images/default-article.png`],
+        images: [twitterImageUrl],
       },
       alternates: {
-        canonical: `${baseUrl}/paper/${params.id}`,
+        canonical: `${baseUrl}/home/search/${params.id}`,
       },
     };
   } catch (error) {
@@ -87,8 +96,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
-  unstable_noStore();
-  
   const article = await fetchArticle(params.id);
 
   return (
