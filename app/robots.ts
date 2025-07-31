@@ -18,7 +18,16 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: ['/', '/home/search/*', '/paper/*', '/articles-for-approval'],
-      disallow: ['/api/', '/profile/', '/my-ip/', '/articles-under-review/', '/as-reviewer/', '/summary/', '/descier/', '/journals/*'],
+      disallow: [
+        '/api/',
+        '/profile/',
+        '/my-ip/',
+        '/articles-under-review/',
+        '/as-reviewer/',
+        '/summary/',
+        '/descier/',
+        '/journals/*',
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

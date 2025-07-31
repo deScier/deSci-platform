@@ -33,34 +33,34 @@ export const social_media = [
 ];
 
 export const links = [
-   {
-      id: uniqueId(),
-      name: 'Home',
-      link: home_routes.home.index
-   },
-   {
-      id: uniqueId(),
-      name: 'Instructions',
-      link: 'https://descier-1.gitbook.io/the-desci-journal-handbook/'
-   },
-   {
-      id: uniqueId(),
-      name: 'Onboard Discord',
-      link: 'https://discord.com/invite/Z6U9P28YtV'
-   },
-   {
-      id: uniqueId(),
-      name: 'Join the community',
-      link: 'https://t.me/desciers'
-   },
-   {
-      id: uniqueId(),
-      name: 'Privacy Policy',
-      link: 'https://descier.science/policy/'
-   },
-   {
-      id: uniqueId(),
-      name: 'Terms',
-      link: 'https://descier.science/terms/'
-   }
-]
+  {
+    id: uniqueId(),
+    name: 'Home',
+    link: home_routes.home.index,
+  },
+  {
+    id: uniqueId(),
+    name: 'Instructions',
+    link: 'https://descier-1.gitbook.io/the-desci-journal-handbook/',
+  },
+  {
+    id: uniqueId(),
+    name: 'Onboard Discord',
+    link: 'https://discord.com/invite/Z6U9P28YtV',
+  },
+  {
+    id: uniqueId(),
+    name: 'Join the community',
+    link: 'https://t.me/desciers',
+  },
+  {
+    id: uniqueId(),
+    name: 'Privacy Policy',
+    link: 'https://descier.science/policy/',
+  },
+  {
+    id: uniqueId(),
+    name: 'Terms',
+    link: 'https://descier.science/terms/',
+  },
+];

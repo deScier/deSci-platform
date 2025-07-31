@@ -1,4 +1,4 @@
-# Empowering science  through decentralization
+# Empowering science through decentralization
 
 At deScier, we believe in revolutionizing how scientific research is conducted, shared, and funded.
 
