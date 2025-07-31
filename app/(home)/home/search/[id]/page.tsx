@@ -1,11 +1,12 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
 import { cache } from 'react';
+import { unstable_noStore } from 'next/cache';
 import { GetDocumentPublicProps } from '@/services/document/getArticles';
 
 import ArticleDetails from '@/components/pages/Article/Article';
 
-const fetchArticle = cache(async (documentId: string): Promise<GetDocumentPublicProps> => {
+const fetchArticle = async (documentId: string): Promise<GetDocumentPublicProps> => {
   try {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/${documentId}`, {
       method: 'GET',
@@ -22,12 +23,6 @@ const fetchArticle = cache(async (documentId: string): Promise<GetDocumentPublic
     console.error('Error fetching article:', error);
     throw error;
   }
-});
-
-const getValidImageUrl = (imageUrl: string, baseUrl: string) => {
-  if (!imageUrl) return `${baseUrl}/images/default-article.png`;
-  if (imageUrl.startsWith('http')) return imageUrl;
-  return `${baseUrl}${imageUrl}`;
 };
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -46,9 +41,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const keywordsArray = doc.keywords
       ? doc.keywords.split(',').map((k) => k.trim())
       : ['DeSci', 'scientific publishing', 'research'];
-
-    const ogImageUrl = getValidImageUrl(doc.cover, baseUrl);
-    const twitterImageUrl = getValidImageUrl(doc.cover, baseUrl);
 
     return {
       title: `${doc.title} | deSci Publications`,
@@ -76,7 +68,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         tags: keywordsArray,
         images: [
           {
-            url: ogImageUrl,
+            url: doc.cover || `${baseUrl}/images/default-article.png`,
             width: 1200,
             height: 630,
             alt: `${doc.title} - deSci Publication`,
@@ -89,7 +81,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         creator: '@desciers',
         title: doc.title,
         description: doc.abstract || 'A scientific publication on the deSci platform.',
-        images: [twitterImageUrl],
+        images: [doc.cover || `${baseUrl}/images/default-article.png`],
       },
       alternates: {
         canonical: `${baseUrl}/home/search/${params.id}`,
@@ -105,6 +97,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
+  unstable_noStore();
+  
   const article = await fetchArticle(params.id);
 
   return (
