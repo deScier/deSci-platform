@@ -22,7 +22,6 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
   const router = useRouter();
 
   const [hovered_curator_id, setHoveredCuratorId] = React.useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
 
   const OPTIONS: EmblaOptionsType = {
     loop: true,
@@ -40,52 +39,7 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowDimension]);
 
-  //    React.useEffect(() => {
-  //       if (!emblaApi) return
-
-  //       const autoScroll = emblaApi?.plugins()?.autoScroll as unknown as AutoScrollPlugin
-
-  //       if (!autoScroll) return
-
-  //       const updateIsPlaying = () => setIsPlaying(autoScroll.isPlaying() as boolean)
-
-  //       updateIsPlaying()
-
-  //       emblaApi.on('autoScroll:play' as EmblaEventType, updateIsPlaying)
-  //       emblaApi.on('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-  //       emblaApi.on('reInit' as EmblaEventType, updateIsPlaying)
-
-  //       return () => {
-  //          emblaApi.off('autoScroll:play' as EmblaEventType, updateIsPlaying)
-  //          emblaApi.off('autoScroll:stop' as EmblaEventType, updateIsPlaying)
-  //          emblaApi.off('reInit' as EmblaEventType, updateIsPlaying)
-  //       }
-  //    }, [emblaApi])
-
-  // Activate the auto scroll plugin when the window dimension is greater than 1024
-  //    React.useEffect(() => {
-  //       const autoScroll = emblaApi?.plugins()?.autoScroll
-  //       if (!autoScroll) return
-
-  //       if (windowDimension && windowDimension < 1024) {
-  //          ;(autoScroll.stop as () => void)()
-  //       } else {
-  //          if (hovered_curator_id !== null) {
-  //             ;(autoScroll.stop as () => void)()
-  //          } else {
-  //             ;(autoScroll.play as () => void)()
-  //          }
-  //       }
-  //    }, [emblaApi, hovered_curator_id, windowDimension])
-
   const [journalsCarousel, setJournalsCarousel] = React.useState<JournalForCarousel[] | undefined>(undefined);
-
-  // Set the first journal as the hovered curator id when the window dimension is less than 1024
-  //    React.useEffect(() => {
-  //       if (windowDimension && windowDimension < 1024 && journalsCarousel && journalsCarousel.length > 0) {
-  //          setHoveredCuratorId(journalsCarousel[0].id_carroussel)
-  //       }
-  //    }, [windowDimension, journalsCarousel])
 
   React.useEffect(() => {
     if (journals === undefined) return;
@@ -117,26 +71,6 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
   }, [journals, windowDimension]);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
-
-  // Set the hovered curator id when the user selects a journal
-  //    React.useEffect(() => {
-  //       if (!emblaApi) return
-
-  //       const onSelect = () => {
-  //          if (windowDimension && windowDimension < 1024) {
-  //             const selectedIndex = emblaApi.selectedScrollSnap()
-  //             if (journalsCarousel && journalsCarousel.length > 0) {
-  //                setHoveredCuratorId(journalsCarousel[selectedIndex].id_carroussel)
-  //             }
-  //          }
-  //       }
-
-  //       emblaApi.on('select' as EmblaEventType, onSelect)
-
-  //       return () => {
-  //          emblaApi.off('select' as EmblaEventType, onSelect)
-  //       }
-  //    }, [emblaApi, journalsCarousel, windowDimension])
 
   if (journals?.length == 0) {
     return (
@@ -219,21 +153,21 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
                           <React.Fragment>{journal.name}</React.Fragment>
                         )}
                       </motion.h2>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {keywordsArray(journal.keywords).map((keyword) => (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                        {keywordsArray(journal.keywords).slice(0, 6).map((keyword) => (
                           <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
-                            transition={{ duration: 0.25 }}
-                            key={keyword}
-                            className="z-40 border border-white rounded-full px-2 w-fit"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: hovered_curator_id === journal.id_carroussel ? 1 : 0 }}
+                          transition={{ duration: 0.25 }}
+                          key={keyword}
+                          className="z-40 border border-white rounded-full px-2 w-fit"
                           >
-                            <p className="text-white text-xxs lg:text-xs">
-                              {keyword.length > 30 ? formatName(keyword) : keyword}
-                            </p>
+                          <p className="text-white text-xxs lg:text-xs">
+                            {keyword.length > 30 ? formatName(keyword) : keyword}
+                          </p>
                           </motion.div>
                         ))}
-                      </div>
+                        </div>
                     </div>
                     <div className="embla__slide__number">
                       <motion.div
@@ -267,12 +201,6 @@ const OurJournals: React.FC<OurJournalsProps> = ({ journals }: OurJournalsProps)
       </div>
     </React.Fragment>
   );
-};
-
-type AutoScrollPlugin = {
-  play: () => void;
-  stop: () => void;
-  isPlaying: () => boolean;
 };
 
 type OurJournalsProps = {
