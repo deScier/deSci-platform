@@ -44,10 +44,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     const doc = article.document;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci.reviews';
-    const keywordsArray = doc.keywords ? doc.keywords.split(',').map(k => k.trim()) : ['DeSci', 'scientific publishing', 'research'];
-    
+    const keywordsArray = doc.keywords
+      ? doc.keywords.split(',').map((k) => k.trim())
+      : ['DeSci', 'scientific publishing', 'research'];
+
     const ogImageUrl = getValidImageUrl(doc.cover, baseUrl);
     const twitterImageUrl = getValidImageUrl(doc.cover, baseUrl);
+
     return {
       title: `${doc.title} | deSci Publications`,
       description: doc.abstract || 'A scientific publication on the deSci platform.',
@@ -59,9 +62,17 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         type: 'article',
         url: `${baseUrl}/home/search/${params.id}`,
         siteName: 'deSci Publications',
-        publishedTime: doc.publishedAt ? new Date(doc.publishedAt).toISOString() : (doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined),
-        modifiedTime: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : undefined,
-        authors: doc.authors?.map(author => author.name) || [doc.authorName],
+        publishedTime: doc.publishedAt
+          ? new Date(doc.publishedAt).toISOString()
+          : doc.createdAt
+            ? new Date(doc.createdAt).toISOString()
+            : undefined,
+        modifiedTime: doc.updatedAt
+          ? new Date(doc.updatedAt).toISOString()
+          : doc.createdAt
+            ? new Date(doc.createdAt).toISOString()
+            : undefined,
+        authors: doc.authors?.map((author) => author.name) || [doc.authorName],
         section: doc.field || 'Research',
         tags: keywordsArray,
         images: [
