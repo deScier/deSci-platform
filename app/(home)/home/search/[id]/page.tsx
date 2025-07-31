@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         url: `${baseUrl}/home/search/${params.id}`,
         siteName: 'deSci Publications',
         publishedTime: doc.publishedAt ? new Date(doc.publishedAt).toISOString() : (doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined),
-        modifiedTime: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : undefined,
+        modifiedTime: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : (doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined),
         authors: doc.authors?.map(author => author.name) || [doc.authorName],
         section: doc.field || 'Research',
         tags: keywordsArray,
