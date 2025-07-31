@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { GetDocumentPublicProps } from '@/services/document/getArticles';
