@@ -27,9 +27,10 @@ export const BannerStartPublishing: React.FC<BannerStartPublishingModalProps> = 
                 Want to publish a paper? Want to create a Journal?
               </p>
               <p className="text-sm md:text-base font-regular text-white">
-                Publishing with deScier is affordable, fast and easy, with selected peer-review and, 100% author-owned
-                copyright. A variety of articles genres are welcome for publication. Choose deScier, where your research
-                meets affordability, fairness and community. Your ideas, your terms, your future.
+                Publishing with DeSci Reviews is affordable, fast and easy, with rigorous peer-review and 100%
+                author-owned copyright. A variety of research genres are welcome for publication; from breakthrough
+                studies to interdisciplinary work. Choose DeSci Reviews, where your research meets{' '}
+                <strong>blockchain-backed tech</strong>, ownership and recognition. Your ideas, your terms, your future.
               </p>
             </div>
             <div className="lg:flex space-y-4 lg:space-y-0 lg:gap-4 lg:justify-end">

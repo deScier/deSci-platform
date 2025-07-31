@@ -51,7 +51,7 @@ export const links = [
   {
     id: uniqueId(),
     name: 'Join the community',
-    link: 'https://app.gosh.sh/o/descier',
+    link: 'https://t.me/desciers',
   },
   {
     id: uniqueId(),
