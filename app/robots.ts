@@ -17,22 +17,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: [
-        '/',
-        '/journals/*',
-        '/home/search/*',
-        '/paper/*',
-        '/articles-for-approval'
-      ],
-      disallow: [
-        '/api/',
-        '/profile/',
-        '/my-ip/',
-        '/articles-under-review/',
-        '/as-reviewer/',
-        '/summary/',
-        '/descier/',
-      ],
+      allow: ['/', '/home/search/*', '/paper/*', '/articles-for-approval'],
+      disallow: ['/api/', '/profile/', '/my-ip/', '/articles-under-review/', '/as-reviewer/', '/summary/', '/descier/', '/journals/*'],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
