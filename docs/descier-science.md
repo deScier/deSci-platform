@@ -1,4 +1,4 @@
-# Empowering science through decentralization
+# Empowering science  through decentralization
 
 At deScier, we believe in revolutionizing how scientific research is conducted, shared, and funded.
 
@@ -308,4 +308,8 @@ Connect with researchers via Telegram
 
 Be part of the decentralized science revolution. Connect with us to learn more about publishing opportunities and platform features.
 
+<<<<<<< HEAD
 Get StartedLearn More
+=======
+Get StartedLearn More
+>>>>>>> 4df8d67 (added documents)

@@ -8,7 +8,7 @@ Purpose of the Handbook: The primary aim of this handbook is to provide authors 
 
 Title: The DeSci Journal Handbook
 
-A new future for publications. This section is a brief introduction and welcomes Authors to a new future for publications, giving the advantages of using the platform.
+A new future for publications. This section is a brief introduction and welcomes Authors to a new future for publications, giving the advantages of using the platform. 
 
 Understanding the Submission Process. This section explains the submission process, from creating an account to submitting a manuscript, and offers insights into peer review, publication, and authorship. This section also delves into the rights and responsibilities of authors, including right to data, ethical considerations, proper attribution and plagiarism.
 
@@ -39,7 +39,7 @@ Submitting your technical and scientific results are a crucial step in sharing y
 
 In creating our submission process, we've meticulously designed it to be incredibly user-friendly and intuitive, ensuring that authors can effortlessly navigate the steps from start to finish. We've streamlined the process, making it as easy as possible for researchers to share their valuable work with the world, allowing their ideas to shine without the burden of a complex submission procedure.
 
-Terms:
+Terms: 
 
 Manuscript or Submitted article: Text not yet peer-reviewed.
 
@@ -49,43 +49,43 @@ Paper, Article, Revised or Reviewed Article: Peer-reviewed text.
 
 We've compiled this list for Types of Articles:
 
-Research Articles:
+Research Articles: 
 
-Research article
+Research article 
 
-Review article
+Review article 
 
 Capstone work | TCC
 
-Short communication
+Short communication 
 
-Cases and Notes:
+Cases and Notes: 
 
-Case report
+Case report 
 
-Case series
+Case series 
 
-Technical note
+Technical note 
 
-Technical report
+Technical report 
 
 Reviews:
 
-Systematic review
+Systematic review 
 
-Pictorial essay
+Pictorial essay 
 
 Communications:
 
-Letter to the Editor
+Letter to the Editor 
 
-Correspondence
+Correspondence 
 
-Commentary
+Commentary 
 
-Others:
+Others: 
 
-Conference Abstract
+Conference Abstract 
 
 Editorial
 
@@ -93,7 +93,7 @@ If you can't find a category you'd like to publish in, please don't hesitate to 
 
 Online Submission: You will be required to create an account for acessing the submission form.
 
-Manuscript Preparation: Ensure your manuscript is .docx. Do not worry too much with formatting, structure, and citation style. You can use formats adopted by The Serbian Astronomical Journal or by the IEEE. If you are still in doubt, our Editors, Reviewers and Designers will gladly assist you on formatting.
+Manuscript Preparation: Ensure your manuscript is .docx. Do not worry too much with formatting, structure, and citation style.  You can use formats adopted by The Serbian Astronomical Journal or by the IEEE. If you are still in doubt, our Editors, Reviewers and Designers will gladly assist you on formatting.
 
 Your data: The DeSci Journal does not require any letters alongside your submission. By submitting your article you guarantee that it the data is yours, that you have not published it elsewhere and that is not product of plagiarism. We will check for plagiarism before accepting your article for peer-review. If you have any special considerations for the Editor, you may include a Section in your manuscript.
 
@@ -103,24 +103,24 @@ Supplementary data. Similarly, authors are not required to supplementary data wh
 
 Selecting Peer Reviewers: You will have the opportunity to invite potential peer reviewers using a link which will be created during submission. Make informed and ethical choices when suggesting reviewers. Please let us know if you have problems finding Reviewers by sending us an email or whatsapp.
 
-Payment: We do not charge for submission. We charge a publication fee, only when your manuscript is accepted for peer-review. Seventy percent (70%) of this payment fee is allocated to compensate Editors, Reviewers, and Designers, embodying the spirit of a true community that values their dedicated contributions. Values and price structures can be find here.
+Payment: We do not charge for submission. We charge a publication fee, only when your manuscript is accepted for peer-review.  Seventy percent (70%) of this payment fee is allocated to compensate Editors, Reviewers, and Designers, embodying the spirit of a true community that values their dedicated contributions. Values and price structures can be find here.
 
 Cover image. During manuscript submission, authors are encouraged to upload an image that symbolizes their work, providing a visual representation. Please note that this image selection is permanent and cannot be altered at a later stage, so choose an image that resonates with the essence of your manuscript. It serves as a lasting visual identifier for your research
 
 Ethical Declarations: By submitting to The DeSci Journal, you are affirming that you do not have any potential conflicts of interest or requirements for ethical approvals.
 
-New features on The DeSci Journal:
+New features on The DeSci Journal: 
 
-Introducing our groundbreaking feature:
+Introducing our groundbreaking feature: 
 
 The Percentage of Authorship. A tool where authors can specify their contribution percentage, allocating up to 100% among collaborators. This innovative feature not only promotes transparency and recognition but also directly impacts potential gains from paid access to Articles, ensuring that royalties are distributed fairly based on each author's defined share, fostering a system of equitable compensation for your valuable contributions.
 
-Affiliations, financial supporters, or other non-individual entities. If you need to include affiliations (universities, research institutions), financial supporters, investors or other non-individual entities, please incorporate them as part of the Authorship section, including their percentages. Make sure all co-Authors and organizations agree on percentages. This cannot be changed.
+ Affiliations, financial supporters, or other non-individual entities. If you need to include affiliations (universities, research institutions), financial supporters, investors or other non-individual entities, please incorporate them as part of the Authorship section, including their percentages. Make sure all co-Authors and organizations agree on percentages. This cannot be changed.
 
----
+--- 
 
 Payments
-For submitting a manuscript for review and purchases, we accept payments in fiat BRL, EUR, USD and digital currencies such as USDC, DAI, ETH and BTC.
+For submitting a manuscript for review and purchases, we accept payments in fiat BRL, EUR, USD and digital currencies such as USDC, DAI, ETH and BTC. 
 
 Certain payment methods may be unavailable in the initial release (Version 1) of our platform. We will introduce additional payment methods and ensure that payments are processed swiftly as we continue to enhance our payment gateways.
 
@@ -128,7 +128,11 @@ Fiat currencies are a type of currency that has value because a government has d
 
 Digital currencies, often referred to as cryptocurrencies, are a type of currency that exists in digital form and relies on cryptographic techniques to secure and verify transactions.
 
+<<<<<<< HEAD
 To engage in digital currency transactions, you must possess a digital wallet.
+=======
+To engage in digital currency transactions, you must possess a digital wallet. 
+>>>>>>> 4df8d67 (added documents)
 
 Metamask stands out as one of the most widely used digital wallets. To get started, simply visit Metamask's website and create your account.
 
@@ -186,12 +190,20 @@ Backup and Recovery: Many crypto wallets provide backup and recovery options to 
 
 It's important to choose a crypto wallet that aligns with your security preferences and the type of cryptocurrencies you intend to store. Security practices, such as keeping private keys secure and regularly updating software, are essential for protecting your digital assets.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Peer-Review
 The Peer Review Process
 
+<<<<<<< HEAD
 Peer review plays a vital role in the technical and scientific publishing process.
+=======
+Peer review plays a vital role in the technical and scientific publishing process. 
+>>>>>>> 4df8d67 (added documents)
 
 Peer-reviewed manuscripts offer several valuable advantages. Firstly, they undergo rigorous evaluation by experts in the field, ensuring the accuracy, quality, and credibility of the research. Secondly, peer review enhances the clarity and coherence of the manuscript, making it more accessible to a wider audience. Lastly, acceptance through peer review adds a stamp of approval, boosting the author's credibility and the manuscript's suitability for technical and scientific discourse.
 
@@ -209,28 +221,44 @@ Reviewer Feedback: Reviewers provide feedback and recommendations, which you wil
 
 In our publication platform, we place a significant emphasis on delivering constructive feedback and mentorship during the peer-review process. Our dedication to this approach stems from the understanding that constructive critique is not only pivotal for elevating research quality but also for fostering author development. Our team of experienced reviewers is committed to providing valuable, actionable insights that enable authors to enhance their work, contributing to a culture of ongoing refinement. We acknowledge that peer review is not solely an evaluation process but also an opportunity for mentorship and collaboration. We take great pride in offering authors the support and guidance required to maximize the impact of their research contributions.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Tracking your submission
 Manuscript Tracking, Status Updates and Discussion. Our platform offers an integrated Manuscript Tracking, Status Updates and Discussion feature, providing Authors with real-time insights into the progress of their submissions. By simply logging into their accounts, authors can conveniently monitor the status of their manuscripts, from initial submission through peer review to eventual publication, ensuring full transparency and peace of mind throughout the publication journey.
 
 Within our platform, Authors and Reviewers can engage in meaningful discussions regarding necessary edits, suggestions, and clarifications. This collaborative space fosters effective communication, ensuring that the revision process is both constructive and seamless. Thus, the revision process within our platform allows for efficient and organized manuscript improvements. This feature simplifies the collaboration between Authors and Reviewers, making the revision phase more convenient and productive.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Editorial decision
 Editorial Decision: The Editor will make a decision based on the reviews and may accept your manuscript as is, ask for revisions, or, in some cases, reject it.
 
 In the editorial decision-making process, the editor carefully evaluates reviewers' comments and suggestions to determine the manuscript's fate. If a consensus among reviewers cannot be reached, the editor serves as the final arbiter, drawing upon their expertise and the feedback received to make an informed decision. This critical role ensures that each manuscript undergoes a fair and thorough assessment before reaching a publication outcome.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Publishing
 Proofs. Prior to publication, authors receive proofs of their work for review. While we value the author's expertise and insights, we understand that the final say belongs to them. Authors are given a 48-hour window to carefully examine and make any necessary adjustments to the proofs, ensuring their work accurately reflects their intent and vision before it goes public.
 
 Copyright and Licensing. At our platform, we firmly believe in empowering authors by granting them 100% copyright ownership of their content. This means that authors retain full control over their work, including the ability to share, reproduce, or publish it elsewhere as they see fit. Our commitment to author-centric copyright policies ensures that the creative and intellectual rights of authors are respected and protected.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Celebrating Your Achievements
 Once your paper is published, we'll keep a close eye on its performance, tracking metrics like likes, comments, shares and purchases. These interactions help gauge the impact of your research, providing valuable insights into its reach and relevance in the scientific community and beyond.
@@ -239,7 +267,11 @@ It's important to note that the impact of your research, measured by likes, comm
 
 You can easily track and monitor the impact of your research in real time through your personalized author's dashboard on our platform. This feature allows you to stay informed about the likes, comments, shares and purchases your work has, offering a comprehensive view of your research's influence within the community.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 A quick guide on articles' styles
 We warmly welcome a diverse array of article styles and recognize that each style may come with its own unique formatting requirements.
@@ -289,7 +321,11 @@ Appendices are additional materials that supplement the main text, such as raw d
 
 These sections collectively structure an academic or research article, guiding readers through the research process, from introduction to conclusion, and providing valuable context and supporting information.
 
+<<<<<<< HEAD
 Images are more than a thousand words
+=======
+Images are more than a thousand words 
+>>>>>>> 4df8d67 (added documents)
 In today's publishing landscape, the inclusion of images has become a valuable and appreciated feature. Images enhance the visual appeal of articles and can significantly contribute to the clarity and accessibility of the research. While not mandatory, incorporating images has evolved into a "nice-to-have" aspect that can elevate the overall presentation of your work.
 
 Photographs: Visual representations captured with a camera or other imaging devices, depicting real-life scenes and subjects.
@@ -347,11 +383,21 @@ Acknowledgments (if applicable): Authors can acknowledge individuals, organizati
 
 Pictorial essays, in particular, rely heavily on visual content to convey their message and often aim to present a story or argument through a carefully curated selection of images and their accompanying text.
 
+<<<<<<< HEAD
 ---
+=======
+--- 
+>>>>>>> 4df8d67 (added documents)
 
 Author-Centric Evolution: Shaping the Future with You
 Congratulations to all the visionary Authors who have embraced this new and revolutionary form of publishing. Your choice empowers you by returning control of your creative work and ideas through a renewed commitment to author-centric copyright. This transformation not only revitalizes the publishing industry but also paves the way for a more inclusive, collaborative, and dynamic era of knowledge sharing. Your contributions are shaping the future of scholarly communication, where innovation and author empowerment are at the forefront.
 
+<<<<<<< HEAD
 As we embark on this transformative journey together, we value your input and collaboration as Authors. We have just taken the first steps, and your feedback is invaluable as we evolve and build this new publishing paradigm. Your insights and ideas will play a pivotal role in shaping the future of this platform, and we look forward to jointly constructing a publishing ecosystem that best serves the needs of authors like you. Please share your thoughts, suggestions, and experiences to help us refine and improve this innovative approach. Our DMs and e-mails are open to you.
 
 Welcome to a new future for publications!
+=======
+As we embark on this transformative journey together, we value your input and collaboration as Authors. We have just taken the first steps, and your feedback is invaluable as we evolve and build this new publishing paradigm. Your insights and ideas will play a pivotal role in shaping the future of this platform, and we look forward to jointly constructing a publishing ecosystem that best serves the needs of authors like you. Please share your thoughts, suggestions, and experiences to help us refine and improve this innovative approach. Our DMs and e-mails are open to you. 
+
+Welcome to a new future for publications!
+>>>>>>> 4df8d67 (added documents)
