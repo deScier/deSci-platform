@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!process.env.NEXT_PUBLIC_BASE_URL) {
     throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for sitemap generation');
   }
-  
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const [documents] = await Promise.all([fetchPublicDocumentsServer()]);
@@ -32,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.7,
-    }
+    },
   ];
 
   const documentRoutes: MetadataRoute.Sitemap = documents.map((document: DocumentProps) => ({
@@ -58,14 +58,14 @@ async function fetchPublicDocumentsServer(): Promise<DocumentProps[]> {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      next: { revalidate: 3600 }
+      next: { revalidate: 3600 },
     });
-    
+
     if (!request.ok) {
       console.error('Failed to fetch public documents for sitemap, status:', request.status);
       return [];
     }
-    
+
     const response = await request.json();
     return response?.documents || [];
   } catch (error) {

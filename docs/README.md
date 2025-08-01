@@ -20,22 +20,27 @@ deScier is revolutionizing how scientific research is conducted, shared, and fun
 This documentation is organized into the following sections:
 
 ### 1. Platform Overview
+
 - **File**: `platform-overview.md`
 - **Content**: Comprehensive overview of deScier, mission, core values, ecosystem, and technology foundation
 
 ### 2. User Guide
+
 - **File**: `user-guide.md`
 - **Content**: Complete guide for authors, reviewers, and readers including submission process, peer review, payment information, and platform features
 
 ### 3. Technical Documentation
+
 - **File**: `technical-documentation.md`
 - **Content**: Whitepaper content, technical architecture, blockchain implementation, smart contracts, and decentralized publishing model
 
 ### 4. Team & Community
+
 - **File**: `team-community.md`
 - **Content**: Leadership team, advisory board, community ecosystem, platform statistics, and contact information
 
 ### 5. Design References
+
 - **File**: `design-references.md`
 - **Content**: Website design inspiration, UI/UX patterns, implementation guidelines, and evaluation criteria for platform design
 
