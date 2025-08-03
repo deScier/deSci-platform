@@ -6,6 +6,8 @@ import { AuthorsPublicInfo, DocumentPublicProps, GetDocumentPublicProps } from '
 
 import ArticleDetails from '@/components/pages/Article/Article';
 
+const MIN_TERM_LENGTH_FOR_KEYWORD = 1;
+
 const fetchArticle = cache(async (documentId: string): Promise<GetDocumentPublicProps> => {
   try {
     const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/${documentId}`, {
@@ -59,7 +61,7 @@ const processKeywords = (docKeywords?: string, docTitle?: string, term?: string)
 
   const contextualKeywords = [...baseKeywords];
 
-  if (term && term !== '-' && docTitle && term !== docTitle && term.length > 5) {
+  if (term && term !== '-' && docTitle && term !== docTitle && term.length > MIN_TERM_LENGTH_FOR_KEYWORD) {
     contextualKeywords.push(term);
   }
 
@@ -183,7 +185,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const doc = article.document;
 
     if (!process.env.NEXT_PUBLIC_BASE_URL) {
-      throw new Error('NEXT_PUBLIC_BASE_URL is not set');
+      throw new Error("NEXT_PUBLIC_BASE_URL environment variable is required for generating metadata. Please set NEXT_PUBLIC_BASE_URL in your environment configuration.");
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
