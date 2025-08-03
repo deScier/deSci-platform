@@ -31,13 +31,7 @@ const getValidImageUrl = (imageUrl: string, baseUrl: string) => {
   return `${baseUrl}${imageUrl}`;
 };
 
-export async function generateMetadata({ 
-  params, 
-  searchParams 
-}: { 
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
     const article = await fetchArticle(params.id);
 
@@ -51,21 +45,21 @@ export async function generateMetadata({
     const doc = article.document;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci.reviews';
     
-    const searchTerm = searchParams?.term as string;
-    const searchAuthor = searchParams?.author as string;
-    const searchType = searchParams?.type as string;
+    const term = doc.title || '-';
+    const authors = doc.authors?.join(', ') || '-';
+    const type = doc.field || '-';
     
     const createContextualCanonicalUrl = (): string => {
       const baseCanonicalUrl = `${baseUrl}/home/search/${params.id}`;
       
-      if (!searchTerm && !searchAuthor && !searchType) {
+      if (!term && !authors && !type) {
         return baseCanonicalUrl;
       }
       
       const queryParams = new URLSearchParams();
-      if (searchTerm) queryParams.append('term', searchTerm);
-      if (searchAuthor) queryParams.append('author', searchAuthor);
-      if (searchType) queryParams.append('type', searchType);
+      if (term) queryParams.append('term', term);
+      if (authors) queryParams.append('author', authors);
+      if (type) queryParams.append('type', type);
       
       return `${baseCanonicalUrl}?${queryParams.toString()}`;
     };
@@ -76,23 +70,23 @@ export async function generateMetadata({
     
     const contextualKeywords = [...baseKeywords];
     
-    if (searchTerm) {
-      contextualKeywords.push(...searchTerm.split(' ').filter(term => term.length > 2));
+    if (term) {
+      contextualKeywords.push(...term.split(' ').filter(term => term.length > 2));
     }
-    if (searchAuthor) {
-      contextualKeywords.push(searchAuthor);
+    if (authors) {
+      contextualKeywords.push(authors);
     }
     
     const createContextualDescription = (): string => {
       const baseDescription = doc.abstract || 'A scientific publication on the deSci platform.';
       
-      if (!searchTerm && !searchAuthor) {
+      if (!term && !authors) {
         return baseDescription;
       }
       
       const contextParts: string[] = [];
-      if (searchTerm) contextParts.push(`related to "${searchTerm}"`);
-      if (searchAuthor) contextParts.push(`by ${searchAuthor}`);
+      if (term) contextParts.push(`related to "${term}"`);
+      if (authors) contextParts.push(`by ${authors}`);
       
       const contextSuffix = contextParts.length > 0 
         ? ` Found ${contextParts.join(' ')}.`
@@ -104,12 +98,12 @@ export async function generateMetadata({
     const createContextualTitle = (): string => {
       const baseTitle = `${doc.title} | deSci Publications`;
       
-      if (searchTerm) {
-        return `${doc.title} - ${searchTerm} | deSci Publications`;
+      if (term) {
+        return `${doc.title} - ${term} | deSci Publications`;
       }
       
-      if (searchAuthor) {
-        return `${doc.title} by ${searchAuthor} | deSci Publications`;
+      if (authors) {
+        return `${doc.title} by ${authors} | deSci Publications`;
       }
       
       return baseTitle;
