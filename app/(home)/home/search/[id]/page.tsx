@@ -122,13 +122,13 @@ const createOpenGraphMetadata = (
   publishedTime: doc.publishedAt
     ? new Date(doc.publishedAt).toISOString()
     : doc.createdAt
-    ? new Date(doc.createdAt).toISOString()
-    : undefined,
+      ? new Date(doc.createdAt).toISOString()
+      : undefined,
   modifiedTime: doc.updatedAt
     ? new Date(doc.updatedAt).toISOString()
     : doc.createdAt
-    ? new Date(doc.createdAt).toISOString()
-    : undefined,
+      ? new Date(doc.createdAt).toISOString()
+      : undefined,
   authors: doc.authors?.map((author: AuthorsPublicInfo) => author.name) || [doc.authorName],
   section: doc.field || 'Research',
   tags: keywords,
@@ -181,7 +181,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
 
     const doc = article.document;
-    
+
     if (!process.env.NEXT_PUBLIC_BASE_URL) {
       throw new Error('NEXT_PUBLIC_BASE_URL is not set');
     }
