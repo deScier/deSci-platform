@@ -280,7 +280,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const doc = article.document;
 
     if (!process.env.NEXT_PUBLIC_BASE_URL) {
-      throw new Error("NEXT_PUBLIC_BASE_URL environment variable is required for generating metadata. Please set NEXT_PUBLIC_BASE_URL in your environment configuration.");
+      throw new Error(
+        'NEXT_PUBLIC_BASE_URL environment variable is required for generating metadata. Please set NEXT_PUBLIC_BASE_URL in your environment configuration.'
+      );
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
