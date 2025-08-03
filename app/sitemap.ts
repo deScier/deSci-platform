@@ -36,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const documentRoutes: MetadataRoute.Sitemap = documents.map((document: DocumentProps) => ({
-    url: `${baseUrl}/paper/${document.id}`,
+    url: `${baseUrl}/home/search/${document.id}`,
     lastModified: new Date(document.updatedAt),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
