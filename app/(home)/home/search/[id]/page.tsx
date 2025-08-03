@@ -31,7 +31,13 @@ const getValidImageUrl = (imageUrl: string, baseUrl: string) => {
   return `${baseUrl}${imageUrl}`;
 };
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ 
+  params, 
+  searchParams 
+}: { 
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}): Promise<Metadata> {
   try {
     const article = await fetchArticle(params.id);
 
@@ -44,37 +50,100 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     const doc = article.document;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://desci.reviews';
-    const keywordsArray = doc.keywords
+    
+    const searchTerm = searchParams?.term as string;
+    const searchAuthor = searchParams?.author as string;
+    const searchType = searchParams?.type as string;
+    
+    const createContextualCanonicalUrl = (): string => {
+      const baseCanonicalUrl = `${baseUrl}/home/search/${params.id}`;
+      
+      if (!searchTerm && !searchAuthor && !searchType) {
+        return baseCanonicalUrl;
+      }
+      
+      const queryParams = new URLSearchParams();
+      if (searchTerm) queryParams.append('term', searchTerm);
+      if (searchAuthor) queryParams.append('author', searchAuthor);
+      if (searchType) queryParams.append('type', searchType);
+      
+      return `${baseCanonicalUrl}?${queryParams.toString()}`;
+    };
+    
+    const baseKeywords = doc.keywords
       ? doc.keywords.split(',').map((k) => k.trim())
       : ['DeSci', 'scientific publishing', 'research'];
+    
+    const contextualKeywords = [...baseKeywords];
+    
+    if (searchTerm) {
+      contextualKeywords.push(...searchTerm.split(' ').filter(term => term.length > 2));
+    }
+    if (searchAuthor) {
+      contextualKeywords.push(searchAuthor);
+    }
+    
+    const createContextualDescription = (): string => {
+      const baseDescription = doc.abstract || 'A scientific publication on the deSci platform.';
+      
+      if (!searchTerm && !searchAuthor) {
+        return baseDescription;
+      }
+      
+      const contextParts: string[] = [];
+      if (searchTerm) contextParts.push(`related to "${searchTerm}"`);
+      if (searchAuthor) contextParts.push(`by ${searchAuthor}`);
+      
+      const contextSuffix = contextParts.length > 0 
+        ? ` Found ${contextParts.join(' ')}.`
+        : '';
+      
+      return `${baseDescription}${contextSuffix}`;
+    };
+    
+    const createContextualTitle = (): string => {
+      const baseTitle = `${doc.title} | deSci Publications`;
+      
+      if (searchTerm) {
+        return `${doc.title} - ${searchTerm} | deSci Publications`;
+      }
+      
+      if (searchAuthor) {
+        return `${doc.title} by ${searchAuthor} | deSci Publications`;
+      }
+      
+      return baseTitle;
+    };
 
     const ogImageUrl = getValidImageUrl(doc.cover, baseUrl);
     const twitterImageUrl = getValidImageUrl(doc.cover, baseUrl);
+    const contextualDescription = createContextualDescription();
+    const contextualTitle = createContextualTitle();
 
     return {
-      title: `${doc.title} | deSci Publications`,
-      description: doc.abstract || 'A scientific publication on the deSci platform.',
-      keywords: keywordsArray,
-      authors: doc.authors?.map((author) => ({ name: author.name })) || [{ name: doc.authorName }],
-      openGraph: {
-        title: doc.title,
-        description: doc.abstract || 'A scientific publication on the deSci platform.',
-        type: 'article',
-        url: `${baseUrl}/home/search/${params.id}`,
-        siteName: 'deSci Publications',
-        publishedTime: doc.publishedAt
-          ? new Date(doc.publishedAt).toISOString()
-          : doc.createdAt
-            ? new Date(doc.createdAt).toISOString()
-            : undefined,
-        modifiedTime: doc.updatedAt
-          ? new Date(doc.updatedAt).toISOString()
-          : doc.createdAt
-            ? new Date(doc.createdAt).toISOString()
-            : undefined,
-        authors: doc.authors?.map((author) => author.name) || [doc.authorName],
-        section: doc.field || 'Research',
-        tags: keywordsArray,
+        title: contextualTitle,
+        description: contextualDescription,
+        keywords: Array.from(new Set(contextualKeywords)), // Remove duplicates
+        authors: doc.authors?.map((author) => ({ name: author.name })) || [{ name: doc.authorName }],
+        openGraph: {
+          title: doc.title,
+          description: contextualDescription,
+          type: 'article',
+          url: createContextualCanonicalUrl(),
+          siteName: 'deSci Publications',
+          publishedTime: doc.publishedAt
+            ? new Date(doc.publishedAt).toISOString()
+            : doc.createdAt
+              ? new Date(doc.createdAt).toISOString()
+              : undefined,
+          modifiedTime: doc.updatedAt
+            ? new Date(doc.updatedAt).toISOString()
+            : doc.createdAt
+              ? new Date(doc.createdAt).toISOString()
+              : undefined,
+          authors: doc.authors?.map((author) => author.name) || [doc.authorName],
+          section: doc.field || 'Research',
+          tags: Array.from(new Set(contextualKeywords)),
         images: [
           {
             url: ogImageUrl,
@@ -89,11 +158,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         site: '@desciers',
         creator: '@desciers',
         title: doc.title,
-        description: doc.abstract || 'A scientific publication on the deSci platform.',
+        description: contextualDescription,
         images: [twitterImageUrl],
       },
       alternates: {
-        canonical: `${baseUrl}/home/search/${params.id}`,
+        canonical: createContextualCanonicalUrl(),
       },
     };
   } catch (error) {
