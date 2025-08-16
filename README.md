@@ -60,8 +60,10 @@ Before running the project you need to set up environment variables. Create a .e
 ```
 NEXT_PUBLIC_NODE_ENV=<your-env>
 NEXT_PUBLIC_API_URL=<your-api-url>
-
+NEXT_PUBLIC_BASE_URL=<your-base-url>
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=<your-google-site-verification>
 NEXTAUTH_SECRET=<your-secret> # Generate using `jose newkey -s 512 -t oct -a HS512` ou `openssl rand -base64 32`
+NEXTAUTH_URL=<your-nextauth-url>
 
 GOOGLE_ID=<your-google-id>
 GOOGLE_SECRET=<your-google-secret>
