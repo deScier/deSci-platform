@@ -138,19 +138,52 @@ This document outlines the content strategy for the redesigned deScier landing p
 
 ## 11. Footer
 
-- Structure: 4-column layout.
+- Structure: 4-column layout (group headings and quick links).
 
-- **Column 1 — Brand**
+- Column groups (adapted for deScier):
+
+- Resources | Community & Social | Company | Brand
+
+- Resources
+  - Home — `/` (platform home page)
+  - Documentation — `docs/technical-documentation.md` (SciDAO whitepaper, architecture, governance)
+  - Platform Overview — `docs/platform-overview.md`
+  - User Guide — `docs/user-guide.md` (submission, review, publishing workflow)
+  - Team & Community — `docs/team-community.md`
+  - FAQ — (See `docs/user-guide.md` or `docs/organized/03-user-guides/`)
+  - Help & Support — contact `publishing@descier.science`
+
+- Community & Social
+  - **Social Media:**
+    - X (Twitter) — `https://twitter.com/desciers` (@desciers)
+    - LinkedIn — `https://www.linkedin.com/company/descier` (/descier)
+    - Instagram — `https://instagram.com/descier.science` (@descier.science)
+    - YouTube — `https://www.youtube.com/@desciers` (@desciers)
+  - **Community Platforms:**
+    - Instructions — `https://descier-1.gitbook.io/the-desci-journal-handbook/` (GitBook handbook)
+    - Discord — `https://discord.com/invite/Z6U9P28YtV` (Onboard Discord)
+    - Telegram — `https://t.me/desciers` (Join the community)
+  - **Developer Resources:**
+    - Technical Paper (Whitepaper) — `docs/technical-documentation.md#whitepaper`
+    - API & Integrations — `docs/technical-documentation.md#api-access`
+    - Security & Hardening — `docs/technical-documentation.md#security-measures`
+    - Report Vulnerability / Bug Bounty — contact `publishing@descier.science` (TBD)
+
+- Company
+  - Privacy Policy — `https://descier.science/policy/` (current) / (TBD for platform-specific)
+  - Terms of Use — `https://descier.science/terms/` (current) / (TBD for platform-specific)
+  - Contact — `publishing@descier.science` (primary) / `maxi@maxi.science` (current)
+  - Careers — (TBD)
+
+- Brand
   - deScier Logo (redesigned)
   - Mission Snippet: `Science belongs to humanity.`
-  - Copyright: `© 2024 deScier. All rights reserved.`
+  - Copyright: `© 2024 deScier. All rights reserved.` (updated from "© 2024 Maxi Science")
+  - Tagline: `Powered by web3` (current branding element)
+  - **Contact Information:**
+    - WhatsApp: `+55 11 98343-2131` (current) / `+1 (303) 525-7908` (from docs)
+    - Email: `maxi@maxi.science` (current) / `publishing@descier.science` (primary)
 
-- **Column 2 — Social Media**
-  - Links to be sourced from `mock/footer_items.ts` (e.g., Twitter, Telegram, Discord).
+Notes
 
-- **Column 3 — Links**
-  - Links to be sourced from `mock/footer_items.ts` (e.g., Home, Search, Documentation).
-
-- **Column 4 — Contact**
-  - WhatsApp: link to WhatsApp (redesigned)
-  - E-mail: `publishing@descier.science`
+deScier provides resources about decentralized scientific publishing, the SciDAO whitepaper, and tools that support authors, reviewers, journals and institutions. Where applicable the footer links point to local documentation files in this repository; items marked (TBD) are placeholders to be replaced with canonical legal or product pages. The platform documents smart contracts, workflow automation, and tokenomics used to automate publishing and royalties, but deScier does not control or operate any version of the DAO, smart contracts or blockchain networks where those contracts may be deployed. For author support and publishing inquiries, contact `publishing@descier.science`.
