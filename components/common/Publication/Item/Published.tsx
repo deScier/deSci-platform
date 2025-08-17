@@ -1,3 +1,6 @@
+export { PublicationItem };
+export type { PublicationItemProps };
+
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Eye, HandThumbsUpFill } from 'react-bootstrap-icons';
 import { twMerge } from 'tailwind-merge';
@@ -11,7 +14,7 @@ import React from 'react';
  * @notice This component displays a publication item with details like title, likes, views, and date.
  * @dev Component for displaying individual publication items in a list or grid format.
  */
-export const PublicationItem: React.FC<PublicationItemProps> = ({
+const PublicationItem: React.FC<PublicationItemProps> = ({
   date,
   link,
   likes,
@@ -70,7 +73,7 @@ export const PublicationItem: React.FC<PublicationItemProps> = ({
   );
 };
 
-export interface PublicationItemProps {
+interface PublicationItemProps {
   id?: string;
   date: string;
   likes: string;

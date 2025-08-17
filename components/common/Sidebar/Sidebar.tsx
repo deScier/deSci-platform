@@ -2,18 +2,18 @@
 
 import * as Dialog from '@components/common/Dialog/Digalog';
 
-import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles';
 import { admin_key, article_key, items } from '@/mock/sidebar_items';
 import { home_routes } from '@/routes/home';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
-import { SelectCreation } from './SelectCreation/SelectCreation';
+import { PurchasedArticles } from '@/components/modules/home/search/purchase/purchased-articles';
+import { SelectCreation } from '@/components/common/sidebar/select-creation/select-creation';
 
 import LogoDeScier from 'public/svgs/common/logo/deScier - Logo.svg';
 import React from 'react';
-import Item from './Item/Item';
-import Logout from './Logout/Logout';
+import Logout from '@/components/common/sidebar/logout/logout';
+import Item from '@/components/common/sidebar/item/item';
 
 /**
  * @title Sidebar Component

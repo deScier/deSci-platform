@@ -1,5 +1,7 @@
+export { File };
+export type { FileProps };
+
 import { formatDate } from '@/utils/date_format';
-import { FileProps } from '@components/common/File/Typing';
 import { Download, FileEarmarkText, Trash } from 'react-bootstrap-icons';
 
 import React from 'react';
@@ -37,4 +39,10 @@ const File: React.FC<FileProps> = ({ file_name, onDownload, uploaded_at, uploade
   );
 };
 
-export { File };
+interface FileProps {
+  file_name: string;
+  uploaded_at: string;
+  uploaded_by: string;
+  onDownload: () => void;
+  onDelete?: () => void;
+}

@@ -1,8 +1,10 @@
-import { CommentItemProps } from '@components/common/Comment/Typing';
+export { CommentItem };
+export type { CommentItemProps };
+
 import { useSession } from 'next-auth/react';
 import { Check, Pencil, X } from 'react-bootstrap-icons';
-
 import React from 'react';
+
 /**
  * @title CommentItem Component
  * @notice Handles the display and interaction of a single comment item.
@@ -72,4 +74,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
   );
 };
 
-export default CommentItem;
+interface CommentItemProps {
+  id?: string;
+  comment_author: string;
+  comment_content: string;
+  reason?: string;
+  status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  user_id: string;
+  onApprove?: () => void;
+  onReject?: () => void;
+  onEdit?: () => void;
+  onSeeReasoning?: () => void;
+}

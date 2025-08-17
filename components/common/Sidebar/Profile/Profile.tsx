@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { CaretRight, PlusCircle, X } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
-import { ProfileProps } from './Typing';
+import { SubmitedItem } from '@/components/common/sidebar/profile/submited-item/submited-item';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,14 +24,13 @@ import ShapeDeScierHandBookBottom from 'public/svgs/modules/sidebar/Ellipse 46.s
 import ShapeDeScierHandBookTop from 'public/svgs/modules/sidebar/Ellipse 48.svg';
 import IllustrationHandBook from 'public/svgs/modules/sidebar/emojione-v1_document.svg';
 import React from 'react';
-import SubmitedItem from './SubmitedItem/SubmitedItem';
 
 /**
  * @title Profile Component
  * @notice This component renders the user's profile page, allowing them to view their profile details, connect a wallet, and access their submitted articles.
  * @dev This component uses the `useSession` and `useArticles` hooks for session management and fetching articles, respectively. It also manages states for the Web3Auth, provider, and wallet connection.
  */
-const Profile: React.FC<ProfileProps> = ({ className, onClose }: ProfileProps) => {
+const Profile: React.FC<{ className?: string; onClose?: () => void; }> = ({ className, onClose }: { className?: string; onClose?: () => void; }) => {
   /** @dev Initialize router hook for navigation */
   const router = useRouter();
 

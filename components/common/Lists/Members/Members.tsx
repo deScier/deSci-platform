@@ -1,8 +1,11 @@
-import { MembersListDragabbleProps } from '@components/common/Lists/Members/Typing';
-import { TruncateWithHoverCard } from '@components/common/Truncate/TruncateWithHoverCard';
+export { MembersListDragabble };
+export type { MembersListDragabbleProps };
+
+import { TruncateWithHoverCard } from '@/components/common/Truncate/TruncateWithHoverCard';
 import { Reorder, useDragControls } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { Pencil, Trash } from 'react-bootstrap-icons';
+import { MembersDTO } from '@/schemas/create_new_journal';
 
 import CircleIcon from 'public/svgs/modules/new-document/circles.svg';
 import React from 'react';
@@ -133,4 +136,10 @@ const role_mapping = {
   EDITORIAL_BOARD_MEMBER: 'Editorial Board Member',
 };
 
-export { MembersListDragabble };
+interface MembersListDragabbleProps {
+  members: MembersDTO[];
+  is_admin?: boolean;
+  onReorder: (newOrder: MembersDTO[]) => void;
+  onDelete?: (member: MembersDTO) => void;
+  onEdit?: (member: MembersDTO) => void;
+}

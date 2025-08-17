@@ -1,11 +1,15 @@
 'use client';
+
+export { Dropzone };
+export type { BorderProps, DropzoneProps, FileWithPreview, StoredFile };
+
 import * as Button from '@components/common/Button/Button';
 
 import { formatFileName } from '@/utils/format_file_name';
 import { Eye, FileEarmarkText, Upload } from 'react-bootstrap-icons';
 import { Accept, useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
-import { DropzoneProps, StoredFile } from './Typing';
+import { UseFormSetValue } from 'react-hook-form';
 
 import React from 'react';
 
@@ -199,4 +203,37 @@ const Dropzone = React.forwardRef(
 
 Dropzone.displayName = 'Dropzone';
 
-export default Dropzone;
+interface DropzoneProps {
+  setSelectedFile?: (file: StoredFile | null) => void;
+  error_message?: any;
+  fileName?: FileWithPreview['name'];
+  setValue?: UseFormSetValue<any>;
+  viewSelected?: boolean;
+  placeholder?: string;
+  message?: string;
+  thumbnail?: boolean;
+  accept?: 'images' | 'documents';
+  defaultCover?: StoredFile;
+}
+
+interface FileWithPreview {
+  name: string;
+  preview?: string;
+}
+
+interface BorderProps {
+  isDragAccept?: boolean;
+  isDragReject?: boolean;
+  isFocused?: boolean;
+  isDragActive?: boolean;
+}
+
+interface StoredFile {
+  path: string;
+  name: string;
+  lastModified: number;
+  lastModifiedDate: Date;
+  size: number;
+  type: string;
+  preview: string;
+}

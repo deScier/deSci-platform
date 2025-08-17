@@ -1,16 +1,19 @@
 'use client';
 
+export { Back, Button, Link, buttonVariants };
+export type { ButtonProps, LinkProps, BackProps };
+
 import { cn } from '@/lib/utils';
-import { BackProps, ButtonProps, LinkProps } from '@components/common/Button/Typing';
+import { VariantProps } from 'class-variance-authority';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { useRouter } from 'next/navigation';
 
-import Spinner from '@components/common/Loading/Spinner';
+import Spinner from '@components/common/loading/spinner';
 import NextLink from 'next/link';
 import React from 'react';
 
-export const buttonVariants = cva(
+const buttonVariants = cva(
   'inline-flex gap-2 w-full max-h-[42px] items-center justify-center px-4 py-3.5 rounded-md font-semibold select-none transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 transition-all duration-300',
   {
     variants: {
@@ -124,4 +127,19 @@ const Back: React.FC<BackProps> = ({ text }: BackProps) => {
   );
 };
 
-export { Back, Button, Link };
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    variant?: 'primary' | 'outline' | 'disabled';
+    loading?: boolean;
+    icon?: React.ReactNode;
+    asChild?: boolean;
+  };
+
+type LinkProps = {
+  href: string;
+  children: React.ReactNode;
+};
+
+type BackProps = {
+  text?: string;
+};

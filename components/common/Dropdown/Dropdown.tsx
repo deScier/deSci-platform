@@ -1,5 +1,8 @@
 'use client';
 
+export { Dropdown };
+export type { DropdownProps };
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +13,6 @@ import {
 import { FilterOption } from '@/mock/dropdow_filter_options';
 import { CaretDown } from 'react-bootstrap-icons';
 import { twMerge } from 'tailwind-merge';
-import { DropdownProps } from './Typing';
 
 import React from 'react';
 
@@ -84,4 +86,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 };
 
-export { Dropdown };
+interface DropdownProps {
+  label: string;
+  className?: string;
+  classNameTrigger?: string;
+  items: FilterOption[];
+  no_selected?: boolean;
+  custom_intial_value?: string;
+  selected?: string;
+  onSelect?: (value: string) => void;
+}

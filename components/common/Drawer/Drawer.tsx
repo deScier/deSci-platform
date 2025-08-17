@@ -1,4 +1,6 @@
-import { DrawerContentProps, DrawerOverlayProps, DrawerRootProps } from '@components/common/Drawer/Typing';
+export { Content, Overlay, Root };
+export type { DrawerContentProps, DrawerOverlayProps, DrawerRootProps };
+
 import { usePathname } from 'next/navigation';
 import { twJoin, twMerge } from 'tailwind-merge';
 
@@ -78,4 +80,19 @@ const Content: React.FC<DrawerContentProps> = ({ children, className, position =
   );
 };
 
-export { Content, Overlay, Root };
+interface DrawerContentProps {
+  className?: string;
+  children?: React.ReactNode;
+  position?: 'left' | 'right';
+}
+
+interface DrawerRootProps {
+  className?: string;
+  children?: React.ReactNode;
+  open?: boolean;
+}
+
+interface DrawerOverlayProps {
+  className?: string;
+  checked?: boolean;
+}

@@ -1,13 +1,16 @@
-import { PaginationProps } from '@components/common/Pagination/Typing';
+export { PaginationComponent };
+export type { PaginationProps };
+
 import { CaretLeft, CaretLeftSquare, CaretRight, CaretRightSquare } from 'react-bootstrap-icons';
 
 import React from 'react';
+
 /**
  * @title Pagination Component
  * @notice Handles the display and interaction of a pagination system in a React application
  * @dev This component provides navigation controls for paginating through data sets
  */
-export default function PaginationComponent({
+function PaginationComponent({
   total,
   current,
   perPage,
@@ -89,4 +92,14 @@ export default function PaginationComponent({
       </div>
     </>
   );
+}
+
+interface PaginationProps {
+  total: number;
+  current: number;
+  perPage: number;
+  handleNextPage: () => void;
+  handlePreviousPage: () => void;
+  handleFirstPage: () => void;
+  handleLastPage: () => void;
 }

@@ -1,9 +1,18 @@
+export { Content, Information, Portal, Provider, Root, Trigger };
+
 import '@styles/tooltip.css';
 
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 import { twMerge } from 'tailwind-merge';
-import { TooltipInformationProps } from './Typing';
+import {
+  TooltipArrowProps,
+  TooltipContentProps,
+  TooltipPortalProps,
+  TooltipProps,
+  TooltipProviderProps,
+  TooltipTriggerProps,
+} from '@radix-ui/react-tooltip';
 
 import HelpIcon from 'public/svgs/common/help.svg';
 import React from 'react';
@@ -76,4 +85,18 @@ const Information: React.FC<TooltipInformationProps> = ({ content }) => {
   );
 };
 
-export { Content, Information, Portal, Provider, Root, Trigger };
+interface ProviderProps extends TooltipProviderProps {}
+
+interface RootProps extends TooltipProps {}
+
+interface TriggerProps extends TooltipTriggerProps {}
+
+interface PortalProps extends TooltipPortalProps {}
+
+interface ContentProps extends TooltipContentProps {}
+
+interface ArrowProps extends TooltipArrowProps {}
+
+interface TooltipInformationProps {
+  content: React.ReactNode;
+}

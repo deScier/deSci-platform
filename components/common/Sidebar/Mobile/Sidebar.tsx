@@ -1,15 +1,15 @@
 'use client';
 
 import * as Dialog from '@components/common/Dialog/Digalog';
-import * as Drawer from '@components/common/Drawer/Drawer';
+import * as Drawer from '@components/common/drawer/drawer';
 
-import { PurchasedArticles } from '@/components/modules/Home/Search/Purchase/PurchasedArticles';
+import { PurchasedArticles } from '@/components/modules/home/search/purchase/purchased-articles';
 import { article_key } from '@/mock/sidebar_items';
 import { home_routes } from '@/routes/home';
 import { Person } from 'react-bootstrap-icons';
 import { twMerge } from 'tailwind-merge';
-import { MobileSidebarComponent } from './MobileSidebar';
-import { MobileProfileComponent } from './ProfileSidebar';
+import { MobileSidebarComponent } from '@/components/common/sidebar/mobile/mobile-sidebar';
+import { MobileProfileComponent } from '@/components/common/sidebar/mobile/profile-sidebar';
 
 import useDimension from '@/hooks/useWindowDimension';
 import Link from 'next/link';

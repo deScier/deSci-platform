@@ -1,9 +1,11 @@
+export { Content, Overlay, Root, Title };
+export type { TitleProps };
+
 import '@styles/dialog.css';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
-import { TitleProps } from '@/components/common/Dialog/Typing';
 import { cn } from '@/lib/utils';
 import { X } from 'react-bootstrap-icons';
 
@@ -96,4 +98,8 @@ const Title: React.FC<TitleProps> = ({ onClear, onClose, title }: TitleProps) =>
   );
 };
 
-export { Content, Overlay, Root, Title };
+type TitleProps = {
+  title?: string;
+  onClose: () => void;
+  onClear?: () => void;
+};

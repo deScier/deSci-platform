@@ -34,6 +34,100 @@ interface EIP1193Provider {
   request: (request: { method: string; params?: Array<unknown> }) => Promise<unknown>;
 }
 
+// Image module declarations for Next.js static assets
+// These handle imports from the public directory
+declare module '*.png' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.jpg' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.jpeg' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.gif' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.webp' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.bmp' {
+  const src: string;
+  export default src;
+}
+
+declare module '*.ico' {
+  const src: string;
+  export default src;
+}
+
+// Module declarations for public directory imports (matching SVG pattern)
+declare module 'public/svgs/*/*.png' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*.jpg' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*.jpeg' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*.gif' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*.webp' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*/*.png' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*/*.jpg' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*/*.jpeg' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*/*.gif' {
+  const src: string;
+  export default src;
+}
+
+declare module 'public/svgs/*/*/*.webp' {
+  const src: string;
+  export default src;
+}
+
+// Specific declaration for the problematic file
+declare module 'public/svgs/common/logo/deScier - Logo.png' {
+  const src: string;
+  export default src;
+}
+
 declare global {
   interface Window {
     ethereum?: {

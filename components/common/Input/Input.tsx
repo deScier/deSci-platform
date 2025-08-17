@@ -1,14 +1,9 @@
-import * as S from '@components/common/Select/Select';
+export { Error, Input, Label, Password, Percentage, Root, Search, Select, TextArea };
+export type { ErrorProps, InputProps, LabelProps, SelectInputProps, TextAreaProps, WrapperInputProps, Option, LabelWithTrashIconProps, ComboboxProps };
+
+import * as S from '@components/common/select/select';
 import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
-import {
-  ErrorProps,
-  InputProps,
-  LabelProps,
-  SelectInputProps,
-  TextAreaProps,
-  WrapperInputProps,
-} from '@components/common/Input/Typing';
 import { CaretDown, Eye, EyeSlash, Search as SearchIcon } from 'react-bootstrap-icons';
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
 import { twMerge } from 'tailwind-merge';
@@ -16,6 +11,7 @@ import { tv } from 'tailwind-variants';
 
 import useDimension from '@/hooks/useWindowDimension';
 import React from 'react';
+import { TriggerProps } from '../select/typing';
 
 /** @dev Tailwind CSS variant for standard input */
 export const input = tv({
@@ -348,4 +344,63 @@ Search.displayName = 'Search';
 Select.displayName = 'Select';
 Percentage.displayName = 'Percentage';
 
-export { Error, Input, Label, Password, Percentage, Root, Search, Select, TextArea };
+type WrapperInputProps = {
+  children: React.ReactNode;
+};
+
+type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
+  optional?: boolean;
+  icon?: React.ReactNode;
+  tooltip_message?: string | React.ReactNode;
+};
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  start?: React.ReactNode;
+  end?: React.ReactNode;
+  icon?: React.ReactNode;
+  visible?: boolean;
+};
+
+type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  start?: React.ReactNode;
+  end?: React.ReactNode;
+  icon?: React.ReactNode;
+};
+
+type ErrorProps = {
+  children: React.ReactNode;
+};
+
+type Option = {
+  id: number | string;
+  label: string;
+  value: string | null;
+};
+
+type SelectInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  start?: React.ReactNode;
+  end?: React.ReactNode;
+  icon?: React.ReactNode;
+  options: Option[];
+  label?: string;
+  value?: string;
+  defaultValue?: string;
+  variant?: TriggerProps['variant'];
+  onValueChange?: (value: string) => void;
+};
+
+type LabelWithTrashIconProps = React.HTMLAttributes<HTMLDivElement> & {
+  text: string;
+  optional?: boolean;
+  onDelete: () => void;
+};
+
+type ComboboxProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  placeholder?: string;
+  options: Option[];
+  onSelect?: ((value: string) => void) | undefined;
+  onUnselect?: () => void;
+  className?: string;
+  className_icon?: string;
+  is_input?: boolean;
+};

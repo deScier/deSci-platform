@@ -7,8 +7,8 @@ import * as Tooltip from '@components/common/Tooltip/Tooltip';
 
 import { StoredFile } from '@/components/common/Dropzone/Typing';
 import { File } from '@/components/common/File/File';
-import { SelectArticleType } from '@/components/common/Filters/SelectArticleType/SelectArticleType';
-import { YouAre, YouAreAuthor } from '@/components/common/Flags/Author/AuthorFlags';
+import { SelectArticleType } from '@/components/common/filters/select-article-type/select-article-type';
+import { YouAre, YouAreAuthor } from '@/components/common/flags/author/author-flags';
 import { InviteLink } from '@/components/common/InviteLink/InviteLink';
 import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
 import { EditorReviewList } from '@/components/common/Lists/EditorReview/EditorReview';
@@ -48,10 +48,10 @@ import { twMerge } from 'tailwind-merge';
 
 import Box from '@/components/common/Box/Box';
 import CommentItem from '@/components/common/Comment/Comment';
-import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
+import DocumentApprovals from '@/components/common/document-approvals/document-approvals';
 import Dropzone from '@/components/common/Dropzone/Dropzone';
-import EditComment from '@/components/modules/deScier/Article/EditComment';
-import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import EditComment from '@/components/modules/de-scier/article/edit-comment';
+import Reasoning from '@/components/modules/de-scier/article/reasoning';
 import Link from 'next/link';
 import React from 'react';
 

@@ -1,7 +1,11 @@
+export { AuthorsListDragabble };
+export type { AuthorsListDragabbleProps };
+
+import { Author } from '@/mock/submit_new_document';
+import { DocumentGetProps } from '@/services/document/getArticles';
 import { Reorder } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { Pencil, Trash } from 'react-bootstrap-icons';
-import { AuthorsListDragabbleProps } from './Typing';
 
 import CircleIcon from 'public/svgs/modules/new-document/circles.svg';
 import React from 'react';
@@ -11,7 +15,7 @@ import React from 'react';
  * @dev Component to display and manage a list of authors with drag and drop functionality.
  * @notice This component allows users to view, reorder, edit, and delete authors in a list.
  */
-export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
+const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
   authors,
   article,
   onReorder,
@@ -187,3 +191,13 @@ export const AuthorsListDragabble: React.FC<AuthorsListDragabbleProps> = ({
     </React.Fragment>
   );
 };
+
+interface AuthorsListDragabbleProps {
+  article: DocumentGetProps | null;
+  authors: Author[];
+  is_admin?: boolean;
+  read_only?: boolean;
+  onReorder: (newOrder: any[]) => void;
+  onDelete?: (author: Author) => void;
+  onEdit?: (author: Author) => void;
+}

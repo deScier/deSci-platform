@@ -15,6 +15,16 @@ const nextConfig = {
         issuer: /\.[jt]sx?$/,
         resourceQuery: { not: /url/ },
         use: ['@svgr/webpack'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|webp)$/i,
+        use: {
+          loader: 'file-loader',
+          options: {
+            publicPath: '/_next/static/images/',
+            outputPath: 'static/images/',
+          },
+        },
       }
     );
     fileLoaderRule.exclude = /\.svg$/i;

@@ -1,8 +1,10 @@
+export { Content, Group, Icon, Item, ItemText, Portal, Root, select, Trigger, Value, Viewport };
+export type { TriggerProps };
+
 import '@styles/select.css';
 
 import * as Select from '@radix-ui/react-select';
 
-import { TriggerProps } from '@components/common/Select/Typing';
 import { twMerge } from 'tailwind-merge';
 import { tv } from 'tailwind-variants';
 
@@ -157,4 +159,6 @@ const Group: React.FC<Select.SelectGroupProps> = ({ children, className, ...prop
   );
 };
 
-export { Content, Group, Icon, Item, ItemText, Portal, Root, select, Trigger, Value, Viewport };
+interface TriggerProps extends Select.SelectTriggerProps {
+  variant?: 'small' | 'input';
+}

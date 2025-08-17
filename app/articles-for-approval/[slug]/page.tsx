@@ -4,10 +4,7 @@ import * as Button from '@components/common/Button/Button';
 import * as Dialog from '@components/common/Dialog/Digalog';
 import * as Input from '@components/common/Input/Input';
 
-import { StoredFile } from '@/components/common/Dropzone/Typing';
-import { EditorsAndReviewers } from '@/components/common/EditorsAndReviwers/EditorAndReviwer';
-import { File } from '@/components/common/File/File';
-import { AuthorsListDragabble } from '@/components/common/Lists/Authors/Authors';
+import { EditorsAndReviewers } from '@/components/common/editors-and-reviwers/editor-and-reviwer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGetApprovals } from '@/hooks/useGetApprovals';
 import { header_editor_reviewer } from '@/mock/article_under_review';
@@ -27,12 +24,13 @@ import { ArrowLeft, Check } from 'react-bootstrap-icons';
 import { CurrencyInput } from 'react-currency-mask';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
+import { StoredFile } from '@/components/common/dropzone/dropzone';
+import { File } from '@/components/common/file/file';
 
-import Box from '@/components/common/Box/Box';
-import CommentItem from '@/components/common/Comment/Comment';
-import DocumentApprovals from '@/components/common/DocumentApprovals/DocumentApprovals';
-import Reasoning from '@/components/modules/deScier/Article/Reasoning';
+import DocumentApprovals from '@/components/common/document-approvals/document-approvals';
+import Reasoning from '@/components/modules/de-scier/article/reasoning';
 import React from 'react';
+import Box from '@/components/common/box/box';
 
 export default function ArticleForApprovalPage({ params }: { params: { slug: string } }) {
   const router = useRouter();

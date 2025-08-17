@@ -1,3 +1,6 @@
+export { Pills };
+export type { PillsProps };
+
 import { DocumentTypes } from '@/mock/document_types';
 import { twMerge } from 'tailwind-merge';
 
@@ -14,7 +17,7 @@ import React from 'react';
  *
  * @return A set of pills with labels that can be clicked to select.
  */
-export const Pills: React.FC<PillsProps> = ({ items, onSelect, selected }: PillsProps) => {
+const Pills: React.FC<PillsProps> = ({ items, onSelect, selected }: PillsProps) => {
   /** @dev Initialize the active state to keep track of the currently active pill. */
   const [active, setActive] = React.useState<number>(0);
   return (
