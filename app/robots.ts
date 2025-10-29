@@ -17,16 +17,16 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: ['/', '/home/search/*', '/articles-for-approval'],
+      allow: ['/', '/home', '/home/search/*', '/journals', '/journals/*', '/paper/*'],
       disallow: [
         '/api/',
         '/profile/',
         '/my-ip/',
         '/articles-under-review/',
+        '/articles-for-approval',
         '/as-reviewer/',
         '/summary/',
         '/descier/',
-        '/journals/*',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
