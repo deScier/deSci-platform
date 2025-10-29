@@ -18,6 +18,7 @@ const publicRoutes = [
   '/home',
   '/journals/*',
   '/home/search/*',
+  '/paper/*',
   '/articles-for-approval',
   '/sitemap.xml',
   '/robots.txt',
