@@ -8,20 +8,17 @@ import type { MetadataRoute } from 'next';
  * @custom:sitemap Points to dynamically generated XML sitemap for content discovery
  */
 export default function robots(): MetadataRoute.Robots {
-  if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for robots.txt generation');
-  }
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   return {
     rules: {
       userAgent: '*',
-      allow: ['/', '/home', '/home/search/*', '/journals', '/journals/*', '/paper/*'],
+      allow: ['/', '/home', '/home/search', '/home/search/*', '/paper/*'],
       disallow: [
         '/api/',
         '/profile/',
         '/my-ip/',
+        '/journals/',
         '/articles-under-review/',
         '/articles-for-approval',
         '/as-reviewer/',
