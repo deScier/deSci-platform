@@ -73,18 +73,12 @@ const extractSearchContext = (doc: DocumentPublicProps) => ({
  * @return string The complete canonical URL with appropriate query parameters
  */
 const createCanonicalUrl = (baseUrl: string, id: string, term?: string, authors?: string, type?: string): string => {
-  const baseCanonicalUrl = `${baseUrl}/home/search/${id}`;
+  // Always use /paper/{id} as canonical to match sitemap preference
+  const baseCanonicalUrl = `${baseUrl}/paper/${id}`;
 
-  if ((!term || term === '-') && (!authors || authors === '-') && (!type || type === '-')) {
-    return baseCanonicalUrl;
-  }
-
-  const queryParams = new URLSearchParams();
-  if (term && term !== '-') queryParams.append('term', term);
-  if (authors && authors !== '-') queryParams.append('author', authors);
-  if (type && type !== '-') queryParams.append('type', type);
-
-  return `${baseCanonicalUrl}?${queryParams.toString()}`;
+  // Note: /home/search/{id} pages now point to /paper/{id} as canonical
+  // This prevents duplicate content issues since both URLs show the same content
+  return baseCanonicalUrl;
 };
 
 /**
@@ -279,13 +273,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     const doc = article.document;
 
-    if (!process.env.NEXT_PUBLIC_BASE_URL) {
-      throw new Error(
-        'NEXT_PUBLIC_BASE_URL environment variable is required for generating metadata. Please set NEXT_PUBLIC_BASE_URL in your environment configuration.'
-      );
-    }
-
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     const { term, authors, type } = extractSearchContext(doc);
 
