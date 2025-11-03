@@ -16,9 +16,8 @@ import { UserSession } from './types/next-auth';
 const publicRoutes = [
   '/',
   '/home',
-  '/journals/*',
   '/home/search/*',
-  '/articles-for-approval',
+  '/paper/*',
   '/sitemap.xml',
   '/robots.txt',
 ];
