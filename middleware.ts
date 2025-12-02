@@ -16,10 +16,8 @@ import { UserSession } from './types/next-auth';
 const publicRoutes = [
   '/',
   '/home',
-  '/paper/*',
-  '/journals/*',
   '/home/search/*',
-  '/articles-for-approval',
+  '/paper/*',
   '/sitemap.xml',
   '/robots.txt',
 ];
@@ -101,6 +99,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - /public/* (public files)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home|paper/).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|svgs/|home/).*)',
   ],
 };

@@ -12,37 +12,37 @@ import type { DocumentProps } from '@/services/document/getArticles';
  * @return Promise<MetadataRoute.Sitemap> Array of sitemap entries with URLs, priorities, and metadata
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required for sitemap generation');
-  }
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const documents = await fetchPublicDocumentsServer();
 
-  const [documents] = await Promise.all([fetchPublicDocumentsServer()]);
+  const approvedDocuments = documents.filter((document: DocumentProps) => {
+    if ((document as { status?: string }).status) {
+      return (document as { status?: string }).status === 'APPROVED';
+    }
+
+    return Boolean(document.publishedAt);
+  });
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: `${baseUrl}/home`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/articles-for-approval`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.7,
-    },
   ];
 
-  const documentRoutes: MetadataRoute.Sitemap = documents.map((document: DocumentProps) => ({
-    url: `${baseUrl}/paper/${document.id}`,
-    lastModified: new Date(document.updatedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }));
+  const paperRoutes: MetadataRoute.Sitemap = approvedDocuments
+    .filter((document: DocumentProps) => Boolean(document.nftHash || document.id))
+    .map((document: DocumentProps) => ({
+      url: `${baseUrl}/paper/${document.nftHash || document.id}`,
+      lastModified: document.updatedAt ? new Date(document.updatedAt) : new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
 
-  return [...staticRoutes, ...documentRoutes];
+  return [...staticRoutes, ...paperRoutes];
 }
 
 /**

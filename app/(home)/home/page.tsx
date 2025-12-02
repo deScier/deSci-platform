@@ -1,6 +1,9 @@
 import { HomeComponent } from '@/components/pages/Home/Home';
 import { PublicJournalsProps } from '@/services/journal/getJournals.service';
 import { unstable_noStore } from 'next/cache';
+import { generateHomeMetadata } from './metadata';
+
+export const metadata = generateHomeMetadata();
 
 export default async function HomePage() {
   unstable_noStore();
