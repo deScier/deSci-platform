@@ -25,8 +25,8 @@ export const links = [
   },
   {
     id: uniqueId(),
-    label: 'Maxi Science',
-    link: 'https://maxi.science',
+    label: 'DeScier Science',
+    link: 'https://descier.science',
     icon: (
       <RedirectIcon className="w-4 h-4 fill-blue-gray mb-1 hover:text-secundary_blue-main transition-all duration-200" />
     ),
@@ -42,7 +42,7 @@ export const links = [
   {
     id: uniqueId(),
     label: 'My IP',
-    link: 'https://registermaxi.io',
+    link: 'https://inspireip.io',
     icon: (
       <RedirectIcon className="w-4 hs-4 fill-blue-gray mb-1 hover:text-secundary_blue-main transition-all duration-200" />
     ),
